@@ -1,0 +1,15 @@
+
+DATA:      	
+FILE IS CorPun.dat;		! name of the file
+TYPE IS COVA;		! indicate it is a covariance matrix
+NOBSERVATIONS ARE 175;	! indicate the number of cases
+VARIABLE: NAMES are harsh just reject maladj;
+
+MODEL: 
+maladj ON reject;
+reject ON harsh just;
+
+harsh just; 
+harsh with just;
+
+OUTPUT: TECH1;

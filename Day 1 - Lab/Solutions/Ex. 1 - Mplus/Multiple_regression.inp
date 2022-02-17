@@ -1,0 +1,7 @@
+DATA: FILE IS popular_regr_missingsrecoded.dat;
+VARIABLE: 
+	NAMES ARE respnr Dutch  gender sw covert  overt;
+	USEVARIABLES ARE covert sw overt;
+	MISSING ARE ALL (-999);
+MODEL: sw ON covert overt;
+OUTPUT: sampstat; stand(stdyx);

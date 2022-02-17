@@ -1,0 +1,48 @@
+VERSION 1.1.0
+INPUT
+DATA:
+ FILE IS popular_regr_missingsrecoded.dat;
+VARIABLE:
+NAMES ARE respnr Dutch  gender sw covert overt;
+USEVARIABLES ARE covert sw overt;
+MISSING ARE ALL (-999);
+OUTPUT:
+ sampstat; stand (stdyx);
+MODEL:
+ sw ON covert overt;
+covert overt;
+INPUT_END
+2
+2
+0
+2
+ML
+1
+GENERAL
+0
+3
+0
+0
+sw covert overt
+2
+1 0 0
+0
+0
+1 1 covert sw   -0.508    0.028
+1 1 overt sw   -0.293    0.046
+2 1 overt covert    0.086    0.006
+4 1 sw    0.329    0.013
+5 1 covert    0.357    0.014
+5 1 overt    0.138    0.005
+11 1 covert sw   -0.448    0.023
+11 1 overt sw   -0.160    0.025
+12 1 overt covert    0.386    0.023
+14 1 sw    0.718    0.021
+15 1 covert    1.000    0.000
+15 1 overt    1.000    0.000
+31 1 covert sw   -0.508    0.028
+31 1 overt sw   -0.293    0.046
+32 1 overt covert    0.086    0.006
+34 1 sw    0.329    0.013
+35 1 covert    0.357    0.014
+35 1 overt    0.138    0.005

@@ -1,0 +1,189 @@
+Mplus VERSION 8
+MUTHEN & MUTHEN
+05/31/2017   9:51 AM
+
+INPUT INSTRUCTIONS
+
+  DATA: FILE IS popular_regr_missingsrecoded.dat;
+  VARIABLE:
+  	NAMES ARE respnr Dutch  gender sw covert  overt;
+  	USEVARIABLES ARE covert sw overt;
+
+  OUTPUT: sampstat;
+
+
+
+*** WARNING in MODEL command
+  All variables are uncorrelated with all other variables in the model.
+  Check that this is what is intended.
+   1 WARNING(S) FOUND IN THE INPUT INSTRUCTIONS
+
+
+
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Number of observations                                        1491
+
+Number of dependent variables                                    3
+Number of independent variables                                  0
+Number of continuous latent variables                            0
+
+Observed dependent variables
+
+  Continuous
+   COVERT      SW          OVERT
+
+
+Estimator                                                       ML
+Information matrix                                        OBSERVED
+Maximum number of iterations                                  1000
+Convergence criterion                                    0.500D-04
+Maximum number of steepest descent iterations                   20
+
+Input data file(s)
+  popular_regr_1_missingsrecoded.dat
+
+Input data format  FREE
+
+
+SAMPLE STATISTICS
+
+
+     SAMPLE STATISTICS
+
+
+           Means
+              COVERT        SW            OVERT
+              ________      ________      ________
+              -97.415       -93.878       -97.299
+
+
+           Covariances
+              COVERT        SW            OVERT
+              ________      ________      ________
+ COVERT     89577.860
+ SW         87907.932     88255.003
+ OVERT      88917.845     87920.300     88929.140
+
+
+           Correlations
+              COVERT        SW            OVERT
+              ________      ________      ________
+ COVERT         1.000
+ SW             0.989         1.000
+ OVERT          0.996         0.992         1.000
+
+
+UNIVARIATE SAMPLE STATISTICS
+
+
+     UNIVARIATE HIGHER-ORDER MOMENT DESCRIPTIVE STATISTICS
+
+         Variable/         Mean/     Skewness/   Minimum/ % with                Percentiles
+        Sample Size      Variance    Kurtosis    Maximum  Min/Max      20%/60%    40%/80%    Median
+
+     COVERT              -97.415      -2.680    -999.000    9.93%       1.250      1.750      1.750
+            1491.000   89577.860       5.184       3.750    0.40%       2.000      2.500
+     SW                  -93.878      -2.719    -999.000    9.73%       2.818      3.364      3.545
+            1491.000   88255.003       5.390       5.909    0.07%       3.727      4.091
+     OVERT               -97.299      -2.693    -999.000    9.86%       1.000      1.125      1.125
+            1491.000   88929.140       5.252       3.125    0.20%       1.250      1.500
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+
+
+MODEL FIT INFORMATION
+
+Number of Free Parameters                        6
+
+Loglikelihood
+
+          H0 Value                      -31832.906
+          H1 Value                      -25058.465
+
+Information Criteria
+
+          Akaike (AIC)                   63677.813
+          Bayesian (BIC)                 63709.656
+          Sample-Size Adjusted BIC       63690.595
+            (n* = (n + 2) / 24)
+
+Chi-Square Test of Model Fit
+
+          Value                          13548.882
+          Degrees of Freedom                     3
+          P-Value                           0.0000
+
+RMSEA (Root Mean Square Error Of Approximation)
+
+          Estimate                           1.740
+          90 Percent C.I.                    1.716  1.765
+          Probability RMSEA <= .05           0.000
+
+CFI/TLI
+
+          CFI                                0.000
+          TLI                                0.000
+
+Chi-Square Test of Model Fit for the Baseline Model
+
+          Value                          13548.882
+          Degrees of Freedom                     3
+          P-Value                           0.0000
+
+SRMR (Standardized Root Mean Square Residual)
+
+          Value                              0.573
+
+
+
+MODEL RESULTS
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+ Means
+    COVERT           -97.407      7.751    -12.567      0.000
+    SW               -93.878      7.694    -12.202      0.000
+    OVERT            -97.292      7.723    -12.598      0.000
+
+ Variances
+    COVERT         89578.359   3280.815     27.304      0.000
+    SW             88255.031   3232.331     27.304      0.000
+    OVERT          88928.938   3257.004     27.304      0.000
+
+
+QUALITY OF NUMERICAL RESULTS
+
+     Condition Number for the Information Matrix              0.200E+00
+       (ratio of smallest to largest eigenvalue)
+
+
+DIAGRAM INFORMATION
+
+  Use View Diagram under the Diagram menu in the Mplus Editor to view the diagram.
+  If running Mplus from the Mplus Diagrammer, the diagram opens automatically.
+
+  Diagram output
+    d:\dropbox\onderwijs\mplus summerschool 2017\course materials\week 1\day 1 - rens\exercise\solutions folder\sample_s
+
+     Beginning Time:  09:51:00
+        Ending Time:  09:51:01
+       Elapsed Time:  00:00:01
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2017 Muthen & Muthen

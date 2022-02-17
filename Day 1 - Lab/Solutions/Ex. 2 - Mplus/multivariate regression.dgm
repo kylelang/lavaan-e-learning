@@ -1,0 +1,45 @@
+VERSION 1.1.0
+INPUT
+DATA:
+ FILE IS CDSsummerschool.dat;
+VARIABLE:
+NAMES ARE APst02 Problems Selfesteem DS02 LWst02 GenChild;
+USEVARIABLES ARE APst02 Problems Selfesteem DS02 LWst02;
+ MISSING ARE ALL (-999);
+MODEL:
+APst02 ON DS02 LWst02;
+Problems ON DS02 LWst02;
+Selfesteem ON DS02 LWst02;
+APst02 Problems Selfesteem DS02 LWst02
+INPUT_END
+2
+0
+0
+0
+ML
+1
+GENERAL
+0
+5
+0
+0
+apst02 problems selfesteem ds02 lwst02
+2
+1 1 1 0 0
+0
+0
+1 1 ds02 apst02 0.647 0.064
+1 1 lwst02 apst02 0.468 0.015
+1 1 ds02 problems -0.180 0.043
+1 1 lwst02 problems -0.091 0.010
+1 1 ds02 selfesteem 0.061 0.025
+1 1 lwst02 selfesteem 0.012 0.005
+2 1 problems apst02 -15.000 2.465
+2 1 selfesteem apst02 1.816 1.298
+2 1 selfesteem problems -5.721 0.843
+2 1 lwst02 ds02 30.268 1.758
+4 1 apst02 183.662 5.073
+4 1 problems 83.720 2.223
+4 1 selfesteem 14.590 0.497
+5 1 ds02 19.996 0.553
+5 1 lwst02 359.765 9.916

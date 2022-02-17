@@ -1,0 +1,219 @@
+Mplus VERSION 8
+MUTHEN & MUTHEN
+05/31/2017   9:52 AM
+
+INPUT INSTRUCTIONS
+
+  DATA: FILE IS popular_regr_missingsrecoded.dat;
+  VARIABLE:
+  	NAMES ARE respnr Dutch  gender sw covert  overt;
+  	USEVARIABLES ARE covert sw overt;
+  	MISSING ARE ALL (-999);
+  OUTPUT: sampstat;
+
+
+
+*** WARNING in MODEL command
+  All variables are uncorrelated with all other variables in the model.
+  Check that this is what is intended.
+*** WARNING
+  Data set contains cases with missing on all variables.
+  These cases were not included in the analysis.
+  Number of cases with missing on all variables:  145
+   2 WARNING(S) FOUND IN THE INPUT INSTRUCTIONS
+
+
+
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Number of observations                                        1346
+
+Number of dependent variables                                    3
+Number of independent variables                                  0
+Number of continuous latent variables                            0
+
+Observed dependent variables
+
+  Continuous
+   COVERT      SW          OVERT
+
+
+Estimator                                                       ML
+Information matrix                                        OBSERVED
+Maximum number of iterations                                  1000
+Convergence criterion                                    0.500D-04
+Maximum number of steepest descent iterations                   20
+Maximum number of iterations for H1                           2000
+Convergence criterion for H1                             0.100D-03
+
+Input data file(s)
+  popular_regr_1_missingsrecoded.dat
+
+Input data format  FREE
+
+
+SUMMARY OF DATA
+
+     Number of missing data patterns             3
+
+
+COVARIANCE COVERAGE OF DATA
+
+Minimum covariance coverage value   0.100
+
+
+     PROPORTION OF DATA PRESENT
+
+
+           Covariance Coverage
+              COVERT        SW            OVERT
+              ________      ________      ________
+ COVERT         0.998
+ SW             0.998         1.000
+ OVERT          0.998         0.999         0.999
+
+
+SAMPLE STATISTICS
+
+
+     ESTIMATED SAMPLE STATISTICS
+
+
+           Means
+              COVERT        SW            OVERT
+              ________      ________      ________
+                1.940         3.628         1.325
+
+
+           Covariances
+              COVERT        SW            OVERT
+              ________      ________      ________
+ COVERT         0.357
+ SW            -0.207         0.459
+ OVERT          0.086        -0.084         0.138
+
+
+           Correlations
+              COVERT        SW            OVERT
+              ________      ________      ________
+ COVERT         1.000
+ SW            -0.510         1.000
+ OVERT          0.386        -0.333         1.000
+
+
+     MAXIMUM LOG-LIKELIHOOD VALUE FOR THE UNRESTRICTED (H1) MODEL IS -2844.678
+
+
+UNIVARIATE SAMPLE STATISTICS
+
+
+     UNIVARIATE HIGHER-ORDER MOMENT DESCRIPTIVE STATISTICS
+
+         Variable/         Mean/     Skewness/   Minimum/ % with                Percentiles
+        Sample Size      Variance    Kurtosis    Maximum  Min/Max      20%/60%    40%/80%    Median
+
+     COVERT                1.941       0.290       1.000   10.87%       1.500      1.750      2.000
+            1343.000       0.357      -0.400       3.750    0.45%       2.000      2.500
+     SW                    3.628       0.135       1.455    0.07%       3.091      3.455      3.636
+            1346.000       0.459       0.107       5.909    0.07%       3.727      4.182
+     OVERT                 1.325       1.604       1.000   30.88%       1.000      1.125      1.250
+            1344.000       0.138       2.965       3.125    0.22%       1.250      1.625
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+
+
+MODEL FIT INFORMATION
+
+Number of Free Parameters                        6
+
+Loglikelihood
+
+          H0 Value                       -3175.404
+          H1 Value                       -2844.678
+
+Information Criteria
+
+          Akaike (AIC)                    6362.808
+          Bayesian (BIC)                  6394.037
+          Sample-Size Adjusted BIC        6374.978
+            (n* = (n + 2) / 24)
+
+Chi-Square Test of Model Fit
+
+          Value                            661.452
+          Degrees of Freedom                     3
+          P-Value                           0.0000
+
+RMSEA (Root Mean Square Error Of Approximation)
+
+          Estimate                           0.404
+          90 Percent C.I.                    0.378  0.430
+          Probability RMSEA <= .05           0.000
+
+CFI/TLI
+
+          CFI                                0.000
+          TLI                                0.000
+
+Chi-Square Test of Model Fit for the Baseline Model
+
+          Value                            661.452
+          Degrees of Freedom                     3
+          P-Value                           0.0000
+
+SRMR (Standardized Root Mean Square Residual)
+
+          Value                              0.240
+
+
+
+MODEL RESULTS
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+ Means
+    COVERT             1.941      0.016    118.989      0.000
+    SW                 3.628      0.018    196.527      0.000
+    OVERT              1.325      0.010    130.804      0.000
+
+ Variances
+    COVERT             0.357      0.014     25.913      0.000
+    SW                 0.459      0.018     25.942      0.000
+    OVERT              0.138      0.005     25.923      0.000
+
+
+QUALITY OF NUMERICAL RESULTS
+
+     Condition Number for the Information Matrix              0.905E-01
+       (ratio of smallest to largest eigenvalue)
+
+
+DIAGRAM INFORMATION
+
+  Use View Diagram under the Diagram menu in the Mplus Editor to view the diagram.
+  If running Mplus from the Mplus Diagrammer, the diagram opens automatically.
+
+  Diagram output
+    d:\dropbox\onderwijs\mplus summerschool 2017\course materials\week 1\day 1 - rens\exercise\solutions folder\sample_s
+
+     Beginning Time:  09:52:54
+        Ending Time:  09:52:54
+       Elapsed Time:  00:00:00
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2017 Muthen & Muthen
