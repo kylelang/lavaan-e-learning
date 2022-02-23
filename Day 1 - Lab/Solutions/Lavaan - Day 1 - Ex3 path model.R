@@ -75,6 +75,10 @@ fit_path <- lavaan(model = model.path,
 #
 # Output
 summary(fit_path, fit.measures = TRUE, ci = TRUE, rsquare = TRUE)
+# - Note that the residual variances are denoted by stating a "." before the 
+#   variable name. Here: .reject and .maladj
+#   The variances are denoted without a ".". Here: harsh and just
+# - Part of output: 
 # The chi-square statistic and its degrees of freedom:
 #Model Test User Model:
 #Test statistic                                 1.546
@@ -88,6 +92,21 @@ summary(fit_path, fit.measures = TRUE, ci = TRUE, rsquare = TRUE)
 #
 # Fit measures
 fitMeasures(fit_path)   # many model fit measures 
+# Ask for specific model fit measures:
+#fitMeasures(fit_path, c("cfi", "tli", "rmsea","srmr")) 
+# - Model chi-square is the chi-square statistic obtained from 
+#   the maximum likelihood statistic. 
+#   (in lavaan: 'the Test Statistic for the Model Test User Model')
+# - CFI is the Comparative Fit Index.
+#   Values can range between 0 and 1 
+#   (values greater than 0.90, conservatively 0.95 indicate good fit)
+# - TLI Tucker Lewis Index which also ranges between 0 and 1 
+#   (if it’s greater than 1 it should be rounded to 1) 
+#   with values greater than 0.90 indicating good fit. 
+# If the CFI and TLI are less than one, the CFI is always greater than the TLI.
+# - RMSEA is the root mean square error of approximation. 
+#   In lavaan, you also obtain a p-value of close fit, that the RMSEA < 0.05. 
+#   If you reject the model, it means your model is not a close fitting model.
 #inspect(fit_path, 'r2') # R-square for all dependent variables
 #
 # Technical output

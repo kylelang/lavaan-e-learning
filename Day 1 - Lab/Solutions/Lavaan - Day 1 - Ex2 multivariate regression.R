@@ -100,6 +100,12 @@ fit_multivar <- lavaan(model = model.multivar, data = data_multivar,
 #
 # Output
 summary(fit_multivar, fit.measures = TRUE, ci = TRUE, rsquare = TRUE)
+# - Note that the residual variances are denoted by stating a "." before the 
+#   variable name. Here: .APst02, .Problems, and .Selfesteem
+#   The variances are denoted without a ".". Here: DS02 and LWst02
+# - Note that the intercepts are denoted by stating a "." before the 
+#   variable name. Here: .APst02, .Problems, and .Selfesteem
+#   The means are denoted without a ".". Here: DS02 and LWst02
 #
 # Parameter estimates
 #coef(fit_multivar)                 # unstandardized regression parameters

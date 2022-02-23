@@ -83,16 +83,23 @@ fit_regr <- lavaan(model = model.regression, data = data_regr)
 #
 # Output
 summary(fit_regr, fit.measures = TRUE, ci = TRUE, rsquare = TRUE)
+# Can add 'standardized=TRUE' to obtain standardized estimates as well.
+# - Note that the residual variances are denoted by stating a "." before the 
+#   variable name. Here: .sw
+# - Note that the intercepts are denoted by stating a "." before the 
+#   variable name. Here: .sw
 #
 # Parameter estimates
 #coef(fit_regr)                 # unstandardized regression parameters
 #parameterEstimates(fit_regr)   # all unstandardized parameters - with extra information
 standardizedSolution(fit_regr) # all standardized parameters - with extra information
+# Note that now you also obtain the confidence interval of the standardized estimates.
 #
 ## Fit measures
-#fitMeasures(fit_regr)                          # many model fit measures
-#fitMeasures(fit_path, c("cfi","rmsea","srmr")) # ask for specific model fit measures
-#inspect(fit_regr, 'r2')                        # R-square (for sw)
+#fitMeasures(fit_regr)   # many model fit measures
+#fitMeasures(fit_regr, c("cfi", "tli", "rmsea","srmr")) 
+#                        # ask for specific model fit measures
+#inspect(fit_regr, 'r2') # R-square (for sw)
 #
 ## Technical output
 #lavInspect(fit_regr) # Comparable to TECH1 in Mplus
