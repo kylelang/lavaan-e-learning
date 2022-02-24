@@ -1,0 +1,236 @@
+Mplus VERSION 7.31 (Mac)
+MUTHEN & MUTHEN
+08/12/2015   5:07 PM
+
+INPUT INSTRUCTIONS
+
+
+  DATA:      	
+  FILE IS CorPun.dat;		! name of the file
+  TYPE IS COVA;		! indicate it is a covariance matrix
+  NOBSERVATIONS ARE 175;	! indicate the number of cases
+  VARIABLE: NAMES are harsh just reject maladj;
+
+  MODEL:
+  maladj ON reject;
+  reject ON harsh just;
+
+  harsh just;
+  harsh with just;
+
+  OUTPUT: TECH1;
+
+
+
+INPUT READING TERMINATED NORMALLY
+
+
+
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Number of observations                                         175
+
+Number of dependent variables                                    2
+Number of independent variables                                  2
+Number of continuous latent variables                            0
+
+Observed dependent variables
+
+  Continuous
+   REJECT      MALADJ
+
+Observed independent variables
+   HARSH       JUST
+
+
+Estimator                                                       ML
+Information matrix                                        EXPECTED
+Maximum number of iterations                                  1000
+Convergence criterion                                    0.500D-04
+Maximum number of steepest descent iterations                   20
+
+Input data file(s)
+  CorPun.dat
+
+Input data format  FREE
+
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+
+
+MODEL FIT INFORMATION
+
+Number of Free Parameters                        8
+
+Loglikelihood
+
+          H0 Value                       -2142.534
+          H1 Value                       -2141.761
+
+Information Criteria
+
+          Akaike (AIC)                    4301.069
+          Bayesian (BIC)                  4326.387
+          Sample-Size Adjusted BIC        4301.054
+            (n* = (n + 2) / 24)
+
+Chi-Square Test of Model Fit
+
+          Value                              1.546
+          Degrees of Freedom                     2
+          P-Value                           0.4616
+
+RMSEA (Root Mean Square Error Of Approximation)
+
+          Estimate                           0.000
+          90 Percent C.I.                    0.000  0.139
+          Probability RMSEA <= .05           0.598
+
+CFI/TLI
+
+          CFI                                1.000
+          TLI                                1.012
+
+Chi-Square Test of Model Fit for the Baseline Model
+
+          Value                            101.641
+          Degrees of Freedom                     5
+          P-Value                           0.0000
+
+SRMR (Standardized Root Mean Square Residual)
+
+          Value                              0.023
+
+
+
+MODEL RESULTS
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+ MALADJ   ON
+    REJECT             0.387      0.051      7.658      0.000
+
+ REJECT   ON
+    HARSH              2.607      0.584      4.462      0.000
+    JUST              -4.395      0.763     -5.758      0.000
+
+ HARSH    WITH
+    JUST              -0.259      0.262     -0.987      0.324
+
+ Variances
+    HARSH              4.514      0.483      9.354      0.000
+    JUST               2.645      0.283      9.354      0.000
+
+ Residual Variances
+    REJECT           268.220     28.674      9.354      0.000
+    MALADJ           158.956     16.993      9.354      0.000
+
+
+QUALITY OF NUMERICAL RESULTS
+
+     Condition Number for the Information Matrix              0.126E-01
+       (ratio of smallest to largest eigenvalue)
+
+
+TECHNICAL 1 OUTPUT
+
+
+     PARAMETER SPECIFICATION
+
+
+           LAMBDA
+              REJECT        MALADJ        HARSH         JUST
+              ________      ________      ________      ________
+ REJECT             0             0             0             0
+ MALADJ             0             0             0             0
+ HARSH              0             0             0             0
+ JUST               0             0             0             0
+
+
+           THETA
+              REJECT        MALADJ        HARSH         JUST
+              ________      ________      ________      ________
+ REJECT             0
+ MALADJ             0             0
+ HARSH              0             0             0
+ JUST               0             0             0             0
+
+
+           BETA
+              REJECT        MALADJ        HARSH         JUST
+              ________      ________      ________      ________
+ REJECT             0             0             1             2
+ MALADJ             3             0             0             0
+ HARSH              0             0             0             0
+ JUST               0             0             0             0
+
+
+           PSI
+              REJECT        MALADJ        HARSH         JUST
+              ________      ________      ________      ________
+ REJECT             4
+ MALADJ             0             5
+ HARSH              0             0             6
+ JUST               0             0             7             8
+
+
+     STARTING VALUES
+
+
+           LAMBDA
+              REJECT        MALADJ        HARSH         JUST
+              ________      ________      ________      ________
+ REJECT         1.000         0.000         0.000         0.000
+ MALADJ         0.000         1.000         0.000         0.000
+ HARSH          0.000         0.000         1.000         0.000
+ JUST           0.000         0.000         0.000         1.000
+
+
+           THETA
+              REJECT        MALADJ        HARSH         JUST
+              ________      ________      ________      ________
+ REJECT         0.000
+ MALADJ         0.000         0.000
+ HARSH          0.000         0.000         0.000
+ JUST           0.000         0.000         0.000         0.000
+
+
+           BETA
+              REJECT        MALADJ        HARSH         JUST
+              ________      ________      ________      ________
+ REJECT         0.000         0.000         0.000         0.000
+ MALADJ         0.000         0.000         0.000         0.000
+ HARSH          0.000         0.000         0.000         0.000
+ JUST           0.000         0.000         0.000         0.000
+
+
+           PSI
+              REJECT        MALADJ        HARSH         JUST
+              ________      ________      ________      ________
+ REJECT       178.985
+ MALADJ         0.000       106.725
+ HARSH          0.000         0.000         2.270
+ JUST           0.000         0.000         0.000         1.330
+
+
+     Beginning Time:  17:07:45
+        Ending Time:  17:07:45
+       Elapsed Time:  00:00:00
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2015 Muthen & Muthen

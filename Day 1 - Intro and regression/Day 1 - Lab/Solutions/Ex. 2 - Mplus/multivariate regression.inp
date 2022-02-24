@@ -1,0 +1,13 @@
+
+DATA: FILE IS CDSsummerschool.dat;
+VARIABLE: 
+NAMES ARE APst02 Problems Selfesteem DS02 LWst02 GenChild;
+USEVARIABLES ARE APst02 Problems Selfesteem DS02 LWst02;
+	MISSING ARE ALL (-999);
+
+MODEL:
+APst02 ON DS02 LWst02;
+Problems ON DS02 LWst02;
+Selfesteem ON DS02 LWst02;
+
+APst02 Problems Selfesteem DS02 LWst02 ! FIML

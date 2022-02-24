@@ -1,0 +1,235 @@
+Mplus VERSION 8.7
+MUTHEN & MUTHEN
+02/17/2022  10:23 AM
+
+INPUT INSTRUCTIONS
+
+
+  DATA: FILE IS CDSsummerschool.dat;
+  VARIABLE:
+  NAMES ARE APst02 Problems Selfesteem DS02 LWst02 GenChild;
+  USEVARIABLES ARE APst02 Problems Selfesteem DS02 LWst02;
+  	MISSING ARE ALL (-999);
+
+  MODEL:
+  APst02 ON DS02 LWst02;
+  Problems ON DS02 LWst02;
+  Selfesteem ON DS02 LWst02;
+
+  APst02 Problems Selfesteem DS02 LWst02
+
+
+
+*** WARNING in VARIABLE command
+  Note that only the first 8 characters of variable names are used in the output.
+  Shorten variable names to avoid any confusion.
+*** WARNING
+  Data set contains cases with missing on all variables.
+  These cases were not included in the analysis.
+  Number of cases with missing on all variables:  454
+   2 WARNING(S) FOUND IN THE INPUT INSTRUCTIONS
+
+
+
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Number of observations                                        2899
+
+Number of dependent variables                                    3
+Number of independent variables                                  2
+Number of continuous latent variables                            0
+
+Observed dependent variables
+
+  Continuous
+   APST02      PROBLEMS    SELFESTEEM
+
+Observed independent variables
+   DS02        LWST02
+
+
+Estimator                                                       ML
+Information matrix                                        OBSERVED
+Maximum number of iterations                                  1000
+Convergence criterion                                    0.500D-04
+Maximum number of steepest descent iterations                   20
+Maximum number of iterations for H1                           2000
+Convergence criterion for H1                             0.100D-03
+
+Input data file(s)
+  CDSsummerschool.dat
+
+Input data format  FREE
+
+
+SUMMARY OF DATA
+
+     Number of missing data patterns            15
+
+
+COVARIANCE COVERAGE OF DATA
+
+Minimum covariance coverage value   0.100
+
+
+     PROPORTION OF DATA PRESENT
+
+
+           Covariance Coverage
+              APST02        PROBLEMS      SELFESTE      DS02          LWST02
+              ________      ________      ________      ________      ________
+ APST02         0.905
+ PROBLEMS       0.895         0.989
+ SELFESTE       0.588         0.587         0.595
+ DS02           0.900         0.894         0.588         0.905
+ LWST02         0.905         0.898         0.590         0.903         0.908
+
+
+
+UNIVARIATE SAMPLE STATISTICS
+
+
+     UNIVARIATE HIGHER-ORDER MOMENT DESCRIPTIVE STATISTICS
+
+         Variable/         Mean/     Skewness/   Minimum/ % with                Percentiles
+        Sample Size      Variance    Kurtosis    Maximum  Min/Max      20%/60%    40%/80%    Median
+
+     APST02              101.943       0.099      19.000    0.04%      90.000     97.000    100.000
+            2625.000     288.604       0.851     171.000    0.04%     105.000    117.000
+     PROBLEMS             43.108       1.405      32.000    4.39%      35.000     39.000     41.000
+            2868.000      88.318       2.335      94.000    0.03%      43.000     50.000
+     SELFESTEEM           24.394      -0.703       6.000    0.06%      21.000     24.000     25.000
+            1724.000      14.764       0.626      30.000    8.76%      26.000     28.000
+     DS02                 14.551       0.402       0.000    0.11%      11.000     13.000     14.000
+            2623.000      19.974       0.407      30.000    0.11%      15.000     18.000
+     LWST02              103.577       0.527      28.000    0.04%      90.000     97.000    100.000
+            2633.000     359.688       1.679     184.000    0.08%     106.000    117.000
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+
+
+MODEL FIT INFORMATION
+
+Number of Free Parameters                       20
+
+Loglikelihood
+
+          H0 Value                      -44663.866
+          H1 Value                      -44663.866
+
+Information Criteria
+
+          Akaike (AIC)                   89367.732
+          Bayesian (BIC)                 89487.175
+          Sample-Size Adjusted BIC       89423.627
+            (n* = (n + 2) / 24)
+
+Chi-Square Test of Model Fit
+
+          Value                              0.000
+          Degrees of Freedom                     0
+          P-Value                           0.0000
+
+RMSEA (Root Mean Square Error Of Approximation)
+
+          Estimate                           0.000
+          90 Percent C.I.                    0.000  0.000
+          Probability RMSEA <= .05           0.000
+
+CFI/TLI
+
+          CFI                                1.000
+          TLI                                1.000
+
+Chi-Square Test of Model Fit for the Baseline Model
+
+          Value                           1428.250
+          Degrees of Freedom                     9
+          P-Value                           0.0000
+
+SRMR (Standardized Root Mean Square Residual)
+
+          Value                              0.000
+
+
+
+MODEL RESULTS
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+ APST02   ON
+    DS02               0.647      0.064     10.145      0.000
+    LWST02             0.468      0.015     31.264      0.000
+
+ PROBLEMS ON
+    DS02              -0.180      0.043     -4.178      0.000
+    LWST02            -0.091      0.010     -8.942      0.000
+
+ SELFESTE ON
+    DS02               0.061      0.025      2.423      0.015
+    LWST02             0.012      0.005      2.246      0.025
+
+ PROBLEMS WITH
+    APST02           -15.000      2.465     -6.085      0.000
+
+ SELFESTE WITH
+    APST02             1.816      1.298      1.399      0.162
+    PROBLEMS          -5.721      0.843     -6.787      0.000
+
+ LWST02   WITH
+    DS02              30.268      1.758     17.214      0.000
+
+ Means
+    DS02              14.545      0.087    166.843      0.000
+    LWST02           103.560      0.369    280.803      0.000
+
+ Intercepts
+    APST02            44.041      1.517     29.028      0.000
+    PROBLEMS          55.128      1.025     53.781      0.000
+    SELFESTEEM        22.197      0.508     43.690      0.000
+
+ Variances
+    DS02              19.996      0.553     36.185      0.000
+    LWST02           359.765      9.916     36.280      0.000
+
+ Residual Variances
+    APST02           183.662      5.073     36.202      0.000
+    PROBLEMS          83.720      2.223     37.655      0.000
+    SELFESTEEM        14.590      0.497     29.370      0.000
+
+
+QUALITY OF NUMERICAL RESULTS
+
+     Condition Number for the Information Matrix              0.429E-06
+       (ratio of smallest to largest eigenvalue)
+
+
+DIAGRAM INFORMATION
+
+  Use View Diagram under the Diagram menu in the Mplus Editor to view the diagram.
+  If running Mplus from the Mplus Diagrammer, the diagram opens automatically.
+
+  Diagram output
+    c:\werk\ow - s65 - e-learning lavaan\lab material - day 1\solutions\ex. 2 - mplus\multivariate regression.dgm
+
+     Beginning Time:  10:23:46
+        Ending Time:  10:23:46
+       Elapsed Time:  00:00:00
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2021 Muthen & Muthen
