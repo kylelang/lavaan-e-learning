@@ -1,0 +1,66 @@
+\begin{Schunk}
+\begin{Sinput}
+ library(lavaan)
+ dataDir <- "../data/"
+ dat1 <- readRDS(paste0(dataDir, "adamsKlpsData.rds"))
+ ## Specify the CFA model:
+ mod1.1 <- "
+ merit =~ meritP1 + meritP2 + meritP3
+ policy =~ policyP1 + policyP2 + policyP3
+ "
+ ## Fit the CFA and check model:
+ out1.1 <- cfa(mod1.1, data = dat1, std.lv = TRUE)
+ ## Check model fit:
+ round(fitMeasures(out1.1)[c("chisq", "df", "pvalue", "cfi", 
+                             "tli", "rmsea", "srmr")], 4)
+\end{Sinput}
+\begin{Soutput}
+  chisq      df  pvalue     cfi     tli   rmsea    srmr 
+16.8695  8.0000  0.0315  0.9215  0.8529  0.1129  0.0653 
+\end{Soutput}
+\begin{Sinput}
+ summary(out1.1)
+\end{Sinput}
+\begin{Soutput}
+lavaan (0.5-20) converged normally after  22 iterations
+
+  Number of observations                            87
+
+  Estimator                                         ML
+  Minimum Function Test Statistic               16.869
+  Degrees of freedom                                 8
+  P-value (Chi-square)                           0.031
+
+Parameter Estimates:
+
+  Information                                 Expected
+  Standard Errors                             Standard
+
+Latent Variables:
+                   Estimate  Std.Err  Z-value  P(>|z|)
+  merit =~                                            
+    meritP1           0.690    0.134    5.155    0.000
+    meritP2           0.968    0.142    6.830    0.000
+    meritP3           0.748    0.137    5.458    0.000
+  policy =~                                           
+    policyP1          0.851    0.186    4.570    0.000
+    policyP2          0.996    0.167    5.967    0.000
+    policyP3          1.121    0.177    6.339    0.000
+
+Covariances:
+                   Estimate  Std.Err  Z-value  P(>|z|)
+  merit ~~                                            
+    policy           -0.336    0.131   -2.563    0.010
+
+Variances:
+                   Estimate  Std.Err  Z-value  P(>|z|)
+    meritP1           0.865    0.165    5.248    0.000
+    meritP2           0.445    0.201    2.211    0.027
+    meritP3           0.833    0.172    4.857    0.000
+    policyP1          1.836    0.324    5.671    0.000
+    policyP2          0.942    0.256    3.683    0.000
+    policyP3          0.857    0.297    2.882    0.004
+    merit             1.000                           
+    policy            1.000                           
+\end{Soutput}
+\end{Schunk}

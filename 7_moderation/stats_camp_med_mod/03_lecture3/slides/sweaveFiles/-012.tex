@@ -1,0 +1,17 @@
+\begin{Schunk}
+\begin{Sinput}
+ ## Load package to draw the Monte Carlo samples
+ library(mvtnorm) 
+ ## Specify the model (note the parameter labels):
+ mod3 <- "
+ policy ~ polAffil + b*sysRac
+ sysRac ~ a*polAffil
+ "
+ ## Fit the model:
+ out4 <- sem(mod3, data = dat1)
+ ## Extract the important estimates:
+ a <- coef(out4)["a"]
+ b <- coef(out4)["b"]
+ acov <- vcov(out4)[c("a", "b"), c("a", "b")]
+\end{Sinput}
+\end{Schunk}

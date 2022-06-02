@@ -1,0 +1,30 @@
+\begin{Schunk}
+\begin{Sinput}
+ ## Calculate Goodman's Z:
+ goodSE <- sqrt(b^2 * seA^2 + a^2 * seB^2 - seA^2 * seB^2)
+ goodZ <- ieProd / goodSE
+ goodZ
+\end{Sinput}
+\begin{Soutput}
+polAffil 
+3.514885 
+\end{Soutput}
+\begin{Sinput}
+ goodP <- 2 * pnorm(goodZ, lower = FALSE)
+ goodP
+\end{Sinput}
+\begin{Soutput}
+    polAffil 
+0.0004399441 
+\end{Soutput}
+\begin{Sinput}
+ goodUB <- ieProd + 1.96 * goodSE
+ goodLB <- ieProd - 1.96 * goodSE
+ ## 95% Goodman CI:
+ c(goodLB, goodUB)
+\end{Sinput}
+\begin{Soutput}
+  polAffil   polAffil 
+0.08207647 0.28899835 
+\end{Soutput}
+\end{Schunk}

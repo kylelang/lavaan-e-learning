@@ -1,0 +1,28 @@
+\begin{Schunk}
+\begin{Sinput}
+ summary(out2.4)
+\end{Sinput}
+\begin{Soutput}
+Call:
+lm(formula = conc ~ neuro * educ3, data = dat1)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-2.52324 -0.34119  0.01457  0.36247  1.86213 
+
+Coefficients:
+                      Estimate Std. Error t value Pr(>|t|)    
+(Intercept)            3.42186    0.05331  64.183  < 2e-16 ***
+neuro                  0.14014    0.01629   8.601  < 2e-16 ***
+educ3subHS             0.30738    0.12102   2.540 0.011146 *  
+educ3highSchool       -0.02154    0.06525  -0.330 0.741340    
+neuro:educ3subHS      -0.12755    0.03552  -3.591 0.000336 ***
+neuro:educ3highSchool -0.01722    0.01972  -0.873 0.382770    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.5308 on 2546 degrees of freedom
+Multiple R-squared:  0.0746,	Adjusted R-squared:  0.07278 
+F-statistic: 41.05 on 5 and 2546 DF,  p-value: < 2.2e-16
+\end{Soutput}
+\end{Schunk}

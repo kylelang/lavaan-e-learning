@@ -1,0 +1,18 @@
+\begin{Schunk}
+\begin{Sinput}
+ ## Conditional process model with b, c paths moderated:
+ mod5 <- "
+ agree ~ b1*open + b2*consc + cp1*extra + cp2*neuro + 
+         cp3*extraXneuro + b3*openXconsc
+ open ~ a*extra
+ 
+ cpLo  := cp1 + cp3*(-0.962268)
+ cpMid := cp1 + cp3*(-0.162268)
+ cpHi  := cp1 + cp3*0.837732
+ 
+ abLo := a * (b1 + b3*(-0.4045))
+ abMid := a * (b1 + b3*(-0.0045))
+ abHi := a * (b1 + b3*0.3955)
+ "
+\end{Sinput}
+\end{Schunk}

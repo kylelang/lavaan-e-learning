@@ -1,0 +1,27 @@
+\begin{Schunk}
+\begin{Sinput}
+ ## Use semTools to orthogonalize:
+ dat2.2 <- indProd(data = dat1,
+                   var1 = c("x1", "x2", "x3"),
+                   var2 = c("z1", "z2", "z3"),
+                   match = FALSE,
+                   residualC = TRUE)
+ sum(dat2 - dat2.2)
+\end{Sinput}
+\begin{Soutput}
+[1] -9.790839e-14
+\end{Soutput}
+\begin{Sinput}
+ ##
+ ## Use semTools to double mean center:
+ dat3.2 <- indProd(data = dat1,
+                   var1 = c("x1", "x2", "x3"),
+                   var2 = c("z1", "z2", "z3"),
+                   match = FALSE,
+                   doubleMC = TRUE)
+ sum(dat3[ , -c(1 : 9)] - dat3.2[ , -c(1 : 9)])
+\end{Sinput}
+\begin{Soutput}
+[1] 0
+\end{Soutput}
+\end{Schunk}

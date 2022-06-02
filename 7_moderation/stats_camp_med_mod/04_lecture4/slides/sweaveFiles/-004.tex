@@ -1,0 +1,93 @@
+\begin{Schunk}
+\begin{Sinput}
+ ## Test differences in specific indirect effects:
+ mod1.2 <- "
+ policy ~ b1*sysRac + b2*indRac + b3*merit + cp*polAffil
+ sysRac ~ a1*polAffil
+ indRac ~ a2*polAffil
+ merit ~ a3*polAffil
+ 
+ sysRac ~~ indRac + merit
+ indRac ~~ merit
+ 
+ ab1 := a1*b1
+ ab2 := a2*b2
+ ab3 := a3*b3
+ totalIE := ab1 + ab2 + ab3
+ 
+ ab1 == ab2
+ "
+ out1.2 <- 
+     sem(mod1.2, data = dat1, se = "boot", boot = nBoot)
+ summary(out1.2)
+\end{Sinput}
+\begin{Soutput}
+lavaan (0.5-20) converged normally after 278 iterations
+
+  Number of observations                            87
+
+  Estimator                                         ML
+  Minimum Function Test Statistic                6.738
+  Degrees of freedom                                 1
+  P-value (Chi-square)                           0.009
+
+Parameter Estimates:
+
+  Information                                 Observed
+  Standard Errors                            Bootstrap
+  Number of requested bootstrap draws             2500
+  Number of successful bootstrap draws            2500
+
+Regressions:
+                   Estimate  Std.Err  Z-value  P(>|z|)
+  policy ~                                            
+    sysRac    (b1)    0.575    0.204    2.816    0.005
+    indRac    (b2)    0.192    0.130    1.473    0.141
+    merit     (b3)   -0.055    0.156   -0.351    0.726
+    polAffil  (cp)    0.125    0.082    1.534    0.125
+  sysRac ~                                            
+    polAffil  (a1)    0.027    0.067    0.410    0.682
+  indRac ~                                            
+    polAffil  (a2)    0.082    0.092    0.892    0.372
+  merit ~                                             
+    polAffil  (a3)   -0.217    0.063   -3.433    0.001
+
+Covariances:
+                   Estimate  Std.Err  Z-value  P(>|z|)
+  sysRac ~~                                           
+    indRac           -0.106    0.109   -0.966    0.334
+    merit            -0.234    0.098   -2.396    0.017
+  indRac ~~                                           
+    merit             0.164    0.100    1.637    0.102
+
+Variances:
+                   Estimate  Std.Err  Z-value  P(>|z|)
+    policy            0.967    0.182    5.319    0.000
+    sysRac            0.804    0.123    6.565    0.000
+    indRac            1.206    0.158    7.618    0.000
+    merit             0.724    0.112    6.466    0.000
+
+Defined Parameters:
+                   Estimate  Std.Err  Z-value  P(>|z|)
+    ab1               0.016    0.019    0.820    0.412
+    ab2               0.016    0.019    0.820    0.412
+    ab3               0.012    0.037    0.318    0.750
+    totalIE           0.043    0.059    0.730    0.465
+
+Constraints:
+                                               |Slack|
+    ab1 - (ab2)                                  0.000
+\end{Soutput}
+\begin{Sinput}
+ ## Conduct a chi-squared difference test:
+ chiDiff <- fitMeasures(out1.2)["chisq"] - 
+     fitMeasures(out1.1)["chisq"]
+ dfDiff <- fitMeasures(out1.2)["df"] - 
+     fitMeasures(out1.1)["df"]
+ pchisq(chiDiff, dfDiff, lower = FALSE)
+\end{Sinput}
+\begin{Soutput}
+      chisq 
+0.009440083 
+\end{Soutput}
+\end{Schunk}

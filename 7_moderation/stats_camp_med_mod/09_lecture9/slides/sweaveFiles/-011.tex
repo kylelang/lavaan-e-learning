@@ -1,0 +1,17 @@
+\begin{Schunk}
+\begin{Sinput}
+ ## Test simple slopes via centering:
+ dat1$neuroLo <-
+     with(dat1,
+          neuro - quantile(neuro, 0.05, na.rm = TRUE)
+          )
+ dat1$neuroMid <- 
+     with(dat1, 
+          neuro - quantile(neuro, 0.5, na.rm = TRUE)
+          )
+ dat1$neuroHi <-
+     with(dat1,
+          neuro - quantile(neuro, 0.95, na.rm = TRUE)
+          )
+\end{Sinput}
+\end{Schunk}

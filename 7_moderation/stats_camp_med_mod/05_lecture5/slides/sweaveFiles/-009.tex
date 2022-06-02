@@ -1,0 +1,68 @@
+\begin{Schunk}
+\begin{Sinput}
+ ## Possible range of a:
+ aMarg <- sqrt(s2M * s2Y - sYM^2) * sqrt(s2X * s2Y - sYX^2)
+ aInt <- c(
+     (sYM * sYX - aMarg) / (s2X * s2Y),
+     (sYM * sYX + aMarg) / (s2X * s2Y)
+ )
+ aInt
+\end{Sinput}
+\begin{Soutput}
+[1] -0.4378558  0.5793099
+\end{Soutput}
+\begin{Sinput}
+ ##
+ ## Possible range of b:
+ bMarg <- sqrt(s2X * s2Y - sYX^2) / sqrt(s2X * s2M - sMX^2)
+ bInt <- c(-1 * bMarg, bMarg)
+ bInt
+\end{Sinput}
+\begin{Soutput}
+[1] -1.289996  1.289996
+\end{Soutput}
+\begin{Sinput}
+ ##
+ ## max(a):
+ aMax <- ifelse(coef(out2)["a"] < 0,
+                aInt[1],
+                aInt[2])
+ aMax
+\end{Sinput}
+\begin{Soutput}
+        a 
+0.5793099 
+\end{Soutput}
+\begin{Sinput}
+ ##
+ ## max(b)
+ bMax <- ifelse(coef(out2)["b"] < 0,
+                bInt[1],
+                bInt[2])
+ bMax
+\end{Sinput}
+\begin{Soutput}
+       b 
+1.289996 
+\end{Soutput}
+\begin{Sinput}
+ ##
+ ## max(ab)
+ abMax <- aMax * bMax
+ abMax
+\end{Sinput}
+\begin{Soutput}
+        a 
+0.7473075 
+\end{Soutput}
+\begin{Sinput}
+ ##
+ ## Kappa Squared:
+ k2 <- ab / abMax
+ k2
+\end{Sinput}
+\begin{Soutput}
+        a 
+0.1359491 
+\end{Soutput}
+\end{Schunk}

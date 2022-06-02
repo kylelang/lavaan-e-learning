@@ -1,0 +1,27 @@
+\begin{thebibliography}{}
+
+\bibitem [\protect \citeauthoryear {%
+Hayes%
+}{%
+Hayes%
+}{%
+{\protect \APACyear {2017}}%
+}]{%
+hayes:2017}
+\APACinsertmetastar {%
+hayes:2017}%
+\begin{APACrefauthors}%
+Hayes, A\BPBI F.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYear{2017}.
+\newblock
+\APACrefbtitle {Introduction to mediation, moderation, and conditional process
+  analysis: {A} regression-based approach} {Introduction to mediation,
+  moderation, and conditional process analysis: {A} regression-based approach}.
+\newblock
+\APACaddressPublisher{New York}{Guilford Press}.
+\PrintBackRefs{\CurrentBib}
+
+\end{thebibliography}

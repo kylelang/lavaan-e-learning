@@ -1,0 +1,39 @@
+\begin{Schunk}
+\begin{Sinput}
+ round(fitMeasures(out6)[c("chisq", "df", "pvalue", "cfi", 
+                           "tli", "rmsea", "srmr")], 3)
+\end{Sinput}
+\begin{Soutput}
+ chisq     df pvalue    cfi    tli  rmsea   srmr 
+61.353 48.000  0.093  0.991  0.987  0.024  0.026 
+\end{Soutput}
+\begin{Sinput}
+ fitMeasures(out5)[c("aic", "bic")]
+\end{Sinput}
+\begin{Soutput}
+     aic      bic 
+22197.38 22450.25 
+\end{Soutput}
+\begin{Sinput}
+ fitMeasures(out6)[c("aic", "bic")]
+\end{Sinput}
+\begin{Soutput}
+     aic      bic 
+15774.19 15951.20 
+\end{Soutput}
+\begin{Sinput}
+ probeOut6 <- probe2WayMC(fit = out6,
+                          nameX = c("fX", "fZ", "fXZ"),
+                          nameY = "fY",
+                          modVar = "fZ",
+                          valProbe = c(-1, 0, 1)
+                          )
+ probeOut6$SimpleSlope
+\end{Sinput}
+\begin{Soutput}
+     fZ    Slope        SE      Wald p
+[1,] -1 1.204548 0.2303323  5.229609 0
+[2,]  0 1.833131 0.1120757 16.356193 0
+[3,]  1 2.461715 0.1713437 14.367117 0
+\end{Soutput}
+\end{Schunk}

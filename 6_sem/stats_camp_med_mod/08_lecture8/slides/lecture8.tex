@@ -1,0 +1,476 @@
+\documentclass{beamer}
+\usetheme{ttuStatsCamp}
+\usefonttheme{serif}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage[natbibapa]{apacite}
+\usepackage{color}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{Sweavel}
+\usepackage{listings}
+\usepackage{fancybox}
+
+\def\Sweavesize{\scriptsize}
+\def\Rcolor{\color{black}}
+%\def\Routcolor{\color{red}}
+\def\Rcommentcolor{\color{violet}}
+\def\Rbackground{\color[gray]{0.85}}
+\def\Routbackground{\color[gray]{0.85}}
+
+\lstset{tabsize=2, breaklines=true, style=Rstyle}
+
+
+
+\newcommand{\red}[0]{\textcolor{red}}
+\newcommand{\green}[0]{\textcolor{green}}
+\newcommand{\blue}[0]{\textcolor{blue}}
+\newcommand{\comment}[1]{}
+\newcommand{\va}[0]{\vspace{12pt}}
+\newcommand{\vb}[0]{\vspace{6pt}}
+\newcommand{\vc}[0]{\vspace{3pt}}
+\newcommand{\vx}[1]{\vspace{#1pt}}
+
+\title[Lecture 8]{Lecture 8: Probing Moderation}
+
+\author{Kyle M. Lang}
+
+\institute[TTU IMMAP]{
+  Institute for Measurement, Methodology, Analysis \& Policy\\
+  Texas Tech University\\
+  Lubbock, TX
+}
+
+\date{2016 Stats Camp}
+
+\setbeamertemplate{frametitle continuation}{}
+
+\begin{document}
+
+\setkeys{Gin}{width=\textwidth}
+
+\input{sweaveFiles/-001}
+
+
+
+\begin{frame}[plain]
+  
+  \titlepage
+  
+\end{frame}
+
+
+
+\begin{frame}{Outline}
+
+  \begin{itemize}
+  \item Probing moderation via centering
+    \va
+  \item Alternative probing strategies
+    \va
+  \item Confidence bands for simple slopes
+  \end{itemize}
+
+\end{frame}
+
+
+
+\begin{frame}{Starting Point}
+
+  Last time, we fit the following model:
+
+  \begin{figure}
+    \includegraphics[width=\textwidth]{figures/modExample1.pdf}
+  \end{figure}
+
+\end{frame}
+
+
+
+\begin{frame}{Interaction Probing}
+  
+  We probed the interaction with the \emph{Pick-a-point} approach.
+  \va
+  \begin{itemize}
+    \item Choose interesting values of the moderator $Z$
+      \vb
+    \item Check the significance of the focal effect $X \rightarrow Y$
+      at the values we choose for $Z$.
+      \vb
+    \item Gives us an idea of where in $Z$'s distribution the focal
+      effect is/is not significant.
+  \end{itemize}
+  \va
+  Previously, we manually calculated the all of the quantities we
+  needed, including a SE for the conditional focal effect.
+  \vb
+  \begin{itemize}
+    \item There is a simpler way: \textsc{Centering}
+  \end{itemize}
+  
+\end{frame}
+
+
+
+\begin{frame}{Centering}
+  
+  Centering transforms a variable by subtracting a constant (e.g., the
+  variable's mean) from each observation of the variable
+  \va
+  \begin{itemize}
+  \item The most familiar form of center is \emph{mean centering}
+    \vb
+  \item We can center on any value
+    \vb
+    \begin{itemize}
+    \item When probing interactions, we can center $Z$ on the
+      interesting values we choose during the pick-a-point approach
+      \vb
+    \item Running the model with $Z$ centered on specific values
+      automatically provides tests of the simple slope conditional
+      on those values of $Z$
+    \end{itemize}
+  \end{itemize}
+  
+\end{frame}
+
+
+
+\begin{frame}{Probing via Centering}
+  
+  Say we want to do a simple slopes analysis to test the conditional
+  effect of $X$ on $Y$ at three levels of $Z = \{Z_1, Z_2,
+  Z_3\}$.\\ 
+  \va 
+  Then, all we need to do is fit the following three
+  models:
+  \begin{align*}
+    Y = \alpha + \beta_1X + \beta_2(Z - Z_1) + \beta_3 X(Z - Z_1) + e\\
+    \\
+    Y = \alpha + \beta_1X + \beta_2(Z - Z_2) + \beta_3 X(Z - Z_2) + e\\
+    \\
+    Y = \alpha + \beta_1X + \beta_2(Z - Z_3) + \beta_3 X(Z - Z_3) + e
+  \end{align*}
+  The default output for $\beta_1$ provides tests of the simple
+  slopes.
+  
+\end{frame}
+
+
+
+\begin{frame}[allowframebreaks]{Example}
+
+\input{sweaveFiles/-002}
+
+\end{frame}
+
+
+\begin{frame}{Compare Approaches}
+  
+  The manual and the centering approaches give identical answers,
+  barring rounding errors with the manual approach: 
+  \va
+\input{sweaveFiles/-003}
+
+\end{frame}
+
+
+
+\begin{frame}[allowframebreaks]{A Few Comments on Centering}
+  
+  You will often hear mean centering touted as absolutely necessary or
+  absolutely unnecessary for moderation analysis.\\ 
+  \va 
+  Both sides are partially correct.\\ 
+  \va 
+  Two effects are usually ascribed to mean
+  centering in moderation analysis: 
+  \vb
+  \begin{enumerate}
+    \item Improved interpretation of the conditional effects 
+      \vb
+    \item Reduced multicollinearity between lower-order effects and
+      the interaction term
+  \end{enumerate}
+  
+  \pagebreak
+  
+  Mean center absolutely \emph{does} have the potential to improve
+  parameter interpretations
+  \vb
+  \begin{itemize}
+  \item When $X = 0$ or $Z = 0$ are not sensible values, centering is
+    necessary for any plausible interpretation of $\beta_1$ or
+    $\beta_2$.
+  \end{itemize}
+  \va 
+  Mean centering \emph{can} remove collinearity between lower-order
+  terms and the interaction term
+  \vb
+  \begin{itemize}
+    \item \textbf{BUT}, we don't care
+  \end{itemize}
+  \va 
+  We can get a better sense of what's going on with a synthetic
+  example.
+\end{frame}
+
+
+\begin{frame}[allowframebreaks]{Example}
+    
+\input{sweaveFiles/-004}
+
+\pagebreak
+
+\input{sweaveFiles/-005}
+\includegraphics{sweaveFiles/-005}
+
+\end{frame}
+
+
+\begin{frame}[shrink = 10]{Example}
+  
+\input{sweaveFiles/-006}
+
+\end{frame}
+
+
+\begin{frame}[allowframebreaks]{Example}
+  
+\input{sweaveFiles/-007}
+
+\pagebreak
+
+\input{sweaveFiles/-008}
+
+\pagebreak
+
+\input{sweaveFiles/-009}
+
+\pagebreak
+
+\input{sweaveFiles/-010}
+
+\pagebreak
+
+\input{sweaveFiles/-011}
+
+\end{frame}
+
+
+
+\begin{frame}{Back to Work}
+  
+  \textsc{Question:} Okay, so what about our example analysis? Should
+  we center the predictors in this model:
+  \begin{align*}
+    Depress = \alpha + \beta_1Ratio + \beta_2Perception + \beta_3 Ratio \times Perception + e
+  \end{align*}
+
+  \pause
+  
+  \textsc{Answer:} Yes.\\\va
+  
+  \pause
+  
+  \textsc{Question Mark II:} Why?\\\va
+  
+  \pause 
+  
+  \textsc{Answer the Second:} Because a \emph{Weight:Height} ratio of zero
+  is nonsensical and zero is outside the range of \emph{Perception}.
+  
+\end{frame}
+
+
+\begin{frame}[shrink = 10]{Example}
+
+\input{sweaveFiles/-012}
+
+\end{frame}
+
+
+\begin{frame}[shrink = 10]{Example}
+  
+\input{sweaveFiles/-013}
+
+\end{frame}
+
+
+
+\begin{frame}{Alternative Probing Strategies}
+  
+  The pick-a-point approach is nice due to its simplicity and ease of
+  interpretation, but the points we choose are totally arbitrary.
+  \vb
+  \begin{itemize}
+    \item We may be missing important nuances that occur in some of
+      the areas of $Z$'s distribution that we \emph{did not} pick.
+  \end{itemize}
+  \va
+  \pause
+  The \emph{Johnson-Neyman} technique is an alternative approach that
+  removes the arbitrary choices necessary for pick-a-point.
+  \vb
+  \begin{itemize}
+    \item Johnson-Neyman finds the \emph{region of significance}
+      wherein the conditional effect of $X$ on $Y$ is statistically
+      significant
+      \vb
+    \item Inverts the pick-a-point approach to find what cut-points on
+      the moderator correspond to a critical $t$ value for the
+      conditional $\beta_1$.
+  \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}{Johnson-Neyman Technique}
+  
+  With pick-a-point, we:
+  \vb
+  \begin{enumerate}
+    \item Choose conditional values of $Z$, say $Z_1$
+      \vb
+    \item Calculate the simple slope $SS_1$ and standard error
+      $SE_{SS1}$ associated with $Z_1$
+      \vb
+    \item Test $SS_1$ for significance via a simple Wald-type test:
+      \begin{align}
+        t = \frac{SS_1}{SE_{SS1}} \label{waldEq}
+      \end{align}
+  \end{enumerate}
+
+\end{frame}
+
+
+\begin{frame}{Johnson-Neyman Technique}
+  
+  With Johnson-Neyman, we:
+  \vb
+  \begin{enumerate}
+  \item Choose an $\alpha$ level for our test and the corresponding
+    critical value of $t$, say $t_{crit} = 1.96$ to give $\alpha =
+    0.05$ in large samples.
+    \vb
+  \item Re-arrange Equation \ref{waldEq} into the following quadratic
+    form:
+    \begin{align}
+      t_{crit}^2 SE_{SS}^2 - SS^2 = 0 \label{quadEq}
+    \end{align}
+    \vc
+  \item Solve Equation \ref{quadEq} to find the two values of $Z$ that
+    produce critical $t$ statistics for the conditional focal effect.
+  \end{enumerate}
+  
+\end{frame}
+
+
+\begin{frame}{Johnson-Neyman Technique}
+  
+  The roots produced by the Johnson-Neyman technique delineate the
+  \emph{region of significance}.  
+  \vb
+  \begin{itemize}
+  \item The conditional effect of $X$ on $Y$ is either significant
+    everywhere between these two points or everywhere outside of these
+    two points.  
+    \vb
+  \item If only one of the points falls within the observed range of
+    $Z$, ignore the other point 
+    \vc
+    \begin{itemize}
+    \item The region of significant is either everywhere above or
+      below the legal root
+    \end{itemize}
+    \vb
+  \item If neither of the roots fall within the observed range of $Z$
+    then, either: 
+    \vc
+    \begin{enumerate}
+    \item The focal effect is significant across the entire range of
+      $Z$, or 
+      \vc
+    \item The focal effect is not significant anywhere within the
+      range of $Z$
+    \end{enumerate}
+  \end{itemize}
+  
+\end{frame}
+
+
+\begin{frame}{Perspectives on Simple Slopes}
+  
+  Recall the formula for a simple slope:
+  \begin{align*}
+    SS = \beta_1 + \beta_3Z
+  \end{align*}
+  \vc From a graphical perspective, we can think about $SS$ in, at
+  least, two different ways:
+  \vb
+  \begin{enumerate}
+  \item As a weight for $X$ that we can use to get plots of the
+    conditional effect of $X$ on $Y$ at different levels of $Z$.
+    \vb
+  \item We can also consider how $SS$, itself, smoothly changes as a
+    function of $Z$.  
+  \end{enumerate}
+  \va
+  The latter perspective embodies the spirit of the Johnson-Neyman
+  technique.
+  
+\end{frame}
+
+
+\begin{frame}{Confidence Bands}
+  
+  A natural quantity to consider is a confidence interval for $SS$:
+  \begin{align*}
+    CI_{SS} = SS \pm t_{crit} \cdot SE_{SS}
+  \end{align*}
+  \vc 
+  Last time, we computed a few such intervals for the interesting
+  values of $Z$ we chose for the pick-a-point analysis.\\ 
+  \va 
+  When doing Johnson-Neyman, we can considering the values of $CI_{SS}$
+  for the entire range of $Z$.  
+  \vb
+  \begin{itemize}
+  \item These CI values define the \emph{confidence bands} of SS and
+    show, for any value of $Z$, the corresponding CI for $SS$
+    \vb
+    \begin{itemize}
+    \item As a result, we can immediately check any value of $Z$ for
+      a significant simple slope
+    \end{itemize}
+  \end{itemize}
+  
+\end{frame}
+
+  
+\begin{frame}[allowframebreaks]{Example}
+  
+  Implementing the Johnson-Neyman technique by hand is a pain, but we
+  can easily do so by using the \textbf{rockchalk} package in
+  \textsf{R}\\ 
+  \va
+  
+\input{sweaveFiles/-014}
+\includegraphics{sweaveFiles/-014}
+\pagebreak
+
+We can see the significance boundaries by extracting the roots from
+'testOut'
+\input{sweaveFiles/-015}
+\va
+We can plot the result:
+\input{sweaveFiles/-016}
+\includegraphics{sweaveFiles/-016}
+
+\end{frame}
+
+
+\end{document}

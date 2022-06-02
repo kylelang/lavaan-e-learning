@@ -1,0 +1,11 @@
+\begin{Schunk}
+\begin{Sinput}
+ ## Calculate the percentile CI:
+ lb <- sort(abVec)[0.025 * nSams]
+ ub <- sort(abVec)[0.975 * nSams]
+ c(lb, ub)
+\end{Sinput}
+\begin{Soutput}
+[1] 0.1032923 0.2568537
+\end{Soutput}
+\end{Schunk}

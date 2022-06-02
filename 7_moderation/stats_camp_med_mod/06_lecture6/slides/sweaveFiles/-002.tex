@@ -1,0 +1,131 @@
+\begin{Schunk}
+\begin{Sinput}
+ library(lavaan)
+ dataDir <- "../data/"
+ dat1 <- readRDS(paste0(dataDir, "unicorn2.rds"))
+ mod1 <- "
+ att3 ~ att2 + b2*conf2 + cp2*horn2
+ att2 ~ att1 + b1*conf1 + cp1*horn1
+ 
+ conf3 ~ conf2 + a2*horn2
+ conf2 ~ conf1 + a1*horn1
+ 
+ horn3 ~ horn2
+ horn2 ~ horn1
+ 
+ horn3 ~~ conf3 + att3
+ conf3 ~~ att3
+ 
+ horn2 ~~ conf2 + att2
+ conf2 ~~ att2
+ 
+ ab1 := a1*b1
+ ab2 := a2*b2
+ "
+ out1 <- sem(mod1, data = dat1, se = "boot", boot = nBoot)
+ summary(out1)
+\end{Sinput}
+\begin{Soutput}
+lavaan (0.5-20) converged normally after  52 iterations
+
+  Number of observations                           500
+
+  Estimator                                         ML
+  Minimum Function Test Statistic              285.028
+  Degrees of freedom                                15
+  P-value (Chi-square)                           0.000
+
+Parameter Estimates:
+
+  Information                                 Observed
+  Standard Errors                            Bootstrap
+  Number of requested bootstrap draws             2000
+  Number of successful bootstrap draws            2000
+
+Regressions:
+                   Estimate  Std.Err  Z-value  P(>|z|)
+  att3 ~                                              
+    att2              0.525    0.037   14.086    0.000
+    conf2     (b2)    0.068    0.025    2.756    0.006
+    horn2    (cp2)    0.070    0.095    0.731    0.465
+  att2 ~                                              
+    att1              0.498    0.043   11.522    0.000
+    conf1     (b1)    0.127    0.026    4.795    0.000
+    horn1    (cp1)    0.112    0.100    1.110    0.267
+  conf3 ~                                             
+    conf2             0.636    0.040   16.048    0.000
+    horn2     (a2)    0.780    0.173    4.506    0.000
+  conf2 ~                                             
+    conf1             0.657    0.033   20.188    0.000
+    horn1     (a1)    0.293    0.155    1.897    0.058
+  horn3 ~                                             
+    horn2             0.835    0.029   29.228    0.000
+  horn2 ~                                             
+    horn1             0.708    0.024   29.601    0.000
+
+Covariances:
+                   Estimate  Std.Err  Z-value  P(>|z|)
+  conf3 ~~                                            
+    horn3             1.039    0.159    6.524    0.000
+  att3 ~~                                             
+    horn3             0.332    0.092    3.613    0.000
+    conf3             3.548    0.459    7.724    0.000
+  conf2 ~~                                            
+    horn2             0.812    0.121    6.740    0.000
+  att2 ~~                                             
+    horn2             0.264    0.088    3.007    0.003
+    conf2             2.028    0.410    4.946    0.000
+
+Variances:
+                   Estimate  Std.Err  Z-value  P(>|z|)
+    att3              5.988    0.383   15.642    0.000
+    att2              6.017    0.354   17.013    0.000
+    conf3            15.800    0.932   16.948    0.000
+    conf2            12.455    0.765   16.279    0.000
+    horn3             0.694    0.039   17.783    0.000
+    horn2             0.559    0.035   16.099    0.000
+
+Defined Parameters:
+                   Estimate  Std.Err  Z-value  P(>|z|)
+    ab1               0.037    0.021    1.785    0.074
+    ab2               0.053    0.021    2.504    0.012
+\end{Soutput}
+\begin{Sinput}
+ parameterEstimates(out1, boot = "bca.simple")[ , -c(1 : 3)]
+\end{Sinput}
+\begin{Soutput}
+   label    est    se      z pvalue ci.lower ci.upper
+1         0.525 0.037 14.086  0.000    0.452    0.596
+2     b2  0.068 0.025  2.756  0.006    0.015    0.112
+3    cp2  0.070 0.095  0.731  0.465   -0.118    0.265
+4         0.498 0.043 11.522  0.000    0.417    0.584
+5     b1  0.127 0.026  4.795  0.000    0.074    0.180
+6    cp1  0.112 0.100  1.110  0.267   -0.091    0.296
+7         0.636 0.040 16.048  0.000    0.555    0.711
+8     a2  0.780 0.173  4.506  0.000    0.443    1.133
+9         0.657 0.033 20.188  0.000    0.596    0.725
+10    a1  0.293 0.155  1.897  0.058    0.000    0.606
+11        0.835 0.029 29.228  0.000    0.780    0.893
+12        0.708 0.024 29.601  0.000    0.662    0.756
+13        1.039 0.159  6.524  0.000    0.734    1.371
+14        0.332 0.092  3.613  0.000    0.161    0.516
+15        3.548 0.459  7.724  0.000    2.684    4.445
+16        0.812 0.121  6.740  0.000    0.593    1.068
+17        0.264 0.088  3.007  0.003    0.101    0.448
+18        2.028 0.410  4.946  0.000    1.278    2.903
+19        5.988 0.383 15.642  0.000    5.267    6.790
+20        6.017 0.354 17.013  0.000    5.412    6.807
+21       15.800 0.932 16.948  0.000   14.186   17.777
+22       12.455 0.765 16.279  0.000   11.095   14.124
+23        0.694 0.039 17.783  0.000    0.625    0.782
+24        0.559 0.035 16.099  0.000    0.495    0.632
+25        8.748 0.000     NA     NA    8.748    8.748
+26        8.475 0.000     NA     NA    8.475    8.475
+27        1.470 0.000     NA     NA    1.470    1.470
+28       28.025 0.000     NA     NA   28.025   28.025
+29        3.939 0.000     NA     NA    3.939    3.939
+30        1.809 0.000     NA     NA    1.809    1.809
+31   ab1  0.037 0.021  1.785  0.074    0.003    0.085
+32   ab2  0.053 0.021  2.504  0.012    0.019    0.103
+\end{Soutput}
+\end{Schunk}

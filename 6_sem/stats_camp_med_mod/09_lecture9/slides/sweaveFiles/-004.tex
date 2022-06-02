@@ -1,0 +1,8 @@
+\begin{Schunk}
+\begin{Sinput}
+ ## Center 'conc' on interesting values for SS analysis:
+ dat1$concLo  <- with(dat1, conc - quantile(conc, 0.25, na.rm = TRUE))
+ dat1$concMid <- with(dat1, conc - quantile(conc, 0.5, na.rm = TRUE))
+ dat1$concHi  <- with(dat1, conc - quantile(conc, 0.75, na.rm = TRUE))
+\end{Sinput}
+\end{Schunk}

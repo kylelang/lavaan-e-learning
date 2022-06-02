@@ -1,0 +1,13 @@
+\begin{Schunk}
+\begin{Sinput}
+ ## Extract info needed to plot simple slopes:
+ ints <- c(0,
+           coef(fit2)[c("conc~1.g2",
+                        "conc~1.g3")]
+           )
+ slopes <- coef(fit2)[c("conc~neuro",
+                        "conc~neuro.g2",
+                        "conc~neuro.g3")]
+ fScores <- do.call(rbind, predict(fit2))
+\end{Sinput}
+\end{Schunk}

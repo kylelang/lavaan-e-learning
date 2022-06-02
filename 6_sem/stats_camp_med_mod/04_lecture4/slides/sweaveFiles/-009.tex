@@ -1,0 +1,51 @@
+\begin{Schunk}
+\begin{Sinput}
+ mod2.2 <- "
+ policy ~ cp*polAffil + b2*sysRac
+ merit ~ a1*polAffil
+ sysRac ~ d21*merit
+ 
+ fullIE := a1*d21*b2
+ "
+ out2.2 <- 
+     sem(mod2.2, data = dat1, se = "boot", boot = nBoot)
+ summary(out2.2)
+\end{Sinput}
+\begin{Soutput}
+lavaan (0.5-20) converged normally after  13 iterations
+
+  Number of observations                            87
+
+  Estimator                                         ML
+  Minimum Function Test Statistic                1.991
+  Degrees of freedom                                 2
+  P-value (Chi-square)                           0.370
+
+Parameter Estimates:
+
+  Information                                 Observed
+  Standard Errors                            Bootstrap
+  Number of requested bootstrap draws             2500
+  Number of successful bootstrap draws            2500
+
+Regressions:
+                   Estimate  Std.Err  Z-value  P(>|z|)
+  policy ~                                            
+    polAffil  (cp)    0.135    0.083    1.638    0.102
+    sysRac    (b2)    0.597    0.137    4.359    0.000
+  merit ~                                             
+    polAffil  (a1)   -0.266    0.061   -4.353    0.000
+  sysRac ~                                            
+    merit    (d21)   -0.367    0.098   -3.764    0.000
+
+Variances:
+                   Estimate  Std.Err  Z-value  P(>|z|)
+    policy            0.987    0.166    5.946    0.000
+    merit             0.719    0.116    6.218    0.000
+    sysRac            0.705    0.094    7.520    0.000
+
+Defined Parameters:
+                   Estimate  Std.Err  Z-value  P(>|z|)
+    fullIE            0.058    0.025    2.318    0.020
+\end{Soutput}
+\end{Schunk}

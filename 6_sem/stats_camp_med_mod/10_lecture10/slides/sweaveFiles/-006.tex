@@ -1,0 +1,31 @@
+\begin{Schunk}
+\begin{Sinput}
+ ## Construct another product term:
+ dat1$extraXneuro <- dat1$extra*dat1$neuro
+ ## Find interesting quantiles of 'neuro':
+ quantile(dat1$neuro, c(0.25, 0.50, 0.75))
+\end{Sinput}
+\begin{Soutput}
+       25%        50%        75% 
+-0.9622679 -0.1622679  0.8377321 
+\end{Soutput}
+\begin{Sinput}
+ ## Conditional process model with a and b paths moderated:
+ mod3 <- "
+ agree ~ b1*open + cp*extra + b2*consc + b3*openXconsc
+ open ~ a1*extra + a2*neuro + a3*extraXneuro
+ 
+ abLoLo  := (a1 + a3*(-0.962268)) * (b1 + b3*(-0.4045))
+ abLoMid := (a1 + a3*(-0.962268)) * (b1 + b3*(-0.0045))
+ abLoHi  := (a1 + a3*(-0.962268)) * (b1 + b3*0.3955)
+ 
+ abMidLo  := (a1 + a3*(-0.162268)) * (b1 + b3*(-0.4045))
+ abMidMid := (a1 + a3*(-0.162268)) * (b1 + b3*(-0.0045))
+ abMidHi  := (a1 + a3*(-0.162268)) * (b1 + b3*0.3955)
+ 
+ abHiLo  := (a1 + a3*0.837732) * (b1 + b3*(-0.4045))
+ abHiMid := (a1 + a3*0.837732) * (b1 + b3*(-0.0045))
+ abHiHi  := (a1 + a3*0.837732) * (b1 + b3*0.3955)
+ "
+\end{Sinput}
+\end{Schunk}

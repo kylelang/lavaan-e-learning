@@ -1,0 +1,78 @@
+\begin{Schunk}
+\begin{Sinput}
+ ## Test differences in specific indirect effects:
+ mod1.3 <- "
+ policy ~ b1*sysRac + b2*indRac + b3*merit + cp*polAffil
+ sysRac ~ a1*polAffil
+ indRac ~ a2*polAffil
+ merit ~ a3*polAffil
+ 
+ sysRac ~~ indRac + merit
+ indRac ~~ merit
+ 
+ ab1 := a1*b1
+ ab2 := a2*b2
+ ab3 := a3*b3
+ totalIE := ab1 + ab2 + ab3
+ 
+ test1 := ab2 - ab1
+ "
+ out1.3 <- 
+     sem(mod1.3, data = dat1, se = "boot", boot = nBoot)
+ summary(out1.3)
+\end{Sinput}
+\begin{Soutput}
+lavaan (0.5-20) converged normally after  21 iterations
+
+  Number of observations                            87
+
+  Estimator                                         ML
+  Minimum Function Test Statistic                0.000
+  Degrees of freedom                                 0
+  Minimum Function Value               0.0000000000000
+
+Parameter Estimates:
+
+  Information                                 Observed
+  Standard Errors                            Bootstrap
+  Number of requested bootstrap draws             2500
+  Number of successful bootstrap draws            2499
+
+Regressions:
+                   Estimate  Std.Err  Z-value  P(>|z|)
+  policy ~                                            
+    sysRac    (b1)    0.601    0.141    4.251    0.000
+    indRac    (b2)    0.143    0.109    1.315    0.189
+    merit     (b3)   -0.036    0.152   -0.239    0.811
+    polAffil  (cp)    0.125    0.077    1.639    0.101
+  sysRac ~                                            
+    polAffil  (a1)    0.170    0.066    2.599    0.009
+  indRac ~                                            
+    polAffil  (a2)   -0.004    0.077   -0.055    0.956
+  merit ~                                             
+    polAffil  (a3)   -0.266    0.060   -4.438    0.000
+
+Covariances:
+                   Estimate  Std.Err  Z-value  P(>|z|)
+  sysRac ~~                                           
+    indRac           -0.076    0.101   -0.747    0.455
+    merit            -0.217    0.090   -2.403    0.016
+  indRac ~~                                           
+    merit             0.154    0.099    1.555    0.120
+
+Variances:
+                   Estimate  Std.Err  Z-value  P(>|z|)
+    policy            0.963    0.178    5.406    0.000
+    sysRac            0.755    0.107    7.043    0.000
+    indRac            1.188    0.154    7.708    0.000
+    merit             0.719    0.110    6.539    0.000
+
+Defined Parameters:
+                   Estimate  Std.Err  Z-value  P(>|z|)
+    ab1               0.102    0.046    2.227    0.026
+    ab2              -0.001    0.014   -0.042    0.966
+    ab3               0.010    0.041    0.236    0.813
+    totalIE           0.111    0.052    2.127    0.033
+    test1            -0.103    0.050   -2.074    0.038
+\end{Soutput}
+\end{Schunk}

@@ -1,0 +1,17 @@
+### Title:    Med/Mod Lecture7: Examples
+### Author:   Kyle M. Lang
+### Created:  2016-MAR-17
+### Modified: 2017-MAR-20
+
+dataDir <- "../data/"
+fileName <- "nlsyData.rds"
+
+dat1 <- readRDS(paste0(dataDir, fileName))
+
+out1 <- lm(depress1 ~ ratio1, data = dat1)
+out2 <- lm(depress1 ~ ratio1 + perception1, data = dat1)
+out3 <- lm(depress1 ~ ratio1*perception1, data = dat1)
+
+summary(out1)
+summary(out2)
+summary(out3)

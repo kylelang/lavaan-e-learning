@@ -1,0 +1,20 @@
+\begin{Schunk}
+\begin{Sinput}
+ tab3 <- 
+     parameterEstimates(out3, boot.ci.type = "bca.simple")
+ tab3[grep("ab", tab3$label), 
+      c("label", "est", "ci.lower", "ci.upper")]
+\end{Sinput}
+\begin{Soutput}
+      label   est ci.lower ci.upper
+25   abLoLo 0.051    0.030    0.078
+26  abLoMid 0.043    0.026    0.064
+27   abLoHi 0.035    0.019    0.053
+28  abMidLo 0.052    0.033    0.074
+29 abMidMid 0.043    0.028    0.062
+30  abMidHi 0.035    0.019    0.052
+31   abHiLo 0.053    0.035    0.072
+32  abHiMid 0.044    0.029    0.062
+33   abHiHi 0.036    0.019    0.055
+\end{Soutput}
+\end{Schunk}

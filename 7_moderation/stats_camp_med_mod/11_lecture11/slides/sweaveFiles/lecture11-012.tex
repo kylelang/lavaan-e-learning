@@ -1,0 +1,54 @@
+\begin{Schunk}
+\begin{Sinput}
+ ## Fit the model:
+ out6 <- sem(mod6, data = dat1, se = "boot", boot = nBoot)
+ summary(out6)
+\end{Sinput}
+\begin{Soutput}
+lavaan (0.5-20) converged normally after  23 iterations
+
+  Number of observations                           100
+
+  Estimator                                         ML
+  Minimum Function Test Statistic                8.849
+  Degrees of freedom                                 6
+  P-value (Chi-square)                           0.182
+
+Parameter Estimates:
+
+  Information                                 Observed
+  Standard Errors                            Bootstrap
+  Number of requested bootstrap draws             1000
+  Number of successful bootstrap draws            1000
+
+Regressions:
+                   Estimate  Std.Err  Z-value  P(>|z|)
+  y ~                                                 
+    x         (cp)    0.055    0.239    0.232    0.817
+    m1        (b1)    0.427    0.256    1.666    0.096
+    m2        (b2)    0.763    0.205    3.720    0.000
+  m2 ~                                                
+    x         (a2)    0.473    0.073    6.470    0.000
+    m1        (d1)    0.689    0.090    7.678    0.000
+    z         (d2)    0.863    0.103    8.387    0.000
+    m1z       (d3)    0.400    0.064    6.249    0.000
+  m1 ~                                                
+    x         (a1)    0.720    0.094    7.700    0.000
+    z         (a2)    0.473    0.073    6.470    0.000
+    xz        (a3)    0.476    0.099    4.794    0.000
+
+Variances:
+                   Estimate  Std.Err  Z-value  P(>|z|)
+    y                 4.490    0.675    6.649    0.000
+    m2                0.617    0.089    6.956    0.000
+    m1                0.691    0.094    7.350    0.000
+
+Defined Parameters:
+                   Estimate  Std.Err  Z-value  P(>|z|)
+    imm1              0.203    0.133    1.531    0.126
+    ab2               0.361    0.106    3.402    0.001
+    fullIE1           0.019    0.032    0.591    0.555
+    fullIE2           1.295    0.381    3.400    0.001
+    mmTest           -1.276    0.381   -3.349    0.001
+\end{Soutput}
+\end{Schunk}

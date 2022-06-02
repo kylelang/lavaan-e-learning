@@ -1,0 +1,49 @@
+\begin{Schunk}
+\begin{Sinput}
+ out5 <- sem(mod5, data = dat1, se = "boot", boot = nBoot)
+ summary(out5)
+\end{Sinput}
+\begin{Soutput}
+lavaan (0.5-20) converged normally after  18 iterations
+
+  Number of observations                          2800
+
+  Estimator                                         ML
+  Minimum Function Test Statistic              201.443
+  Degrees of freedom                                 4
+  P-value (Chi-square)                           0.000
+
+Parameter Estimates:
+
+  Information                                 Observed
+  Standard Errors                            Bootstrap
+  Number of requested bootstrap draws             5000
+  Number of successful bootstrap draws            5000
+
+Regressions:
+                   Estimate  Std.Err  Z-value  P(>|z|)
+  agree ~                                             
+    open      (b1)    0.191    0.028    6.941    0.000
+    consc     (b2)    0.021    0.027    0.774    0.439
+    extra    (cp1)    0.349    0.027   13.030    0.000
+    neuro    (cp2)   -0.102    0.012   -8.564    0.000
+    extraXnr (cp3)    0.049    0.022    2.210    0.027
+    opnXcnsc  (b3)   -0.074    0.044   -1.671    0.095
+  open ~                                              
+    extra      (a)    0.268    0.023   11.662    0.000
+
+Variances:
+                   Estimate  Std.Err  Z-value  P(>|z|)
+    agree             0.471    0.014   32.521    0.000
+    open              0.294    0.010   29.875    0.000
+
+Defined Parameters:
+                   Estimate  Std.Err  Z-value  P(>|z|)
+    cpLo              0.302    0.036    8.459    0.000
+    cpMid             0.341    0.027   12.473    0.000
+    cpHi              0.390    0.031   12.502    0.000
+    abLo              0.059    0.011    5.320    0.000
+    abMid             0.051    0.009    5.778    0.000
+    abHi              0.043    0.009    4.788    0.000
+\end{Soutput}
+\end{Schunk}

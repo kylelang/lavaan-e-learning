@@ -1,0 +1,22 @@
+\begin{Schunk}
+\begin{Sinput}
+ summary(lm(y ~ x*zLow))$coef
+\end{Sinput}
+\begin{Soutput}
+             Estimate  Std. Error   t value Pr(>|t|)
+(Intercept) 90.039011 0.070029301 1285.7334        0
+x           40.996039 0.006951782 5897.1983        0
+zLow         4.984967 0.024795709  201.0415        0
+x:zLow       2.001488 0.002465063  811.9419        0
+\end{Soutput}
+\begin{Sinput}
+ summary(lm(y ~ xc*zLow))$coef
+\end{Sinput}
+\begin{Soutput}
+              Estimate  Std. Error    t value Pr(>|t|)
+(Intercept) 500.642731 0.007057934 70933.3306        0
+xc           40.996039 0.006951782  5897.1983        0
+zLow         25.031254 0.002473949 10117.9348        0
+xc:zLow       2.001488 0.002465063   811.9419        0
+\end{Soutput}
+\end{Schunk}

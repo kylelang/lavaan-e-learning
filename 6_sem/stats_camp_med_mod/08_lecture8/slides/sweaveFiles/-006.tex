@@ -1,0 +1,36 @@
+\begin{Schunk}
+\begin{Sinput}
+ y <- 5*x + 5*z + 2*xz + rnorm(n, 0, 0.5)
+ out3.1 <- lm(y ~ x*z)
+ out3.2 <- lm(y ~ xc*z) 
+ out3.3 <- lm(y ~ xc*zc)
+ summary(out3.1)$coef
+\end{Sinput}
+\begin{Soutput}
+             Estimate  Std. Error    t value  Pr(>|t|)
+(Intercept) 0.6385057 0.515435755   1.238769 0.2154603
+x           4.9437053 0.051277645  96.410537 0.0000000
+z           4.9697606 0.025657191 193.698546 0.0000000
+x:z         2.0026657 0.002552174 784.690103 0.0000000
+\end{Soutput}
+\begin{Sinput}
+ summary(out3.2)$coef
+\end{Sinput}
+\begin{Soutput}
+             Estimate  Std. Error    t value Pr(>|t|)
+(Intercept) 50.081375 0.050828516  985.30077        0
+xc           4.943705 0.051277645   96.41054        0
+z           24.998774 0.002529088 9884.50339        0
+xc:z         2.002666 0.002552174  784.69010        0
+\end{Soutput}
+\begin{Sinput}
+ summary(out3.3)$coef
+\end{Sinput}
+\begin{Soutput}
+              Estimate  Std. Error     t value Pr(>|t|)
+(Intercept) 550.015671 0.005045344 109014.5048        0
+xc           44.993721 0.005069554   8875.2812        0
+zc           24.998774 0.002529088   9884.5034        0
+xc:zc         2.002666 0.002552174    784.6901        0
+\end{Soutput}
+\end{Schunk}

@@ -1,0 +1,27 @@
+\begin{Schunk}
+\begin{Sinput}
+ ## Additive Model:
+ out2 <- lm(depress1 ~ ratio1 + perception1, data = dat1)
+ summary(out2)
+\end{Sinput}
+\begin{Soutput}
+Call:
+lm(formula = depress1 ~ ratio1 + perception1, data = dat1)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-2.09842 -0.28788  0.09376  0.34951  1.08428 
+
+Coefficients:
+             Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  3.047115   0.028211 108.011  < 2e-16 ***
+ratio1       0.102258   0.012460   8.207 2.59e-16 ***
+perception1 -0.068113   0.008328  -8.178 3.27e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.5097 on 8981 degrees of freedom
+Multiple R-squared:  0.009843,	Adjusted R-squared:  0.009623 
+F-statistic: 44.64 on 2 and 8981 DF,  p-value: < 2.2e-16
+\end{Soutput}
+\end{Schunk}

@@ -1,0 +1,31 @@
+\begin{Schunk}
+\begin{Sinput}
+ out1.4.2 <- lm(agree ~ open*conc*neuroMid, data = dat1)
+ summary(out1.4.2)
+\end{Sinput}
+\begin{Soutput}
+Call:
+lm(formula = agree ~ open * conc * neuroMid, data = dat1)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-2.79789 -0.41779  0.09925  0.47556  2.10928 
+
+Coefficients:
+                   Estimate Std. Error t value Pr(>|t|)    
+(Intercept)         1.62552    0.57429   2.831  0.00468 ** 
+open                0.63055    0.14845   4.248 2.24e-05 ***
+conc                0.43936    0.15119   2.906  0.00369 ** 
+neuroMid            0.73766    0.32240   2.288  0.02222 *  
+open:conc          -0.10098    0.03883  -2.601  0.00936 ** 
+open:neuroMid      -0.21616    0.08091  -2.672  0.00760 ** 
+conc:neuroMid      -0.25632    0.08244  -3.109  0.00190 ** 
+open:conc:neuroMid  0.06541    0.02028   3.225  0.00128 ** 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.6945 on 2544 degrees of freedom
+Multiple R-squared:  0.07189,	Adjusted R-squared:  0.06933 
+F-statistic: 28.15 on 7 and 2544 DF,  p-value: < 2.2e-16
+\end{Soutput}
+\end{Schunk}

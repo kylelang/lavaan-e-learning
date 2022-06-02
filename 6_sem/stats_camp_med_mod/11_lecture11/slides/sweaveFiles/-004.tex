@@ -1,0 +1,57 @@
+\begin{Schunk}
+\begin{Sinput}
+ ##
+ ## Create product term:
+ dat1$m1w <- dat1$m1 * dat1$w
+ dat1$xw <- dat1$x * dat1$w
+ ##
+ ## Specify model:
+ mod2 <- "
+ y ~ cp1*x + cp2*xw + b1*m1 + b2*w + b3*m1w
+ m1 ~ a*x
+ 
+ imm := a*b3
+ "
+ ##
+ ## Fit model:
+ out2 <- sem(mod2, data = dat1, se = "boot", boot = nBoot)
+ summary(out2)
+\end{Sinput}
+\begin{Soutput}
+lavaan (0.5-20) converged normally after  23 iterations
+
+  Number of observations                           100
+
+  Estimator                                         ML
+  Minimum Function Test Statistic                5.078
+  Degrees of freedom                                 3
+  P-value (Chi-square)                           0.166
+
+Parameter Estimates:
+
+  Information                                 Observed
+  Standard Errors                            Bootstrap
+  Number of requested bootstrap draws             1000
+  Number of successful bootstrap draws            1000
+
+Regressions:
+                   Estimate  Std.Err  Z-value  P(>|z|)
+  y ~                                                 
+    x        (cp1)   -0.103    0.190   -0.543    0.587
+    xw       (cp2)    1.099    0.204    5.380    0.000
+    m1        (b1)    1.615    0.167    9.649    0.000
+    w         (b2)    0.381    0.173    2.206    0.027
+    m1w       (b3)    0.571    0.173    3.297    0.001
+  m1 ~                                                
+    x          (a)    0.741    0.131    5.638    0.000
+
+Variances:
+                   Estimate  Std.Err  Z-value  P(>|z|)
+    y                 2.950    0.344    8.575    0.000
+    m1                1.182    0.145    8.161    0.000
+
+Defined Parameters:
+                   Estimate  Std.Err  Z-value  P(>|z|)
+    imm               0.424    0.153    2.773    0.006
+\end{Soutput}
+\end{Schunk}

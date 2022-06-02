@@ -1,0 +1,488 @@
+\documentclass{beamer}
+\usetheme{TTU}
+\usefonttheme{serif}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage[natbibapa]{apacite}
+\usepackage{color}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{Sweavel}
+\usepackage{listings}
+\usepackage{fancybox}
+
+\def\Sweavesize{\scriptsize}
+\def\Rcolor{\color{black}}
+%\def\Routcolor{\color{red}}
+\def\Rcommentcolor{\color{violet}}
+\def\Rbackground{\color[gray]{0.85}}
+\def\Routbackground{\color[gray]{0.85}}
+
+\lstset{tabsize=2, breaklines=true, style=Rstyle}
+
+\SweaveOpts{keep.source=T, prefix.string=sweaveFiles/lecture5, split=T, ae=F, height=4, width=6}
+
+\newcommand{\red}[0]{\textcolor{red}}
+\newcommand{\green}[0]{\textcolor{green}}
+\newcommand{\blue}[0]{\textcolor{blue}}
+\newcommand{\comment}[1]{}
+\newcommand{\va}[0]{\vspace{12pt}}
+\newcommand{\vb}[0]{\vspace{6pt}}
+\newcommand{\vc}[0]{\vspace{3pt}}
+\newcommand{\vx}[1]{\vspace{#1pt}}
+
+\title[Lecture 7]{Lecture 7: Basic Moderation}
+
+\author{Kyle M. Lang}
+
+\institute[TTU IMMAP]{
+  Institute for Measurement, Methodology, Analysis \& Policy\\
+  Texas Tech University\\
+  Lubbock, TX
+}
+
+\date{March 21, 2016}
+
+\setbeamertemplate{frametitle continuation}{}
+
+\begin{document}
+
+\setkeys{Gin}{width=\textwidth}
+
+<<echo=F>>=
+options(width=160, prompt=" ", continue=" ", useFancyQuotes = TRUE)
+nBoot <- 2000
+@
+
+
+% Use a custom background template for the title slide
+{\usebackgroundtemplate{\rule{0pt}{3.4in}\hspace*{2.25in}
+    \makebox[0pt][r]{\includegraphics[natwidth=1000bp, natwidth=283bp,width=2in]{TTU_Logo.png}}}
+
+  \begin{frame}[plain]
+
+    \titlepage
+
+  \end{frame}
+}% CLOSE Custom Background Template
+
+
+\begin{frame}{Outline}
+
+  \begin{itemize}
+  \item Review the moderation hypothesis
+    \va
+  \item Doing basic moderation analysis
+    \va
+  \item Visualizing the moderation (a little)
+    \va
+  \item Probing the moderation (also a little)
+  \end{itemize}
+
+\end{frame}
+
+
+
+\begin{frame}{Intuition}
+
+  So far we've been discussing \emph{mediation}
+  \vb
+  \begin{itemize}
+  \item Mediation allows us to ask \emph{how} one variable ($X$)
+    affects another variable ($Y$).
+    \vc
+    \begin{itemize}
+    \item Namely, through the intermediary influence of a third
+      variable ($M$).
+    \end{itemize}
+  \end{itemize}
+  \va
+  Now, we're stepping into the realm of \emph{moderation}
+  \vb
+  \begin{itemize}
+  \item Moderation allows us to ask \emph{when} one variable ($X$) affects
+    another variable ($Y$).
+    \vc
+    \begin{itemize}
+    \item Here, we're considering the effect of $X$ on $Y$
+      conditional on certain levels of a third variable $Z$.
+    \end{itemize}
+  \end{itemize}
+
+\end{frame}
+
+
+
+\begin{frame}{Conceptual Diagram}
+
+  We can diagrammatically represent the above intuition with:
+
+  \begin{figure}
+    \includegraphics[width=\textwidth]{figures/modConcept.pdf}
+  \end{figure}
+
+\end{frame}
+
+
+
+\begin{frame}{Equations}
+
+  In simple additive MLR, we might have the following equation:
+  \begin{align}
+    Y = \alpha + \beta_1X + \beta_2Z + e_i \label{additiveEq}
+  \end{align}
+  This additive equation assumes that $X$ and $Z$ are independent
+  predictors of $Y$.\\
+  \va
+  When $X$ and $Z$ are independent predictors, the following
+  points are true:
+  \vb
+  \begin{itemize}
+  \item $X$ and $Z$ \emph{can} be correlated
+    \vb
+  \item $\beta_1$ and $\beta_2$ are \emph{partial} regression
+    coefficients
+    \vb
+  \item \red{The effect of $X$ on $Y$ is the same at \textbf{all levels} of
+    $Z$, and the effect of $Z$ on $Y$ is the same at \textbf{all
+      levels} of $X$}
+  \end{itemize}
+
+\end{frame}
+
+
+
+\begin{frame}{Equations}
+
+  When testing moderation, we hypothesize that the effect of $X$ on
+  $Y$ in Equation \ref{additiveEq} varies as a function of $Z$.\\
+  \va
+  We can represent this concept with the following equation:
+  \begin{align}
+    Y = \alpha + f(Z)X + \beta_2Z + e_i
+  \end{align}
+  \pause
+  If we assume that $Z$ linearly affects the relationship between $X$
+  and $Y$, then we can take:
+  \begin{align}
+    f(Z) = \beta_1 + \beta_3Z
+  \end{align}
+  \pause
+  Which, after substitution, leads to:
+  \begin{align}
+    Y = \alpha + (\beta_1 + \beta_3Z)X + \beta_2Z + e_i
+  \end{align}
+  \pause
+  Which, after distributing $X$ and reordering terms, becomes:
+  \begin{align}
+    Y = \alpha + \beta_1X + \beta_2Z + \beta_3XZ + e_i
+  \end{align}
+
+\end{frame}
+
+
+\begin{frame}{Analytical Model}
+
+  We can diagrammatically represent the analytical model we'll actually
+  be fitting with:
+
+  \begin{figure}
+    \includegraphics[width=\textwidth]{figures/modAnalytic.pdf}
+  \end{figure}
+
+\end{frame}
+
+
+\begin{frame}{Analytical Model}
+
+  By adding the appropriate path labels, we get:
+
+  \begin{figure}
+    \includegraphics[width=\textwidth]{figures/modAnalytic2.pdf}
+  \end{figure}
+
+\end{frame}
+
+\begin{frame}{Testing Moderation}
+
+  This is the equation we'll be working with:\\
+  \begin{center}\ovalbox{$Y = \alpha + \beta_1X + \beta_2Z + \beta_3XZ + e_i$}\end{center}
+  \va
+  Or, after fitting the above to some data:
+  \begin{center}\ovalbox{$\hat{Y} = \hat{\alpha} + \hat{\beta}_1X + \hat{\beta}_2Z + \hat{\beta}_3XZ$}\end{center}
+  \va
+  To test for significant moderation, we simply need to see if
+  $\hat{\beta}_3$ is significantly different from zero.\\
+  \va
+  We do so using simple linear regression modeling.
+
+\end{frame}
+
+
+
+\begin{frame}{Example}
+
+Data from the \emph{National Longitudinal Survey of Youth}\\
+\va
+We suspect that participants' weight to height ratio is predictive of
+their levels of depression.\\
+\va
+We further suspect that this effect may be differentially expressed
+depending on how the participants perceive their own weight.
+
+\end{frame}
+
+
+\begin{frame}{Example}
+
+  This is the conceptual diagram for the model we'll fit:
+
+  \begin{figure}
+    \includegraphics[width=\textwidth]{figures/modExample1.pdf}
+  \end{figure}
+
+\end{frame}
+
+
+\begin{frame}[allowframebreaks]{Example}
+
+<<echo=F>>=
+## Read in the data:
+dataDir <- "../data/"
+fileName <- "nlsyData.rds"
+dat1 <- readRDS(paste0(dataDir, fileName))
+@
+
+<<>>=
+## Focal Effect:
+out1 <- lm(depress1 ~ ratio1, data = dat1)
+summary(out1)
+@
+\pagebreak
+<<>>=
+## Additive Model:
+out2 <- lm(depress1 ~ ratio1 + perception1, data = dat1)
+summary(out2)
+@
+\pagebreak
+<<>>=
+## Moderated Model:
+out3 <- lm(depress1 ~ ratio1*perception1, data = dat1)
+summary(out3)
+@
+
+\end{frame}
+
+
+
+\begin{frame}{Visualizing the Interaction}
+
+  We can get a better idea of the patterns of moderation by plotting
+  the focal effect at conditional values of the moderator:\\
+  \vb
+<<echo=F, fig=T>>=
+par(cex = 0.75,
+    family = "serif")
+## Plot the conditional effects:
+meanX <- mean(dat1$ratio1)
+meanZ <- mean(dat1$perception1)
+sdX <- sd(dat1$ratio1)
+sdZ <- sd(dat1$perception1)
+
+xVals <- c(meanX - sdX, meanX, meanX + sdX)
+
+preds1 <- cbind(1,
+                xVals,
+                meanZ - sdZ,
+                xVals * (meanZ - sdZ)
+                )
+preds2 <- cbind(1,
+                xVals,
+                meanZ,
+                xVals * meanZ
+                )
+preds3 <- cbind(1,
+                xVals,
+                meanZ + sdZ,
+                xVals * (meanZ + sdZ)
+                )
+
+yHats1 <- preds1 %*% matrix(coef(out3))
+yHats2 <- preds2 %*% matrix(coef(out3))
+yHats3 <- preds3 %*% matrix(coef(out3))
+
+plot(yHats1,
+     ylim = range(c(yHats1, yHats2, yHats3)),
+     type = "l",
+     lty = 3,
+     xlab = "Weight:Height Ratio",
+     ylab = "Predicted Depression",
+     main = "Conditional Effects of\nWeight:Height Ratio on Depression Scores")
+lines(yHats2)
+lines(yHats3,
+      lty = 5)
+
+legend(x = "topleft",
+       inset = 0.05,
+       legend =
+           c("Mean Perception -1 SD",
+             "Mean Perception",
+             "Mean Perception +1 SD"),
+       lty = c(3, 1, 5)
+       )
+@
+
+\end{frame}
+
+
+
+\begin{frame}{Probing the Interaction}
+
+  A significant estimate of $\beta_3$ tells us that the effect of $X$
+  on $Y$ depends on the level of $Z$, but nothing more.\\
+  \va
+  The plot on the previous slide gives a descriptive illustration of the
+  pattern, but does not support statistical inference.
+  \vb
+  \begin{itemize}
+  \item The three conditional effects we plotted look different, but
+    we cannot say that they differ in any meaningful way by only the
+    plot and $\hat{\beta}_3$.
+  \end{itemize}
+  \va
+  This is the purpose of \emph{probing} the interaction.
+  \vb
+  \begin{itemize}
+  \item Try to isolate areas of $Z$'s distribution in which
+      $\hat{\beta}_3$ is significant and areas where it is not.
+  \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}{Probing the Interaction}
+
+  The most popular approach to probing the interaction is the
+  \emph{pick-a-point} approach AKA \emph{simple slopes analysis} or
+  \emph{spotlight analysis}.\\
+  \va
+  The pick-a-point approach tests if the slopes of the conditional
+  effects plotted above are
+  significantly different from zero.\\
+  \va
+  To do so, pick-a-point tests the significance of \emph{simple
+    slopes}.
+
+\end{frame}
+
+
+\begin{frame}{Simple Slopes}
+
+  Recall the derivation of our moderated equation:
+  \begin{align*}
+    Y = \alpha + \beta_1X + \beta_2Z + \beta_3XZ + e_i
+  \end{align*}
+  We can reverse the process by factoring out $X$ and reordering terms
+  to get back to:
+  \begin{align*}
+    Y = \alpha + (\beta_1 + \beta_3Z)X + \beta_2Z + e_i
+  \end{align*}
+  Where $f(Z) = \beta_1 + \beta_3Z$ is the linear function that shows
+  how the relationship between $X$ and $Y$ changes as a function of
+  $Z$.\\
+  \va
+  \underline{$f(Z)$ is actually our \emph{simple slope}.}
+  \vb
+  \begin{itemize}
+  \item By plugging different values of $Z$ into $f(Z)$, we get the
+    slope of the conditional effect of $X$ on $Y$ at the chosen
+    value of $Z$.
+  \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}{Significance Testing of Simple Slopes}
+
+  The conditional values of $Z$ used to define the simple slopes in
+  the pick-a-point approach are totally arbitrary
+  \vb
+  \begin{itemize}
+  \item The most popular choice is: $\left\{ (\bar{Z} - SD_Z), \bar{Z},
+    (\bar{Z} + SD_Z) \right\}$
+    \vc
+  \item You could also use interesting percentiles of $Z$'s
+    distribution
+  \end{itemize}
+  \va
+  The standard error of a simple slope is given by:
+  \begin{align}
+    SE_{SS} = \sqrt{SE_{\beta_1}^2 + 2Z \cdot \text{COV}(\beta_1, \beta_3) + Z^2 SE_{\beta_3}^2}
+  \end{align}
+  So, you can test the significance of a simple slope by constructing
+  a Wald statistic or confidence interval using $SE_{SS}$:
+  \begin{align*}
+    Wald_{SS} &= \frac{\hat{f}(Z)}{SE_{SS}}\\
+    95\% CI_{SS} &= \hat{f}(Z) \pm 1.96 \cdot SE_{SS}
+  \end{align*}
+
+\end{frame}
+
+
+\begin{frame}[allowframebreaks]{Example}
+
+<<>>=
+## Specify function to compute simple slopes:
+getSS <- function(z, lmOut) {
+    tmp <- coef(lmOut)
+    tmp[2] + tmp[4]*z
+}
+##
+## Specify function to compute SE for simple slopes:
+getSE <- function(z, lmOut) {
+    tmp <- vcov(lmOut)
+    varB1 <- tmp[2, 2]
+    varB3 <- tmp[4, 4]
+    covB13 <- tmp[4, 2]
+
+    sqrt(varB1 + 2 * z * covB13 + z^2 * varB3)
+}
+@
+\pagebreak
+<<>>=
+## Compute vector of simple slopes:
+ssVec <- sapply(c(meanZ - sdZ,
+                  meanZ,
+                  meanZ + sdZ),
+                FUN = getSS,
+                lmOut = out3)
+##
+## Compute vector of SEs for simple slopes:
+seVec <- sapply(c(meanZ - sdZ,
+                  meanZ,
+                  meanZ + sdZ),
+                FUN = getSE,
+                lmOut = out3)
+@
+\pagebreak
+<<>>=
+## Compute Wald Statistics:
+waldVec <- ssVec / seVec
+names(waldVec) <- c("Mean - SD", "Mean", "Mean + SD")
+waldVec
+##
+## Compute CIs:
+ciMat <- cbind(ssVec - 1.96 * seVec,
+               ssVec + 1.96 * seVec)
+rownames(ciMat) <- c("Mean - SD", "Mean", "Mean + SD")
+colnames(ciMat) <- c("LB", "UB")
+ciMat
+@
+
+\end{frame}
+
+
+\end{document}

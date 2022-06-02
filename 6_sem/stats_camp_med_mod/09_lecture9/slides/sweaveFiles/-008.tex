@@ -1,0 +1,15 @@
+\begin{Schunk}
+\begin{Sinput}
+ ## Plot the simple slopes:
+ par(family = "serif", cex = 0.75)
+ plotOut1.2 <- plotSlopes(model = out1.2,
+                          plotx = "open",
+                          modx = "conc",
+                          plotPoints = FALSE,
+                          modxVals =
+                              quantile(dat1$conc,
+                                       c(0.25, 0.5, 0.75),
+                                       na.rm = TRUE)
+                          )
+\end{Sinput}
+\end{Schunk}

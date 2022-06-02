@@ -1,0 +1,374 @@
+\documentclass{beamer}
+\usetheme{ttuStatsCamp}
+\usefonttheme{serif}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage[natbibapa]{apacite}
+\usepackage{color}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{Sweavel}
+\usepackage{listings}
+
+\def\Sweavesize{\scriptsize}
+\def\Rcolor{\color{black}}
+%\def\Routcolor{\color{red}}
+\def\Rcommentcolor{\color{violet}}
+\def\Rbackground{\color[gray]{0.85}}
+\def\Routbackground{\color[gray]{0.85}}
+
+\lstset{tabsize=2, breaklines=true, style=Rstyle}
+
+
+
+\newcommand{\red}[0]{\textcolor{red}}
+\newcommand{\green}[0]{\textcolor{green}}
+\newcommand{\blue}[0]{\textcolor{blue}}
+\newcommand{\comment}[1]{}
+\newcommand{\va}[0]{\vspace{12pt}}
+\newcommand{\vb}[0]{\vspace{6pt}}
+\newcommand{\vc}[0]{\vspace{3pt}}
+\newcommand{\vx}[1]{\vspace{#1pt}}
+
+\title[Lecture 5]{Lecture 5: A Bit Advanced Mediation}
+
+\author{Kyle M. Lang}
+
+\institute[TTU IMMAP]{
+  Institute for Measurement, Methodology, Analysis \& Policy\\
+  Texas Tech University\\
+  Lubbock, TX
+}
+
+\date{2016 Stats Camp}
+
+\setbeamertemplate{frametitle continuation}{}
+
+\begin{document}
+
+\setkeys{Gin}{width=\textwidth}
+
+\input{sweaveFiles/-001}
+
+
+\begin{frame}[plain]
+  
+  \titlepage
+  
+\end{frame}
+
+
+\begin{frame}{Outline}
+  
+  \begin{itemize}
+  \item Show how to test for indirect effects in latent variable models
+    \va
+  \item Discuss the interpretation of indirect effects
+    \va
+  \item Discuss effect size measures for indirect effects
+  \end{itemize}
+  
+\end{frame}
+
+
+\begin{frame}{Boring Model}
+
+  So far, all of our models have been similar to:
+  \begin{figure}
+    \includegraphics[width=.8\textwidth]{figures/simpleMediationPathDiagram.pdf}
+  \end{figure}
+  But there is no reason that we need to restrict ourselves to mucking
+  about with observed variables.
+
+\end{frame}
+
+
+
+\begin{frame}{Better Model}
+
+  We can (and should) test for indirect effects using \emph{latent
+    variable models} such as:
+  \begin{figure}
+    \includegraphics[width=.8\textwidth]{figures/semMedDiagram.pdf}
+  \end{figure}
+  Measurement error can be a big problem for mediation analysis, so
+  latent variable modeling is highly recommended.
+
+\end{frame}
+
+
+
+\begin{frame}[allowframebreaks]{Example}
+  
+\input{sweaveFiles/-002}
+
+\pagebreak
+
+\input{sweaveFiles/-003}
+
+\end{frame}
+
+
+
+\begin{frame}{Interpretation of Indirect Effects}
+  
+  Although indirect effects are composed parameters, they have direct
+  interpretations, independent of the interpretations of their
+  constituent paths:
+  \vb
+  \begin{itemize}
+  \item The $X \rightarrow M \rightarrow Y$ indirect effect $ab$ is
+    interpreted as:
+    \vb
+    \begin{itemize}
+    \item The expected change in $Y$ for a unit change in $X$ that
+      is transmitted indirectly through $M$, or...
+      \vb
+    \item For a unit change in $X$, $Y$ is expected to change by
+      $ab$ units, indirectly through $M$, or...
+      \vb
+    \item Participants who differ by one unit on $X$ are expect
+      to differ by $ab$ units on $Y$ as a results of the effect
+      of $X$ on $M$ which, in turn, affects $Y$.
+    \end{itemize}
+    \va
+  \item The interpretation/scaling of the indirect effect is entirely
+    defined by the input $X$ and outcome $Y$
+    \vb
+    \begin{itemize}
+    \item The scaling of the intermediary variable $M$ does not affect
+      the interpretation of the indirect effect.
+    \end{itemize}
+  \end{itemize}
+  
+\end{frame}
+  
+  
+\begin{frame}{Partially Standardized Indirect Effect}
+  
+  \begin{align*}
+    ab_{ps} &= \frac{ab}{SD_Y}\\
+    c'_{ps} &= \frac{c'}{SD_Y}\\
+    c_{ps} &= \frac{c}{SD_Y} = ab_{ps} + c'_{ps}
+  \end{align*}
+  
+  \begin{itemize}
+    \item Simple
+    \item Removes binding to the scale of $Y$
+    \item Still scale-bound by $X$
+    \item Not clear what constitutes a ``large'' effect
+  \end{itemize}
+  
+\end{frame}
+
+
+
+\begin{frame}{Completely Standardized Indirect Effect}
+  
+  \begin{align*}
+    ab_{cs} &= \frac{SD_X ab}{SD_Y}\\
+    c'_{cs} &= \frac{SD_X c'}{SD_Y}\\
+    c_{cs} &= \frac{SD_X c}{SD_Y} = ab_{cs} + c'_{cs}
+  \end{align*}
+  
+  \begin{itemize}
+    \item Simple
+    \item Removes all scale binding
+    \item Not clear what constitutes a ``large'' effect
+  \end{itemize}
+  
+\end{frame}
+
+
+\begin{frame}{Ratio of the Indirect Effect to the Total Effect}
+  
+  \begin{align*}
+    P_M = \frac{ab}{c} = \frac{ab}{c' + ab}
+  \end{align*}
+  
+  \begin{itemize}
+  \item Very simple
+  \item Not bounded by 0 and 1
+  \item Explodes toward $\pm \infty$ as $c\rightarrow 0$
+  \item Very unstable
+    \begin{itemize}
+    \item High between-sample variability
+    \item Requires $N \geq 500$
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{Ratio of the Indirect Effect to the Direct Effect}
+  
+  \begin{align*}
+    R_M = \frac{ab}{c'} = \frac{P_M}{1 - P_M}
+  \end{align*}
+  
+  \begin{itemize}
+  \item Very simple
+  \item Not bounded by 0 and 1
+  \item Explodes toward $\pm \infty$ as $c'\rightarrow 0$
+  \item Very unstable
+    \begin{itemize}
+    \item High between-sample variability
+    \item Requires $N \geq 2000$
+    \end{itemize}
+  \end{itemize}
+  
+\end{frame}
+
+
+\begin{frame}{Proportion of Variance in $Y$ Explained by the Indirect Effect}
+  
+  Developed by \citet{fairchildEtAl:2009}.
+  \begin{itemize}
+    \item Given a non-zero total effect, represents the proportion of
+      variance in Y accounted for by the indirect effect.
+  \end{itemize}
+  
+  \begin{align*}
+    R_{med}^2 = r_{MY}^2 - \left( R_{Y.MX}^2-r_{XY}^2 \right)
+  \end{align*}
+
+  \begin{itemize}
+  \item Mostly sensible interpretation
+  \item Predicated on the assumption that $\beta_{YX} \neq 0$
+  \item $|ab| > |c| \Rightarrow R_{med}^2 < 0$
+    \begin{itemize}
+    \item Not a strict proportion
+    \end{itemize}
+  \end{itemize}
+  
+\end{frame}
+
+
+\begin{frame}{Kappa Squared}
+  
+  Developed by \citet{preacherKelley:2011}.
+  \begin{itemize}
+  \item Gives the proportion of the \emph{maximum possible} indirect
+    effect represented by $ab$.
+  \end{itemize}
+  
+  \begin{align*}
+    \kappa^2 = \frac{ab}{\text{max}(ab)}
+  \end{align*}
+  
+  \begin{itemize}
+  \item Bounded by 0 and 1
+  \item Values closer to 1.0 indicate a bigger effect
+  \item A bit of a pain to calculate.
+  \end{itemize}
+  
+\end{frame}
+
+
+\begin{frame}{Computing $\text{max}(ab)$}
+  
+  \begin{align*}
+    a &\in \left\{ 
+    \frac{
+      \sigma_{YM} \sigma_{YX} \pm 
+      \sqrt{ \sigma_M^2 \sigma_Y^2 - \sigma_{YM}^2 }
+      \sqrt{ \sigma_X^2 \sigma_Y^2 - \sigma_{YX}^2 } 
+    }{ 
+      \sigma_X^2 \sigma_Y^2 
+    }
+    \right\} 
+    = [a_{low}, a_{high}],
+    \\
+    \\
+    b &\in \left\{
+    \pm \frac{
+      \sqrt{ \sigma_X^2 \sigma_Y^2 - \sigma_{YX}^2 }
+    }{
+      \sqrt{ \sigma_X^2 \sigma_M^2 - \sigma_{MX}^2 }
+    }
+    \right\} = [b_{low}, b_{high}],
+  \end{align*}
+  
+  \begin{align*}
+    \text{max}(a) = \left\{ \begin{array}{lll}
+      a_{high}, & \text{ if } & \hat{a} > 0\\
+      a_{low}, & \text{ if } & \hat{a} < 0
+    \end{array}
+    \right.,~~
+    \text{max}(b) = \left\{ \begin{array}{lll}
+      b_{high}, & \text{ if } & \hat{b} > 0\\
+      b_{low}, & \text{ if } & \hat{b} < 0
+    \end{array}
+    \right.,
+  \end{align*}
+  
+  \begin{align*}
+    \text{max}(ab) = \text{max}(a) \text{max}(b)
+  \end{align*}
+  
+\end{frame}
+
+
+\begin{frame}[allowframebreaks]{Example}
+    
+\input{sweaveFiles/-004}
+
+\pagebreak
+
+\input{sweaveFiles/-005}
+
+\pagebreak
+
+\input{sweaveFiles/-006}
+
+\pagebreak
+
+\input{sweaveFiles/-007}
+
+\end{frame}
+
+
+\begin{frame}[allowframebreaks]{Compute $\kappa^2$}
+
+\input{sweaveFiles/-008}
+
+\pagebreak
+
+\input{sweaveFiles/-009}
+
+\end{frame}
+
+
+\begin{frame}{Practice}
+  
+\input{sweaveFiles/-010}
+
+Suppose:
+\begin{enumerate}
+\item $\Sigma$ is given by:
+\input{sweaveFiles/-011}
+\va
+\item The estimated paths are:
+  \begin{itemize}
+  \item $a = $ 0.2
+    \vb
+  \item $b = $ 0.246
+    \vb
+  \item $ab = $ 0.049
+  \end{itemize}
+  \end{enumerate}
+  \va
+  Compute $\kappa^2$ for the estimated $ab$.
+  
+\end{frame}
+
+\begin{frame}{References}
+\bibliographystyle{apacite}
+\bibliography{../../bibtexStuff/dissRefsList}
+\end{frame}
+
+
+\end{document}

@@ -1,0 +1,19 @@
+\begin{Schunk}
+\begin{Sinput}
+ par(family = "serif", cex = 0.75)
+ library(rockchalk)
+ ## First we need to create a 'plotSlopes' object:
+ plotOut <- plotSlopes(model = out1,
+                       plotx = "ratioC",
+                       modx = "perceptionC",
+                       plotPoints = FALSE)
+ ## Then we modify 'plotOut' to get the J-N test:
+ testOut <- testSlopes(plotOut)
+\end{Sinput}
+\begin{Soutput}
+Values of perceptionC OUTSIDE this interval:
+      lo       hi 
+1.327479 2.452667 
+cause the slope of (b1 + b2*perceptionC)ratioC to be statistically significant
+\end{Soutput}
+\end{Schunk}

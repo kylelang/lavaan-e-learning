@@ -1,0 +1,52 @@
+\begin{Schunk}
+\begin{Sinput}
+ out3 <- sem(mod3, data = dat1, se = "boot", boot = nBoot)
+ summary(out3)
+\end{Sinput}
+\begin{Soutput}
+lavaan (0.5-20) converged normally after  18 iterations
+
+  Number of observations                          2800
+
+  Estimator                                         ML
+  Minimum Function Test Statistic              214.855
+  Degrees of freedom                                 4
+  P-value (Chi-square)                           0.000
+
+Parameter Estimates:
+
+  Information                                 Observed
+  Standard Errors                            Bootstrap
+  Number of requested bootstrap draws             5000
+  Number of successful bootstrap draws            5000
+
+Regressions:
+                   Estimate  Std.Err  Z-value  P(>|z|)
+  agree ~                                             
+    open      (b1)    0.167    0.027    6.074    0.000
+    extra     (cp)    0.361    0.027   13.549    0.000
+    consc     (b2)   -0.028    0.026   -1.057    0.290
+    openXcnsc (b3)   -0.079    0.039   -2.040    0.041
+  open ~                                              
+    extra     (a1)    0.261    0.023   11.359    0.000
+    neuro     (a2)    0.072    0.009    7.866    0.000
+    extraXner (a3)    0.005    0.022    0.214    0.830
+
+Variances:
+                   Estimate  Std.Err  Z-value  P(>|z|)
+    agree             0.485    0.014   33.643    0.000
+    open              0.287    0.009   30.369    0.000
+
+Defined Parameters:
+                   Estimate  Std.Err  Z-value  P(>|z|)
+    abLoLo            0.051    0.012    4.219    0.000
+    abLoMid           0.043    0.009    4.544    0.000
+    abLoHi            0.035    0.009    4.066    0.000
+    abMidLo           0.052    0.010    4.994    0.000
+    abMidMid          0.043    0.008    5.177    0.000
+    abMidHi           0.035    0.008    4.199    0.000
+    abHiLo            0.053    0.010    5.449    0.000
+    abHiMid           0.044    0.009    5.200    0.000
+    abHiHi            0.036    0.009    3.901    0.000
+\end{Soutput}
+\end{Schunk}

@@ -1,0 +1,11 @@
+\begin{Schunk}
+\begin{Sinput}
+ diffVec <- fitMeasures(fit3)[c("chisq", "df")] -
+     fitMeasures(fit2)[c("chisq", "df")]
+ pchisq(diffVec[1], diffVec[2], lower = FALSE)
+\end{Sinput}
+\begin{Soutput}
+    chisq 
+0.3093433 
+\end{Soutput}
+\end{Schunk}

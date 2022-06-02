@@ -1,0 +1,67 @@
+\frametitle{Classification Example}
+
+
+
+Let's re-classify our patient into either the ``high glucose'', ``moderate
+glucose'', or ``low glucose'' group using the model fit above.
+\begin{itemize}
+\item First we plug their predictor data into the fitted model to get their
+  set of model-implied $\eta_l$ values:
+\end{itemize}
+%\begin{align*}
+%  \text{logit}\left(\frac{\pi_{low.gluc}}{\pi_{low.gluc}}\right) &=
+%  b10 &+ b11 (57 - 40) &+ b12 (28 - 25)\\ &+ b13 (92 - 100) &=
+%  eta2[1]\\
+%  \text{logit}\left(\frac{\pi_{mid.gluc}}{\pi_{low.gluc}}\right) &=
+%  b20 &+ b21 (57 - 40) &+ b22 (28 - 25)\\ &+ b23 (92 - 100) &=
+%  eta2[2]\\
+%  \text{logit}\left(\frac{\pi_{hi.gluc}}{\pi_{low.gluc}}\right) &=
+%  b30 &+ b31 (57 - 40) &+ b32 (28 - 25)\\ &+ b33 (92 - 100) &=
+%  eta2[3]
+%\end{align*}
+%\end{itemize}
+
+\vc
+
+\setlength\tabcolsep{1.5pt} % decrease column padding in tabular
+
+\begin{tabular}{rllll}
+  $\text{logit}\left(\frac{\pi_{low.gluc}}{\pi_{low.gluc}}\right)$ &=&&&\\
+  0 &+ 0 (57 - 40) &+ 0 (28 - 25) &+ 0 (92 - 100) &=
+  0\\[8pt]
+  $\text{logit}\left(\frac{\pi_{mid.gluc}}{\pi_{low.gluc}}\right)$ &=&&&\\
+  1.626 &+ 0.016 (57 - 40) &+ 0.132 (28 - 25) &+ 0.046 (92 - 100) &=
+  1.929\\[8pt]
+  $\text{logit}\left(\frac{\pi_{hi.gluc}}{\pi_{low.gluc}}\right)$ &=&&&\\
+  -0.022 &+ 0.035 (57 - 40) &+ 0.241 (28 - 25) &+ 0.067 (92 - 100) &=
+  0.762
+\end{tabular}
+
+\setlength\tabcolsep{6pt} % back to the default value
+
+\pagebreak
+
+\begin{itemize}
+\item Next we apply the softmax function to convert the predicted $\eta_l$
+  values into model-implied success probabilities:
+\end{itemize}
+\begin{align*}
+  \hat{\pi}_{low.gluc} &=
+  \frac{1}{1 + e^{1.929} + e^{0.762}} =
+  0.1\\[8pt]
+  \hat{\pi}_{mid.gluc} &=
+  \frac{e^{1.929}}{1 + e^{1.929} + e^{0.762}} =
+  0.687\\[8pt]
+  \hat{\pi}_{hi.gluc} &=
+  \frac{e^{0.762}}{1 + e^{1.929} + e^{0.762}} =
+  0.214
+\end{align*}
+\begin{itemize}
+\item Finally, to make the classification, we find the largest $\hat{\pi}_l'$:
+  \begin{itemize}
+  \item Because $\hat{\pi}_{mid.gluc} = 0.687$ is the
+    largest, we would classify this patient into the
+    ``moderate glucose'' group.
+  \end{itemize}
+\end{itemize}
+

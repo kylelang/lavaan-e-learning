@@ -1,0 +1,35 @@
+\begin{Schunk}
+\begin{Sinput}
+ fit1 <- measurementInvariance(mod1,
+                               data = dat2,
+                               group = "educ",
+                               std.lv = TRUE)
+\end{Sinput}
+\begin{Soutput}
+Measurement invariance models:
+
+Model 1 : fit.configural
+Model 2 : fit.loadings
+Model 3 : fit.intercepts
+Model 4 : fit.means
+
+Chi Square Difference Test
+
+                Df   AIC   BIC  Chisq Chisq diff Df diff Pr(>Chisq)    
+fit.configural 102 85428 85971 1039.1                                  
+fit.loadings   118 85427 85877 1070.0     30.927      16  0.0137462 *  
+fit.intercepts 134 85456 85813 1131.4     61.399      16  3.037e-07 ***
+fit.means      138 85468 85801 1150.8     19.324       4  0.0006788 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Fit measures:
+
+                 cfi rmsea cfi.delta rmsea.delta
+fit.configural 0.874 0.104        NA          NA
+fit.loadings   0.871 0.097     0.002       0.007
+fit.intercepts 0.865 0.094     0.006       0.004
+fit.means      0.863 0.093     0.002       0.001
+\end{Soutput}
+\end{Schunk}

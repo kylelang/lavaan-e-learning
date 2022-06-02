@@ -1,0 +1,16 @@
+\begin{Schunk}
+\begin{Sinput}
+ ## Look at ACOV(a,b):
+ round(acov, 4)
+\end{Sinput}
+\begin{Soutput}
+       a     b
+a 0.0038 0.000
+b 0.0000 0.012
+\end{Soutput}
+\begin{Sinput}
+ ## Draw the Monte Carlo samples:
+ samMat <- rmvnorm(nSams, c(a, b), acov)
+ abVec <- samMat[ , "a"] * samMat[ , "b"]
+\end{Sinput}
+\end{Schunk}

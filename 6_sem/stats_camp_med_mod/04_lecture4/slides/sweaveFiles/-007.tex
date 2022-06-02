@@ -1,0 +1,59 @@
+\begin{Schunk}
+\begin{Sinput}
+ ## Serial Multiple Mediator Model:
+ mod2.1 <- "
+ policy ~ b1*merit + b2*sysRac + cp*polAffil
+ sysRac ~ d21*merit + a2*polAffil
+ merit ~ a1*polAffil
+ 
+ ab1 := a1*b1
+ ab2 := a2*b2
+ fullIE := a1*d21*b2
+ totalIE := ab1 + ab2 + fullIE 
+ "
+ out2.1 <- 
+     sem(mod2.1, data = dat1, se = "boot", boot = nBoot)
+ summary(out2.1)
+\end{Sinput}
+\begin{Soutput}
+lavaan (0.5-20) converged normally after  16 iterations
+
+  Number of observations                            87
+
+  Estimator                                         ML
+  Minimum Function Test Statistic                0.000
+  Degrees of freedom                                 0
+
+Parameter Estimates:
+
+  Information                                 Observed
+  Standard Errors                            Bootstrap
+  Number of requested bootstrap draws             2500
+  Number of successful bootstrap draws            2499
+
+Regressions:
+                   Estimate  Std.Err  Z-value  P(>|z|)
+  policy ~                                            
+    merit     (b1)   -0.008    0.145   -0.052    0.959
+    sysRac    (b2)    0.595    0.142    4.184    0.000
+    polAffil  (cp)    0.134    0.076    1.763    0.078
+  sysRac ~                                            
+    merit    (d21)   -0.301    0.110   -2.733    0.006
+    polAffil  (a2)    0.090    0.072    1.253    0.210
+  merit ~                                             
+    polAffil  (a1)   -0.266    0.061   -4.384    0.000
+
+Variances:
+                   Estimate  Std.Err  Z-value  P(>|z|)
+    policy            0.987    0.164    6.013    0.000
+    sysRac            0.689    0.094    7.309    0.000
+    merit             0.719    0.112    6.389    0.000
+
+Defined Parameters:
+                   Estimate  Std.Err  Z-value  P(>|z|)
+    ab1               0.002    0.040    0.050    0.960
+    ab2               0.053    0.044    1.215    0.225
+    fullIE            0.048    0.026    1.822    0.068
+    totalIE           0.103    0.048    2.145    0.032
+\end{Soutput}
+\end{Schunk}

@@ -1,0 +1,22 @@
+\frametitle{Choosing an ``Optimal'' Polynomial Order}
+
+  We can use K-fold cross-validation to estimate which polynomial order will
+  give us the lowest prediction error.
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.878, 0.918, 0.933}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{cv.lm}\hlstd{(}\hlkwc{data}   \hlstd{= Cars93,}
+      \hlkwc{models} \hlstd{=} \hlkwd{polyList}\hlstd{(}\hlkwc{y} \hlstd{=} \hlstr{"MPG.city"}\hlstd{,}
+                        \hlkwc{x} \hlstd{=} \hlstr{"Horsepower"}\hlstd{,}
+                        \hlkwc{n} \hlstd{=} \hlnum{5}\hlstd{),}
+      \hlkwc{K}      \hlstd{=} \hlnum{5}\hlstd{,}
+      \hlkwc{names}  \hlstd{=} \hlkwd{c}\hlstd{(}\hlstr{"line"}\hlstd{,} \hlstr{"quad"}\hlstd{,} \hlstr{"cube"}\hlstd{,} \hlstr{"quart"}\hlstd{,} \hlstr{"quint"}\hlstd{)}
+      \hlstd{)}
+\end{alltt}
+\begin{verbatim}
+##     line     quad     cube    quart    quint
+## 17.68113 12.76947 11.33363 11.85176 12.36846
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+

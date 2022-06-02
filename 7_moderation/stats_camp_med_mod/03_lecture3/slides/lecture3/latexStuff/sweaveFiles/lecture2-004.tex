@@ -1,0 +1,16 @@
+\begin{Schunk}
+\begin{Sinput}
+ ## We can also get CIs:
+ parameterEstimates(out2)
+\end{Sinput}
+\begin{Soutput}
+       lhs op      rhs label   est    se     z pvalue ci.lower ci.upper
+1   policy  ~   sysRac     b 0.722 0.110 6.595  0.000    0.508    0.937
+2   policy  ~ polAffil       0.051 0.069 0.745  0.456   -0.084    0.186
+3   sysRac  ~ polAffil     a 0.257 0.061 4.182  0.000    0.136    0.377
+4   policy ~~   policy       0.837 0.127 6.595  0.000    0.588    1.086
+5   sysRac ~~   sysRac       0.802 0.122 6.595  0.000    0.564    1.040
+6 polAffil ~~ polAffil       2.444 0.000    NA     NA    2.444    2.444
+7       ab :=      a*b    ab 0.186 0.053 3.532  0.000    0.083    0.289
+\end{Soutput}
+\end{Schunk}

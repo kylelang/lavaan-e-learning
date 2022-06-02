@@ -1,0 +1,101 @@
+\begin{Schunk}
+\begin{Sinput}
+ mod3 <- "
+ att3 ~ att2 + b2*conf2 + cp2*horn2
+ att2 ~ att1 + b1*conf1 + cp1*horn1
+ 
+ conf3 ~ conf2 + a2*horn2
+ conf2 ~ conf1 + a1*horn1
+ 
+ horn3 ~ horn2
+ horn2 ~ horn1
+ 
+ horn3 ~~ conf3 + att3
+ conf3 ~~ att3
+ 
+ horn2 ~~ conf2 + att2
+ conf2 ~~ att2
+ 
+ a1 == a2
+ b1 == b2
+ cp1 == cp2
+ "
+ out3 <- sem(mod3, data = dat1)
+ summary(out3)
+\end{Sinput}
+\begin{Soutput}
+lavaan (0.5-20) converged normally after  46 iterations
+
+  Number of observations                           500
+
+  Estimator                                         ML
+  Minimum Function Test Statistic              294.220
+  Degrees of freedom                                18
+  P-value (Chi-square)                           0.000
+
+Parameter Estimates:
+
+  Information                                 Expected
+  Standard Errors                             Standard
+
+Regressions:
+                   Estimate  Std.Err  Z-value  P(>|z|)
+  att3 ~                                              
+    att2              0.497    0.035   14.234    0.000
+    conf2     (b2)    0.098    0.019    5.200    0.000
+    horn2    (cp2)    0.083    0.072    1.157    0.247
+  att2 ~                                              
+    att1              0.530    0.040   13.345    0.000
+    conf1     (b1)    0.098    0.019    5.200    0.000
+    horn1    (cp1)    0.083    0.072    1.157    0.247
+  conf3 ~                                             
+    conf2             0.684    0.035   19.602    0.000
+    horn2     (a2)    0.493    0.107    4.596    0.000
+  conf2 ~                                             
+    conf1             0.623    0.032   19.546    0.000
+    horn1     (a1)    0.493    0.107    4.596    0.000
+  horn3 ~                                             
+    horn2             0.826    0.030   27.609    0.000
+  horn2 ~                                             
+    horn1             0.714    0.024   29.181    0.000
+
+Covariances:
+                   Estimate  Std.Err  Z-value  P(>|z|)
+  conf3 ~~                                            
+    horn3             1.016    0.155    6.556    0.000
+  att3 ~~                                             
+    horn3             0.322    0.093    3.483    0.000
+    conf3             3.574    0.465    7.691    0.000
+  conf2 ~~                                            
+    horn2             0.836    0.124    6.721    0.000
+  att2 ~~                                             
+    horn2             0.273    0.083    3.289    0.001
+    conf2             2.027    0.400    5.067    0.000
+
+Variances:
+                   Estimate  Std.Err  Z-value  P(>|z|)
+    att3              6.019    0.381   15.811    0.000
+    att2              6.041    0.382   15.811    0.000
+    conf3            15.814    1.000   15.811    0.000
+    conf2            12.570    0.795   15.811    0.000
+    horn3             0.695    0.044   15.811    0.000
+    horn2             0.560    0.035   15.811    0.000
+
+Constraints:
+                                               |Slack|
+    a1 - (a2)                                    0.000
+    b1 - (b2)                                    0.000
+    cp1 - (cp2)                                  0.000
+\end{Soutput}
+\begin{Sinput}
+ chiDiff <- fitMeasures(out3)["chisq"] -
+     fitMeasures(out1)["chisq"]
+ dfDiff <- fitMeasures(out3)["df"] -
+     fitMeasures(out1)["df"]
+ pchisq(chiDiff, dfDiff, lower = FALSE)
+\end{Sinput}
+\begin{Soutput}
+     chisq 
+0.02684148 
+\end{Soutput}
+\end{Schunk}

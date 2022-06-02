@@ -1,0 +1,16 @@
+\begin{Schunk}
+\begin{Sinput}
+ ## Subset the data:
+ tmpData <- dat1[ , c("polAffil", "sysRac", "policy")]
+ colnames(tmpData) <- c("x", "m", "y")
+ ##
+ ## Extract pertinent variance/covariance elements:
+ cov1 <- cov(tmpData)
+ sYM <- cov1["x", "m"]
+ sYX <- cov1["y", "x"]
+ sMX <- cov1["m", "x"]
+ s2X <- cov1["x", "x"]
+ s2M <- cov1["m", "m"]
+ s2Y <- cov1["y", "y"]
+\end{Sinput}
+\end{Schunk}

@@ -1,0 +1,28 @@
+\begin{Schunk}
+\begin{Sinput}
+ round(fitMeasures(out3)[c("chisq", "df", "pvalue", "cfi", 
+                           "tli", "rmsea", "srmr")], 3)
+\end{Sinput}
+\begin{Soutput}
+  chisq      df  pvalue     cfi     tli   rmsea    srmr 
+ 74.899 113.000   0.998   1.000   1.015   0.000   0.020 
+\end{Soutput}
+\begin{Sinput}
+ library(semTools)
+ out3.2 <- 
+     sem(mod3, data = dat2, std.lv = TRUE, meanstructure = TRUE)
+ probeOut3 <- probe2WayRC(fit = out3.2,
+                          nameX = c("fX", "fZ", "fXZ"),
+                          nameY = "fY",
+                          modVar = "fZ",
+                          valProbe = c(-1, 0, 1)
+                          )
+ probeOut3$SimpleSlope
+\end{Sinput}
+\begin{Soutput}
+     fZ    Slope        SE      Wald p
+[1,] -1 1.169652 0.1572049  7.440306 0
+[2,]  0 1.657530 0.0979130 16.928605 0
+[3,]  1 2.145409 0.1426381 15.040921 0
+\end{Soutput}
+\end{Schunk}

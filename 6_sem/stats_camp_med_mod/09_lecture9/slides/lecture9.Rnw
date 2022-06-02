@@ -1,0 +1,793 @@
+\documentclass{beamer}
+\usetheme{ttuStatsCamp}
+\usefonttheme{serif}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage[natbibapa]{apacite}
+\usepackage{color}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{Sweavel}
+\usepackage{listings}
+\usepackage{fancybox}
+
+\def\Sweavesize{\scriptsize}
+\def\Rcolor{\color{black}}
+%\def\Routcolor{\color{red}}
+\def\Rcommentcolor{\color{violet}}
+\def\Rbackground{\color[gray]{0.85}}
+\def\Routbackground{\color[gray]{0.85}}
+
+\lstset{tabsize=2, breaklines=true, style=Rstyle}
+
+\SweaveOpts{keep.source=T, prefix.string=sweaveFiles/, split=T, ae=F, height=4, width=6}
+
+\newcommand{\red}[0]{\textcolor{red}}
+\newcommand{\green}[0]{\textcolor{green}}
+\newcommand{\blue}[0]{\textcolor{blue}}
+\newcommand{\comment}[1]{}
+\newcommand{\va}[0]{\vspace{12pt}}
+\newcommand{\vb}[0]{\vspace{6pt}}
+\newcommand{\vc}[0]{\vspace{3pt}}
+\newcommand{\vx}[1]{\vspace{#1pt}}
+
+\title[Lecture 9]{Lecture 9: Moderation Wrap-Up}
+
+\author{Kyle M. Lang}
+
+\institute[TTU IMMAP]{
+  Institute for Measurement, Methodology, Analysis \& Policy\\
+  Texas Tech University\\
+  Lubbock, TX
+}
+
+\date{2016 Stats Camp}
+
+\setbeamertemplate{frametitle continuation}{}
+
+\begin{document}
+
+\setkeys{Gin}{width=\textwidth}
+
+<<echo=F>>=
+options(width=160, prompt=" ", continue=" ", useFancyQuotes = TRUE)
+library(xtable)
+@
+
+
+\begin{frame}[plain]
+  
+  \titlepage
+  
+\end{frame}
+
+
+
+\begin{frame}{Outline}
+
+  \begin{itemize}
+  \item Multiple Moderators
+    \va
+  \item Moderated Moderation
+    \va
+  \item Categorical Moderation
+    \va
+  \item Multiple Group Modeling
+  \end{itemize}
+
+\end{frame}
+
+
+
+\begin{frame}{Starting Point}
+
+  So far, we've been looking at this type of model:
+
+  \begin{figure}
+    \includegraphics[width=0.7\textwidth]{figures/simpleConceptual.pdf}
+  \end{figure}
+
+  We've had one focal variable and one moderator.
+  \begin{itemize}
+    \item We've been asking questions about how the focal effect
+      changes as a function of the moderator.
+    \item There's no reason we need to restrict ourselves to a single
+      moderator.
+  \end{itemize}
+  
+\end{frame}
+
+
+
+\begin{frame}{Multiple Moderation}
+  
+  Maybe we suspect that the focal effect changes as a function of two other variables.
+  \begin{itemize}
+    \item We could fit this type of model:
+  \end{itemize}
+
+  \begin{figure}
+    \includegraphics[width=0.7\textwidth]{figures/twoModConceptual.pdf}
+  \end{figure}
+
+  Now, the focal effect of $X$ on $Y$ changes as a function of both
+  $Z$ and $W$.
+  
+\end{frame}
+
+
+\begin{frame}{Multiple Moderation}
+  
+  The preceding diagram implies the following formula:
+  \begin{align*}
+    Y = \alpha + f(Z, W) X + \beta_2Z + \beta_3W + e,
+  \end{align*}\\
+  \va 
+  Taking $f(Z, W)$ to be the following simple slope:
+  \begin{align*}
+    f(Z, W) = \beta_1 + \beta_4Z + \beta_5W
+  \end{align*}\\
+  \va 
+  Produces the following analytic equation:
+  \begin{align*}
+    Y = \alpha + \beta_1X + \beta_2Z + \beta_3W + \beta_4XZ + \beta_5XW + e
+  \end{align*}\\
+  \va
+  We can easily fit this model in any regression software
+  \vb
+  \begin{itemize}
+  \item We can test for significant moderating effects of $Z$ and $W$
+    by testing for non-zero $\beta_4$ and $\beta_5$, respectively.
+  \end{itemize}
+  
+\end{frame}
+
+
+
+\begin{frame}{Multiple Moderation}
+  
+  Our analytic diagram is predictably extended:
+
+  \begin{figure}
+    \includegraphics[width=\textwidth]{figures/twoModAnalytic.pdf}
+  \end{figure}
+
+\end{frame}
+
+  
+
+\begin{frame}[allowframebreaks]{Example}
+    
+<<>>=
+library(psych)
+library(rockchalk)
+dat1 <- readRDS("../data/bfiData1.rds")
+
+## Additive model:
+out1.1 <- lm(agree ~ conc + open + neuro, data = dat1)
+summary(out1.1)
+@
+
+\pagebreak
+
+<<>>=
+## Additive two-way interaction model:
+out1.2 <- lm(agree ~ open*conc + open*neuro, data = dat1)
+summary(out1.2)
+@
+
+\pagebreak
+
+<<>>=
+## Center 'conc' on interesting values for SS analysis:
+dat1$concLo  <- with(dat1, conc - quantile(conc, 0.25, na.rm = TRUE))
+dat1$concMid <- with(dat1, conc - quantile(conc, 0.5, na.rm = TRUE))
+dat1$concHi  <- with(dat1, conc - quantile(conc, 0.75, na.rm = TRUE))
+@
+
+\pagebreak
+
+<<>>=
+## Test simple slopes via centering:
+out1.2.1 <- lm(agree ~ open*concLo + neuro, data = dat1)
+summary(out1.2.1)
+@
+
+\pagebreak
+
+<<>>=
+out1.2.2 <- lm(agree ~ open*concMid + neuro, data = dat1)
+summary(out1.2.2)
+@ 
+
+\pagebreak
+
+<<>>=
+out1.2.3 <- lm(agree ~ open*concHi + neuro, data = dat1)
+summary(out1.2.3)
+@
+
+\pagebreak
+
+<<fig=T>>=
+## Plot the simple slopes:
+par(family = "serif", cex = 0.75)
+plotOut1.2 <- plotSlopes(model = out1.2,
+                         plotx = "open",
+                         modx = "conc",
+                         plotPoints = FALSE,
+                         modxVals =
+                             quantile(dat1$conc,
+                                      c(0.25, 0.5, 0.75),
+                                      na.rm = TRUE)
+                         )
+@ 
+
+\pagebreak
+
+<<fig=T>>=
+par(family = "serif", cex = 0.75)
+testOut1.2 <- testSlopes(plotOut1.2)
+plot(testOut1.2)
+@ 
+
+\end{frame}
+
+
+
+\begin{frame}{Moderated Moderation}
+  
+  The additive two-way interaction model is more flexible than the
+  simple single-moderator model, but it still imposes constraints.
+  \va
+  \begin{itemize}
+    \item The moderating effect of $Z$ (or $W$) on the $X \rightarrow
+      Y$ relation is assumed to be constant across levels of $W$ (or
+      $Z$).
+      \vb
+    \item I.e., the moderation is not moderated
+  \end{itemize}
+  
+  \va
+  We can relax this constraint by modeling moderation of the moderated
+  effect using a three-way interaction.
+  
+\end{frame}
+
+
+
+\begin{frame}{Moderated Moderation}
+  
+  Moderated moderation implies the following conceptual diagram:
+  \begin{figure}
+    \includegraphics[width=\textwidth]{figures/threeWayConceptual.pdf}
+  \end{figure}
+  
+\end{frame}
+
+
+
+\begin{frame}{Moderated Moderation}
+  
+  The preceding conceptual diagram implies this analytic diagram:
+  \begin{figure}
+    \includegraphics[width=\textwidth]{figures/threeWayAnalytic.pdf}
+  \end{figure}
+  
+\end{frame}
+
+
+
+\begin{frame}[shrink = 5]{Moderated Moderation}
+  
+  The preceding diagram represents the following equation:
+  \begin{align*}
+    Y =& ~ \alpha + \beta_1X + \beta_2Z + \beta_3W +\\
+    &\beta_4XZ + \beta_5XW + \beta_6ZW + \beta_7XZW + e
+  \end{align*}\\
+  \vb
+  Which can be restructured into:
+  \begin{align*}
+    Y =& ~ \alpha + (\beta_1 + \beta_4Z + \beta_5W + \beta_7ZW)X + \\
+    &\beta_2Z + \beta_3W + \beta_6ZW + e\\
+    =& ~ \alpha + g(Z, W)X + \beta_2Z + \beta_3W + \beta_6ZW + e
+  \end{align*}\\
+  \vb 
+  With moderated moderation, the simple slope is given by:
+  \begin{align*}
+    g(Z, W) = \beta_1 + \beta_4Z + \beta_5W + \beta_7ZW
+  \end{align*}\\
+  \vb 
+  Which has the same structure as a single moderator model.
+  \vc
+  \begin{itemize}
+  \item Three-way simple slopes represent the moderated effect of
+    $Z$ on the $X \rightarrow Y$ relation at conditional values of $W$.
+  \end{itemize}
+  
+\end{frame}
+
+
+
+\begin{frame}[allowframebreaks]{Example}
+    
+<<>>=
+## Three-way interaction model:
+out1.3 <- lm(agree ~ open*conc*neuro, data = dat1)
+summary(out1.3)
+@ 
+
+\pagebreak
+
+<<>>=
+## Test simple slopes via centering:
+dat1$neuroLo <-
+    with(dat1,
+         neuro - quantile(neuro, 0.05, na.rm = TRUE)
+         )
+dat1$neuroMid <- 
+    with(dat1, 
+         neuro - quantile(neuro, 0.5, na.rm = TRUE)
+         )
+dat1$neuroHi <-
+    with(dat1,
+         neuro - quantile(neuro, 0.95, na.rm = TRUE)
+         )
+@
+
+\pagebreak
+
+<<>>=
+out1.4.1 <- lm(agree ~ open*conc*neuroLo, data = dat1)
+summary(out1.4.1)
+@ 
+
+\pagebreak
+
+<<>>=
+out1.4.2 <- lm(agree ~ open*conc*neuroMid, data = dat1)
+summary(out1.4.2)
+@
+
+\pagebreak
+
+<<>>=
+out1.4.3 <- lm(agree ~ open*conc*neuroHi, data = dat1)
+summary(out1.4.3)
+@
+
+\pagebreak
+
+<<>>=
+## Construct product terms to facilitate J-N technique:
+dat1$openXneuro <- with(dat1, neuro*open)
+dat1$concXneuro <- with(dat1, neuro*conc)
+dat1$openXconc <- with(dat1, open*conc)
+dat1$openXconcXneuro <- with(dat1, open*conc*neuro)
+@
+
+\pagebreak
+
+<<>>=
+out1.5 <- lm(agree ~ open + conc + neuro +
+                 openXconc + openXneuro + concXneuro + openXconc*neuro,
+             data = dat1)
+summary(out1.5)
+sum(coef(out1.3) - coef(out1.5))# Same as above
+@ 
+
+\end{frame}
+
+
+
+\begin{frame}[allowframebreaks]{Example}
+  
+<<fig=T>>=
+par(family = "serif", cex = 0.75)
+plotOut1.5 <- plotSlopes(model = out1.5,
+                         plotx = "openXconc",
+                         modx = "neuro",
+                         plotPoints = FALSE,
+                         modxVals = 
+                         quantile(dat1$neuro,
+                                  c(0.25, 0.5, 0.75),
+                                  na.rm = TRUE)
+                         )
+@ 
+
+\pagebreak
+
+<<fig=T>>=
+par(family = "serif", cex = 0.75)
+testOut1.5 <- testSlopes(plotOut1.5)
+plot(testOut1.5)
+@ 
+
+\end{frame}
+
+
+
+\begin{frame}{Categorical Variable Moderation}
+  
+  When the moderator is a categorical variable, moderation implies
+  between-group differences in the focal effect.  
+  \va
+  \begin{itemize}
+    \item This simplifies probing considerably
+      \vb
+    \item The simple slopes are given (almost) directly in the output
+  \end{itemize}
+  \va
+  Recall the simple slope formula:
+  \begin{align*}
+    SS = \beta_1 + \beta_3Z
+  \end{align*}
+  Because $Z$ is a dummy code, this formula reduces to:
+  \begin{align*}
+    SS &= \beta_1, \text{ or}\\
+    SS &= \beta_1 + \beta_3
+  \end{align*}
+
+\end{frame}
+
+
+
+\begin{frame}[allowframebreaks]{Example}
+
+<<>>=
+## Marginal focal effect:
+out2.1 <- lm(conc ~ neuro, data = dat1)
+summary(out2.1)
+
+## Moderated by highest education attained:
+out2.2 <- lm(conc ~ neuro*educ, data = dat1)
+summary(out2.2)
+
+## Test for omnibus moderation:
+anova(out2.1, out2.2)
+@ 
+
+\pagebreak
+
+<<fig=T>>=
+par(family = "serif", cex = 0.75)
+plotSlopes(out2.2,
+           plotx = "neuro",
+           modx = "educ",
+           plotPoints = FALSE)
+@ 
+
+\pagebreak
+
+<<>>=
+## Compute simple slopes by hand:
+ssSubHS <- coef(out2.2)[2]
+ssHighSchool <- sum(coef(out2.2)[c(2, 5)])
+ssCollege <- sum(coef(out2.2)[c(2, 6)])
+
+## Compute simple slopes using centering:
+dat1$educ2 <- relevel(dat1$educ, ref = "highSchool")
+dat1$educ3 <- relevel(dat1$educ, ref = "college")
+
+out2.3 <- lm(conc ~ neuro*educ2, data = dat1)
+out2.4 <- lm(conc ~ neuro*educ3, data = dat1)
+@ 
+
+\pagebreak
+
+<<>>=
+## By hand:
+ssSubHS
+## By centering:
+as.matrix(coef(out2.2))
+@
+
+\pagebreak
+
+<<>>=
+## By hand:
+ssHighSchool
+## By centering:
+as.matrix(coef(out2.3))
+@
+
+\pagebreak
+
+<<>>= 
+## By hand:
+ssCollege
+## By centering:
+as.matrix(coef(out2.4))
+@
+
+\end{frame}
+
+
+
+\begin{frame}[shrink = 10]{Example}
+
+<<>>=
+summary(out2.2)
+@ 
+
+\end{frame}
+
+
+
+\begin{frame}[shrink = 10]{Example}
+
+<<>>=
+summary(out2.3)
+@ 
+
+\end{frame}
+
+
+
+\begin{frame}[shrink = 10]{Example}
+
+<<>>=
+summary(out2.4)
+@ 
+
+\end{frame}
+
+
+
+
+\begin{frame}{Moderation via Multiple Group SEM}
+  
+  When our moderator is a categorical variable, we can use multiple
+  group CFA/SEM to test for moderation.
+  \va
+  \begin{itemize}
+    \item Categorical moderators define groups
+      \vb
+    \item Significant moderation with categorical moderators implies
+      between-group differences in the focal effect
+      \vb
+    \item These hypotheses are easily tested with multiple group SEM
+  \end{itemize}
+  \va
+  \begin{center}\textsc{Whiteboard Time!}\end{center}
+  
+\end{frame}
+
+
+
+\begin{frame}[allowframebreaks]{Example}
+
+<<>>=
+library(lavaan)
+library(semTools)
+dat2 <- readRDS("../data/bfiData2.rds")
+
+## Multiple group moderation:
+mod1 <- "
+conc =~ C1 + C2 + C3 + C4 + C5
+neuro =~ N1 + N2 + N3 + N4 + N5
+"
+@ 
+
+\end{frame}
+
+
+
+\begin{frame}[shrink = 10]{Example}
+  
+<<>>=
+fit1 <- measurementInvariance(mod1,
+                              data = dat2,
+                              group = "educ",
+                              std.lv = TRUE)
+@ 
+
+\end{frame}
+
+
+\begin{frame}[allowframebreaks]{Example}
+
+<<>>=
+mod2 <- "
+conc =~ C1 + C2 + C3 + C4 + C5
+neuro =~ N1 + N2 + N3 + N4 + N5
+
+conc ~ neuro
+
+conc ~~ c(1.0, NA, NA)*conc
+neuro ~~ c(1.0, NA, NA)*neuro
+
+conc ~ c(0.0, NA, NA)*1.0
+neuro ~ c(0.0, NA, NA)*1.0
+"
+@
+
+\pagebreak
+
+<<>>=
+fit2 <- lavaan(mod2,
+               data = dat2,
+               std.lv = FALSE,
+               auto.fix.first = FALSE,
+               auto.var = TRUE,
+               int.ov.free = TRUE,
+               group = "educ",
+               group.equal = c("loadings", "intercepts")
+               )
+@ 
+
+\pagebreak
+
+<<>>=
+summary(fit2)
+@ 
+
+\pagebreak
+
+<<>>=
+mod3 <- "
+conc =~ C1 + C2 + C3 + C4 + C5
+neuro =~ N1 + N2 + N3 + N4 + N5
+
+conc ~ c(b1, b1, b1)*neuro
+
+conc ~~ c(1.0, NA, NA)*conc
+neuro ~~ c(1.0, NA, NA)*neuro
+
+conc ~ c(0.0, NA, NA)*1.0
+neuro ~ c(0.0, NA, NA)*1.0
+"
+@ 
+
+\pagebreak
+
+<<>>=
+fit3 <- lavaan(mod3,
+               data = dat2,
+               std.lv = FALSE,
+               auto.fix.first = FALSE,
+               auto.var = TRUE,
+               int.ov.free = TRUE,
+               group = "educ",
+               group.equal = c("loadings", "intercepts")
+               )
+@ 
+
+\pagebreak
+
+<<>>=
+summary(fit3)
+@ 
+
+\pagebreak
+
+<<>>=
+diffVec <- fitMeasures(fit3)[c("chisq", "df")] -
+    fitMeasures(fit2)[c("chisq", "df")]
+
+pchisq(diffVec[1], diffVec[2], lower = FALSE)
+@
+
+\pagebreak
+
+<<>>=
+mod4 <- "
+conc =~ C1 + C2 + C3 + C4 + C5
+neuro =~ N1 + N2 + N3 + N4 + N5
+
+conc ~ c(b1, b1, b2)*neuro
+
+conc ~~ c(1.0, NA, NA)*conc
+neuro ~~ c(1.0, NA, NA)*neuro
+
+conc ~ c(0.0, NA, NA)*1.0
+neuro ~ c(0.0, NA, NA)*1.0
+"
+@
+
+\pagebreak
+
+<<>>=
+fit4 <- lavaan(mod4,
+               data = dat2,
+               std.lv = FALSE,
+               auto.fix.first = FALSE,
+               auto.var = TRUE,
+               int.ov.free = TRUE,
+               group = "educ",
+               group.equal = c("loadings", "intercepts")
+               )
+@ 
+
+\pagebreak
+
+<<>>=
+summary(fit4)
+@ 
+
+\pagebreak
+
+<<>>=
+diffVec <- fitMeasures(fit4)[c("chisq", "df")] -
+    fitMeasures(fit2)[c("chisq", "df")]
+
+pchisq(diffVec[1], diffVec[2], lower = FALSE)
+@
+
+\end{frame}
+
+
+
+\begin{frame}{Probing Multiple Group Moderation}
+  
+  Several advantages to testing moderation with multiple group SEM
+  \va
+  \begin{itemize}
+    \item Remove measurement error from the estimates
+      \vb
+    \item Test for factorial invariance
+      \vb
+    \item \textit{All information needed to plot/probe the simple
+      slopes is contained directly in the output from the unrestricted
+      model}
+  \end{itemize}
+  
+\end{frame}
+
+
+
+\begin{frame}[allowframebreaks]{Example}
+  
+<<>>=
+summary(fit2)
+@ 
+
+\pagebreak
+
+<<>>=
+## Extract info needed to plot simple slopes:
+ints <- c(0,
+          coef(fit2)[c("conc~1.g2",
+                       "conc~1.g3")]
+          )
+slopes <- coef(fit2)[c("conc~neuro",
+                       "conc~neuro.g2",
+                       "conc~neuro.g3")]
+fScores <- do.call(rbind, predict(fit2))
+@ 
+
+\pagebreak
+
+<<fig=T>>=
+par(family = "serif", cex = 0.75)
+plot(y = fScores[ , "conc"],
+     x = fScores[ , "neuro"],
+     type = "n",
+     main = "Latent Simple Slopes",
+     xlab = "Neuroticism",
+     ylab = "Conscientiousness")
+
+abline(a = ints[1], b = slopes[1])
+abline(a = ints[2], b = slopes[2], col = "red")
+abline(a = ints[3], b = slopes[3], col = "blue")
+
+legend(x = "topright",
+       inset = 0.01,
+       legend =
+           c("High School",
+             "College",
+             "< High School"),
+       col =
+           c("black",
+             "red",
+             "blue"),
+       lty = 1)
+@ 
+
+\end{frame}
+
+
+\end{document}

@@ -1,0 +1,24 @@
+\begin{Schunk}
+\begin{Sinput}
+ ## Extract important parameter estimates:
+ a <- coef(mod3)["polAffil"]
+ b <- coef(mod4)["sysRac"]
+ c <- coef(mod1)["polAffil"]
+ cPrime <- coef(mod4)["polAffil"]
+ ## Compute indirect effects:
+ ieDiff <- c - cPrime
+ ieProd <- a * b
+ ieDiff
+\end{Sinput}
+\begin{Soutput}
+ polAffil 
+0.1855374 
+\end{Soutput}
+\begin{Sinput}
+ ieProd
+\end{Sinput}
+\begin{Soutput}
+ polAffil 
+0.1855374 
+\end{Soutput}
+\end{Schunk}

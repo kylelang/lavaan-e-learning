@@ -1,0 +1,28 @@
+\begin{thebibliography}{}
+
+\bibitem [\protect \citeauthoryear {%
+Efron%
+}{%
+Efron%
+}{%
+{\protect \APACyear {1979}}%
+}]{%
+efron:1979}
+\APACinsertmetastar {%
+efron:1979}%
+\begin{APACrefauthors}%
+Efron, B.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{1979}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Bootstrap methods: {A}nother look at the jackknife}
+  {Bootstrap methods: {A}nother look at the jackknife}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{The Annals of Statistics}{7}{1}{1--26}.
+\newblock
+\begin{APACrefDOI} \doi{10.1214/aos/1176344552} \end{APACrefDOI}
+\PrintBackRefs{\CurrentBib}
+
+\end{thebibliography}

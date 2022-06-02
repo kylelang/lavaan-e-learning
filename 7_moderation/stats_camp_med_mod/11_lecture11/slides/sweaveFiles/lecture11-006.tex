@@ -1,0 +1,64 @@
+\begin{Schunk}
+\begin{Sinput}
+ ## Create product term:
+ dat1$m2w <- dat1$m2 * dat1$w
+ ##
+ ## Specify model:
+ mod4 <- "
+ y ~ cp*x + b1*m1 + b2*m2 + b3*w + b4*m2w
+ m2 ~ a2*x + d*m1
+ m1 ~ a1*x
+ 
+ ab1 := a1*b1
+ imm2 := a2*b4
+ fullImm := a1*d*b4
+ "
+ ##
+ ## Fit model:
+ out4 <- sem(mod4, data = dat1, se = "boot", boot = nBoot)
+ summary(out4)
+\end{Sinput}
+\begin{Soutput}
+lavaan (0.5-20) converged normally after  24 iterations
+
+  Number of observations                           100
+
+  Estimator                                         ML
+  Minimum Function Test Statistic                1.655
+  Degrees of freedom                                 4
+  P-value (Chi-square)                           0.799
+
+Parameter Estimates:
+
+  Information                                 Observed
+  Standard Errors                            Bootstrap
+  Number of requested bootstrap draws             1000
+  Number of successful bootstrap draws            1000
+
+Regressions:
+                   Estimate  Std.Err  Z-value  P(>|z|)
+  y ~                                                 
+    x         (cp)   -0.082    0.220   -0.375    0.708
+    m1        (b1)    0.462    0.225    2.051    0.040
+    m2        (b2)    0.822    0.167    4.931    0.000
+    w         (b3)    0.656    0.190    3.446    0.001
+    m2w       (b4)    0.627    0.112    5.595    0.000
+  m2 ~                                                
+    x         (a2)    0.035    0.127    0.277    0.782
+    m1         (d)    1.262    0.098   12.838    0.000
+  m1 ~                                                
+    x         (a1)    0.741    0.124    5.955    0.000
+
+Variances:
+                   Estimate  Std.Err  Z-value  P(>|z|)
+    y                 2.784    0.358    7.772    0.000
+    m2                1.051    0.133    7.929    0.000
+    m1                1.182    0.145    8.160    0.000
+
+Defined Parameters:
+                   Estimate  Std.Err  Z-value  P(>|z|)
+    ab1               0.342    0.181    1.890    0.059
+    imm2              0.022    0.082    0.271    0.787
+    fullImm           0.587    0.154    3.805    0.000
+\end{Soutput}
+\end{Schunk}

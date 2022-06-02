@@ -1,0 +1,59 @@
+\begin{Schunk}
+\begin{Sinput}
+ ## Prep stuff:
+ library(lavaan)
+ nBoot <- 1000
+ dat1 <- readRDS("../data/lecture11Data.rds")
+ ##
+ ## Create product term:
+ dat1$xz <- dat1$x * dat1$z
+ ##
+ ## Specify model:
+ mod1 <- "
+ y ~ cp*x + b*m1
+ m1 ~ a1*x + a2*z + a3*xz
+ 
+ imm := a3*b
+ "
+ ##
+ ## Fit model:
+ out1 <- sem(mod1, data = dat1, se = "boot", boot = nBoot)
+ summary(out1)
+\end{Sinput}
+\begin{Soutput}
+lavaan (0.5-20) converged normally after  16 iterations
+
+  Number of observations                           100
+
+  Estimator                                         ML
+  Minimum Function Test Statistic                2.380
+  Degrees of freedom                                 2
+  P-value (Chi-square)                           0.304
+
+Parameter Estimates:
+
+  Information                                 Observed
+  Standard Errors                            Bootstrap
+  Number of requested bootstrap draws             1000
+  Number of successful bootstrap draws            1000
+
+Regressions:
+                   Estimate  Std.Err  Z-value  P(>|z|)
+  y ~                                                 
+    x         (cp)    0.082    0.251    0.329    0.742
+    m1         (b)    1.390    0.210    6.609    0.000
+  m1 ~                                                
+    x         (a1)    0.729    0.092    7.923    0.000
+    z         (a2)    0.641    0.087    7.368    0.000
+    xz        (a3)    0.451    0.095    4.745    0.000
+
+Variances:
+                   Estimate  Std.Err  Z-value  P(>|z|)
+    y                 5.102    0.692    7.369    0.000
+    m1                0.669    0.087    7.726    0.000
+
+Defined Parameters:
+                   Estimate  Std.Err  Z-value  P(>|z|)
+    imm               0.628    0.167    3.764    0.000
+\end{Soutput}
+\end{Schunk}

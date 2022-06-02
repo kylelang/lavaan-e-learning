@@ -1,0 +1,65 @@
+\begin{Schunk}
+\begin{Sinput}
+ dat1 <- readRDS("../data/adamsKlpsScaleScore.rds")
+ ## Partial out the mediator's effect:
+ mod1 <- lm(policy ~ sysRac + polAffil, data = dat1)
+ mod2 <- lm(sysRac ~ polAffil, data = dat1)
+ summary(mod1)$coef
+\end{Sinput}
+\begin{Soutput}
+              Estimate Std. Error   t value     Pr(>|t|)
+(Intercept) 0.83265885 0.41246491 2.0187386 4.670428e-02
+sysRac      0.72235878 0.11147514 6.4799987 5.930291e-09
+polAffil    0.05121251 0.06998433 0.7317711 4.663450e-01
+\end{Soutput}
+\begin{Sinput}
+ summary(mod2)$coef
+\end{Sinput}
+\begin{Soutput}
+             Estimate Std. Error  t value     Pr(>|t|)
+(Intercept) 2.6060451 0.28489391 9.147423 2.715546e-14
+polAffil    0.2568494 0.06213495 4.133735 8.336022e-05
+\end{Soutput}
+\begin{Sinput}
+ ## Extract important parameter estimates:
+ a <- coef(mod2)["polAffil"]
+ b <- coef(mod1)["sysRac"]
+ ## Compute indirect effect:
+ ieProd <- a * b
+ ieProd
+\end{Sinput}
+\begin{Soutput}
+ polAffil 
+0.1855374 
+\end{Soutput}
+\begin{Sinput}
+ ## Calculate Sobel's Z:
+ seA <- sqrt(diag(vcov(mod2)))["polAffil"]
+ seB <- sqrt(diag(vcov(mod1)))["sysRac"]
+ sobelSE <- sqrt(b^2 * seA^2 + a^2 * seB^2)
+ sobelZ <- ieProd / sobelSE
+ sobelZ
+\end{Sinput}
+\begin{Soutput}
+polAffil 
+ 3.48501 
+\end{Soutput}
+\begin{Sinput}
+ sobelP <- 2 * pnorm(sobelZ, lower = FALSE)
+ sobelP
+\end{Sinput}
+\begin{Soutput}
+    polAffil 
+0.0004921178 
+\end{Soutput}
+\begin{Sinput}
+ sobelUB <- ieProd + 1.96 * sobelSE
+ sobelLB <- ieProd - 1.96 * sobelSE
+ ## 95% Sobel CI:
+ c(sobelLB, sobelUB)
+\end{Sinput}
+\begin{Soutput}
+  polAffil   polAffil 
+0.08118957 0.28988525 
+\end{Soutput}
+\end{Schunk}

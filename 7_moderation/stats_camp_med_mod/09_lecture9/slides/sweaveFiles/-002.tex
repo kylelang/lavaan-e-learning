@@ -1,0 +1,31 @@
+\begin{Schunk}
+\begin{Sinput}
+ library(psych)
+ library(rockchalk)
+ dat1 <- readRDS("../data/bfiData1.rds")
+ ## Additive model:
+ out1.1 <- lm(agree ~ conc + open + neuro, data = dat1)
+ summary(out1.1)
+\end{Sinput}
+\begin{Soutput}
+Call:
+lm(formula = agree ~ conc + open + neuro, data = dat1)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-2.78733 -0.41707  0.09673  0.47476  2.12198 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  3.23373    0.12379  26.123  < 2e-16 ***
+conc         0.06890    0.02647   2.603  0.00929 ** 
+open         0.27661    0.02647  10.449  < 2e-16 ***
+neuro       -0.10633    0.01205  -8.826  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.6966 on 2548 degrees of freedom
+Multiple R-squared:  0.06473,	Adjusted R-squared:  0.06363 
+F-statistic: 58.79 on 3 and 2548 DF,  p-value: < 2.2e-16
+\end{Soutput}
+\end{Schunk}

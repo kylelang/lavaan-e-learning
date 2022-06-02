@@ -1,0 +1,2343 @@
+%%% Title:    Regression Assumptions & Diagnostics
+%%% Author:   Kyle M. Lang
+%%% Created:  2018-04-12
+%%% Modified: 2021-11-09
+
+\documentclass[10pt]{beamer}
+\usetheme{Utrecht}
+
+\usepackage{graphicx}
+\usepackage[natbibapa]{apacite}
+\usepackage[libertine]{newtxmath}
+\usepackage{fancybox}
+\usepackage{booktabs}
+\usepackage{relsize}
+
+\newcommand{\eqit}[1]{\textrm{\textit{#1}}}
+
+\title{Regression Assumptions \& Diagnostics}
+\subtitle{Fundamental Techniques in Data Science with R}
+\author{Kyle M. Lang}
+\institute{Department of Methodology \& Statistics\\Utrecht University}
+\date{}
+
+\begin{document}
+
+<<setup, include = FALSE, cache = FALSE>>=
+set.seed(235711)
+
+dataDir <- "../data/"
+codeDir <- "../../../code/"
+
+library(knitr)
+library(ggplot2)
+library(MASS)
+library(DAAG)
+library(xtable)
+library(MLmetrics)
+library(dplyr)
+
+source(paste0(codeDir, "supportFunctions.R"))
+
+options(width = 60)
+opts_chunk$set(size = "footnotesize",
+               fig.align = "center",
+               message = FALSE,
+               comment = "")
+knit_theme$set('edit-kwrite')
+@
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}[t,plain]
+  \titlepage
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{Outline}
+  \tableofcontents
+\end{frame}
+
+%------------------------------------------------------------------------------%
+\comment{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\sectionslide{Categorical Predictors}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{Categorical Predictors}
+
+  Most of the predictors we've considered thus far have been
+  \emph{quantitative}.
+  \vc
+  \begin{itemize}
+  \item Continuous variables that can take any real value in their range
+    \vc
+  \item Interval or Ratio scaling
+  \end{itemize}
+  \vb
+  We often want to include grouping factors as predictors.
+  \vc
+  \begin{itemize}
+  \item These variables are \emph{qualitative}.
+    \begin{itemize}
+    \item Their values are simply labels.
+      \vc
+    \item There is no ordering of the categories.
+      \vc
+    \item Nominal scaling
+    \end{itemize}
+  \end{itemize}
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{How to Model Categorical Predictors}
+
+  We need to be careful when we include categorical predictors into a regression
+  model.
+  \vc
+  \begin{itemize}
+  \item The variables need to be coded before entering the model
+  \end{itemize}
+  \vb
+  Consider the following indicator of major:
+  $X_{maj} = \{1 = \textit{Law}, 2 = \textit{Economics}, 3 = \textit{Data Science}\}$
+  \vc
+  \begin{itemize}
+    \item What would happen if we na\"ively used this variable to predict
+      program satisfaction?
+  \end{itemize}
+
+\end{frame}
+
+\watermarkoff %----------------------------------------------------------------%
+
+\begin{frame}[allowframebreaks, fragile]{How to Model Categorical Predictors}
+
+<<>>=
+mDat <- readRDS("../data/major_data.rds")
+mDat[seq(25, 150, 25), ]
+out1 <- lm(sat ~ majN, data = mDat)
+@
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}[fragile]{How to Model Categorical Predictors}
+
+<<>>=
+partSummary(out1, -1)
+@
+
+\end{frame}
+
+\watermarkon %-----------------------------------------------------------------%
+
+\subsection{Dummy Coding}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{Dummy Coding}
+
+  The most common way to code categorical predictors is \emph{dummy coding}.
+  \vb
+  \begin{itemize}
+  \item A $G$-level factor must be converted into a set of $G - 1$ dummy codes.
+    \vb
+  \item Each code is a variable on the dataset that equals 1 for observations
+    corresponding to the code's group and equals 0, otherwise.
+    \vb
+  \item The group without a code is called the \emph{reference group}.
+  \end{itemize}
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{Example Dummy Code}
+ Let's look at the simple example of coding biological sex:
+<<echo = FALSE, results = "asis">>=
+sex  <- factor(sample(c("male", "female"), 10, TRUE))
+male <- as.numeric(model.matrix(~sex)[ , -1])
+
+xTab2 <- xtable(data.frame(sex, male), digits = 0)
+print(xTab2, booktabs = TRUE)
+@
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{Example Dummy Codes}
+ Now, a slightly more complex  example:
+<<echo = FALSE, results = "asis">>=
+drink <- factor(sample(c("coffee", "tea", "juice"), 10, TRUE))
+
+codes           <- model.matrix(~drink)[ , -1]
+colnames(codes) <- c("juice", "tea")
+
+xTab3 <- xtable(data.frame(drink, codes), digits = 0)
+print(xTab3, booktabs = TRUE)
+@
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{Using Dummy Codes}
+
+  To use the dummy codes, we simply include the $G - 1$ codes as $G - 1$
+  predictor variables in our regression model.
+  \begin{align*}
+    Y &= \beta_0 + \beta_1 X_{male} + \varepsilon\\
+    Y &= \beta_0 + \beta_1 X_{juice} + \beta_2 X_{tea} + \varepsilon
+  \end{align*}
+  \vx{-18}
+  \begin{itemize}
+  \item The intercept corresponds to the mean of $Y$ for the reference group.
+    \vc
+  \item Each slope represents the difference between the mean of $Y$ in the
+    coded group and the mean of $Y$ in the reference group.
+  \end{itemize}
+
+\end{frame}
+
+\watermarkoff %----------------------------------------------------------------%
+
+\begin{frame}[fragile, allowframebreaks]{Example}
+
+  First, an example with a single, binary dummy code:
+
+<<>>=
+## Read in some data:
+cDat <- readRDS("../data/cars_data.rds")
+
+## Fit and summarize the model:
+out2 <- lm(price ~ mtOpt, data = cDat)
+@
+
+\pagebreak
+
+<<>>=
+partSummary(out2, -1)
+@
+
+\end{frame}
+
+\watermarkon %-----------------------------------------------------------------%
+
+\begin{frame}{Interpretations}
+
+  \begin{itemize}
+  \item The average price of a car without the option for a manual transmission
+    is $\hat{\beta}_0 = \Sexpr{round(coef(out2)[1], 2)}$ thousand dollars.
+    \vb
+  \item The average difference in price between cars that have manual
+    transmissions as an option and those that do not is $\hat{\beta}_1 =
+    \Sexpr{round(coef(out2)[2], 2)}$ thousand dollars.
+  \end{itemize}
+
+\end{frame}
+
+\watermarkoff %----------------------------------------------------------------%
+
+\begin{frame}[fragile]{Example}
+
+Fit a more complex model:
+
+<<>>=
+out3 <- lm(price ~ front + rear, data = cDat)
+partSummary(out3, -1)
+@
+
+\end{frame}
+
+\watermarkon %-----------------------------------------------------------------%
+
+\begin{frame}{Interpretations}
+
+  \begin{itemize}
+  \item The average price of a four-wheel-drive car is $\hat{\beta}_0 =
+    \Sexpr{round(coef(out3)[1], 2)}$ thousand dollars.
+    \vb
+  \item The average difference in price between front-wheel-drive cars and
+    four-wheel-drive cars is $\hat{\beta}_1 = \Sexpr{round(coef(out3)[2], 2)}$
+    thousand dollars.
+   \vb
+  \item The average difference in price between rear-wheel-drive cars and
+    four-wheel-drive cars is $\hat{\beta}_2 = \Sexpr{round(coef(out3)[3], 2)}$
+    thousand dollars.
+  \end{itemize}
+
+\end{frame}
+
+\watermarkoff %----------------------------------------------------------------%
+
+\begin{frame}[fragile]{Example}
+
+  Include two sets of dummy codes:
+
+<<>>=
+out4 <- lm(price ~ mtOpt + front + rear, data = cDat)
+partSummary(out4, -c(1, 2))
+@
+
+\end{frame}
+
+\watermarkon %-----------------------------------------------------------------%
+
+\begin{frame}{Interpretations}
+
+  \begin{itemize}
+  \item The average price of a four-wheel-drive car that does not have a manual
+    transmission option is $\hat{\beta}_0 = \Sexpr{round(coef(out4)[1], 2)}$
+    thousand dollars.
+    \vb
+  \item After controlling for drive type, the average difference in price
+    between cars that have manual transmissions as an option and those that do
+    not is $\hat{\beta}_1 = \Sexpr{round(coef(out4)[2], 2)}$ thousand dollars.
+    \vb
+  \item After controlling for transmission options, the average difference in
+    price between front-wheel-drive cars and four-wheel-drive cars is
+    $\hat{\beta}_2 = \Sexpr{round(coef(out4)[3], 2)}$ thousand dollars.
+   \vb
+  \item After controlling for transmission options, the average difference in
+    price between rear-wheel-drive cars and four-wheel-drive cars is
+    $\hat{\beta}_3 = \Sexpr{round(coef(out4)[4], 2)}$ thousand dollars.
+  \end{itemize}
+
+\end{frame}
+
+\watermarkoff %----------------------------------------------------------------%
+
+\subsection{Significance Testing for Dummy Codes}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}[fragile]{Significance Testing}
+
+  For variables with only two levels, we can test the overall factor's
+  significance by evaluating the significance of a single dummy code.
+
+<<>>=
+partSummary(out2, -c(1, 2))
+@
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}[fragile]{Significance Testing}
+
+  For variables with more than two levels, we need to simultaneously evaluate
+  the significance of each of the variable's dummy codes.
+
+<<>>=
+partSummary(out4, -c(1, 2))
+@
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}[fragile]{Significance Testing}
+
+<<>>=
+summary(out4)$r.squared - summary(out2)$r.squared
+anova(out2, out4)
+@
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}[fragile]{Significance Testing}
+
+  For models with a single nominal factor is the only predictor, we use the
+  omnibus F-test.
+
+<<>>=
+partSummary(out3, -c(1, 2))
+@
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\sectionslide{Moderation}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{Moderation}
+
+  So far we've been discussing \emph{additive models}.
+  \vb
+  \begin{itemize}
+  \item Additive models allow us to examine the partial effects of several
+    predictors on some outcome.
+    \vc
+    \begin{itemize}
+    \item The effect of one predictor does not change based on the values of
+      other predictors.
+    \end{itemize}
+  \end{itemize}
+  \va
+  Now, we'll discuss \emph{moderation}.
+  \vb
+  \begin{itemize}
+  \item Moderation allows us to ask \emph{when} one variable, $X$, affects
+    another variable, $Y$.
+    \vc
+    \begin{itemize}
+    \item We're considering the conditional effects of $X$ on $Y$ given certain
+      levels of a third variable $Z$.
+    \end{itemize}
+  \end{itemize}
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{Equations}
+
+  In additive MLR, we might have the following equation:
+  \begin{align*}
+    Y = \beta_0 + \beta_1X + \beta_2Z + \varepsilon
+  \end{align*}
+  This additive equation assumes that $X$ and $Z$ are independent
+  predictors of $Y$.\\
+  \va
+  When $X$ and $Z$ are independent predictors, the following are true:
+  \vb
+  \begin{itemize}
+  \item $X$ and $Z$ \emph{can} be correlated.
+    \vb
+  \item $\beta_1$ and $\beta_2$ are \emph{partial} regression
+    coefficients.
+    \vb
+  \item \red{The effect of $X$ on $Y$ is the same at \textbf{all levels} of
+    $Z$, and the effect of $Z$ on $Y$ is the same at \textbf{all
+      levels} of $X$.}
+  \end{itemize}
+
+\end{frame}
+
+\watermarkoff %----------------------------------------------------------------%
+
+\begin{frame}{Additive Regression}
+
+  The effect of $X$ on $Y$ is the same at \textbf{all levels} of $Z$.
+
+  \begin{columns}
+    \begin{column}{0.45\textwidth}
+      \includegraphics[width = 1.1\textwidth]{figures/3d_data_plot}
+    \end{column}
+
+    \begin{column}{0.1\textwidth}
+      \begin{center}\Huge{$\rightarrow$}\end{center}
+    \end{column}
+
+    \begin{column}{0.45\textwidth}
+      \includegraphics[width = 1.1\textwidth]{figures/response_surface_plot0}
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{Moderated Regression}
+
+  The effect of $X$ on $Y$ varies \textbf{as a function} of $Z$.
+
+  \begin{columns}
+    \begin{column}{0.45\textwidth}
+      \includegraphics[width = 1.1\textwidth]{figures/3d_data_plot}
+    \end{column}
+
+    \begin{column}{0.1\textwidth}
+      \begin{center}\Huge{$\rightarrow$}\end{center}
+    \end{column}
+
+    \begin{column}{0.45\textwidth}
+      \includegraphics[width = 1.1\textwidth]{figures/response_surface_plot}
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+\watermarkon %-----------------------------------------------------------------%
+
+\begin{frame}{Equations}
+
+  The following derivation is adapted from \citet{hayes:2017}.
+  \vb
+  \begin{itemize}
+  \item When testing moderation, we hypothesize that the effect of $X$ on $Y$
+    varies as a function of $Z$.
+    \vb
+  \item We can represent this concept with the following equation:
+    \begin{align}
+      Y = \beta_0 + f(Z)X + \beta_2Z + \varepsilon \label{fEq}
+    \end{align}
+    \vx{-8}
+    \pause
+  \item If we assume that $Z$ linearly (and deterministically) affects the
+    relationship between $X$ and $Y$, then we can take:
+    \begin{align}
+      f(Z) = \beta_1 + \beta_3Z \label{ssEq}
+    \end{align}
+  \end{itemize}
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{Equations}
+
+  \begin{itemize}
+  \item Substituting Equation \ref{ssEq} into Equation \ref{fEq} leads to:
+    \begin{align*}
+      Y = \beta_0 + (\beta_1 + \beta_3Z)X + \beta_2Z + \varepsilon
+    \end{align*}
+    \pause
+  \item Which, after distributing $X$ and reordering terms, becomes:
+    \begin{align*}
+      Y = \beta_0 + \beta_1X + \beta_2Z + \beta_3XZ + \varepsilon
+    \end{align*}
+  \end{itemize}
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{Testing Moderation}
+  Now, we have an estimable regression model that quantifies the linear
+  moderation we hypothesized.
+  \vb
+  \begin{center}\ovalbox{$Y = \beta_0 + \beta_1X + \beta_2Z + \beta_3XZ +
+      \varepsilon$}\end{center}
+  \vc
+  \begin{itemize}
+  \item To test for significant moderation, we simply need to test the
+    significance of the interaction term, $XZ$.
+    \begin{itemize}
+    \item Check if $\hat{\beta}_3$ is significantly different from zero.
+    \end{itemize}
+  \end{itemize}
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{Interpretation}
+
+  Given the following equation:
+  \begin{align*}
+    Y = \hat{\beta}_0 + \hat{\beta}_1X + \hat{\beta}_2Z + \hat{\beta}_3XZ +
+    \hat{\varepsilon}
+  \end{align*}
+  \vx{-16}
+  \begin{itemize}
+  \item $\hat{\beta}_3$ quantifies the effect of $Z$ on the focal effect (the $X
+    \rightarrow Y$ effect).
+    \vc
+    \begin{itemize}
+    \item For a unit change in $Z$, $\hat{\beta}_3$ is the expected change in
+      the effect of $X$ on $Y$.
+    \end{itemize}
+    \vb
+  \item $\hat{\beta}_1$ and $\hat{\beta}_2$ are \emph{conditional effects}.
+    \vc
+    \begin{itemize}
+      \item Interpreted where the other predictor is zero.
+        \vc
+      \item For a unit change in $X$, $\hat{\beta}_1$ is the expected change in
+        $Y$, when $Z = 0$.
+        \vc
+      \item For a unit change in $Z$, $\hat{\beta}_2$ is the expected change in
+        $Y$, when $X = 0$.
+    \end{itemize}
+  \end{itemize}
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{Example}
+
+  Still looking at the \emph{diabetes} dataset.
+  \va
+  \begin{itemize}
+  \item We suspect that patients' BMIs are predictive of their average blood
+    pressure.
+    \va
+  \item We further suspect that this effect may be differentially expressed
+    depending on the patients' LDL levels.
+  \end{itemize}
+
+\end{frame}
+
+\watermarkoff%-----------------------------------------------------------------%
+
+\begin{frame}[fragile]{Example}
+
+<<echo = FALSE>>=
+dDat <- readRDS("../data/diabetes.rds")
+@
+
+<<>>=
+## Focal Effect:
+out0 <- lm(bp ~ bmi, data = dDat)
+partSummary(out0, -c(1, 2))
+@
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}[fragile]{Example}
+
+<<>>=
+## Additive Model:
+out1 <- lm(bp ~ bmi + ldl, data = dDat)
+partSummary(out1, -c(1, 2))
+@
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}[fragile]{Example}
+
+<<>>=
+## Moderated Model:
+out2 <- lm(bp ~ bmi * ldl, data = dDat)
+partSummary(out2, -c(1, 2))
+@
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{Visualizing the Interaction}
+
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      We can get a better idea of the patterns of moderation by plotting the
+      focal effect at conditional values of the moderator.
+    \end{column}
+
+    \begin{column}{0.5\textwidth}
+
+<<echo = FALSE>>=
+m1 <- mean(dDat$ldl)
+s1 <- sd(dDat$ldl)
+
+dDat$ldlLo  <- dDat$ldl - (m1 - s1)
+dDat$ldlMid <- dDat$ldl - m1
+dDat$ldlHi  <- dDat$ldl - (m1 + s1)
+
+outLo  <- lm(bp ~ bmi*ldlLo, data = dDat)
+outMid <- lm(bp ~ bmi*ldlMid, data = dDat)
+outHi  <- lm(bp ~ bmi*ldlHi, data = dDat)
+
+b0Lo <- coef(outLo)[1]
+b1Lo <- coef(outLo)["bmi"]
+
+b0Mid <- coef(outMid)[1]
+b1Mid <- coef(outMid)["bmi"]
+
+b0Hi <- coef(outHi)[1]
+b1Hi <- coef(outHi)["bmi"]
+
+x    <- seq(min(dDat$bmi), max(dDat$bmi), 0.1)
+dat1 <- data.frame(x    = x,
+                   yLo  = b0Lo + b1Lo * x,
+                   yMid = b0Mid + b1Mid * x,
+                   yHi  = b0Hi + b1Hi * x)
+
+p1 <- ggplot(data = dDat, aes(x = bmi, y = bp)) +
+    theme_classic() +
+    theme(text = element_text(family = "Courier", size = 16))
+p2 <- p1 + geom_point(colour = "gray") +
+    geom_line(mapping = aes(x = x, y = yLo, colour = "Mean LDL - 1 SD"),
+              data    = dat1,
+              size    = 1.5) +
+    geom_line(mapping = aes(x = x, y = yMid, colour = "Mean LDL"),
+              data    = dat1,
+              size    = 1.5) +
+    geom_line(mapping = aes(x = x, y = yHi, colour = "Mean LDL + 1 SD"),
+              data    = dat1,
+              size    = 1.5) +
+    xlab("BMI") +
+    ylab("BP")
+
+p2 + scale_colour_manual(name = "", values = c("Mean LDL" = "black",
+                                               "Mean LDL - 1 SD" = "red",
+                                               "Mean LDL + 1 SD" = "blue")
+                         ) +
+    theme(legend.justification = c(1, 0), legend.position = c(0.975, 0.025))
+@
+
+\end{column}
+\end{columns}
+
+\end{frame}
+
+\watermarkon %-----------------------------------------------------------------%
+
+\subsection{Categorical Moderators}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{Categorical Moderators}
+
+  Categorical moderators encode \emph{group-specific} effects.
+  \vb
+  \begin{itemize}
+  \item E.g., if we include \emph{sex} as a moderator, we are modeling separate
+    focal effects for males and females.
+  \end{itemize}
+  \va
+  Given a set of codes representing our moderator, we specify the
+  interactions as before:
+  \begin{align*}
+    Y_{total} &= \beta_0 + \beta_1 X_{inten} + \beta_2 Z_{male} +
+    \beta_3 X_{inten}Z_{male} + \varepsilon\\\\
+    Y_{total} &= \beta_0 + \beta_1 X_{inten} + \beta_2 Z_{lo} + \beta_3 Z_{mid} +
+    \beta_4 Z_{hi}\\
+    &+ \beta_5 X_{inten}Z_{lo} + \beta_6 X_{inten}Z_{mid} + \beta_7 X_{inten}Z_{hi} +
+    \varepsilon
+  \end{align*}
+
+\end{frame}
+
+\watermarkoff %----------------------------------------------------------------%
+
+\begin{frame}[fragile]{Example}
+
+<<>>=
+## Load data:
+socSup <- readRDS(paste0(dataDir, "social_support.rds"))
+
+## Focal effect:
+out3 <- lm(bdi ~ tanSat, data = socSup)
+partSummary(out3, -c(1, 2))
+@
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}[fragile]{Example}
+
+<<>>=
+## Estimate the interaction:
+out4 <- lm(bdi ~ tanSat * sex, data = socSup)
+partSummary(out4, -c(1, 2))
+@
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}[fragile]{Visualizing Categorical Moderation}
+
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      {\scriptsize
+        \vx{-12}
+        \begin{align*}
+          \hat{Y}_{BDI} &= \Sexpr{sprintf('%.2f', round(coef(out4)[1], 2))}
+            \Sexpr{sprintf('%.2f', round(coef(out4)[2], 2))} X_{tsat} +
+              \Sexpr{sprintf('%.2f', round(coef(out4)[3], 2))} Z_{male}\\
+                &\Sexpr{sprintf('%.2f', round(coef(out4)[4], 2))}
+                  X_{tsat} Z_{male}
+        \end{align*}
+        \vx{-12}
+      }
+<<echo = FALSE, warning = FALSE>>=
+socSup$sex2 <- relevel(socSup$sex, ref = "male")
+
+out5  <- lm(bdi ~ tanSat * sex2, data = socSup)
+out66 <- lm(BDI ~ tangiblesat + gender, data = socsupport)
+
+p3 <- ggplot(data    = socsupport,
+             mapping = aes(x = tangiblesat, y = BDI, colour = gender)) +
+    theme_classic() +
+    theme(text = element_text(family = "Courier", size = 16))
+
+p4 <- p3 + geom_jitter(na.rm = TRUE) +
+    scale_colour_manual(values = c("red", "blue"))
+
+p4 + geom_abline(slope     = coef(out4)["tanSat"],
+                 intercept = coef(out4)[1],
+                 colour    = "red",
+                 size      = 1.5) +
+    geom_abline(slope     = coef(out5)["tanSat"],
+                intercept = coef(out5)[1],
+                colour    = "blue",
+                size      = 1.5) +
+    ggtitle("Moderation by Gender") +
+    xlab("Tangible Satisfaction") +
+    theme(plot.title = element_text(hjust = 0.5, size = 20, face = 2))
+@
+
+\end{column}
+
+\begin{column}{0.5\textwidth}
+  {\scriptsize
+    \begin{align*}
+      \hat{Y}_{BDI} = \Sexpr{sprintf('%.2f', round(coef(out66)[1], 2))}
+      \Sexpr{sprintf('%.2f', round(coef(out66)[2], 2))} X_{tsat}
+      \Sexpr{sprintf('%.2f', round(coef(out66)[3], 2))} Z_{male}
+    \end{align*}
+    \vx{-6}
+  }
+<<echo = FALSE>>=
+p4 + geom_abline(slope     = coef(out66)["tangiblesat"],
+                 intercept = coef(out66)[1],
+                 colour    = "red",
+                 size      = 1.5) +
+    geom_abline(slope     = coef(out66)["tangiblesat"],
+                intercept = (coef(out66)[1] + coef(out66)["gendermale"]),
+                colour    = "blue",
+                size      = 1.5) +
+    ggtitle("Additive Gender Effect") +
+    xlab("Tangible Satisfaction") +
+    theme(plot.title = element_text(hjust = 0.5, size = 20, face = 2))
+@
+
+\end{column}
+\end{columns}
+
+\end{frame}
+}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\watermarkon %-----------------------------------------------------------------%
+
+\sectionslide{Assumptions \& Diagnostics}
+
+%------------------------------------------------------------------------------%
+\comment{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Algebraic Example}
+
+  Consider the following equation:
+  \begin{align*}
+    5 = x + y
+  \end{align*}
+  What are the values of $x$ and $y$?
+  \pause
+  \begin{align*}
+    y = 5 - x
+  \end{align*}
+  \pause
+  What if we assume that $y = x$?
+  \pause
+  \begin{align*}
+    5 &= x + y\\
+    0 &= x - y
+  \end{align*}
+  \pause
+  Now we have enough information:
+  \begin{align*}
+    5 = x + x = 2x~~\Rightarrow~~x = y = 2.5
+  \end{align*}
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{Assumptions in Statistics}
+
+  Why do we need \emph{assumptions} in statistics?
+  \begin{itemize}
+  \item Data, by themselves, do not offer enough information to support
+    statistical analysis.
+    \vc
+  \item We need to assume some properties of the population model that generated
+    the data.
+    \vc
+  \item We also use assumptions to simplify problems.
+  \end{itemize}
+
+\end{frame}
+}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%------------------------------------------------------------------------------%
+
+\begin{frame}[allowframebreaks]{Assumptions of MLR}
+
+  The assumptions of the linear model can be stated as follows:
+  \vb
+  \begin{enumerate}
+  \item The model is linear in the parameters.
+    \vc
+    \begin{itemize}
+    \item This is OK: $Y = \beta_0 + \beta_1X + \beta_2Z + \beta_3XZ + \beta_4X^2 + \beta_5X^3 + \varepsilon$
+      \vc
+    \item This is not: $Y = \beta_0 X^{\beta_1} + \varepsilon$
+    \end{itemize}
+    \vb
+  \item The predictor matrix is \emph{full rank}.
+    \vc
+    \begin{itemize}
+    \item $N > P$
+      \vc
+    \item No $X_p$ can be a linear combination of other predictors.
+    \end{itemize}
+
+    \pagebreak
+
+  \item The predictors are strictly exogenous.\label{exo}
+    \vc
+    \begin{itemize}
+    \item The predictors do not correlated with the errors.
+      \vc
+    \item $\textrm{Cov}(\hat{Y}, \varepsilon) = 0$
+      \vc
+    \item $\textrm{E}[\varepsilon_n] = 0$
+    \end{itemize}
+    \vb
+  \item The errors have constant, finite variance.\label{constVar}
+    \vc
+    \begin{itemize}
+    \item $\textrm{Var}(\varepsilon_n) = \sigma^2 < \infty$
+    \end{itemize}
+    \vb
+  \item The errors are uncorrelated.\label{indErr}
+    \vc
+    \begin{itemize}
+    \item $\textrm{Cov}(\varepsilon_i, \varepsilon_j) = 0, ~ i \neq j$
+    \end{itemize}
+    \vb
+  \item The errors are normally distributed.\label{normErr}
+    \vc
+    \begin{itemize}
+    \item $\varepsilon \sim \textrm{N}(0, \sigma^2)$
+    \end{itemize}
+  \end{enumerate}
+
+  \pagebreak
+
+  The assumption of \emph{spherical errors} combines Assumptions \ref{constVar}
+  and \ref{indErr}.
+  \begin{align*}
+    \textrm{Var}(\varepsilon) =
+    \begin{bmatrix}
+      \sigma^2 & 0 & \cdots & 0\\
+      0 & \sigma^2 & \cdots & 0\\
+      0 & 0 & \ddots & 0\\
+      0 & 0 & \cdots & \sigma^2
+    \end{bmatrix} =
+    \sigma^2\mathbf{I}_N
+  \end{align*}
+  We can combine Assumptions \ref{exo}, \ref{constVar}, \ref{indErr}, and
+  \ref{normErr} by assuming independent and identically distributed normal
+  errors:
+  \begin{itemize}
+  \item $\varepsilon \overset{iid}{\sim} \textrm{N}(0, \sigma^2)$
+  \end{itemize}
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{Consequences of Violating Assumptions}
+
+  \begin{enumerate}
+  \item If the model is not linear in the parameters, then we're not even
+    working with linear regression.
+    \begin{itemize}
+    \item We need to move to entirely different modeling paradigm.
+    \end{itemize}
+    \vb
+  \item If the predictor matrix is not full rank, the model is not estimable.
+    \begin{itemize}
+    \item The parameter estimates cannot be uniquely determined from the data.
+    \end{itemize}
+    \vb
+  \item If the predictors are not exogenous, the estimated regression
+    coefficients will be biased.
+    \vb
+  \item If the errors are not spherical, the standard errors will be biased.
+    \begin{itemize}
+    \item The estimated regression coefficients will be unbiased, though.
+    \end{itemize}
+    \vb
+  \item If errors are non-normal, small-sample inferences may be biased.
+    \begin{itemize}
+    \item The justification for some tests and procedures used in regression
+      analysis may not hold.
+    \end{itemize}
+  \end{enumerate}
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\subsection{Regression Diagnostics}
+
+\begin{frame}{Regression Diagnostics}
+
+  If some of the assumptions are (grossly) violated, the inferences we make
+  using the model may be wrong.
+  \begin{itemize}
+  \item We need to check the tenability of our assumptions before leaning too
+    heavily on the model estimates.
+  \end{itemize}
+  \vb
+  These checks are called \emph{regression diagnostics}.
+  \begin{itemize}
+  \item Graphical visualizations
+    \vc
+  \item Quantitative indices/measures
+    \vc
+  \item Formal statistical tests
+  \end{itemize}
+
+\end{frame}
+
+\watermarkoff %----------------------------------------------------------------%
+
+\begin{frame}{Residual Plots}
+
+  One of the most useful diagnostic graphics is the plot of residuals vs.
+  predicted values.
+
+\vb
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+
+<<echo = FALSE, message = FALSE>>=
+data(anscombe)
+out1 <- lm(y1 ~ x1, data = anscombe)
+
+p0 <- with(anscombe, gg0(x = x1, y = y1))
+p0 + geom_smooth(method = "lm", se = FALSE) +
+    xlab("X") +
+    ylab("Y")
+@
+\end{column}
+
+\begin{column}{0.5\textwidth}
+
+<<echo = FALSE>>=
+p0 <- gg0(x = predict(out1), y = resid(out1))
+p0 + geom_hline(yintercept = 0, colour = "gray") +
+    xlab("Predicted Y") +
+    ylab("Residual Y")
+@
+
+\end{column}
+\end{columns}
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+\comment{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Residual Plots}
+
+  Recall the Anscombe data that we saw when discussing EDA:
+  \va
+
+<<echo = FALSE, message = FALSE, out.width = "50%">>=
+aDat <- data.frame(rep(1 : 4, each = nrow(anscombe)),
+                   matrix(as.matrix(anscombe), ncol = 2)
+                   )
+colnames(aDat) <- c("g", "X", "Y")
+
+ggplot(dat = aDat, mapping = aes(x = X, y = Y)) +
+    geom_point() +
+    geom_smooth(method = "lm", se = FALSE) +
+    theme_classic() +
+    facet_wrap("g")
+@
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{Residual Plots}
+
+  The residual plots clearly highlight the problems:
+
+\va
+
+<<echo = FALSE, out.width = "50%">>=
+data(anscombe)
+tmp <- lapply(1 : 4,
+              function(n, dat) lm(paste0("y", n, " ~ x", n), data = dat),
+              dat = anscombe)
+
+preds  <- lapply(tmp, predict)
+resids <- lapply(tmp, resid)
+
+aDat <- data.frame(g = rep(1 : 4, each = nrow(anscombe)),
+                   x = unlist(preds),
+                   y = unlist(resids)
+                   )
+
+ggplot(dat = aDat, mapping = aes(x = x, y = y)) +
+    geom_point() +
+    geom_hline(yintercept = 0, colour = "gray") +
+    xlab("Predicted Y") +
+    ylab("Residual Y") +
+    theme_classic() +
+    facet_wrap("g")
+@
+
+\end{frame}
+}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%------------------------------------------------------------------------------%
+
+\begin{frame}{Heteroscedasticity}
+
+  One commonly encountered problem is non-constant error variance (i.e.,
+  \emph{heteroscedasticity}) which violates Assumption \ref{constVar}.
+
+  \vb
+
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+
+<<echo = FALSE, message = FALSE>>=
+data(Cars93)
+out1 <- lm(Price ~ Horsepower, data = Cars93)
+
+p1 <- gg0(x = Cars93$Horsepower, y = Cars93$Price)
+p1 + geom_smooth(method = "lm", se = FALSE) +
+    xlab("Horsepower") +
+    ylab("Price")
+@
+\end{column}
+\begin{column}{0.5\textwidth}
+
+<<echo = FALSE>>=
+p1 <- gg0(x = predict(out1), y = resid(out1))
+p1 + geom_hline(yintercept = 0, colour = "gray") +
+    xlab("Predicted Price") +
+    ylab("Residual Price")
+@
+
+\end{column}
+\end{columns}
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}[fragile]{Heteroscedasticity}
+
+  We can easily generate a simple plot of residuals vs. fitted values by
+  plotting the fitted \texttt{lm()} object in R.
+
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+
+<<eval = FALSE>>=
+out1 <- lm(Price ~ Horsepower,
+           data = Cars93)
+
+plot(out1, 1)
+@
+
+\end{column}
+\begin{column}{0.5\textwidth}
+
+<<echo = FALSE>>=
+plot(out1, 1)
+@
+
+\end{column}
+\end{columns}
+
+\end{frame}
+
+\watermarkon %-----------------------------------------------------------------%
+
+\begin{frame}{Consequences of Heteroscedasticity}
+
+  Non-constant error variance will not bias the parameter estimates.
+  \begin{itemize}
+  \item The best fit line is still correct.
+  \item Our measure of uncertainty around that best fit line is wrong.
+  \end{itemize}
+  \vb
+  Heteroscedasticity will bias standard errors (usually downward).
+  \begin{itemize}
+  \item Test statistics will be too large.
+  \item CIs will be too narrow.
+  \item We will have inflated Type I error rates.
+  \end{itemize}
+  \vb
+  To get valid inference, we need to address (severe) heteroscedasticity.
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{Treating Heteroscedasticity}
+
+  \begin{enumerate}
+  \item Transform your outcome using a concave function (e.g., $\ln(Y)$,
+    $\sqrt{Y}$).
+    \vc
+    \begin{itemize}
+    \item These transformations will shrink extreme values more than
+      small/moderate ones.
+    \end{itemize}
+    \vb
+  \item Refit the model using \emph{weighted least squares}.
+    \vc
+    \begin{itemize}
+    \item Create inverse weights using functions of the residual variances or
+      quantities highly correlated therewith.
+    \end{itemize}
+    \vb
+  \item Use a \emph{Heteroscedasticity Consistent} (HC) estimate of the
+    asymptotic covariance matrix.
+    \vc
+    \begin{itemize}
+    \item Robust standard errors, Huber-White standard errors, Sandwich
+      estimators
+    \item HC estimators correct the standard errors for non-constant error
+      variance.
+    \end{itemize}
+  \end{enumerate}
+
+\end{frame}
+
+\watermarkoff %----------------------------------------------------------------%
+\comment{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile, allowframebreaks]{Example}
+
+<<>>=
+## The 'sandwich' package provides several HC estimators:
+library(sandwich)
+
+## Use sandwich estimator to compute ACOV matrix:
+hcCov <- vcovHC(out1)
+
+## Test coefficients with robust SEs:
+robTest <- coeftest(out1, vcov = hcCov)
+
+## Test coefficients with default SEs:
+defTest <- summary(out1)$coefficients
+@
+
+\pagebreak
+
+<<>>=
+## Compare robust and default approaches:
+robTest
+defTest
+@
+
+\end{frame}
+}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\watermarkon %-----------------------------------------------------------------%
+
+\begin{frame}{Correlated Errors}
+
+  Errors can become correlated in two basic ways:
+  \vb
+  \begin{enumerate}
+  \item Serial dependence
+    \begin{itemize}
+    \item When modeling longitudinal data, the errors for a given observational
+      unit are correlated over time.
+      \vc
+    \item We can detect temporal dependence by examining the
+      \emph{autocorrelation} of the residuals.
+    \end{itemize}
+    \vb
+  \item Clustering
+    \begin{itemize}
+    \item Your data have some important, unmodeled, grouping structure.
+      \begin{itemize}
+      \item Children nested within classrooms
+      \item Romantic couples
+      \item Departments within a company
+      \end{itemize}
+      \vc
+    \item We can detect problematic levels of clustering with the
+      \emph{intraclass correlation coefficient} (ICC).
+      \begin{itemize}
+      \item We need to know the clustering variable to apply the ICC.
+      \end{itemize}
+    \end{itemize}
+  \end{enumerate}
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}[allowframebreaks]{Treating Correlated Errors}
+
+  Serially dependent errors in a longitudinal model usually indicate an
+  inadequate model.
+  \vc
+  \begin{itemize}
+  \item Your model is ignoring some important aspect of the temporal variation
+    that is being absorbed by the error terms.
+    \vc
+  \item Hopefully, you can add the missing component to your model.
+  \end{itemize}
+
+  \pagebreak
+
+  Clustering can be viewed as theoretically meaningful or as a nuisance factor
+  that just needs to be controlled.
+  \vb
+  \begin{itemize}
+  \item If the clustering is meaningful, you should model the data using
+    \emph{multilevel modeling}.
+    \vc
+    \begin{itemize}
+    \item Hierarchical linear regression
+      \vc
+    \item Mixed models
+      \vc
+    \item Random effects models
+    \end{itemize}
+    \vc
+  \item If the clustering is an uninteresting nuisance, you can use specialized
+    HC variance estimators that deal with clustering.
+  \end{itemize}
+
+\end{frame}
+
+\watermarkoff %----------------------------------------------------------------%
+
+\begin{frame}{Model Specification}
+
+  Our assumptions mostly focus on the errors, so incorrect model specification
+  can lead to violations of many assumptions.
+  \vb
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+
+<<echo = FALSE>>=
+out2 <- lm(MPG.highway ~ Horsepower, data = Cars93)
+
+p2 <- gg0(x = predict(out2), y = resid(out2))
+p3 <- p2 + geom_hline(yintercept = 0, colour = "gray") +
+    xlab("Predicted MPG") +
+    ylab("Residual MPG")
+p3
+@
+
+\end{column}
+
+\begin{column}{0.5\textwidth}
+
+<<echo = FALSE, message = FALSE>>=
+p3 + geom_smooth(method = "loess", se = FALSE)
+@
+
+\end{column}
+\end{columns}
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{Nonlinear Trends in Residual Plots}
+
+  Clearly, the linear trend fits these data poorly.
+  \begin{itemize}
+    \item We should probably add some polynomial terms
+  \end{itemize}
+  \vb
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+
+<<echo = FALSE, message = FALSE>>=
+p4 <- gg0(x = Cars93$Horsepower, y = Cars93$MPG.highway)
+p5 <- p4 + geom_smooth(method = "lm", se = FALSE) +
+    xlab("Horsepower") +
+    ylab("MPG")
+p5
+@
+
+\end{column}
+
+\begin{column}{0.5\textwidth}
+
+<<echo = FALSE, message = FALSE>>=
+p3 + geom_smooth(method = "loess", se = FALSE)
+@
+
+\end{column}
+\end{columns}
+
+\end{frame}
+
+\watermarkon %-----------------------------------------------------------------%
+
+\begin{frame}{Treating Residual Nonlinearity}
+
+  Nonlinearity in the residual plots is usually a sign of either:
+  \begin{enumerate}
+  \item Model misspecification
+  \item Influential observations
+  \end{enumerate}
+  \vb
+  This type of model misspecification usually implies omitted functions of
+  modeled variables.
+  \begin{itemize}
+  \item Polynomial terms
+  \item Interactions
+  \end{itemize}
+  \vb
+  The solution is to include the omitted term into the model and refit.
+  \begin{itemize}
+  \item This is very much easier said than done.
+  \end{itemize}
+
+\end{frame}
+
+\watermarkoff %----------------------------------------------------------------%
+
+\begin{frame}{Residual Plots}
+
+  Certainly looks better, but not ideal.
+  \vb
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+
+<<echo = FALSE, message = FALSE>>=
+out3 <- lm(MPG.highway ~ Horsepower + I(Horsepower^2), data = Cars93)
+
+p6 <- gg0(x = Cars93$Horsepower, y = Cars93$MPG.highway)
+p7 <- p6 + geom_smooth(method = "lm", formula = y ~ x + I(x^2), se = FALSE) +
+    xlab("Horsepower") +
+    ylab("MPG")
+p7
+@
+
+\end{column}
+
+\begin{column}{0.5\textwidth}
+
+<<echo = FALSE, message = FALSE>>=
+p8 <- gg0(x = predict(out3), y = resid(out3)) +
+    geom_hline(yintercept = 0) +
+    geom_smooth(method = "loess", se = FALSE) +
+    xlab("Predicted MPG") +
+    ylab("Residual MPG")
+p8
+@
+
+\end{column}
+\end{columns}
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{Residual Plots}
+
+  Further improvement (perhaps).
+  \vb
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+
+<<echo = FALSE, message = FALSE>>=
+out4 <- lm(MPG.highway ~ Horsepower + I(Horsepower^2) + I(Horsepower^3),
+           data = Cars93)
+
+p9  <- gg0(x = Cars93$Horsepower, y = Cars93$MPG.highway)
+p10 <- p9 + geom_smooth(method = "lm", formula = y ~ x + I(x^2) + I(x^3),
+                        se = FALSE) +
+    xlab("Horsepower") +
+    ylab("MPG")
+p10
+@
+
+\end{column}
+
+\begin{column}{0.5\textwidth}
+
+<<echo = FALSE, message = FALSE>>=
+p11 <- gg0(x = predict(out4), y = resid(out4)) +
+    geom_hline(yintercept = 0) +
+    geom_smooth(method = "loess", se = FALSE) +
+    xlab("Predicted MPG") +
+    ylab("Residual MPG")
+p11
+@
+
+\end{column}
+\end{columns}
+
+\end{frame}
+
+\watermarkon %-----------------------------------------------------------------%
+
+\begin{frame}[allowframebreaks]{Omitted Variables}
+
+  The most common cause of endogeneity (i.e., violating Assumption \ref{exo}) is
+  \emph{omitted variable bias}.
+  \vb
+  \begin{itemize}
+  \item If we leave an important predictor variable out of our equation, some
+    modeled predictors will become endogenous and their estimated regression
+    slopes will be biased.
+    \vb
+  \item The omitted variable must be correlated with $Y$ and at least one of the
+    modeled $X_p$, to be a problem.
+  \end{itemize}
+
+  \pagebreak
+
+  Assume the following is the true regression model.
+  \begin{align*}
+    Y = \beta_0 + \beta_1X + \beta_2Z + \varepsilon
+  \end{align*}
+  Now, suppose we omit $Z$ from the model:
+  \begin{align*}
+    Y &= \beta_0 + \beta_1X + \omega\\
+    \omega &= \varepsilon + \beta_2Z
+  \end{align*}
+  Our new error, $\omega$, is a combination of the true error, $\varepsilon$,
+  and the omitted term, $\beta_2Z$.
+  \begin{itemize}
+  \item Consequently, if $X$ and $Z$ are correlated, omitting $Z$ induces a
+    correlation between $X$ and $\omega$ (i.e., endogeneity).
+  \end{itemize}
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{Treating Omitted Variable Bias}
+
+  Omitted variable bias can have severe consequences, but you can't really test
+  for it.
+  \vb
+  \begin{itemize}
+  \item The \emph{errors} are correlated with the predictors, but our model is
+    estimated under the assumption of exogeneity, so the \emph{residuals} from
+    our model will generally be uncorrelated with the predictors.
+    \vb
+  \item We mostly have to pro-actively work to include all relevant variables in
+    our model.
+  \end{itemize}
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+\comment{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Other Causes of Endogeneity}
+
+  Simultaneity (i.e., the third variable problem)
+  \begin{itemize}
+  \item $X$ and $Y$ are both caused by an unmodeled third variable.
+  \item The absence of the true cause induces a spurious correlation between
+    $X$ and $Y$.
+  \item This is actually special type of omitted variable problem.
+  \end{itemize}
+  \vb
+  Measurement error in the $X_p$ variables
+  \begin{itemize}
+  \item If some predictors are measured with error, their estimated effects will
+    be biased.
+  \item We can use fancy-pants corrections for this bias.
+  \item We can also use \emph{latent variable} models.
+  \item Measurement error in $Y$ increases residual variance, but does not bias
+    parameter estimates.
+  \end{itemize}
+
+\end{frame}
+}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\watermarkoff %----------------------------------------------------------------%
+
+\begin{frame}{Normality Assumption}
+
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+
+      One of the best ways to evaluate the normality of the error distribution
+      with a Q-Q Plot.
+      \vc
+      \begin{itemize}
+      \item Plot the quantiles of the residual distribution against the
+        theoretically ideal quantiles.
+        \vc
+      \item We can actually use a Q-Q Plot to compare any two distributions.
+      \end{itemize}
+
+    \end{column}
+
+    \begin{column}{0.5\textwidth}
+
+<<>>=
+plot(out1, 2)
+@
+
+<<echo = FALSE, eval = FALSE>>=
+out1 <- lm(Price ~ Horsepower, data = Cars93)
+qqnorm(resid(out1))
+qqline(resid(out1))
+@
+
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+\watermarkon %-----------------------------------------------------------------%
+
+\begin{frame}{Consequences of Violating Normality}
+
+  In small samples, with \emph{\underline{fixed}} predictors, normally
+  distributed errors imply normal sampling distributions for the regression
+  coefficients.
+  \vc
+  \begin{itemize}
+  \item In large samples, the central limit theorem implies normal sampling
+    distributions for the coefficients, regardless of the error distribution.
+  \end{itemize}
+  \va
+  \pause
+  Prediction intervals require normally distributed errors.
+  \vc
+  \begin{itemize}
+  \item Confidence intervals for predictions share the same normality
+    requirements as the coefficients' sampling distributions.
+  \end{itemize}
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{Treating Violations of Normality}
+
+  We usually don't need to do anything about non-normal errors.
+  \begin{itemize}
+  \item The CLT will protect our inferences.
+  \end{itemize}
+  \vb
+  \pause
+  We can use \emph{bootstrapping} to get around the need for normality.
+  \begin{enumerate}
+  \item Treat your sample as a synthetic population from which you draw many new
+    samples (with replacement).
+  \item Estimate your model in each new sample.
+  \item The replicates of your estimated parameters generate an empirical
+    sampling distribution that you can use for inference.
+  \end{enumerate}
+  \vb
+  \pause
+  Bootstrapping can be used for inference on pretty much any estimable
+  parameter, but it won't work with small samples.
+  \begin{itemize}
+  \item Need to assume that your sample is representative of the population
+  \end{itemize}
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\sectionslide{Influential Observations}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{Influential Observations}
+
+  Influential observations contaminate analyses in two ways:
+  \vc
+  \begin{enumerate}
+  \item Exert too much influence on the fitted regression model
+    \vc
+  \item Invalidate estimates/inferences by violating assumptions
+  \end{enumerate}
+  \vb
+  There are two distinct types of influential observations:
+  \vc
+  \begin{enumerate}
+  \item Outliers
+    \vc
+    \begin{itemize}
+    \item Observations with extreme outcome values, relative to the other data.
+      \vc
+    \item Observations with outcome values that fit the model very badly.
+    \end{itemize}
+    \vb
+  \item High-leverage observations
+    \vc
+    \begin{itemize}
+    \item Observation with extreme predictor values, relative to other data.
+    \end{itemize}
+  \end{enumerate}
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{Outliers}
+
+  Outliers can be identified by scrutinizing the residuals.
+  \vc
+  \begin{itemize}
+  \item Observations with residuals of large magnitude may be outliers.
+    \vc
+  \item The difficulty arises in quantifying what constitutes a ``large''
+    residual.
+  \end{itemize}
+  \vb
+  If the residuals do not have constant variance, then we cannot directly
+  compare them.
+  \vc
+  \begin{itemize}
+  \item We need to standardize the residuals in some way.
+  \end{itemize}
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{Detecting Outliers}
+
+  We are specifically interested in \emph{externally studentized residuals}.
+  \vb
+  \begin{itemize}
+  \item We can't simply standardize the ordinary residuals.
+    \begin{itemize}
+    \item \emph{Internally studentized residuals}
+      \vc
+    \item Outliers can pull the regression line towards themselves.
+      \vc
+    \item The internally studentized residuals for outliers will be too small.
+    \end{itemize}
+  \end{itemize}
+  \vb
+  Begin by defining the concept of a \emph{deleted residual}:
+  \begin{align*}
+    \hat{\varepsilon}_{(n)} = Y_n - \hat{Y}_{(n)}
+  \end{align*}
+  \vx{-18}
+  \begin{itemize}
+    \item $\hat{\varepsilon}_{(n)}$ quantifies the distance of $Y_n$ from the
+      regression line estimated after excluding the $n$th observation.
+  \end{itemize}
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{Studentized Residuals}
+
+  If we standardize the deleted residual, $\hat{\varepsilon}_{(n)}$, we get the
+  externally studentized residual:
+  \begin{align*}
+    t_{(n)} = \frac{\hat{\varepsilon}_{(n)}}{SE_{\hat{\varepsilon}_{(n)}}}
+  \end{align*}
+  The externally studentized residuals have two very useful properties:
+  \vb
+  \begin{enumerate}
+  \item Each $t_{(n)}$ is scaled equivalently.
+    \vc
+    \begin{itemize}
+    \item We can directly compare different $t_{(n)}$.
+    \end{itemize}
+    \vb
+  \item The $t_{(n)}$ are \emph{Student's t} distributed.
+    \vc
+    \begin{itemize}
+    \item We can quantify outliers in terms of quantiles of the $t$
+      distribution.
+      \vc
+    \item $|t_{(n)}| > 3.0$ is a common rule of thumb for flagging outliers.
+    \end{itemize}
+  \end{enumerate}
+
+\end{frame}
+
+\watermarkoff %----------------------------------------------------------------%
+
+\begin{frame}{Studentized Residual Plots}
+
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+
+      Index plots of the externally studentized residuals can help spotlight
+      potential outliers.
+      \vb
+      \begin{itemize}
+      \item Look for observations that clearly ``stand out from the crowd.''
+      \end{itemize}
+
+    \end{column}
+
+    \begin{column}{0.5\textwidth}
+
+<<>>=
+plot(rstudent(out1))
+@
+
+<<echo = FALSE, eval = FALSE>>=
+p1 <- gg0(x = c(1 : nrow(Cars93)), y = rstudent(out1))
+
+p1 + geom_hline(yintercept = c(-3, 3), colour = "red") +
+    xlab("Index") +
+    ylab("Externally Studentized Residual MPG")
+@
+
+\end{column}
+\end{columns}
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{High-Leverage Points}
+
+  We identify high-leverage observations through their \emph{leverage} values.
+  \vb
+  \begin{itemize}
+  \item An observation's leverage, $h_n$, quantifies the extent to which its
+    predictors affect the fitted regression model.
+    \vb
+  \item Observations with $X$ values very far from the mean, $\bar{X}$, affect
+    the fitted model disproportionately.
+  \end{itemize}
+  \vb
+  \pause
+  In simple linear regression, the $n$th leverage is given by:
+  \begin{align*}
+    h_n = \frac{1}{N} + \frac{\left(X_n - \bar{X}\right)^2}
+    {\sum_{m = 1}^N \left(X_{m} - \bar{X}\right)^2}
+  \end{align*}
+
+\end{frame}
+
+\watermarkoff %----------------------------------------------------------------%
+
+\begin{frame}{Leverage Plots}
+
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+
+      Index plots of the leverage values can help spotlight high-leverage points.
+      \vb
+      \begin{itemize}
+      \item Again, look for observations that clearly ``stand out from the
+        crowd.''
+      \end{itemize}
+
+    \end{column}
+
+    \begin{column}{0.5\textwidth}
+
+<<>>=
+plot(hatvalues(out1))
+@
+
+<<echo = FALSE, eval = FALSE>>=
+n <- nrow(Cars93)
+
+p1 <- gg0(x = c(1 : n), y = hatvalues(out1))
+
+p1 + geom_hline(yintercept = 2 / n, colour = "red") +
+    xlab("Index") +
+    ylab("Leverage Values")
+@
+
+\end{column}
+\end{columns}
+
+\end{frame}
+
+\watermarkon %-----------------------------------------------------------------%
+
+\begin{frame}{Outliers \& Leverages $\rightarrow$ Influential Points}
+
+  Observations with high leverage or large (externally) studentized residuals
+  are not necessarily influential.
+  \vc
+  \begin{itemize}
+  \item High-leverage observations tend to be more influential than outliers.
+    \vc
+  \item The worst problems arise from observations that are both outliers and
+    have high leverage.
+  \end{itemize}
+  \vb
+  \emph{Measures of influence} simultaneously consider extremity in both $X$
+  and $Y$ dimensions.
+  \vc
+  \begin{itemize}
+  \item Observations with high measures of influence are very likely to cause
+    problems.
+  \end{itemize}
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{Measures of Influence}
+
+  Measures of influence come in two flavors.
+  \vb
+  \begin{enumerate}
+  \item Global measures of influence
+    \vc
+    \begin{itemize}
+    \item Cook's Distance
+    \end{itemize}
+    \vb
+  \item Coefficient-specific measures of influence
+    \vc
+    \begin{itemize}
+    \item DFBETAS
+    \end{itemize}
+  \end{enumerate}
+  \vb
+  All measures of influence use the same logic as the deleted residual.
+  \vc
+  \begin{itemize}
+  \item Compare models estimated from the whole sample to models estimated from
+    samples excluding individual observations.
+  \end{itemize}
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{Global Measures of Influence}
+
+  Each observation gets a Cook's Distance value.
+  \begin{align*}
+    \textrm{Cook's} ~ D_n &= \frac{\sum_{n = 1}^N \left( \hat{Y}_n - \hat{Y}_{(n)} \right)^2}{\left(P + 1\right) \hat{\sigma}^2}\\[6pt]
+                          &= (P + 1)^{-1} t_n^2 \frac{h_n}{1 - h_n}
+  \end{align*}
+
+  Each regression coefficient (including the intercept) gets a DFBETAS value for
+  each observation.
+  \begin{align*}
+    \textrm{DFBETAS}_{np} = \frac{\hat{\beta}_p - \hat{\beta}_{p(n)}}{\textrm{SE}_{\hat{\beta}_{p(n)}}}
+  \end{align*}
+
+\end{frame}
+
+\watermarkoff %----------------------------------------------------------------%
+
+\begin{frame}[fragile]{Plots of Cook's Distance}
+
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+
+      Index plots of Cook's distances can help spotlight the influential points.
+      \vb
+      \begin{itemize}
+      \item Look for observations that clearly ``stand out from the crowd.''
+      \end{itemize}
+
+    \end{column}
+    \begin{column}{0.5\textwidth}
+
+<<echo = FALSE, eval = FALSE>>=
+fCrit <- qf(0.5, 2, n - 2)
+
+p1 <- gg0(x = c(1 : n), y = cooks.distance(out1))
+
+p1 + geom_hline(yintercept = c(fCrit), colour = "red") +
+    xlab("Index") +
+    ylab("Cook's Distance")
+@
+
+<<>>=
+cd <- cooks.distance(out1)
+plot(cd)
+@
+
+\end{column}
+\end{columns}
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}[fragile]{Plots of DFBETAS}
+
+<<eval = FALSE>>=
+dfb <- dfbetas(out1)
+plot(dfb[ , 1], main = "Intercept")
+plot(dfb[ , 2], main = "Slope")
+@
+
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+
+<<echo = FALSE>>=
+dfb <- dfbetas(out1)
+plot(dfb[ , 1], main = "Intercept")
+@
+
+<<echo = FALSE, eval = FALSE>>=
+dfb <- dfbetas(out1)
+
+p1 <- gg0(x = c(1 : n), y = dfb[ , 1])
+
+p1 + geom_hline(yintercept = c(-2 / sqrt(n), 2 / sqrt(n)), colour = "red") +
+    xlab("Index") +
+    ylab("DFBETAS for Intercept")
+@
+
+\end{column}
+\begin{column}{0.5\textwidth}
+
+<<echo = FALSE>>=
+plot(dfb[ , 2], main = "Slope")
+@
+
+<<echo = FALSE, eval = FALSE>>=
+p1 <- gg0(x = c(1 : n), y = dfb[ , 2])
+
+p1 + geom_hline(yintercept = c(-2 / sqrt(n), 2 / sqrt(n)), colour = "red") +
+    xlab("Index") +
+    ylab("DFBETAS for Slope")
+@
+
+\end{column}
+\end{columns}
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\subsection{Treating Influential Observations}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}[fragile]{Removing Influential Observations}
+
+<<>>=
+(maxD <- which.max(cd))
+@
+
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+
+      Observation number \Sexpr{maxD} was the most influential
+      according to Cook's Distance.
+      \vb
+      \begin{itemize}
+      \item Removing that observation has a small impact on the fitted
+        regression line.
+        \vc
+      \item Influential observations don't only affect the regression line,
+        though.
+      \end{itemize}
+
+    \end{column}
+
+    \begin{column}{0.5\textwidth}
+
+<<echo = FALSE, message = FALSE>>=
+x <- Cars93$Horsepower
+y <- Cars93$Price
+
+x2 <- x[-maxD]
+y2 <- y[-maxD]
+
+colVec <- rep("black", nrow(Cars93))
+colVec[maxD] <- "red"
+
+p1 <- gg0(x = x, y = y, points = FALSE) +
+    geom_point(aes(colour = colVec), show.legend = FALSE, size = 2) +
+    xlab("Horsepower") +
+    ylab("Price")
+
+p1 + geom_smooth(method = "lm", se = FALSE, size = 2) +
+geom_smooth(mapping  = aes(x = x2, y = y2),
+            method   = "lm",
+            se       = FALSE,
+            color    = "red",
+            linetype = "dashed",
+            size     = 2) +
+scale_colour_manual(values = c("black", "red"))
+@
+
+\end{column}
+\end{columns}
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}[fragile, allowframebreaks]{Removing Influential Observations}
+
+<<>>=
+## Exclude the influential case:
+Cars93.2 <- Cars93[-maxD, ]
+
+## Fit model with reduced sample:
+out2 <- lm(Price ~ Horsepower, data = Cars93.2)
+
+round(summary(out1)$coefficients, 6)
+round(summary(out2)$coefficients, 6)
+@
+
+\pagebreak
+
+<<>>=
+partSummary(out1, 2)
+partSummary(out2, 2)
+@
+
+\pagebreak
+
+<<>>=
+summary(out1)[c("sigma", "r.squared", "fstatistic")] %>%
+    unlist() %>%
+    head(3)
+summary(out2)[c("sigma", "r.squared", "fstatistic")] %>%
+    unlist() %>%
+    head(3)
+@
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}[fragile]{Removing Influential Observations}
+
+<<>>=
+(maxDs <- sort(cd) %>% names() %>% tail(2) %>% as.numeric())
+@
+
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+
+      If we remove the two most influential observations, \Sexpr{maxDs[1]} and
+      \Sexpr{maxDs[2]}, the fitted regression line barely changes at all.
+      \vc
+      \begin{itemize}
+      \item The influences of these two observations were counteracting one
+        another.
+      \item We're probably still better off, though.
+      \end{itemize}
+
+    \end{column}
+
+    \begin{column}{0.5\textwidth}
+
+<<echo = FALSE, message = FALSE>>=
+x <- Cars93$Horsepower
+y <- Cars93$Price
+
+x2 <- x[-maxDs]
+y2 <- y[-maxDs]
+
+colVec <- rep("black", nrow(Cars93))
+colVec[maxDs] <- "red"
+
+p1 <- gg0(x = x, y = y, points = FALSE) +
+    geom_point(aes(colour = colVec), show.legend = FALSE, size = 2) +
+    xlab("Horsepower") +
+    ylab("Price")
+
+p1 + geom_smooth(method = "lm", se = FALSE, size = 2) +
+geom_smooth(mapping  = aes(x = x2, y = y2),
+            method   = "lm",
+            se       = FALSE,
+            color    = "red",
+            linetype = "dashed",
+            size     = 2) +
+scale_colour_manual(values = c("black", "red"))
+@
+
+\end{column}
+\end{columns}
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}[fragile, allowframebreaks]{Removing Influential Observations}
+
+<<>>=
+## Exclude influential cases:
+Cars93.2 <- Cars93[-maxDs, ]
+
+## Fit model with reduced sample:
+out2.2 <- lm(Price ~ Horsepower, data = Cars93.2)
+
+round(summary(out1)$coefficients, 6)
+round(summary(out2.2)$coefficients, 6)
+@
+
+\pagebreak
+
+<<>>=
+partSummary(out1, 2)
+partSummary(out2.2, 2)
+@
+
+\pagebreak
+
+<<>>=
+summary(out1)[c("sigma", "r.squared", "fstatistic")] %>%
+    unlist() %>%
+    head(3)
+summary(out2.2)[c("sigma", "r.squared", "fstatistic")] %>%
+    unlist() %>%
+    head(3)
+@
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+\comment{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Influential Points Violating Assumptions}
+
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+
+      Let's revisit the nonlinear relationship between \emph{Horsepower} and
+      \emph{MPG}.  \vb
+      \begin{itemize}
+      \item The residual plots never really behaved.
+        \vc
+      \item Maybe some influential observations are causing trouble?
+        \vc
+        \begin{itemize}
+        \item $n = 39$ certainly looks like a jerk.
+        \end{itemize}
+      \end{itemize}
+
+    \end{column}
+
+    \begin{column}{0.5\textwidth}
+
+<<echo = FALSE>>=
+out322 <- lm(MPG.highway ~ Horsepower + I(Horsepower^2), data = Cars93)
+
+p1 <- gg0(x = c(1 : nrow(Cars93)), y = cooks.distance(out322))
+p1 + xlab("Index") + ylab("Cook's Distance")
+@
+
+\end{column}
+\end{columns}
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{Quadratic Model}
+
+  Residuals look much smoother after deleting the influential point.
+  \vb
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+
+<<echo = FALSE, message = FALSE>>=
+Cars93.3 <- Cars93[-39, ]
+out3 <- lm(MPG.highway ~ Horsepower + I(Horsepower^2), data = Cars93.3)
+
+p6 <- gg0(x = Cars93.3$Horsepower, y = Cars93.3$MPG.highway)
+p7 <- p6 + geom_smooth(method = "lm", formula = y ~ x + I(x^2), se = FALSE) +
+    xlab("Horsepower") +
+    ylab("MPG")
+p7
+@
+
+\end{column}
+
+\begin{column}{0.5\textwidth}
+
+<<echo = FALSE, message = FALSE>>=
+p8 <- gg0(x = predict(out3), y = resid(out3)) +
+    geom_hline(yintercept = 0) +
+    geom_smooth(method = "loess", se = FALSE) +
+    xlab("Predicted MPG") +
+    ylab("Residual MPG")
+p8
+@
+
+\end{column}
+\end{columns}
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{Cubic Model}
+
+  Basically no trend, after fitting the cubic model to the reduced dataset.
+  \vb
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+
+<<echo = FALSE, message = FALSE>>=
+out4 <- lm(MPG.highway ~ Horsepower + I(Horsepower^2) + I(Horsepower^3),
+           data = Cars93.3)
+
+p9  <- gg0(x = Cars93.3$Horsepower, y = Cars93.3$MPG.highway)
+p10 <- p9 + geom_smooth(method = "lm", formula = y ~ x + I(x^2) + I(x^3),
+                        se = FALSE) +
+    xlab("Horsepower") +
+    ylab("MPG")
+p10
+@
+
+\end{column}
+
+\begin{column}{0.5\textwidth}
+
+<<echo = FALSE, message = FALSE>>=
+p11 <- gg0(x = predict(out4), y = resid(out4)) +
+    geom_hline(yintercept = 0) +
+    geom_smooth(method = "loess", se = FALSE) +
+    xlab("Predicted MPG") +
+    ylab("Residual MPG")
+p11
+@
+
+\end{column}
+\end{columns}
+
+\end{frame}
+}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\watermarkon %-----------------------------------------------------------------%
+
+\begin{frame}{Treating Influential Points}
+
+  The most common way to address influential observations is simply to delete
+  them and refit the model.
+  \vc
+  \begin{itemize}
+  \item This approach is often effective---and always simple---but it is not
+    fool-proof.
+  \vc
+  \item Although an observation is influential, we may not be able to justify
+    excluding it from the analysis.
+  \end{itemize}
+  \vb
+  Robust regression procedures can estimate the model directly in the
+  presence of influential observations.
+  \vc
+  \begin{itemize}
+  \item Observations in the tails of the distribution are weighted less in the
+    estimation process, so outliers and high-leverage points cannot exert
+    substantial influence on the fit.
+  \end{itemize}
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+\comment{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[allowframebreaks]{References}
+
+  \bibliographystyle{apacite}
+  \bibliography{../../../literature/bibtex_files/refs.bib}
+
+\end{frame}
+}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{document}

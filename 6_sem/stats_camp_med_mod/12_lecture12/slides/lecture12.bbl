@@ -1,0 +1,120 @@
+\begin{thebibliography}{}
+
+\bibitem [\protect \citeauthoryear {%
+Klein%
+\ \BBA {} Moosbrugger%
+}{%
+Klein%
+\ \BBA {} Moosbrugger%
+}{%
+{\protect \APACyear {2000}}%
+}]{%
+kleinMoosbrugger:2000}
+\APACinsertmetastar {%
+kleinMoosbrugger:2000}%
+\begin{APACrefauthors}%
+Klein, A.%
+\BCBT {}\ \BBA {} Moosbrugger, H.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2000}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Maximum likelihood estimation of latent interaction
+  effects with the {LMS} method} {Maximum likelihood estimation of latent
+  interaction effects with the {LMS} method}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{Psychometrika}{65}{4}{457--474}.
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Klein%
+, Moosbrugger%
+, Schermelleh-Engel%
+\BCBL {}\ \BBA {} Frank%
+}{%
+Klein%
+\ \protect \BOthers {.}}{%
+{\protect \APACyear {1997}}%
+}]{%
+kleinEtAl:1997}
+\APACinsertmetastar {%
+kleinEtAl:1997}%
+\begin{APACrefauthors}%
+Klein, A.%
+, Moosbrugger, H.%
+, Schermelleh-Engel, K.%
+\BCBL {}\ \BBA {} Frank, D.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{1997}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {A new approach to the estimation of latent interaction
+  effects in structural equation models} {A new approach to the estimation of
+  latent interaction effects in structural equation models}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{SoftStat}{97}{}{479--486}.
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Lin%
+, Wen%
+, Marsh%
+\BCBL {}\ \BBA {} Lin%
+}{%
+Lin%
+\ \protect \BOthers {.}}{%
+{\protect \APACyear {2010}}%
+}]{%
+linEtAl:2010}
+\APACinsertmetastar {%
+linEtAl:2010}%
+\begin{APACrefauthors}%
+Lin, G\BHBI C.%
+, Wen, Z.%
+, Marsh, H\BPBI W.%
+\BCBL {}\ \BBA {} Lin, H\BHBI S.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2010}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Structural equation models of latent interactions:
+  {Clarification} of orthogonalizing and double-mean-centering strategies}
+  {Structural equation models of latent interactions: {Clarification} of
+  orthogonalizing and double-mean-centering strategies}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{Structural Equation Modeling}{17}{3}{374--391}.
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Little%
+, Bovaird%
+\BCBL {}\ \BBA {} Widaman%
+}{%
+Little%
+\ \protect \BOthers {.}}{%
+{\protect \APACyear {2006}}%
+}]{%
+littleEtAl:2006}
+\APACinsertmetastar {%
+littleEtAl:2006}%
+\begin{APACrefauthors}%
+Little, T\BPBI D.%
+, Bovaird, J\BPBI A.%
+\BCBL {}\ \BBA {} Widaman, K\BPBI F.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2006}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {On the merits of orthogonalizing powered and product
+  terms: {Implications} for modeling interactions among latent variables} {On
+  the merits of orthogonalizing powered and product terms: {Implications} for
+  modeling interactions among latent variables}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{Structural Equation Modeling}{13}{4}{497--519}.
+\PrintBackRefs{\CurrentBib}
+
+\end{thebibliography}

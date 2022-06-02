@@ -1,0 +1,606 @@
+\documentclass{beamer}
+\usetheme{ttuStatsCamp}
+\usefonttheme{serif}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage[natbibapa]{apacite}
+\usepackage{color}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{Sweavel}
+\usepackage{listings}
+\usepackage{fancybox}
+
+\def\Sweavesize{\scriptsize}
+\def\Rcolor{\color{black}}
+%\def\Routcolor{\color{red}}
+\def\Rcommentcolor{\color{violet}}
+\def\Rbackground{\color[gray]{0.85}}
+\def\Routbackground{\color[gray]{0.85}}
+
+\lstset{tabsize=2, breaklines=true, style=Rstyle}
+
+\SweaveOpts{keep.source=T, prefix.string=sweaveFiles/, split=T, ae=F, height=4, width=6}
+
+\newcommand{\red}[0]{\textcolor{red}}
+\newcommand{\green}[0]{\textcolor{green}}
+\newcommand{\blue}[0]{\textcolor{blue}}
+\newcommand{\comment}[1]{}
+\newcommand{\va}[0]{\vspace{12pt}}
+\newcommand{\vb}[0]{\vspace{6pt}}
+\newcommand{\vc}[0]{\vspace{3pt}}
+\newcommand{\vx}[1]{\vspace{#1pt}}
+
+\title[Lecture 11]{Lecture 11: Conditional Process Analysis}
+
+\author{Kyle M. Lang}
+
+\institute[TTU IMMAP]{
+  Institute for Measurement, Methodology, Analysis \& Policy\\
+  Texas Tech University\\
+  Lubbock, TX
+}
+
+\date{2016 Stats Camp}
+
+\setbeamertemplate{frametitle continuation}{}
+
+\begin{document}
+
+\setkeys{Gin}{width=\textwidth}
+
+<<echo=F>>=
+options(width=160, prompt=" ", continue=" ", useFancyQuotes = TRUE)
+library(xtable)
+@
+
+
+\begin{frame}[plain]
+  
+  \titlepage
+  
+\end{frame}
+
+
+\begin{frame}{Outline}
+
+  \begin{itemize}
+  \item Index of moderated mediation
+    \va
+  \item Examples of inference in conditional process models
+    \va
+  \item Inference when multiple paths are moderated
+    \va
+  \item General steps of inference in conditional process analysis
+  \end{itemize}
+  
+\end{frame}
+
+
+
+\begin{frame}{From Last Time}
+  
+  Last time, we saw how to calculate the conditional indirect effects
+  in a model such as the following: 
+  \vb
+  \begin{figure}
+    \includegraphics[width=0.95\textwidth]{figures/modAwithZConceptual.pdf}
+  \end{figure}
+  
+\end{frame}
+
+
+
+\begin{frame}{From Last Time}
+  
+  The preceding diagram corresponds to the following equations:
+  \begin{align}
+    Y &= i_1 + bM + c'X + e_Y\\
+    M &= i_2 + a_1X + a_2Z + a_3XZ + e_M \label{eq2}
+  \end{align}
+  The indirect effect must be interpreted as conditional
+  on $Z$ due to the $a$ path being moderated by $Z$.\\ 
+  \va 
+  We rearrange Equation \ref{eq2} to get:
+  \begin{align*}
+    M = i_2 + a_2Z + \left( a_1 + a_3Z \right)X + e_M,
+  \end{align*}
+  and the conditional indirect effect is defined by:
+  \begin{align*}
+    IE = \left(a_1 + a_3Z \right) b
+  \end{align*}
+  
+\end{frame}
+
+
+\begin{frame}{Index of Moderated Mediation}
+  
+  Probing conditional indirect effects is all well and good, but we'd
+  like a single index to test the overall hypothesis of moderated
+  mediation.
+  \vb
+  \begin{itemize}
+    \item Enter the \emph{Index of Moderated Mediation} (IMM)
+      introduced by \citet{hayes:2015}.
+      \vb
+    \item The IMM quantifies the linear effect of the moderator on the
+      indirect effect.
+      \vb
+    \item When IMM is different from zero, we know that the indirect
+      effect is moderated, generally.
+  \end{itemize}
+  
+\end{frame}
+
+
+\begin{frame}{Index of Moderated Mediation}
+  
+  Applying some basic algebra to the preceding conditional indirect
+  effect formula produces:
+  \begin{align*}
+    \left(a_1 + a_3Z \right) b = a_1b + a_3bZ,
+  \end{align*}
+  which is a linear function describing the effect of $Z$ on the
+  indirect effect
+  \begin{itemize}
+    \item $a_1b$ is the intercept term
+    \item $a_3b$ is the slope linking $Z$ to the indirect effect
+  \end{itemize}
+  \vb
+  The $a_3b$ term is the IMM.
+  \vb
+  \begin{itemize}
+    \item We test $a_3b \neq 0$ to infer moderated mediation.
+    \item Normal theory tests are possible, but we want to use
+      bootstrapping.
+  \end{itemize}
+  
+\end{frame}
+
+
+
+\begin{frame}[allowframebreaks]{Example}
+  
+<<>>=
+## Prep stuff:
+library(lavaan)
+nBoot <- 1000
+dat1 <- readRDS("../data/lecture11Data.rds")
+##
+## Create product term:
+dat1$xz <- dat1$x * dat1$z
+##
+## Specify model:
+mod1 <- "
+y ~ cp*x + b*m1
+m1 ~ a1*x + a2*z + a3*xz
+
+imm := a3*b
+"
+##
+## Fit model:
+out1 <- sem(mod1, data = dat1, se = "boot", boot = nBoot)
+summary(out1)
+@ 
+
+\pagebreak
+
+<<>>=
+parameterEstimates(out1, 
+                   boot = "bca.simple")[-c(6 : 13), -c(1 : 3)]
+@ 
+
+\end{frame}
+
+
+
+\begin{frame}{A Little Different}
+  
+  Moderation of the direct effect doesn't change the calculation of
+  the IMM.\\
+  \va
+  Consider the following model:
+  \begin{figure}
+    \includegraphics[width = \textwidth]{figures/modBCwithWConceptual.pdf}
+  \end{figure}
+  
+\end{frame}
+
+
+
+\begin{frame}{A Little Different}
+  
+  This analytic diagram implies the following equations:
+  \begin{align}
+    Y &= i_1 + c_1'X + b_1M + b_2W + c_2'XW + b_3MW + e_Y \label{eq3}\\
+    M &= i_2 + aX + e_M
+  \end{align}
+  The direct effect is conditional:
+  \begin{align*}
+    DE = c_1' + c_2'W
+  \end{align*}
+  The conditional indirect effect is defined by:
+  \begin{align*}
+    IE = a \left(b_1 + b_3W \right) = ab_1 + ab_3W,
+  \end{align*}
+  which implies $IMM = ab_3$
+  
+\end{frame}
+
+
+
+\begin{frame}[allowframebreaks]{Example}
+  
+<<>>=
+##
+## Create product term:
+dat1$m1w <- dat1$m1 * dat1$w
+dat1$xw <- dat1$x * dat1$w
+##
+## Specify model:
+mod2 <- "
+y ~ cp1*x + cp2*xw + b1*m1 + b2*w + b3*m1w
+m1 ~ a*x
+
+imm := a*b3
+"
+##
+## Fit model:
+out2 <- sem(mod2, data = dat1, se = "boot", boot = nBoot)
+summary(out2)
+@ 
+
+\pagebreak
+
+<<>>=
+parameterEstimates(out2, 
+                   boot = "bca.simple")[-c(7 : 18), -c(1 : 3)]
+@ 
+
+\end{frame}
+
+
+
+\begin{frame}{Getting More Complicated}
+  
+  There's no reason that our baseline mediation model needs to be a
+  simple, three-variable model.\\ 
+  \va 
+  Consider the following model:
+  \begin{figure}
+    \includegraphics[width = \textwidth]{figures/serialMediatorModB2withWConceptual.pdf}
+  \end{figure}
+  
+\end{frame}
+
+
+
+\begin{frame}{Getting More Complicated}
+  
+  The preceding implies the following equations:
+  \begin{align}
+    Y &= i_1 + c'X + b_1M_1 + b_2M_2 + b_3W + b_4M_2W + e_Y \label{eq3}\\
+    M_2 &= i_2 + a_2X + dM_1 + e_{M2}\\
+    M_1 &= i_3 + a_1X + e_{M1}
+  \end{align}
+  We now have several specific indirect effects:
+  \begin{align*}
+    IE_1 &= a_1b_1\\
+    IE_2 &= a_2 \left(b_2 + b_4W \right) = a_2b_2 + a_2b_4W\\
+    IE_3 &= a_1 d \left(b_2 + b_4W \right) = a_1db_1 + a_1db_4W,
+  \end{align*}
+  which imply $IMM_2 = a_2b_4$ and $IMM_3 = a_1db_4$.
+  
+\end{frame}
+
+
+  
+\begin{frame}[allowframebreaks]{Example}
+  
+<<>>=
+## Create product term:
+dat1$m2w <- dat1$m2 * dat1$w
+##
+## Specify model:
+mod4 <- "
+y ~ cp*x + b1*m1 + b2*m2 + b3*w + b4*m2w
+m2 ~ a2*x + d*m1
+m1 ~ a1*x
+
+ab1 := a1*b1
+imm2 := a2*b4
+fullImm := a1*d*b4
+"
+##
+## Fit model:
+out4 <- sem(mod4, data = dat1, se = "boot", boot = nBoot)
+summary(out4)
+@ 
+
+\pagebreak
+
+<<>>=
+parameterEstimates(out4, 
+                   boot = "bca.simple")[-c(9 : 17), -c(1 : 3)]
+@ 
+
+\end{frame}
+
+
+
+\begin{frame}{Limitations of IMM}
+  
+  The IMM is only well-defined for \emph{linear} relations between the
+  moderator and the indirect effect.
+  \vb
+  \begin{itemize}
+  \item Indirect effects with multiple constituent paths moderated
+    imply non-linear relations between the moderators and the indirect
+    effect.
+  \end{itemize}
+  \vb
+  Consider this model:
+  \begin{figure}
+    \includegraphics[width = 0.75\textwidth]{figures/modABwithZConceptual.pdf}
+  \end{figure}
+  
+\end{frame}
+
+
+\begin{frame}{Limitations of IMM}
+  
+  The preceding model implies the following equations:
+  \begin{align}
+    Y &= i_1 + c'X + b_1M + b_2Z + b_2MZ + e_{Y}\\
+    M &= i_2 + a_1X + a_2Z + a_3XZ + e_{M1},
+  \end{align}
+  so we have the following conditional indirect effect:
+  \begin{align*}
+    IE &= \left(a_1 + a_3Z\right) \left(b_1 + b_3Z \right)\\
+    &= a_1b_1 + \left(a_1b_3 + a_3b_1\right)Z + a_3b_3Z^2
+  \end{align*}
+  which represents a quadratic linkage between the moderator and
+  indirect effect.\\ 
+  \va 
+  With no single term describing the
+  association of the moderator and the indirect effect, the
+  \citet{hayes:2015} IMM isn't directly applicable.
+  
+\end{frame}
+  
+
+\begin{frame}{Alternative Strategy}
+  
+  When we have multiple moderated paths, we need to employ an
+  alternative method discussed by \citet{edwardsLambert:2007} and
+  \citet{wangPreacher:2015}, among others: 
+  \vb
+  \begin{enumerate}
+  \item Fit our moderated mediation model, as usual
+  \item Compute the conditional indirect effects at two values of the
+    moderator
+  \item Test for significant differences between these two conditional
+    indirect effects.
+  \end{enumerate}
+  \vb
+  Finding significant differences by this method suggests overall moderation.
+  \begin{itemize}
+    \item The converse does not hold
+    \item A lack of significance does not imply no moderation
+    \item Pairwise comparisons of conditional indirect effects are
+      dependent on the values chosen for the moderator values
+  \end{itemize}
+  
+\end{frame}
+
+
+
+\begin{frame}[allowframebreaks]{Example}
+    
+<<echo=F>>=
+dat2 <- dat1
+dat2$y <- dat1$m2
+dat2$m <- dat1$m1
+@ 
+
+<<>>=
+## Compute product term:
+dat2$mz <- dat2$m * dat2$z
+##
+## Specify model:
+mod5 <- "
+y ~ cp*x + b1*m + b2*z + b3*mz
+m ~ a1*x + a2*z + a3*xz
+
+fullIE1 := (a1 + a3 * (-1.244962)) * 
+           (b1 + b3 * (-1.244962)) * b2
+fullIE2 := (a1 + a3 * 1.369550) * 
+           (b1 + b3 * 1.369550) * b2
+mmTest := fullIE1 - fullIE2
+"
+##
+## Fit model:
+out5 <- sem(mod5, data = dat2, se = "boot", boot = nBoot)
+summary(out5)
+@ 
+
+\pagebreak
+
+<<>>=
+parameterEstimates(out5, 
+                   boot = "bca.simple")[-c(8 : 19), -c(1 : 3)]
+@ 
+
+\end{frame}
+
+
+
+\begin{frame}{Limitations of IMM}
+  
+  The same issue arises when the indirect effects has multiple paths
+  moderated by different variables.\\ 
+  \va 
+  Consider this model:
+  \begin{figure}
+    \includegraphics[width = \textwidth]{figures/modAwithZ_BwithWConceptual.pdf}
+  \end{figure}
+  
+\end{frame}
+
+
+
+\begin{frame}{Limitations of IMM}
+  
+  The preceding model implies the following equations:
+  \begin{align}
+    Y &= i_1 + c'X + b_1M + b_2W + b_2M_2W + e_{Y}\\
+    M &= i_2 + a_1X + a_2Z + a_3XZ + e_{M},
+  \end{align}
+  so we have the following conditional indirect effect:
+  \begin{align*}
+    IE &= \left(a_1 + a_3Z\right) \left(b_1 + b_3W \right)\\
+    &= a_1b_1 + a_1b_3W + a_3b_1Z + a_3b_3ZW
+  \end{align*}
+  which represents an interactive linkage between the moderator and
+  indirect effect.\\ 
+  \va 
+  We still have no single term describing the
+  association of the moderator and the indirect effect, so the
+  \citet{hayes:2015} IMM still isn't directly applicable.
+  
+\end{frame}
+  
+
+
+\begin{frame}{More Complicated Model}
+  
+  Okay, let's put this all together into a pretty complicated
+  conditional process model:\\ 
+  \va 
+  Consider this model:
+  \begin{figure}
+    \includegraphics[width = \textwidth]{figures/serialMediatorModA1DwithZConceptual.pdf}
+  \end{figure}
+  
+\end{frame}
+
+
+
+\begin{frame}{More Complicated Model}
+  
+  The preceding model implies the following equations:
+  \begin{align}
+    Y &= i_1 + c'X + b_1M + b_2M_2 + e_{Y}\\
+    M_2 &= i_2 + a_2X + d_1M_1 + d_2Z + d_3M_1Z + e_{M2}\\
+    M_1 &= i_3 + a_1X + a_2Z + a_3XZ,
+  \end{align}
+  so we have the following conditional indirect effects:
+  \begin{align*}
+    IE_1 &= \left(a_1 + a_3Z\right) b_1\\
+    IE_2 &= a_2b_2\\
+    IE_3 &= \left(a_1 + a_3Z\right) \left(d_1 + d_3Z\right) b_2
+  \end{align*}
+  We can employ multiple inferential strategies:
+  \begin{enumerate}
+    \item $IE_2$ is not moderated, so we can make direct inferences
+    \item $IE_1$ only contains one moderated path, so we can make
+      inferences via $IMM_1 = a_3b1$
+    \item $IE_3$ contains two moderated paths, so we need to use the
+      pairwise comparison approach.
+  \end{enumerate}
+  
+\end{frame}
+
+
+\begin{frame}[allowframebreaks]{Example}
+  
+<<>>=
+## Prep stuff:
+dat1$m1z <- dat1$m1 * dat1$z
+quantile(dat1$z, c(0.05, 0.95))
+##
+## Specify the model:
+mod6 <- "
+y ~ cp*x + b1*m1 + b2*m2
+m2 ~ a2*x + d1*m1 + d2*z + d3*m1z
+m1 ~ a1*x + a2*z + a3*xz
+
+imm1 := a3*b1
+ab2 := a2*b2
+fullIE1 := (a1 + a3 * (-1.244962)) * 
+           (d1 + d3 * (-1.244962)) * b2
+fullIE2 := (a1 + a3 * 1.369550) * 
+           (d1 + d3 * 1.369550) * b2
+mmTest := fullIE1 - fullIE2
+"
+@ 
+
+\pagebreak
+
+<<>>=
+## Fit the model:
+out6 <- sem(mod6, data = dat1, se = "boot", boot = nBoot)
+summary(out6)
+@ 
+
+\pagebreak
+
+<<>>=
+parameterEstimates(out6, 
+                   boot = "bca.simple")[-c(11 : 23), -c(1 : 3)]
+@ 
+
+\end{frame}
+
+
+\begin{frame}[allowframebreaks]{General Steps for Conditional Process Analysis}
+  
+  At this point, we can lay out a few general steps that should help
+  structure any conditional process analysis:
+  \va
+  \begin{enumerate}
+  \item Draw a conceptual diagram representing your hypothesized process
+    \vb
+  \item Translate that conceptual diagram into an analytic diagram
+    \vb
+  \item Translate the analytic diagram into equations \label{eqStep}
+    \vb
+  \item Solve for all of your conditional indirect effects \label{hStep1}
+    \vb
+  \item Group your indirect effects into three categories:
+    \begin{itemize}
+    \item Not Moderated
+    \item Linearly Moderated
+    \item Non-Linearly Moderated
+    \end{itemize}
+    
+    \pagebreak
+    
+  \item For linearly moderated conditional indirect effects, derive
+    the appropriate IMMs
+    \vb
+  \item For non-linearly moderated conditional indirect effects,
+    choose conditional values of the moderator(s) at which to test for
+    differences in the conditional direct effects \label{hStep2}
+    \vb
+  \item Use the bootstrapping capabilities of path modeling software
+    to fit the model implied by the equations from Step \ref{eqStep}
+    and test the hypotheses implied by Steps \ref{hStep1} --
+    \ref{hStep2}.
+  \end{enumerate}
+  
+\end{frame}
+
+
+\begin{frame}{References}
+
+  \bibliographystyle{apacite}
+  \bibliography{../../bibtexStuff/lecture11Refs.bib}
+
+\end{frame}
+
+
+\end{document}
