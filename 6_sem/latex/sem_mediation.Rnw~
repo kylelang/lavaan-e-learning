@@ -1,0 +1,257 @@
+%%% Title:    Lavaan E-Learning: SEM & Mediation
+%%% Author:   Kyle M. Lang
+%%% Created:  2016-XX-XX
+%%% Modified: 2022-06-03
+
+\documentclass[10pt]{beamer}
+\usetheme{Utrecht}
+
+\usepackage{graphicx}
+\usepackage[natbibapa]{apacite}
+\usepackage[libertine]{newtxmath}
+\usepackage{fancybox}
+\usepackage{booktabs}
+\usepackage{relsize}
+
+\newcommand{\eqit}[1]{\textrm{\textit{#1}}}
+
+\title{Full Structural Equation Modeling \& Mediation}
+\subtitle{Introduction to SEM with Lavaan}
+\author{Kyle M. Lang}
+\institute{Department of Methodology \& Statistics\\Utrecht University}
+\date{}
+
+\begin{document}
+
+<<setup, include = FALSE, cache = FALSE>>=
+set.seed(235711)
+
+#dataDir <- "../data/"
+#codeDir <- "../../../code/"
+
+library(knitr)
+library(ggplot2)
+library(MASS)
+library(DAAG)
+library(xtable)
+library(MLmetrics)
+library(dplyr)
+
+#source(paste0(codeDir, "supportFunctions.R"))
+
+options(width = 60)
+opts_chunk$set(size = "footnotesize",
+               fig.align = "center",
+               fig.path = "figure/sem-",
+               message = FALSE,
+               comment = "")
+knit_theme$set('edit-kwrite')
+@
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}[t,plain]
+  \titlepage
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{Outline}
+  \tableofcontents
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\section{Full SEM}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Full SEM}
+
+Full structural equation modeling (SEM) simply combines path analysis and CFA.
+\vb
+\begin{itemize}
+\item SEM allows us to model complicated structural relations among latent
+variables.
+\end{itemize}
+\vb
+Let's consider a simple, three-factor CFA model.
+
+ \begin{figure}
+    \includegraphics[width=0.8\textwidth]{figures/3_factor_cfa.pdf}
+  \end{figure}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{CFA $\rightarrow$ SEM}
+
+We first evaluate the validity of the measurement model via CFA.
+\vb
+\begin{itemize}
+\item We then convert the CFA to an SEM by converting some covariances to latent
+regression paths.
+\end{itemize}
+
+ \begin{figure}
+    \includegraphics[width=0.5\textwidth]{figures/simple_sem_diagram.pdf}
+  \end{figure}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Why SEM?}
+
+The beauty of SEM is that we get to model the types of complex relations we can
+specify via path models while leveraging all the strengths of latent variables.
+\vb
+\begin{itemize}
+\item When we fit a multiple-group SEM, we are modeling moderation by group.
+\vc
+\begin{itemize}
+\item The latent variables give us the ability to evaluate measurement
+invariance across groups.
+\vc
+\item We'll see more of these ideas in the next lecture.
+\end{itemize}
+\vc
+\item Path analysis and SEM lend themselves especially well to mediation
+analysis and conditional process anlaysis.
+\end{itemize}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\sectionslide{Mediation}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Mediation vs. Moderation}
+
+  What do we mean by \emph{mediation} and \emph{moderation}?\\
+  \pause
+  \va
+  Mediation and moderation are types of hypotheses, not statistical methods or
+models.
+  \begin{itemize}
+  \item Mediation tells us \emph{how} one variable influences another.
+    \vb
+  \item Moderation tells us \emph{when} one variable influences another.
+  \end{itemize}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Contextualizing Example}
+
+  Say we wish to explore the process underlying exercise habits.\\
+  \va
+  Our first task is to operationalize ``exercise habits''
+  \begin{itemize}
+    \item DV: Hours per week spent in vigorous exercise (\emph{exerciseAmount}).
+  \end{itemize}
+  \va
+  We may initial ask: what predicts devoting more time to exercise?
+  \begin{itemize}
+    \item IV: Concerns about negative health outcomes (\emph{healthConcerns}).
+  \end{itemize}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Focal Effect Only}
+
+  The $healthConcerns \rightarrow exerciseAmount$ relation is our \emph{focal
+effect}
+
+  \vx{-48}
+
+  \begin{figure}
+    \includegraphics[width=\textwidth]{figures/focalEffectDiagram.pdf}
+  \end{figure}
+
+  \vx{-48}
+
+   \begin{itemize}
+    \item Mediation, moderation, and conditional process analysis all attempt to
+describe the focal effect in more detail.
+      \vb
+    \item We always begin by hypothesizing a focal effect.
+  \end{itemize}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{The Mediation Hypothesis}
+
+  A mediation analysis will attempt to describe how health concerns affect
+amount of exercise.
+  \va
+  \begin{itemize}
+  \item The \emph{how} is operationalized in terms of intermediary variables.
+    \va
+  \item Mediator: Motivation to improve health (\emph{motivation}).
+  \end{itemize}
+
+  \vx{-18}
+
+  \begin{figure}
+    \includegraphics[width=.8\textwidth]{figures/mediationDiagram.pdf}
+  \end{figure}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Moderation Hypothesis}
+
+  A moderation hypothesis will attempt to describe when health concerns affect
+amount of exercise.
+  \va
+  \begin{itemize}
+    \item The \emph{when} is operationalized in terms of interactions between
+the focal predictor and contextualizing variables
+      \va
+    \item Moderator: Sense of personal agency relating to physical health
+(\emph{agency}).
+  \end{itemize}
+
+  \vx{-18}
+
+  \begin{figure}
+    \includegraphics[width=.8\textwidth]{figures/moderationDiagram.pdf}
+  \end{figure}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Conditional Process Analysis}
+
+  Conditional process analysis combines the mediation and moderation hypotheses
+into models of moderated mediation.
+\va
+\begin{itemize}
+\item Given a mediation model describing \emph{how} health concerns affect
+exercise amount, what other variables may modulate the indirect effect.
+\end{itemize}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Excellent Resource}
+
+Plug Hayes' book
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\end{document}

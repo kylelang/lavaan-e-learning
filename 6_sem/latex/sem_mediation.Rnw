@@ -1,0 +1,2332 @@
+%%% Title:    Lavaan E-Learning: SEM & Mediation
+%%% Author:   Kyle M. Lang
+%%% Created:  2016-XX-XX
+%%% Modified: 2022-06-03
+
+\documentclass[10pt]{beamer}
+\usetheme{Utrecht}
+
+\usepackage{graphicx}
+\usepackage[natbibapa]{apacite}
+\usepackage[libertine]{newtxmath}
+\usepackage{fancybox}
+\usepackage{booktabs}
+\usepackage{relsize}
+
+\newcommand{\eqit}[1]{\textrm{\textit{#1}}}
+\newcommand{\pkg}[1]{\textbf{#1}}
+\newcommand{\src}[1]{\texttt{#1}}
+\newcommand{\rmsc}[1]{\textrm{\textsc{#1}}}
+
+\title{Structural Equation Modeling \& Mediation}
+\subtitle{Introduction to SEM with Lavaan}
+\author{Kyle M. Lang}
+\institute{Department of Methodology \& Statistics\\Utrecht University}
+\date{}
+
+\begin{document}
+
+<<setup, include = FALSE, cache = FALSE>>=
+set.seed(235711)
+
+dataDir <- "../data/"
+
+library(knitr)
+library(ggplot2)
+library(MASS)
+library(DAAG)
+library(xtable)
+library(MLmetrics)
+library(dplyr)
+library(mvtnorm)
+
+source("../../code/supportFunctions.R")
+
+options(width = 60)
+opts_chunk$set(size = "footnotesize",
+               fig.align = "center",
+               fig.path = "figure/sem-",
+               message = FALSE,
+               comment = "")
+knit_theme$set('edit-kwrite')
+@
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}[t,plain]
+  \titlepage
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{Outline}
+  \tableofcontents
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\section{Structural Equation Modeling}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Full SEM}
+
+Structural equation modeling (SEM) simply combines path analysis and CFA.
+\vb
+\begin{itemize}
+\item SEM allows us to model complicated structural relations among latent
+variables.
+\end{itemize}
+\vb
+Let's consider a simple, three-factor CFA model.
+
+ \begin{figure}
+    \includegraphics[width=0.8\textwidth]{figures/3_factor_cfa.pdf}
+  \end{figure}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{CFA $\rightarrow$ SEM}
+
+We first evaluate the validity of the measurement model via CFA.
+\vb
+\begin{itemize}
+\item We then convert the CFA to an SEM by converting some covariances to latent
+regression paths.
+\end{itemize}
+
+ \begin{figure}
+    \includegraphics[width=0.5\textwidth]{figures/simple_sem_diagram.pdf}
+  \end{figure}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Why SEM?}
+
+The beauty of SEM is that we get to model the types of complex relations we can
+specify via path models while leveraging all the strengths of latent variables.
+\vb
+\begin{itemize}
+\item When we fit a multiple-group SEM, we are modeling moderation by group.
+\vc
+\begin{itemize}
+\item The latent variables give us the ability to evaluate measurement
+invariance across groups.
+\vc
+\item We'll see more of these ideas in the next lecture.
+\end{itemize}
+\vc
+\item Path analysis and SEM lend themselves especially well to mediation
+analysis and conditional process anlaysis.
+\end{itemize}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\sectionslide{Mediation}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Mediation vs. Moderation}
+
+  What do we mean by \emph{mediation} and \emph{moderation}?\\
+  \pause
+  \va
+  Mediation and moderation are types of hypotheses, not statistical methods or
+models.
+  \begin{itemize}
+  \item Mediation tells us \emph{how} one variable influences another.
+    \vb
+  \item Moderation tells us \emph{when} one variable influences another.
+  \end{itemize}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Contextualizing Example}
+
+  Say we wish to explore the process underlying exercise habits.\\
+  \va
+  Our first task is to operationalize ``exercise habits''
+  \begin{itemize}
+    \item DV: Hours per week spent in vigorous exercise (\emph{exerciseAmount}).
+  \end{itemize}
+  \va
+  We may initial ask: what predicts devoting more time to exercise?
+  \begin{itemize}
+    \item IV: Concerns about negative health outcomes (\emph{healthConcerns}).
+  \end{itemize}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Focal Effect Only}
+
+  The $healthConcerns \rightarrow exerciseAmount$ relation is our \emph{focal
+effect}
+
+  \vx{-48}
+
+  \begin{figure}
+    \includegraphics[width=\textwidth]{figures/focalEffectDiagram.pdf}
+  \end{figure}
+
+  \vx{-48}
+
+   \begin{itemize}
+    \item Mediation, moderation, and conditional process analysis all attempt to
+describe the focal effect in more detail.
+      \vb
+    \item We always begin by hypothesizing a focal effect.
+  \end{itemize}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{The Mediation Hypothesis}
+
+  A mediation analysis will attempt to describe how health concerns affect
+amount of exercise.
+  \va
+  \begin{itemize}
+  \item The \emph{how} is operationalized in terms of intermediary variables.
+    \va
+  \item Mediator: Motivation to improve health (\emph{motivation}).
+  \end{itemize}
+
+  \vx{-18}
+
+  \begin{figure}
+    \includegraphics[width=0.8\textwidth]{figures/mediationDiagram.pdf}
+  \end{figure}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Moderation Hypothesis}
+
+  A moderation hypothesis will attempt to describe when health concerns affect
+amount of exercise.
+  \va
+  \begin{itemize}
+    \item The \emph{when} is operationalized in terms of interactions between
+the focal predictor and contextualizing variables
+      \va
+    \item Moderator: Sense of personal agency relating to physical health
+(\emph{agency}).
+  \end{itemize}
+
+  \vx{-18}
+
+  \begin{figure}
+    \includegraphics[width=0.8\textwidth]{figures/moderationDiagram.pdf}
+  \end{figure}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Conditional Process Analysis}
+
+  Conditional process analysis combines the mediation and moderation hypotheses
+into models of moderated mediation.
+\va
+\begin{itemize}
+\item Given a mediation model describing \emph{how} health concerns affect
+exercise amount, what other variables may modulate the indirect effect.
+\end{itemize}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Excellent Resource}
+
+Plug Hayes' book
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+\comment{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{A Wee Bit o' Regression}
+
+\begin{align}
+Y &= \alpha_1 + \beta + e_1\\
+Y &= \alpha_2 + \beta_1X + \beta_2Z + e_2
+\end{align}
+
+\begin{figure}
+  \includegraphics[width=0.8\textwidth]{figures/mlrPathDiagram.pdf}
+\end{figure}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile]{Example}
+
+<<echo = FALSE>>=
+sigma <- matrix(0.3, 3, 3)
+diag(sigma) <- 1.0
+dat1 <- data.frame(rmvnorm(500, c(0, 0, 0), sigma))
+colnames(dat1) <- c("x", "y", "z")
+@
+
+<<>>=
+## Fit model 1:
+fit1 <- lm(y ~ x, data = dat1)
+
+## Fit model 2:
+fit2 <- lm(y ~ x + z, data = dat1)
+
+## Look at the results:
+summary(fit1)
+summary(fit2)
+
+## Get the coefficients:
+coef(fit1)
+coef(fit2)
+
+## Get the standard errors:
+sqrt(diag(vcov(fit1)))
+sqrt(diag(vcov(fit2)))
+@
+
+\end{frame}
+}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%--------------------------------------------------------------------------%%%
+
+\subsection{Simple Mediation}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Path Diagrams}
+
+\begin{figure}
+\includegraphics[width=\textwidth]{figures/simpleMediationPathDiagram.pdf}
+\end{figure}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Necessary Equations}
+
+  To get all the pieces of the preceding diagram using OLS regression, we'll
+  need to fit three seperate models.
+
+\begin{align}
+Y &= i_1 + cX + e_1 \label{eq1}\\
+Y &= i_2 + c'X + bM + e_2 \label{eq2}\\
+M &= i_3 + aX + e_3 \label{eq3}
+\end{align}
+
+\begin{itemize}
+\item Equation \ref{eq1} gives us the total effect ($c$).
+  \vb
+\item Equation \ref{eq2} gives us the direct effect ($c'$) and the partialled
+  effect of the mediator on the outcome ($b$).
+  \vb
+\item Equation \ref{eq3} gives us the effect of the input on the outcome ($a$).
+\end{itemize}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+\comment{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{More Complex Path Diagram}
+
+\begin{figure}
+\includegraphics[width=\textwidth]{figures/complexMediationPathDiagram.pdf}
+\end{figure}
+
+\end{frame}
+}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Two Measures of Indirect Effect}
+
+Indirect effects can be quantified in two different ways:
+\begin{align}
+IE_{diff} &= c - c'\\
+IE_{prod} &= a \cdot b
+\end{align}
+$IE_{diff}$ and $IE_{prod}$ are equivalent in simple mediation.
+\va
+\begin{itemize}
+\item Both give us information about the proportion of the total
+  effect that is transmitted through the intermediary variable.
+  \vb
+\item $IE_{prod}$ provides a more direct representation of the
+  actual pathway we're interested in testing.
+  \vb
+\item $IE_{diff}$ gets at our desired hypothesis indirectly.
+\end{itemize}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{The Causal Steps Approach}
+
+  \citet[][p. 1176]{baronKenny:1986} describe three/four conditions
+  as being sufficient to demonstrate statistical ``mediation.''
+  \va
+  \begin{enumerate}
+  \item Variations in levels of the independent variable significantly
+    account for variations in the presumed mediator (i.e., Path
+    \emph{a}).
+    \begin{itemize}
+      \item Need a significant $a$ path.
+    \end{itemize}
+    \vb
+  \item Variations in the mediator significantly account for variations
+    in the dependent variable (i.e., Path \emph{b}).
+    \begin{itemize}
+    \item Need a significant $b$ path.
+    \end{itemize}
+    \vb
+  \item When Paths \emph{a} and \emph{b} are controlled, a previously
+    significant relation between the independent and dependent
+    variables is no longer significant.
+    \begin{itemize}
+    \item Need a significant total effect
+    \item The direct effect must be ``less'' than the total effect
+    \end{itemize}
+  \end{enumerate}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Example Process Model}
+
+  Consider the following process.
+
+  \begin{figure}
+    \includegraphics[width=0.8\textwidth]{figures/adamsKlpsExample1_two_models.pdf}
+  \end{figure}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile]{Causal Steps Example}
+
+<<>>=
+## Load some data:
+dat1 <- readRDS("../data/adamsKlpsScaleScore.rds")
+
+## Check pre-conditions:
+mod1 <- lm(policy ~ polAffil, data = dat1)
+mod2 <- lm(policy ~ sysRac, data = dat1)
+mod3 <- lm(sysRac ~ polAffil, data = dat1)
+
+## Partial out the mediator's effect:
+mod4 <- lm(policy ~ sysRac + polAffil, data = dat1)
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile]{Causal Steps Example}
+
+<<>>=
+summary(mod1)
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile]{Causal Steps Example}
+
+<<>>=
+summary(mod2)
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile]{Causal Steps Example}
+
+<<>>=
+summary(mod3)
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile]{Causal Steps Example}
+
+<<>>=
+summary(mod4)
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile]{Causal Steps Example}
+
+<<>>=
+## Extract important parameter estimates:
+a      <- coef(mod3)["polAffil"]
+b      <- coef(mod4)["sysRac"]
+c      <- coef(mod1)["polAffil"]
+cPrime <- coef(mod4)["polAffil"]
+
+## Compute indirect effects:
+ieDiff <- unname(c - cPrime)
+ieProd <- unname(a * b)
+
+ieDiff
+ieProd
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Sobel's Z}
+
+  In the previous example, do we have a \emph{significant} indirect effect?
+  \va
+  \begin{itemize}
+  \item The direct effect is ``substantially'' smaller than the total effect,
+    but is the difference statistically significant?
+    \vb
+  \item \citet{sobel:1982} developed an asymptotic standard error for $IE_{prod}$
+    that we can use to assess this hypothesis.
+  \end{itemize}
+  \begin{align}
+    SE_{sobel} &= \sqrt{a^2 \cdot SE_b^2 + b^2 \cdot SE_a^2}\\
+    Z_{sobel} &= \frac{ab}{SE_{sobel}}\\
+    95\% CI_{sobel} &= ab \pm 1.96 \cdot SE_{sobel}
+  \end{align}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile]{Sobel Example}
+
+<<>>=
+## SE:
+seA <- (mod3 %>% vcov() %>% diag() %>% sqrt())["polAffil"]
+seB <- (mod4 %>% vcov() %>% diag() %>% sqrt())["sysRac"]
+
+se <- sqrt(b^2 * seA^2 + a^2 * seB^2) %>% unname()
+
+## z-score:
+(z <- ieProd / se)
+
+## p-value:
+(p <- 2 * pnorm(z, lower = FALSE))
+
+## 95% CI:
+c(ieProd - 1.96 * se, ieProd + 1.96 * se)
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Recall our Basic Path Diagram}
+
+\begin{figure}
+\includegraphics[width=\textwidth]{figures/simpleMediationPathDiagram.pdf}
+\end{figure}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+\comment{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{The Basic OLS Equations}
+
+  To get all the pieces of the preceding diagram using OLS regression,
+  we're forced fit three equations.
+
+\begin{align}
+Y &= i_1 + cX + e_1 \label{eq1}\\
+Y &= i_2 + c'X + bM + e_2 \label{eq2}\\
+M &= i_3 + aX + e_3 \label{eq3}
+\end{align}
+
+\begin{itemize}
+\item Equation \ref{eq1} gives us the total effect ($c$).
+  \vb
+\item Equation \ref{eq2} gives us the direct effect ($c'$) and the
+  partialled effect of the mediator on the outcome ($b$).
+  \vb
+\item Equation \ref{eq3} gives us the effect of the input on the
+  outcome ($a$).
+\end{itemize}
+
+\end{frame}
+}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Two Measures of Indirect Effect}
+
+  Recall the two definitions of an indirect effect:
+  \begin{align}
+    IE_{diff} &= c - c'\\
+    IE_{prod} &= a \cdot b
+  \end{align}
+
+  It pays to remember a few key points:
+  \vc
+  \begin{itemize}
+  \item $IE_{diff}$ and $IE_{prod}$ are equivalent in simple
+    mediation.
+    \vb
+  \item $IE_{diff}$ is only an indirect indication of $IE_{prod}$.
+    \vb
+  \item A significant indirect effect can exist without a significant
+    total effect.
+    \vb
+  \item If we only care about the indirect effect, then we don't need to worry
+    about the total effect.
+  \end{itemize}
+  \pause
+  \vb
+  These points imply something interesting:
+  \vc
+  \begin{itemize}
+    \item We don't need to estimate $c$!
+  \end{itemize}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Simplifying our Path Diagram}
+
+  \textsc{Question:} If we don't care about directly estimating $c$, how can we
+  simplify this diagram?
+
+  \begin{figure}
+    \includegraphics[width=0.8\textwidth]{figures/simpleMediationPathDiagram.pdf}
+  \end{figure}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Simplifying our Path Diagram}
+
+  \textsc{Answer:} We don't fit the upper model.
+
+  \begin{figure}
+    \includegraphics[width=0.8\textwidth]{figures/mediationTriadPathDiagram.pdf}
+  \end{figure}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Why Path Analysis?}
+
+  \begin{figure}
+    \includegraphics[width=\textwidth]{figures/multipleMediationPathDiagrams.pdf}
+  \end{figure}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Example}
+
+  Let's revisit the above example using path analysis in \pkg{lavaan}.
+
+  \begin{figure}
+    \includegraphics[width=\textwidth]{figures/adamsKlpsExample1PathDiagram.pdf}
+  \end{figure}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile]{Example}
+
+<<warning = FALSE>>=
+## Load the lavaan package:
+library(lavaan)
+
+## Specify the basic path model:
+mod1 <- "
+policy ~ sysRac + polAffil
+sysRac ~ polAffil
+"
+
+## Estimate the model:
+out1 <- sem(mod1, data = dat1)
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile]{Example}
+
+<<>>=
+## Look at the results:
+partSummary(out1, c(5, 6))
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile]{Example}
+
+<<>>=
+## Include the indirect effect:
+mod2 <- "
+policy ~ b*sysRac + polAffil
+sysRac ~ a*polAffil
+
+ab := a*b # Define a parameter for the indirect effect
+"
+
+## Estimate the model:
+out2 <- sem(mod2, data = dat1)
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile]{Example}
+
+<<>>=
+## Look at the results:
+partSummary(out2, 5:7)
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile]{Example}
+
+<<>>=
+## We can also get CIs:
+parameterEstimates(out2, zstat = FALSE, pvalue = FALSE, ci = TRUE)
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Results}
+
+  \begin{figure}
+    \begin{center}
+      \includegraphics[width = \textwidth]{figures/adamsKlpsExample1PathDiagramWithValues.pdf}
+    \end{center}
+  \end{figure}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{We're not there yet...}
+
+  Path analysis allows us to directly model complex (and simple) relations, but
+  the preceding example still suffers from a considerable limitation.
+  \vb
+  \begin{itemize}
+  \item The significance test for the indirect effect is still conducted with
+    the Sobel Z approach.
+  \end{itemize}
+  \va
+  Path analysis (or full SEM) doesn't magically get around distributional
+  problems associated with Sobel's Z test.\\
+  \vb
+  \begin{itemize}
+  \item To get a robust significance test of the indirect effect, we need to use
+    \emph{bootstrapping}.
+  \end{itemize}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\subsection{Bootstrapping}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Bootstrapping}
+
+  Bootstrapping was introduced by \citet{efron:1979} as a tool for
+  non-parametric inference.
+  \vb
+  \begin{itemize}
+    \item Traditional inference requires that we assume a parametric sampling
+      distribution for our focal parameter.
+      \vb
+    \item We need to make such an assumption to compute the standard errors we
+      require for inferences.
+      \vb
+    \item If we cannot safely make these assumptions, we can use bootstrapping.
+  \end{itemize}
+
+\end{frame}
+
+%%% --------------------------------------------------------------------------%%%
+
+\begin{frame}{Bootstrapping}
+
+  Assume our observed data $Data_0$ represent the population and:
+  \vb
+  \begin{enumerate}
+    \item Sample rows of $Data_0$, with replacement, to create $B$ new samples
+      $\{Data_b\}$.
+      \vb
+    \item Calculate our focal statistic on each of the $B$ bootstrap samples. \label{calcStatsStep}
+      \vb
+    \item Make inferences based on the empirical distribution of the $B$
+      estimates calculated in Step \ref{calcStatsStep}
+  \end{enumerate}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Bootstrapping}
+
+  \begin{figure}
+    \begin{center}
+      \includegraphics[width=\textwidth]{figures/bootstrappingDiagram.pdf}
+    \end{center}
+  \end{figure}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+\comment{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Bootstrapping}
+
+  It's important to recognize that the following are legal bootstrap samples:
+
+  \vspace{-12pt}
+
+  \begin{figure}
+    \begin{center}
+      \includegraphics[width=\textwidth]{figures/perverseBootstrappingDiagram.pdf}
+    \end{center}
+  \end{figure}
+
+\end{frame}
+}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[allowframebreaks]{Example}
+
+  Suppose I'm on the lookout for a retirement location. Since I want to relax in
+  my old-age, I'm concerned with ensuring a low probability of dragon attacks,
+  so I have a few salient considerations:
+  \vb
+  \begin{itemize}
+    \item Shooting for a location with no dragons, whatsoever, is a fools errand
+      (since dragons are, obviously, ubiquitous).
+      \vb
+    \item I merely require a location that has at least two times as many
+      dragon-free days as other kinds.
+  \end{itemize}
+
+  \pagebreak
+
+  I've been watching several candidate locales over the course of my (long and
+  illustrious) career, and I'm particularly hopeful about one quiet hamlet in
+  the Patagonian highlands.
+  \vb
+  \begin{itemize}
+  \item To ensure that my required degree of dragon-freeness is met, I'll use
+    the \emph{Dragon Risk Index} (DRI):
+    \begin{align*}
+      DRI = \textit{Median}\left( \frac{\text{Dragon-Free Days}}{\text{Dragonned Days}} \right)
+    \end{align*}
+  \end{itemize}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile]{Example}
+
+<<cache = TRUE>>=
+## Read in the observed data:
+rawData <- readRDS("../data/daysData.rds")
+
+## Compute the observed test statistic:
+obsDRI <- median(rawData$goodDays / rawData$badDays)
+obsDRI
+
+## Draw the bootstrap samples:
+set.seed(235711)
+nSams <- 5000
+bootDRI <- rep(NA, nSams)
+for(b in 1:nSams) {
+    bootSam    <- rawData[sample(1:nrow(rawData), replace = TRUE), ]
+    bootDRI[b] <- median(bootSam$goodDays / bootSam$badDays)
+}
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile]{Example}
+
+<<echo = FALSE, out.width = "65%">>=
+gg0(x = bootDRI, points = FALSE) +
+    geom_histogram(aes(y = ..density..), fill = "lightgray", color = "black") +
+    geom_density(color = "red") +
+    xlab("Dragon Risk Index") +
+    ylab("Density") +
+    ggtitle("Empirical Sampling Distribution of DRI")
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile]{Example}
+
+To see if I can be confident in the dragon-freeness of my potential home, I'll
+summarize the preceding distribution with a (one-tailed) percentile confidence
+interval:
+
+\va
+
+<<>>=
+bootLB <- sort(bootDRI)[0.05 * nSams]
+bootUB <- Inf
+
+## The bootstrapped Percentile CI:
+c(bootLB, bootUB)
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Bootstrapped Inference for Indirect Effects}
+
+  We can apply the same procedure to testing the indirect effect.
+  \vb
+  \begin{itemize}
+  \item The problem with Sobel's Z is exactly the type of issue for which
+    bootstrapping was designed
+    \vc
+    \begin{itemize}
+    \item We don't know a reasonable finite-sample sampling distribution for the
+      $ab$ parameter.
+    \end{itemize}
+    \vb
+  \item Bootstrapping will allow us to construct an empirical sampling
+    distribution for $ab$ and construct confidence intervals for inference.
+  \end{itemize}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Bootstrapped Inference for Indirect Effects}
+
+  \rmsc{Procedure:}
+  \vc
+  \begin{enumerate}
+  \item Resample our observed data with replacement
+    \vc
+  \item Fit our hypothesized path model to each bootstrap sample
+    \vc
+  \item Store the value of $ab$ that we get each time
+    \vc
+  \item Summarize the empirical distribution of $ab$ to make inferences
+  \end{enumerate}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile]{Example}
+
+<<cache = TRUE>>=
+nSams <- 1000
+abVec <- rep(NA, nSams)
+for(i in 1:nSams) {
+    ## Resample the data:
+    bootSam <- dat1[sample(1:nrow(dat1), replace = TRUE), ]
+
+    ## Fit the path model:
+    bootOut <- sem(mod2, data = bootSam)
+
+    ## Store the estimated indirect effect:
+    abVec[i] <- coef(bootOut)[c("a", "b")] %>% prod()
+}
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile]{Example}
+
+<<echo = FALSE, out.width = "65%">>=
+gg0(x = abVec, points = FALSE) +
+    geom_histogram(aes(y = ..density..), fill = "lightgray", color = "black") +
+    geom_density(color = "red") +
+    ggtitle("Empirical Sampling Distribution of a*b") +
+    xlab("a*b")
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile]{Example}
+
+<<>>=
+## Calculate the percentile CI:
+lb <- sort(abVec)[0.025 * nSams]
+ub <- sort(abVec)[0.975 * nSams]
+c(lb, ub)
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile]{Example}
+
+<<cache = TRUE>>=
+## Much more parsimoniously:
+bootOut2 <- sem(mod2, data = dat1, se = "boot", bootstrap = 1000)
+
+parameterEstimates(bootOut2, zstat = FALSE, pvalue = FALSE)
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[shrink = 5]{Monte Carlo Method/Parametric Bootstrap}
+
+  We can also use a \emph{parametric bootstrap} of the individual
+  parameters $a$ and $b$ to get a somewhat robust test of the indirect
+  effect.
+  \vb
+  \begin{itemize}
+  \item Assuming normal sampling distributions for $a$ and $b$ is
+    not, generally, problematic
+    \vb
+  \item We can save ourselves a lot of computational effort by
+    assuming normality for $a$ and $b$, then:
+    \vb
+    \begin{enumerate}
+    \item Fit the hypothesized path model to the raw data
+      \vb
+    \item Extract $a$, $b$, and $\textit{ACOV}(\{a, b\})$ from the fitted
+      path model
+      \vb
+    \item Parameterize a bivariate normal distribution $\text{N}(a, b
+      |\mu, \Sigma)$ with $\mu = \{a, b\}$ and $\Sigma =
+      \textit{ACOV}(\{a, b\})$
+      \vb
+    \item Draw simulated values $\{\tilde{a}, \tilde{b}\}$ from
+      $\text{N}(a, b | \mu, \Sigma)$
+      \vb
+    \item Compute the simulated indirect effect
+      $\widetilde{ab} = \tilde{a} \cdot \tilde{b}$ and store it
+      \vb
+    \item Summarize the empirical distribution of $\widetilde{ab}$
+      for inference.
+    \end{enumerate}
+  \end{itemize}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile, allowframebreaks]{Example}
+
+<<>>=
+## Load package to draw the Monte Carlo samples
+library(mvtnorm)
+
+## Specify the model (note the parameter labels):
+mod3 <- "
+policy ~ polAffil + b*sysRac
+sysRac ~ a*polAffil
+"
+
+## Fit the model:
+out4 <- sem(mod3, data = dat1)
+
+## Extract the important estimates:
+a <- coef(out4)["a"]
+b <- coef(out4)["b"]
+acov <- vcov(out4)[c("a", "b"), c("a", "b")]
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile, allowframebreaks]{Aside Regarding Asymptotic Covariances}
+
+  The \emph{asymptotic covariance matrix} (ACOV) is (-1 times) the
+  inverse of the Fisher information matrix of the model parameters.
+  \vb
+  \begin{itemize}
+  \item The $ACOV$ contains the expected covariance among the ML
+    estimates of the model parameters.
+    \vb
+  \item The diagonal elements of the matrix (i.e., the asymptotic
+    variances) are the square of the usual ML SE estimates.
+  \end{itemize}
+  \va
+<<>>=
+round(vcov(out4), 4)
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile, allowframebreaks]{Back to the Example}
+
+<<>>=
+## Look at ACOV(a,b):
+round(acov, 4)
+
+## Draw the Monte Carlo samples:
+samMat <- rmvnorm(nSams, c(a, b), acov)
+abVec <- samMat[ , "a"] * samMat[ , "b"]
+@
+
+\pagebreak
+
+<<echo = FALSE>>=
+par(family = "serif")
+
+## Plot the empirical sampling distribution of a*b:
+hist(abVec,
+     freq = FALSE,
+     main = "Monte Carlo Distribution of a*b",
+     xlab = "a*b")
+lines(density(abVec), col = "red")
+@
+
+\pagebreak
+
+<<>>=
+## Calculate the percentile CI:
+lb <- sort(abVec)[0.025 * nSams]
+ub <- sort(abVec)[0.975 * nSams]
+c(lb, ub)
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Kris Preacher's Website}
+
+  If you don't want to program the Monte Carlo approach yourself
+  (although each of you easily can), you should consider the very
+  handy Web App on Professor Kris Preacher's website
+  \url{http://www.quantpsy.org}.
+  \va
+  \begin{itemize}
+    \item Kris' website has a vast array of hugely helpful resources
+      for anyone doing mediation or moderation analysis.
+      \vb
+    \item You should definitely check it out!
+  \end{itemize}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Simple Mediation}
+
+\begin{figure}
+\includegraphics[width=\textwidth]{figures/simpleMediationPathDiagram.pdf}
+\end{figure}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Simple Mediation is Too Simple}
+
+  We can justify multiple mediator models by asking: ``What mediates
+  the effects in a simple mediation model?''
+  \va
+  \begin{itemize}
+    \item Mediation of the direct effect leads to \emph{parallel
+      multiple mediator models}.
+      \vb
+    \item Mediation of the $a$ or $b$ paths produces \emph{serial
+      multiple mediator models}.
+  \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}{Parallel Multiple Mediation}
+
+  \begin{figure}
+    \includegraphics[width=\textwidth]{figures/parallelDiagram.pdf}
+  \end{figure}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Parallel Multiple Mediation}
+
+  To get all of the information in the preceding diagram, we need to
+  fit four equations:
+  \begin{align*}
+    Y &= i_Y + b_1 M_1 + b_2 M_2 + b_3 M_3 + c' X + e_Y\\
+    M_1 &= i_{M1} + a_1 X + e_{M1}\\
+    M_2 &= i_{M2} + a_2 X + e_{M2}\\
+    M_3 &= i_{M3} + a_3 X + e_{M3}\\
+  \end{align*}
+  %\va
+  In general, a parallel mediator model with $K$ mediator
+  variables will required $K + 1$ separate equations.
+  \\
+  \va
+  Path modeling can make this task much simpler.
+  \vb
+  \begin{itemize}
+  \item Also allows us to explicitly estimate the correlations
+    between parallel mediators.
+  \end{itemize}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Parallel Multiple Mediation}
+
+  Let's reconsider the example from last week:
+
+  \vx{-12}
+
+  \begin{figure}
+    \includegraphics[width=\textwidth]{figures/adamsKlpsExample1PathDiagram.pdf}
+  \end{figure}
+
+  \vx{-24}
+
+  \textsc{Question:} What might be mediating the residual direct effect?
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Parallel Multiple Mediation}
+
+  \textsc{Potential Answer:}
+
+  \begin{figure}
+    \includegraphics[width=\textwidth]{figures/adamsKlpsParallel.pdf}
+  \end{figure}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[shrink = 5]{A Quick Note on Inference}
+
+  In simple mediation:
+  \vb
+  \begin{itemize}
+    \item We have one indirect effect: $ab$.
+      \vc
+    \item The total effect is equal to the direct effect plus the
+      indirect effect $c = c' + ab$
+  \end{itemize}
+  \va
+  In parallel multiple mediation:
+  \vb
+  \begin{itemize}
+  \item We have $K$ \emph{specific indirect effects}, where $K$ is the
+    number of mediators: $a_1b_1, a_2b_2, \ldots, a_Kb_K$.
+    \vc
+  \item The \emph{Total Indirect Effect} is equal to the sum of all
+    the specific indirect effects: $IE_{tot} = \sum_{k = 1}^K a_kb_k$.
+    \vc
+  \item The \emph{Total Effect} is equal to the direct effect plus the
+    total indirect effect: $c = c' + IE_{tot}$
+  \end{itemize}
+\va
+Inference for the specific indirect effects is basically the same
+as it is for the sole indirect effect in simple mediation.
+\vb
+\begin{itemize}
+  \item \textsc{Caveat:} Each specific indirect effect must be
+    interpreted as conditional on all other mediators in the model.
+\end{itemize}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile, allowframebreaks]{Example}
+
+<<cache = TRUE>>=
+library(lavaan)
+
+## Read in the data
+dataDir <- "../data/"
+fileName <- "adamsKlpsScaleScore.rds"
+dat1 <- readRDS(paste0(dataDir, fileName))
+
+nBoot <- 2500 # Number of bootstrap samples
+bootType <- "bca.simple" # Type of CI
+
+## Parallel Multiple Mediator Model:
+mod1.1 <- "
+policy ~ b1*sysRac + b2*indRac + b3*merit + cp*polAffil
+sysRac ~ a1*polAffil
+indRac ~ a2*polAffil
+merit ~ a3*polAffil
+
+sysRac ~~ indRac + merit
+indRac ~~ merit
+
+ab1 := a1*b1
+ab2 := a2*b2
+ab3 := a3*b3
+totalIE := ab1 + ab2 + ab3
+"
+
+## Fit the model:
+out1.1 <-
+    sem(mod1.1, data = dat1, se = "boot", bootstrap = nBoot)
+
+## Look at results:
+summary(out1.1)
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile, shrink = 5]{Example}
+
+<<>>=
+parameterEstimates(out1.1, boot.ci.type = bootType)[ , -c(1 : 3)]
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Comparing Specific Indirect Effects}
+
+  When we have multiple specific indirect effects in a single model,
+  we can test if they are statistically different from one
+  another.\\
+  \va
+  \textsc{Question:} How might we go about doing such a
+  test (assuming we're using path modeling)?\\
+  \pause
+  \va
+  \textsc{Answer:} There are, at least, two reasonable methods:
+  \vb
+  \begin{enumerate}
+    \item Use nested model $\Delta \chi^2$ tests
+      \vc
+    \item Define a new parameter corresponding to the null
+      hypothesis and use bootstrapping
+  \end{enumerate}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile, allowframebreaks]{Example}
+
+<<cache = TRUE>>=
+## Test differences in specific indirect effects:
+mod1.2 <- "
+policy ~ b1*sysRac + b2*indRac + b3*merit + cp*polAffil
+sysRac ~ a1*polAffil
+indRac ~ a2*polAffil
+merit ~ a3*polAffil
+
+sysRac ~~ indRac + merit
+indRac ~~ merit
+
+ab1 := a1*b1
+ab2 := a2*b2
+ab3 := a3*b3
+totalIE := ab1 + ab2 + ab3
+
+ab1 == ab2
+"
+
+out1.2 <-
+    sem(mod1.2, data = dat1, se = "boot", bootstrap = nBoot)
+summary(out1.2)
+
+## Conduct a chi-squared difference test:
+chiDiff <- fitMeasures(out1.2)["chisq"] -
+    fitMeasures(out1.1)["chisq"]
+dfDiff <- fitMeasures(out1.2)["df"] -
+    fitMeasures(out1.1)["df"]
+pchisq(chiDiff, dfDiff, lower = FALSE)
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile, allowframebreaks]{Example}
+
+<<cache = TRUE>>=
+## Test differences in specific indirect effects:
+mod1.3 <- "
+policy ~ b1*sysRac + b2*indRac + b3*merit + cp*polAffil
+sysRac ~ a1*polAffil
+indRac ~ a2*polAffil
+merit ~ a3*polAffil
+
+sysRac ~~ indRac + merit
+indRac ~~ merit
+
+ab1 := a1*b1
+ab2 := a2*b2
+ab3 := a3*b3
+totalIE := ab1 + ab2 + ab3
+
+test1 := ab2 - ab1
+"
+
+out1.3 <-
+    sem(mod1.3, data = dat1, se = "boot", bootstrap = nBoot)
+summary(out1.3)
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile, shrink = 5]{Example}
+
+<<>>=
+parameterEstimates(out1.3, boot.ci.type = bootType)[ , -c(1 : 3)]
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Serial Multiple Mediation}
+
+  \begin{figure}
+    \includegraphics[width=\textwidth]{figures/serialDiagram.pdf}
+  \end{figure}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Serial Multiple Mediation}
+
+  To get all of the information in the preceding diagram, we need to
+  fit three equations:
+  \begin{align*}
+    Y &= i_Y + b_1 M_1 + b_2 M_2 + c' X + e_Y\\
+    M_2 &= i_{M2} + d_{21} M_1 + a_2 X + e_{M2}\\
+    M_1 &= i_{M1} + a_1 X + e_{M1}
+  \end{align*}
+  As with parallel mediator models, a serial mediator model with $K$
+  mediator variables will required $K + 1$ separate equations.\\
+  \va
+  Again, path modeling can make this task much simpler.
+  \vb
+  \begin{itemize}
+  \item Also allows us to fit more parsimonious, restricted models.
+  \end{itemize}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Serial Multiple Mediation}
+
+  Okay, back to our simple mediation example:
+
+  \vx{-12}
+
+  \begin{figure}
+    \includegraphics[width=\textwidth]{figures/adamsKlpsExample1PathDiagram.pdf}
+  \end{figure}
+
+  \vx{-24}
+
+  \textsc{Question:} What could be mediating the $a$ path?
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Serial Multiple Mediation}
+
+  \textsc{Potential Answer:}
+
+  \begin{figure}
+    \includegraphics[width=\textwidth]{figures/adamsKlpsSerial1.pdf}
+  \end{figure}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{A Quick Note on Inference}
+
+  Parallel multiple mediation operates much like a number of combined
+  simple mediation models, serial multiple mediation is not so
+  straight-forward.\\
+  \va
+  In serial multiple mediation:
+  \vb
+  \begin{itemize}
+  \item Every possible path from $X$ to $Y$ that passes through, at
+    least, one mediator is a specific indirect effect.
+    \begin{itemize}
+      \item With the saturated two-mediator model shown above, we
+        have: $IE_{spec} = \{a_1b_1, a_2b_2, a_1d_{21}b_2\}$
+    \end{itemize}
+    \vc
+  \item The \emph{Total Indirect Effect} is, again, equal to the sum
+    of all the specific indirect effects: $IE_{tot} = \sum_{k = 1}^{|\{IE_{spec}\}|}
+    IE_{spec,k}$.
+    \vc
+  \item The \emph{Total Effect} is equal to the direct effect plus the
+    total indirect effect: $c = c' + IE_{tot}$
+  \end{itemize}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{A Quick Note on Inference}
+
+  Inference for the specific indirect effects is basically the
+  same as it is for the sole indirect effect in simple mediation, when
+  using path modeling or bootstrapping.
+  \va
+  \begin{itemize}
+  \item \textsc{Caveat:} Normal-theory, Sobel-Type, standard errors
+    for the specific indirect effects that involve more than two
+    constituent paths can be very complex.
+    \vb
+    \begin{itemize}
+    \item This isn't really a problem since you should always use
+      bootstrapping, anyway!
+    \end{itemize}
+  \end{itemize}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile, allowframebreaks]{Example}
+
+<<cache = TRUE>>=
+## Serial Multiple Mediator Model:
+mod2.1 <- "
+policy ~ b1*merit + b2*sysRac + cp*polAffil
+sysRac ~ d21*merit + a2*polAffil
+merit ~ a1*polAffil
+
+ab1 := a1*b1
+ab2 := a2*b2
+fullIE := a1*d21*b2
+totalIE := ab1 + ab2 + fullIE
+"
+
+out2.1 <-
+    sem(mod2.1, data = dat1, se = "boot", bootstrap = nBoot)
+summary(out2.1)
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile, shrink = 5]{Example}
+
+<<>>=
+parameterEstimates(out2.1, boot.ci.type = bootType)[ , -c(1 : 3)]
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Restricted Models}
+
+  In this example, the $a_2$ and $b_1$ paths are non-significant as
+  are the simple specific indirect effects $a_1b_1$ and $a_2b_2$.
+  \vb
+  \begin{itemize}
+  \item There is a school of thinking that would prescribe
+    constraining the $a_2$ and $b_1$ paths to zero as in:
+  \end{itemize}
+
+  \begin{figure}
+    \includegraphics[width=0.5\textwidth]{figures/adamsKlpsSerial1_restricted.pdf}
+  \end{figure}
+
+  \begin{itemize}
+  \item This model will ascribe a larger effect size to
+    $a_1d_{21}b_2$ since it must convey all of the indirect influence
+    of $X$ on $Y$.
+    \vb
+    \begin{itemize}
+    \item We should first fit a saturated model, but subsequently
+      culling non-significant paths can, sometimes, be appropriate.
+    \end{itemize}
+  \end{itemize}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile, allowframebreaks]{Example}
+
+<<cache = TRUE>>=
+mod2.2 <- "
+policy ~ cp*polAffil + b2*sysRac
+merit ~ a1*polAffil
+sysRac ~ d21*merit
+
+fullIE := a1*d21*b2
+"
+
+out2.2 <-
+    sem(mod2.2, data = dat1, se = "boot", bootstrap = nBoot)
+summary(out2.2)
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile, shrink = 5]{Example}
+
+<<>>=
+parameterEstimates(out2.2, bootstrap = bootType)[ , -c(1 : 3)]
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile, allowframebreaks]{Example}
+
+  As in parallel multiple mediation, we can test for differences in
+  the specific indirect effects of a serial multiple mediator model:
+
+<<cache = TRUE>>=
+## Test Differences between Indirect Effects
+## in Serial Multiple Mediator Model (Method 1):
+mod2.3 <- "
+policy ~ cp*polAffil + b1*merit + b2*sysRac
+merit ~ a1*polAffil
+sysRac ~ a2*polAffil + d21*merit
+
+ab1 := a1*b1
+ab2 := a2*b2
+fullIE := a1*d21*b2
+totalIE := ab1 + ab2 + fullIE
+
+fullIE == ab1
+fullIE == ab2
+"
+
+out2.3 <-
+    sem(mod2.3, data = dat1, se = "boot", bootstrap = nBoot)
+summary(out2.3)
+
+## Conduct a chi-squared difference test:
+chiDiff <- fitMeasures(out2.3)["chisq"] -
+    fitMeasures(out2.1)["chisq"]
+dfDiff <- fitMeasures(out2.3)["df"] -
+    fitMeasures(out2.1)["df"]
+pchisq(chiDiff, dfDiff, lower = FALSE)
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Serial Multiple Mediation}
+
+  Okay, so we've supported an interesting hypothesis with the
+  following model, but why stop there?
+
+  \vx{-12}
+
+  \begin{figure}
+    \includegraphics[width=\textwidth]{figures/adamsKlpsSerial1.pdf}
+  \end{figure}
+
+  \vx{-12}
+
+  \textsc{Question:} What might mediated the $b_2$ path?
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Serial Multiple Mediation}
+
+  \textsc{Potential Answer:}
+
+  \begin{figure}
+    \includegraphics[width=\textwidth]{figures/adamsKlpsSerial2.pdf}
+  \end{figure}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Serial Multiple Mediation}
+
+  \textsc{Question:} How many equations do we need to get the
+  information in the preceding diagram?
+  \pause
+  \begin{align*}
+    Policy &= i_Y + b_1 Merit + b_2 SysRac + b_3 RevDisc + c' PolAff + e_Y\\
+    RevDisc &= i_{M3} + d_{31} Merit + d_{32} SysRac + a_3 PolAff + e_{M3}\\
+    SysRac &= i_{M2} + d_{21} Merit + a_2 PolAff + e_{M2}\\
+    Merit &= i_{M1} + a_1 PolAff + e_{M1}
+  \end{align*}
+
+  Which produces the following set of specific indirect effects:
+  \begin{columns}
+
+    \begin{column}{0.33\textwidth}
+      \begin{itemize}
+      \item $a_1b_1$
+      \item $a_2b_2$
+      \item $a_3b_3$
+      \end{itemize}
+    \end{column}
+
+    \begin{column}{0.33\textwidth}
+      \begin{itemize}
+      \item $a_1d_{31}b_3$
+      \item $a_1d_{21}b_2$
+      \item $a_2d_{32}b_3$
+      \end{itemize}
+    \end{column}
+
+    \begin{column}{0.33\textwidth}
+      \begin{itemize}
+      \item $a_1d_{21}d_{32}b_3$
+      \end{itemize}
+    \end{column}
+
+  \end{columns}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile, allowframebreaks]{Example}
+
+<<cache = TRUE>>=
+## Serial Multiple Mediator Model with 3 Mediators:
+mod3.1 <- "
+policy ~ b1*merit + b2*sysRac + b3*revDisc + cp*polAffil
+revDisc ~ d31*merit + d32*sysRac + a3*polAffil
+sysRac ~ d21*merit + a2*polAffil
+merit ~ a1*polAffil
+
+ab1 := a1*b1
+ab2 := a2*b2
+ab3 := a3*b3
+
+partIE1 := a1*d31*b3
+partIE2 := a1*d21*b2
+partIE3 := a2*d32*b3
+
+fullIE := a1*d21*d32*b3
+
+totalIE := ab1 + ab2 + ab3 + partIE1 + partIE2 + partIE3 + fullIE
+"
+
+out3.1 <-
+    sem(mod3.1, data = dat1, se = "boot", bootstrap = nBoot)
+summary(out3.1)
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile, shrink = 5]{Example}
+
+<<>>=
+parameterEstimates(out3.1, boot.ci.type = bootType)[ , -c(1 : 3)]
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Hybrid Multiple Mediation}
+
+  We can also combine parallel and serial mediation models:
+
+  \begin{figure}
+    \includegraphics[width=\textwidth]{figures/adamsKlpsHybrid.pdf}
+  \end{figure}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile, allowframebreaks]{Example}
+
+<<cache = TRUE>>=
+## Hybrid Multiple Mediator Model:
+mod4.1 <- "
+policy ~ b1*merit + b21*sysRac + b22*revDisc + cp*polAffil
+sysRac ~ d211*merit + a21*polAffil
+revDisc ~ d221*merit + a22*polAffil
+merit ~ a1*polAffil
+
+sysRac ~~ revDisc
+
+ab1 := a1*b1
+ab21 := a21*b21
+ab22 := a22*b22
+
+fullIE21 := a1*d211*b21
+fullIE22 := a1*d221*b22
+
+totalIE := ab1 + ab21 + ab22 + fullIE21 + fullIE22
+"
+
+out4.1 <-
+    sem(mod4.1, data = dat1, se = "boot", bootstrap = nBoot)
+summary(out4.1)
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile, shrink = 5]{Example}
+
+<<>>=
+parameterEstimates(out4.1, boot.ci.type = bootType)[ , -c(1 : 3)]
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Practice}
+
+  List all of the specific indirect effects present in this model:
+
+  \begin{figure}
+    \includegraphics[width=\textwidth]{figures/practiceDiagram.pdf}
+  \end{figure}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Boring Model}
+
+  So far, all of our models have been similar to:
+  \begin{figure}
+    \includegraphics[width=0.8\textwidth]{figures/simpleMediationPathDiagram.pdf}
+  \end{figure}
+  But there is no reason that we need to restrict ourselves to mucking
+  about with observed variables.
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Better Model}
+
+  We can (and should) test for indirect effects using \emph{latent
+    variable models} such as:
+  \begin{figure}
+    \includegraphics[width=0.8\textwidth]{figures/semMedDiagram.pdf}
+  \end{figure}
+  Measurement error can be a big problem for mediation analysis, so
+  latent variable modeling is highly recommended.
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile, allowframebreaks]{Example}
+
+<<>>=
+library(lavaan)
+dataDir <- "../data/"
+dat1 <- readRDS(paste0(dataDir, "adamsKlpsData.rds"))
+
+## Specify the CFA model:
+mod1.1 <- "
+merit =~ meritP1 + meritP2 + meritP3
+policy =~ policyP1 + policyP2 + policyP3
+"
+
+## Fit the CFA and check model:
+out1.1 <- cfa(mod1.1, data = dat1, std.lv = TRUE)
+## Check model fit:
+round(fitMeasures(out1.1)[c("chisq", "df", "pvalue", "cfi",
+                            "tli", "rmsea", "srmr")], 4)
+summary(out1.1)
+@
+
+\pagebreak
+
+<<cache = TRUE>>=
+## Specify the structural model:
+mod1.2 <- "
+merit =~ meritP1 + meritP2 + meritP3
+policy =~ policyP1 + policyP2 + policyP3
+
+policy ~ b*merit + polAffil
+merit ~ a*polAffil
+
+ab := a*b
+"
+
+## Fit the structural model and test the indirect effect:
+out1.2 <- sem(mod1.2, data = dat1, std.lv = TRUE,
+              se = "boot", bootstrap = 2500)
+summary(out1.2)
+parameterEstimates(out1.2, boot.ci.type = "bca.simple")[-c(1 : 3)]
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Interpretation of Indirect Effects}
+
+  Although indirect effects are composed parameters, they have direct
+  interpretations, independent of the interpretations of their
+  constituent paths:
+  \vb
+  \begin{itemize}
+  \item The $X \rightarrow M \rightarrow Y$ indirect effect $ab$ is
+    interpreted as:
+    \vb
+    \begin{itemize}
+    \item The expected change in $Y$ for a unit change in $X$ that
+      is transmitted indirectly through $M$, or...
+      \vb
+    \item For a unit change in $X$, $Y$ is expected to change by
+      $ab$ units, indirectly through $M$, or...
+      \vb
+    \item Participants who differ by one unit on $X$ are expect
+      to differ by $ab$ units on $Y$ as a results of the effect
+      of $X$ on $M$ which, in turn, affects $Y$.
+    \end{itemize}
+    \va
+  \item The interpretation/scaling of the indirect effect is entirely
+    defined by the input $X$ and outcome $Y$
+    \vb
+    \begin{itemize}
+    \item The scaling of the intermediary variable $M$ does not affect
+      the interpretation of the indirect effect.
+    \end{itemize}
+  \end{itemize}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Partially Standardized Indirect Effect}
+
+  \begin{align*}
+    ab_{ps} &= \frac{ab}{SD_Y}\\
+    c'_{ps} &= \frac{c'}{SD_Y}\\
+    c_{ps} &= \frac{c}{SD_Y} = ab_{ps} + c'_{ps}
+  \end{align*}
+
+  \begin{itemize}
+    \item Simple
+    \item Removes binding to the scale of $Y$
+    \item Still scale-bound by $X$
+    \item Not clear what constitutes a ``large'' effect
+  \end{itemize}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Completely Standardized Indirect Effect}
+
+  \begin{align*}
+    ab_{cs} &= \frac{SD_X ab}{SD_Y}\\
+    c'_{cs} &= \frac{SD_X c'}{SD_Y}\\
+    c_{cs} &= \frac{SD_X c}{SD_Y} = ab_{cs} + c'_{cs}
+  \end{align*}
+
+  \begin{itemize}
+    \item Simple
+    \item Removes all scale binding
+    \item Not clear what constitutes a ``large'' effect
+  \end{itemize}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Ratio of the Indirect Effect to the Total Effect}
+
+  \begin{align*}
+    P_M = \frac{ab}{c} = \frac{ab}{c' + ab}
+  \end{align*}
+
+  \begin{itemize}
+  \item Very simple
+  \item Not bounded by 0 and 1
+  \item Explodes toward $\pm \infty$ as $c\rightarrow 0$
+  \item Very unstable
+    \begin{itemize}
+    \item High between-sample variability
+    \item Requires $N \geq 500$
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Ratio of the Indirect Effect to the Direct Effect}
+
+  \begin{align*}
+    R_M = \frac{ab}{c'} = \frac{P_M}{1 - P_M}
+  \end{align*}
+
+  \begin{itemize}
+  \item Very simple
+  \item Not bounded by 0 and 1
+  \item Explodes toward $\pm \infty$ as $c'\rightarrow 0$
+  \item Very unstable
+    \begin{itemize}
+    \item High between-sample variability
+    \item Requires $N \geq 2000$
+    \end{itemize}
+  \end{itemize}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Proportion of Variance in $Y$ Explained by the Indirect Effect}
+
+  Developed by \citet{fairchildEtAl:2009}.
+  \begin{itemize}
+    \item Given a non-zero total effect, represents the proportion of
+      variance in Y accounted for by the indirect effect.
+  \end{itemize}
+
+  \begin{align*}
+    R_{med}^2 = r_{MY}^2 - \left( R_{Y.MX}^2-r_{XY}^2 \right)
+  \end{align*}
+
+  \begin{itemize}
+  \item Mostly sensible interpretation
+  \item Predicated on the assumption that $\beta_{YX} \neq 0$
+  \item $|ab| > |c| \Rightarrow R_{med}^2 < 0$
+    \begin{itemize}
+    \item Not a strict proportion
+    \end{itemize}
+  \end{itemize}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Kappa Squared}
+
+  Developed by \citet{preacherKelley:2011}.
+  \begin{itemize}
+  \item Gives the proportion of the \emph{maximum possible} indirect
+    effect represented by $ab$.
+  \end{itemize}
+
+  \begin{align*}
+    \kappa^2 = \frac{ab}{\text{max}(ab)}
+  \end{align*}
+
+  \begin{itemize}
+  \item Bounded by 0 and 1
+  \item Values closer to 1.0 indicate a bigger effect
+  \item A bit of a pain to calculate.
+  \end{itemize}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Computing $\text{max}(ab)$}
+
+  \begin{align*}
+    a &\in \left\{
+    \frac{
+      \sigma_{YM} \sigma_{YX} \pm
+      \sqrt{ \sigma_M^2 \sigma_Y^2 - \sigma_{YM}^2 }
+      \sqrt{ \sigma_X^2 \sigma_Y^2 - \sigma_{YX}^2 }
+    }{
+      \sigma_X^2 \sigma_Y^2
+    }
+    \right\}
+    = [a_{low}, a_{high}],
+    \\
+    \\
+    b &\in \left\{
+    \pm \frac{
+      \sqrt{ \sigma_X^2 \sigma_Y^2 - \sigma_{YX}^2 }
+    }{
+      \sqrt{ \sigma_X^2 \sigma_M^2 - \sigma_{MX}^2 }
+    }
+    \right\} = [b_{low}, b_{high}],
+  \end{align*}
+
+  \begin{align*}
+    \text{max}(a) = \left\{ \begin{array}{lll}
+      a_{high}, & \text{ if } & \hat{a} > 0\\
+      a_{low}, & \text{ if } & \hat{a} < 0
+    \end{array}
+    \right.,~~
+    \text{max}(b) = \left\{ \begin{array}{lll}
+      b_{high}, & \text{ if } & \hat{b} > 0\\
+      b_{low}, & \text{ if } & \hat{b} < 0
+    \end{array}
+    \right.,
+  \end{align*}
+
+  \begin{align*}
+    \text{max}(ab) = \text{max}(a) \text{max}(b)
+  \end{align*}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile, allowframebreaks]{Example}
+
+<<>>=
+## Specify the model:
+mod2 <- "
+policy ~ b*sysRac + cp*polAffil
+sysRac ~ a*polAffil
+
+ab := a*b
+"
+
+## Estimate the model:
+out2 <- sem(mod2, data = dat1)
+##
+## Extract/compute the necessary quantities:
+ab <- prod(coef(out2)[c("a", "b")])
+ab
+cPrime <- coef(out2)["cp"]
+##
+sdY <- sd(dat1$policy)
+sdX <- sd(dat1$polAffil)
+##
+r2MY <- with(dat1, cor(policy, sysRac))^2
+r2XY <- with(dat1, cor(policy, polAffil))^2
+R2Y.MX <- inspect(out2, "r2")["policy"]
+@
+
+\pagebreak
+
+<<>>=
+## Partially Standardized:
+abPS <- ab / sdY
+abPS
+cPrimePS <- cPrime / sdY
+cPrimePS
+cPS <- abPS + cPrimePS
+cPS
+@
+
+\pagebreak
+
+<<>>=
+## Completely Standardized:
+abCS <- (sdX * ab) / sdY
+abCS
+cPrimeCS <- (sdX * cPrime) / sdY
+cPrimeCS
+cCS <- abCS + cPrimeCS
+cCS
+@
+
+\pagebreak
+
+<<>>=
+## Proportions:
+pm <- ab / (cPrime + ab)
+pm
+rm <- ab / cPrime
+rm
+
+## R2:
+R2med <- r2MY - (R2Y.MX - r2XY)
+R2med
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile, allowframebreaks]{Compute $\kappa^2$}
+
+<<>>=
+## Subset the data:
+tmpData <- dat1[ , c("polAffil", "sysRac", "policy")]
+colnames(tmpData) <- c("x", "m", "y")
+##
+## Extract pertinent variance/covariance elements:
+cov1 <- cov(tmpData)
+
+sYM <- cov1["x", "m"]
+sYX <- cov1["y", "x"]
+sMX <- cov1["m", "x"]
+s2X <- cov1["x", "x"]
+s2M <- cov1["m", "m"]
+s2Y <- cov1["y", "y"]
+@
+
+\pagebreak
+
+<<>>=
+## Possible range of a:
+aMarg <- sqrt(s2M * s2Y - sYM^2) * sqrt(s2X * s2Y - sYX^2)
+aInt <- c(
+    (sYM * sYX - aMarg) / (s2X * s2Y),
+    (sYM * sYX + aMarg) / (s2X * s2Y)
+)
+aInt
+##
+## Possible range of b:
+bMarg <- sqrt(s2X * s2Y - sYX^2) / sqrt(s2X * s2M - sMX^2)
+bInt <- c(-1 * bMarg, bMarg)
+bInt
+##
+## max(a):
+aMax <- ifelse(coef(out2)["a"] < 0,
+               aInt[1],
+               aInt[2])
+aMax
+##
+## max(b)
+bMax <- ifelse(coef(out2)["b"] < 0,
+               bInt[1],
+               bInt[2])
+bMax
+##
+## max(ab)
+abMax <- aMax * bMax
+abMax
+##
+## Kappa Squared:
+k2 <- ab / abMax
+k2
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Practice}
+
+<<echo = FALSE>>=
+## Practice:
+set.seed(235711)
+
+sigma <- matrix(c(1.5, 0.3, 0.6,
+                  0.3, 1.4, 0.45,
+                  0.6, 0.45, 1.55),
+                3, 3)
+
+rownames(sigma) <- colnames(sigma) <- c("x", "m", "y")
+
+a <- sigma["x", "m"] / sigma["x", "x"]
+betaYMX <- solve(sigma[c("x", "m"), c("x", "m")]) %*% sigma[c("x", "m"), "y"]
+b <- betaYMX["m", ]
+@
+
+Suppose:
+\begin{enumerate}
+\item $\Sigma$ is given by:
+<<echo = FALSE, results = "asis">>=
+sigma[upper.tri(sigma)] <- ""
+sigmaTab <- xtable(sigma,
+                   digits = 2,
+                   align = c( "r|",rep( "c", 3 ) )
+                   )
+
+print(sigmaTab)
+@
+\va
+\item The estimated paths are:
+  \begin{itemize}
+  \item $a = $ \Sexpr{round(a, 3)}
+    \vb
+  \item $b = $ \Sexpr{round(b, 3)}
+    \vb
+  \item $ab = $ \Sexpr{round(a*b, 3)}
+  \end{itemize}
+  \end{enumerate}
+  \va
+  Compute $\kappa^2$ for the estimated $ab$.
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[allowframebreaks]{References}
+
+  \bibliographystyle{apacite}
+  \bibliography{../../bibtex/dissRefsList.bib}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\end{document}

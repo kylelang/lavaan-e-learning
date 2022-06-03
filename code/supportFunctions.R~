@@ -1,0 +1,358 @@
+### Title:    Support Functions for Examples
+### Author:   Kyle M. Lang
+### Created:  2017-08-24
+### Modified: 2020-02-24
+
+
+## Create an basic ggplot object using my preferred styling:
+gg0 <- function(x, y, points = TRUE) {
+    p0 <- ggplot(mapping = aes(x = x, y = y)) +
+        theme_classic() +
+        theme(text = element_text(family = "Courier", size = 16))
+
+    if(points) p0 + geom_point()
+    else       p0
+}
+
+###--------------------------------------------------------------------------###
+
+rangeNorm <- function(x, newMin = 0.0, newMax = 1.0) {
+    r0 <- diff(range(x))
+    r1 <- newMax - newMin
+
+    (x * r1 - min(x) * r1) / r0 + newMin
+}
+
+###--------------------------------------------------------------------------###
+
+## Force line-wrapping for wide output when 'width' option is ignored:
+wrap <- function(x, w = 60) {
+    out <- capture.output(x)
+
+    for(x in out) {
+        if(nchar(x) < w)
+            cat(x, sep = "", "\n")
+        else {
+            y <- strsplit(x, "\\s")[[1]]
+
+            while(TRUE) {
+                z <- sapply(y, nchar, USE.NAMES = FALSE)
+
+                check <- cumsum(z + 1)
+                cut   <- max(which(check < w))
+
+                cat(y[1 : cut], sep = " ", "\n")
+
+                if(max(check) <= w) break
+                else                y <- y[-c(1 : cut)]
+            }
+        }
+    }
+}
+
+###--------------------------------------------------------------------------###
+
+### The following 'paragraphs'-related functions were adapted from code by Brett
+### Presnell
+### http://r.789695.n4.nabble.com/Sweave-and-Slides-Beamer-td3451049.html
+
+## Break up long output into "paragraphs":
+paragraphs <- function(x) {
+    text <- capture.output(x)
+
+    if(text[length(text)] == "") text <- text[-length(text)]
+
+    blanks <- which(text == "")
+    if(blanks[1] != 1) blanks <- c(-1, blanks)
+
+    starts <- blanks + 1
+    ends   <- c(blanks[-1] - 1, length(text))
+
+    res <- list()
+    for(i in 1 : length(starts))
+        res <- c(res, list(text[starts[i] : ends[i]]))
+
+    class(res) <- c("paragraphs", res$class)
+    res
+}
+
+as.paragraphs <- paragraphs
+
+## Make sure subsets of 'paragraphs' objects are also 'paragraphs' objects:
+assign("[.paragraphs",
+       function(x, ..., drop = TRUE) {
+           cl       <- oldClass(x)
+           class(x) <- NULL
+
+           val        <- NextMethod("[")
+           class(val) <- cl
+
+           val
+       })
+
+print.paragraphs <- function(x, ...) {
+    for (i in 1 : (length(x))) {
+        cat(x[[i]], sep="\n")
+        cat("\n")
+    }
+}
+
+###--------------------------------------------------------------------------###
+
+## Print only a subset of a summary object:
+partSummary <- function(x, which = Inf, stars = FALSE) {
+    tmp <- paragraphs(print(summary(x), signif.stars = stars))
+
+    check <- length(which) == 1 && is.infinite(which)
+    if(check) tmp
+    else      tmp[which]
+}
+
+###--------------------------------------------------------------------------###
+
+## A summary method for cell-means coded lm models.
+## This function will correct the R^2 and F-stats from the usual summary.lm().
+summary.cellMeans <- function(obj) {
+    ## Get broken summaries:
+    s0  <- summary.lm(obj)
+    av0 <- anova(obj)
+
+    ## Extract model info:
+    y  <- obj$model[ , 1]
+    df <- obj$rank - 1
+
+    ## Compute correct measures of variability:
+    ss <- crossprod(obj$fitted.values - mean(y))
+    ms <- ss / df
+
+    ## Compute correct stats:
+    r2  <- as.numeric(ss / crossprod(y - mean(y)))
+    r2a <- as.numeric(1 - (1 - r2) * ((length(y) - 1) / obj$df.residual))
+    f   <- as.numeric(ms / av0["Residuals", "Mean Sq"])
+
+    ## Replace broken stats:
+    s0$r.squared           <- r2
+    s0$adj.r.squared       <- r2a
+    s0$fstatistic[c(1, 2)] <- c(f, df)
+
+    s0 # Return corrected summary
+}
+
+###--------------------------------------------------------------------------###
+
+## Extract the DV name from an lm.fit object
+## NOTE:
+##  This function only works when lm is run using the fomula interface.
+dvName <- function(x) all.vars(x$terms)[1]
+
+###--------------------------------------------------------------------------###
+
+## Compute the cross-validation error:
+getCve <- function(model, data, K, part) {
+    ## Loop over K repititions:
+    mse <- c()
+    for(k in 1 : K) {
+        ## Partition data:
+        train <- data[part != k, ]
+        valid <- data[part == k, ]
+
+        ## Fit model, generate predictions, and save the MSE:
+        fit    <- lm(model, data = train)
+        pred   <- predict(fit, newdata = valid)
+        mse[k] <- MSE(y_pred = pred, y_true = valid[ , dvName(fit)])
+    }
+    ## Return the CVE:
+    sum((table(part) / length(part)) * mse)
+}
+
+###--------------------------------------------------------------------------###
+
+## Do K-Fold Cross-Validation with lm():
+cv.lm <- function(data, models, K = 10, names = NULL, seed = NULL) {
+    ## Set seed, if necessary:
+    if(!is.null(seed)) set.seed(seed)
+
+    ## Create a partition vector:
+    part <- sample(rep(1 : K, ceiling(nrow(data) / K)))[1 : nrow(data)]
+
+    ## Apply over candidate models:
+    cve <- sapply(models, getCve, data = data, K = K, part = part)
+
+    ## Name output:
+    if(!is.null(names))          names(cve) <- names
+    else if(is.null(names(cve))) names(cve) <- paste("Model", 1 : length(cve))
+
+    cve
+}
+
+###--------------------------------------------------------------------------###
+
+## Create polynomial formula objects:
+polyList <- function(y, x, n) {
+    out <- list(paste(y, x, sep = " ~ "))
+    for(i in 2 : n) {
+        xn       <- paste0("I(", x, "^", i, ")")
+        out[[i]] <- paste(out[[i - 1]], xn, sep = " + ")
+    }
+    out
+}
+
+###--------------------------------------------------------------------------###
+
+## Generate plots to demonstrate the effects of centering
+## NOTE:
+##   This function is used for Lecture 2
+##   This function requires the Cars93 dataset from the MASS package
+cenPlot <- function(center, xLab, xInt = 0) {
+    if(center != 0 & xInt != 0)
+        stop("Only one of 'center' and 'xInt' can be non-zero.")
+
+    ## Center IV:
+    Cars93$PriceC <- Cars93$Price - center
+
+    ## Estimate model:
+    out <- lm(Horsepower ~ PriceC, data = Cars93)
+
+    ## Create basic plot:
+    p0 <- ggplot(data = Cars93, aes(x = PriceC, y = Horsepower)) +
+        geom_point() +
+        geom_abline(intercept = coef(out)[1],
+                    slope     = coef(out)[2],
+                    color     = "blue",
+                    size      = 1) +
+        theme_classic() +
+        theme(text = element_text(size = 16, family = "Courier")) +
+        theme(axis.line.y  = element_blank(),
+              axis.ticks.y = element_blank(),
+              axis.text.y  = element_blank()
+              ) +
+        labs(x = xLab)
+
+    ## Create some dummy data to use in generating a new y-axis:
+    tmp <- data.frame(x1 = rep(xInt - 0.5, 3),
+                      x2 = rep(xInt, 3),
+                      x3 = rep(xInt - 2.5, 3),
+                      y  = c(100, 200, 300)
+                      )
+
+    ## Shift the y-axis:
+    p1 <- p0 + geom_vline(xintercept = xInt) +
+        geom_segment(data    = tmp,
+                     mapping = aes(x = x1, y = y, xend = x2, yend = y)
+                     ) +
+        geom_text(data    = tmp,
+                  mapping = aes(x = x3, y = y, label = y),
+                  size    = 5,
+                  family  = "Courier")
+
+    ## Compute the "correct" intercept:
+    if(xInt != 0)
+        yInt <- predict(out, newdata = data.frame(PriceC = xInt))
+    else
+        yInt <- coef(out)[1]
+
+    ## Make some fake data to generate intercept line/label:
+    tmp <- data.frame(x1 = xInt - 2,
+                      x2 = xInt + 2,
+                      x3 = xInt + 6,
+                      y  = yInt)
+
+    ## Add a line for the intercept:
+    p1 + geom_segment(data    = tmp,
+                      mapping = aes(x = x1, y = y, xend = x2, yend = y),
+                      color   = "red",
+                      size    = 1) +
+        geom_text(data     = tmp,
+                  mapping  = aes(x = x3, y = y, label = round(y, 2)),
+                  size     = 5,
+                  color    = "red",
+                  family   = "Courier",
+                  fontface = "bold")
+}
+
+###--------------------------------------------------------------------------###
+
+## Generate plots to demonstrate the effects of centering
+## NOTE:
+##   This function is used for Lecture 8
+##   This function requires the Cars93 dataset from the MASS package
+
+cenPlot8 <- function(center, xLab, xInt = 0, linSlope = FALSE) {
+    if(center != 0 & xInt != 0)
+        stop("Only one of 'center' and 'xInt' can be non-zero.")
+
+    Cars93$y <- Cars93$MPG.city
+    ## Center IV:
+    Cars93$x <- Cars93$Horsepower - center
+
+    ## Estimate model:
+    out <- lm(y ~ x + I(x^2), data = Cars93)
+
+    ## Create basic plot:
+    p0 <- ggplot(data = Cars93, aes(x = x, y = y)) +
+        geom_point(color = "darkgrey") +
+        geom_smooth(method = "lm", se = FALSE,  formula = y ~ x + I(x^2)) +
+                                        #geom_abline(intercept = coef(out)[1],
+                                        #            slope     = coef(out)[2],
+                                        #            color     = "blue",
+                                        #            size      = 1) +
+        theme_classic() +
+        theme(text = element_text(size = 16, family = "Courier")) +
+        theme(axis.line.y  = element_blank(),
+              axis.ticks.y = element_blank(),
+              axis.text.y  = element_blank()
+              ) +
+        labs(x = xLab, y = "MPG")
+
+    tmp <- data.frame(x1 = rep(xInt - 3, 6),
+                      x2 = rep(xInt, 6),
+                      x3 = rep(xInt - 9, 6),
+                      y  = seq(0, 50, 10)
+                      )
+
+    ## Shift the y-axis:
+    p1 <- p0 + geom_vline(xintercept = xInt) +
+        geom_segment(data    = tmp,
+                     mapping = aes(x = x1, y = y, xend = x2, yend = y)
+                     ) +
+        geom_text(data    = tmp,
+                  mapping = aes(x = x3, y = y, label = y),
+                  size    = 5,
+                  family  = "Courier")
+
+    ## Create some dummy data to use in generating a new y-axis:
+    xWidth <- diff(layer_scales(p1)$x$range$range)
+
+    ## Compute the "correct" intercept:
+    if(xInt != 0)
+        yInt <- predict(out, newdata = data.frame(x = xInt))
+    else
+        yInt <- coef(out)[1]
+
+    ## Make some fake data to generate intercept line/label:
+    tmp <- data.frame(x1 = xInt - 0.033 * xWidth,
+                      x2 = xInt + 0.033 * xWidth,
+                      x3 = xInt + 0.1 * xWidth,
+                      y  = yInt)
+
+    ## Add a line for the intercept:
+    p2 <- p1 + geom_segment(data    = tmp,
+                            mapping = aes(x = x1, y = y, xend = x2, yend = y),
+                            color   = "red",
+                            size    = 1) +
+        geom_text(data     = tmp,
+                  mapping  = aes(x = x3, y = y, label = round(y, 2)),
+                  size     = 5,
+                  color    = "red",
+                  family   = "Courier",
+                  fontface = "bold")
+
+    ## Plot the linear slope:
+    if(linSlope)
+        p2 + geom_abline(slope     = coef(out)[2],
+                         intercept = coef(out)[1],
+                         color     = "purple",
+                         size      = 1)
+    else
+        p2
+}

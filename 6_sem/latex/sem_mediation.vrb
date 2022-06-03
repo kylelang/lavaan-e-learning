@@ -1,0 +1,95 @@
+\frametitle{Compute $\kappa ^2$}
+
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.878, 0.918, 0.933}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{## Subset the data:}
+\hlstd{tmpData} \hlkwb{<-} \hlstd{dat1[ ,} \hlkwd{c}\hlstd{(}\hlstr{"polAffil"}\hlstd{,} \hlstr{"sysRac"}\hlstd{,} \hlstr{"policy"}\hlstd{)]}
+\hlkwd{colnames}\hlstd{(tmpData)} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlstr{"x"}\hlstd{,} \hlstr{"m"}\hlstd{,} \hlstr{"y"}\hlstd{)}
+\hlcom{##}
+\hlcom{## Extract pertinent variance/covariance elements:}
+\hlstd{cov1} \hlkwb{<-} \hlkwd{cov}\hlstd{(tmpData)}
+
+\hlstd{sYM} \hlkwb{<-} \hlstd{cov1[}\hlstr{"x"}\hlstd{,} \hlstr{"m"}\hlstd{]}
+\hlstd{sYX} \hlkwb{<-} \hlstd{cov1[}\hlstr{"y"}\hlstd{,} \hlstr{"x"}\hlstd{]}
+\hlstd{sMX} \hlkwb{<-} \hlstd{cov1[}\hlstr{"m"}\hlstd{,} \hlstr{"x"}\hlstd{]}
+\hlstd{s2X} \hlkwb{<-} \hlstd{cov1[}\hlstr{"x"}\hlstd{,} \hlstr{"x"}\hlstd{]}
+\hlstd{s2M} \hlkwb{<-} \hlstd{cov1[}\hlstr{"m"}\hlstd{,} \hlstr{"m"}\hlstd{]}
+\hlstd{s2Y} \hlkwb{<-} \hlstd{cov1[}\hlstr{"y"}\hlstd{,} \hlstr{"y"}\hlstd{]}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+\pagebreak
+
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.878, 0.918, 0.933}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{## Possible range of a:}
+\hlstd{aMarg} \hlkwb{<-} \hlkwd{sqrt}\hlstd{(s2M} \hlopt{*} \hlstd{s2Y} \hlopt{-} \hlstd{sYM}\hlopt{^}\hlnum{2}\hlstd{)} \hlopt{*} \hlkwd{sqrt}\hlstd{(s2X} \hlopt{*} \hlstd{s2Y} \hlopt{-} \hlstd{sYX}\hlopt{^}\hlnum{2}\hlstd{)}
+\hlstd{aInt} \hlkwb{<-} \hlkwd{c}\hlstd{(}
+    \hlstd{(sYM} \hlopt{*} \hlstd{sYX} \hlopt{-} \hlstd{aMarg)} \hlopt{/} \hlstd{(s2X} \hlopt{*} \hlstd{s2Y),}
+    \hlstd{(sYM} \hlopt{*} \hlstd{sYX} \hlopt{+} \hlstd{aMarg)} \hlopt{/} \hlstd{(s2X} \hlopt{*} \hlstd{s2Y)}
+\hlstd{)}
+\hlstd{aInt}
+\end{alltt}
+\begin{verbatim}
+[1] -0.4378558  0.5793099
+\end{verbatim}
+\begin{alltt}
+\hlcom{##}
+\hlcom{## Possible range of b:}
+\hlstd{bMarg} \hlkwb{<-} \hlkwd{sqrt}\hlstd{(s2X} \hlopt{*} \hlstd{s2Y} \hlopt{-} \hlstd{sYX}\hlopt{^}\hlnum{2}\hlstd{)} \hlopt{/} \hlkwd{sqrt}\hlstd{(s2X} \hlopt{*} \hlstd{s2M} \hlopt{-} \hlstd{sMX}\hlopt{^}\hlnum{2}\hlstd{)}
+\hlstd{bInt} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlopt{-}\hlnum{1} \hlopt{*} \hlstd{bMarg, bMarg)}
+\hlstd{bInt}
+\end{alltt}
+\begin{verbatim}
+[1] -1.289996  1.289996
+\end{verbatim}
+\begin{alltt}
+\hlcom{##}
+\hlcom{## max(a):}
+\hlstd{aMax} \hlkwb{<-} \hlkwd{ifelse}\hlstd{(}\hlkwd{coef}\hlstd{(out2)[}\hlstr{"a"}\hlstd{]} \hlopt{<} \hlnum{0}\hlstd{,}
+               \hlstd{aInt[}\hlnum{1}\hlstd{],}
+               \hlstd{aInt[}\hlnum{2}\hlstd{])}
+\hlstd{aMax}
+\end{alltt}
+\begin{verbatim}
+        a
+0.5793099
+\end{verbatim}
+\begin{alltt}
+\hlcom{##}
+\hlcom{## max(b)}
+\hlstd{bMax} \hlkwb{<-} \hlkwd{ifelse}\hlstd{(}\hlkwd{coef}\hlstd{(out2)[}\hlstr{"b"}\hlstd{]} \hlopt{<} \hlnum{0}\hlstd{,}
+               \hlstd{bInt[}\hlnum{1}\hlstd{],}
+               \hlstd{bInt[}\hlnum{2}\hlstd{])}
+\hlstd{bMax}
+\end{alltt}
+\begin{verbatim}
+       b
+1.289996
+\end{verbatim}
+\begin{alltt}
+\hlcom{##}
+\hlcom{## max(ab)}
+\hlstd{abMax} \hlkwb{<-} \hlstd{aMax} \hlopt{*} \hlstd{bMax}
+\hlstd{abMax}
+\end{alltt}
+\begin{verbatim}
+        a
+0.7473075
+\end{verbatim}
+\begin{alltt}
+\hlcom{##}
+\hlcom{## Kappa Squared:}
+\hlstd{k2} \hlkwb{<-} \hlstd{ab} \hlopt{/} \hlstd{abMax}
+\hlstd{k2}
+\end{alltt}
+\begin{verbatim}
+        a
+0.1359491
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+

@@ -1,0 +1,139 @@
+\begin{thebibliography}{}
+
+\bibitem [\protect \citeauthoryear {%
+Baron%
+\ \BBA {} Kenny%
+}{%
+Baron%
+\ \BBA {} Kenny%
+}{%
+{\protect \APACyear {1986}}%
+}]{%
+baronKenny:1986}
+\APACinsertmetastar {%
+baronKenny:1986}%
+\begin{APACrefauthors}%
+Baron, R\BPBI M.%
+\BCBT {}\ \BBA {} Kenny, D\BPBI A.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{1986}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {The moderator--mediator variable distinction in social
+  psychological research: Conceptual, strategic, and statistical
+  considerations} {The moderator--mediator variable distinction in social
+  psychological research: Conceptual, strategic, and statistical
+  considerations}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{Journal of Personality and Social
+  Psychology}{51}{6}{1173}.
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Efron%
+}{%
+Efron%
+}{%
+{\protect \APACyear {1979}}%
+}]{%
+efron:1979}
+\APACinsertmetastar {%
+efron:1979}%
+\begin{APACrefauthors}%
+Efron, B.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{1979}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Bootstrap methods: {A}nother look at the jackknife}
+  {Bootstrap methods: {A}nother look at the jackknife}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{The Annals of Statistics}{7}{1}{1--26}.
+\newblock
+\begin{APACrefDOI} \doi{10.1214/aos/1176344552} \end{APACrefDOI}
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Fairchild%
+, MacKinnon%
+, Taborga%
+\BCBL {}\ \BBA {} Taylor%
+}{%
+Fairchild%
+\ \protect \BOthers {.}}{%
+{\protect \APACyear {2009}}%
+}]{%
+fairchildEtAl:2009}
+\APACinsertmetastar {%
+fairchildEtAl:2009}%
+\begin{APACrefauthors}%
+Fairchild, A\BPBI J.%
+, MacKinnon, D\BPBI P.%
+, Taborga, M\BPBI P.%
+\BCBL {}\ \BBA {} Taylor, A\BPBI B.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2009}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {R-squared effect-size measures for mediation analysis}
+  {R-squared effect-size measures for mediation analysis}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{Behavior Research Methods}{41}{2}{486--498}.
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Preacher%
+\ \BBA {} Kelley%
+}{%
+Preacher%
+\ \BBA {} Kelley%
+}{%
+{\protect \APACyear {2011}}%
+}]{%
+preacherKelley:2011}
+\APACinsertmetastar {%
+preacherKelley:2011}%
+\begin{APACrefauthors}%
+Preacher, K\BPBI J.%
+\BCBT {}\ \BBA {} Kelley, K.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2011}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Effect size measures for mediation models:
+  {Quantitative} strategies for communicating indirect effects} {Effect size
+  measures for mediation models: {Quantitative} strategies for communicating
+  indirect effects}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{Psychological Methods}{16}{2}{93}.
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Sobel%
+}{%
+Sobel%
+}{%
+{\protect \APACyear {1982}}%
+}]{%
+sobel:1982}
+\APACinsertmetastar {%
+sobel:1982}%
+\begin{APACrefauthors}%
+Sobel, M\BPBI E.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{1982}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Asymptotic confidence intervals for indirect effects in
+  structural equation models} {Asymptotic confidence intervals for indirect
+  effects in structural equation models}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{Sociological Methodology}{13}{1982}{290--312}.
+\PrintBackRefs{\CurrentBib}
+
+\end{thebibliography}
