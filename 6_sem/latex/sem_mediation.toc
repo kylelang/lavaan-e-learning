@@ -1,4 +1,8 @@
 \beamer@sectionintoc {1}{Structural Equation Modeling}{3}{0}{1}
-\beamer@sectionintoc {2}{Mediation}{6}{0}{2}
-\beamer@subsectionintoc {2}{1}{Simple Mediation}{15}{0}{2}
-\beamer@subsectionintoc {2}{2}{Bootstrapping}{42}{0}{2}
+\beamer@sectionintoc {2}{Mediation}{16}{0}{2}
+\beamer@subsectionintoc {2}{1}{Simple Mediation}{23}{0}{2}
+\beamer@subsectionintoc {2}{2}{Bootstrapping}{50}{0}{2}
+\beamer@subsectionintoc {2}{3}{Multiple Mediation}{64}{0}{2}
+\beamer@subsubsectionintoc {2}{3}{1}{Parallel Mediators}{66}{0}{2}
+\beamer@subsubsectionintoc {2}{3}{2}{Serial Mediators}{87}{0}{2}
+\beamer@subsectionintoc {2}{4}{Mediation + SEM}{120}{0}{2}

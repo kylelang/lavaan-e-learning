@@ -1,34 +1,34 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2021.11.1)  3 JUN 2022 19:11
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/Debian) (preloaded format=pdflatex 2022.6.8)  9 JUN 2022 16:19
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
 **sem_mediation.tex
 (./sem_mediation.tex
-LaTeX2e <2021-06-01> patch level 1
-L3 programming layer <2021-10-18>
-(c:/texlive/2021/texmf-dist/tex/latex/beamer/beamer.cls
-Document Class: beamer 2021/10/18 v3.64 A class for typesetting presentations
-(c:/texlive/2021/texmf-dist/tex/latex/beamer/beamerbasemodes.sty
-(c:/texlive/2021/texmf-dist/tex/latex/etoolbox/etoolbox.sty
+LaTeX2e <2020-10-01> patch level 4
+L3 programming layer <2021-01-09> xparse <2020-03-03>
+(/usr/share/texlive/texmf-dist/tex/latex/beamer/beamer.cls
+Document Class: beamer 2020/11/26 v3.60 A class for typesetting presentations
+(/usr/share/texlive/texmf-dist/tex/latex/beamer/beamerbasemodes.sty
+(/usr/share/texlive/texmf-dist/tex/latex/etoolbox/etoolbox.sty
 Package: etoolbox 2020/10/05 v2.5k e-TeX tools for LaTeX (JAW)
-\etb@tempcnta=\count182
+\etb@tempcnta=\count177
 )
-\beamer@tempbox=\box50
-\beamer@tempcount=\count183
-\c@beamerpauses=\count184
+\beamer@tempbox=\box47
+\beamer@tempcount=\count178
+\c@beamerpauses=\count179
 
-(c:/texlive/2021/texmf-dist/tex/latex/beamer/beamerbasedecode.sty
-\beamer@slideinframe=\count185
-\beamer@minimum=\count186
-\beamer@decode@box=\box51
+(/usr/share/texlive/texmf-dist/tex/latex/beamer/beamerbasedecode.sty
+\beamer@slideinframe=\count180
+\beamer@minimum=\count181
+\beamer@decode@box=\box48
 )
-\beamer@commentbox=\box52
-\beamer@modecount=\count187
+\beamer@commentbox=\box49
+\beamer@modecount=\count182
 )
-(c:/texlive/2021/texmf-dist/tex/generic/iftex/ifpdf.sty
+(/usr/share/texlive/texmf-dist/tex/generic/iftex/ifpdf.sty
 Package: ifpdf 2019/10/25 v3.4 ifpdf legacy package. Use iftex instead.
 
-(c:/texlive/2021/texmf-dist/tex/generic/iftex/iftex.sty
+(/usr/share/texlive/texmf-dist/tex/generic/iftex/iftex.sty
 Package: iftex 2020/03/06 v1.0d TeX engine tests
 ))
 \headdp=\dimen138
@@ -48,50 +48,49 @@ Package: iftex 2020/03/06 v1.0d TeX engine tests
 \beamer@descdefault=\dimen152
 \beamer@descriptionwidth=\dimen153
 \beamer@lastskip=\skip47
-\beamer@areabox=\box53
-\beamer@animcurrent=\box54
-\beamer@animshowbox=\box55
-\beamer@sectionbox=\box56
-\beamer@logobox=\box57
-\beamer@linebox=\box58
-\beamer@sectioncount=\count188
-\beamer@subsubsectionmax=\count189
-\beamer@subsectionmax=\count190
-\beamer@sectionmax=\count191
-\beamer@totalheads=\count192
-\beamer@headcounter=\count193
-\beamer@partstartpage=\count194
-\beamer@sectionstartpage=\count195
-\beamer@subsectionstartpage=\count196
-\beamer@animationtempa=\count197
-\beamer@animationtempb=\count198
-\beamer@xpos=\count199
-\beamer@ypos=\count266
-\beamer@ypos@offset=\count267
-\beamer@showpartnumber=\count268
-\beamer@currentsubsection=\count269
-\beamer@coveringdepth=\count270
-\beamer@sectionadjust=\count271
-\beamer@toclastsection=\count272
-\beamer@tocsectionnumber=\count273
+\beamer@areabox=\box50
+\beamer@animcurrent=\box51
+\beamer@animshowbox=\box52
+\beamer@sectionbox=\box53
+\beamer@logobox=\box54
+\beamer@linebox=\box55
+\beamer@sectioncount=\count183
+\beamer@subsubsectionmax=\count184
+\beamer@subsectionmax=\count185
+\beamer@sectionmax=\count186
+\beamer@totalheads=\count187
+\beamer@headcounter=\count188
+\beamer@partstartpage=\count189
+\beamer@sectionstartpage=\count190
+\beamer@subsectionstartpage=\count191
+\beamer@animationtempa=\count192
+\beamer@animationtempb=\count193
+\beamer@xpos=\count194
+\beamer@ypos=\count195
+\beamer@ypos@offset=\count196
+\beamer@showpartnumber=\count197
+\beamer@currentsubsection=\count198
+\beamer@coveringdepth=\count199
+\beamer@sectionadjust=\count266
+\beamer@tocsectionnumber=\count267
 
-(c:/texlive/2021/texmf-dist/tex/latex/beamer/beamerbaseoptions.sty
-(c:/texlive/2021/texmf-dist/tex/latex/graphics/keyval.sty
+(/usr/share/texlive/texmf-dist/tex/latex/beamer/beamerbaseoptions.sty
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/keyval.sty
 Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
-\KV@toks@=\toks16
+\KV@toks@=\toks15
 ))
 \beamer@paperwidth=\skip48
 \beamer@paperheight=\skip49
 
-(c:/texlive/2021/texmf-dist/tex/latex/geometry/geometry.sty
+(/usr/share/texlive/texmf-dist/tex/latex/geometry/geometry.sty
 Package: geometry 2020/01/02 v5.9 Page Geometry
 
-(c:/texlive/2021/texmf-dist/tex/generic/iftex/ifvtex.sty
+(/usr/share/texlive/texmf-dist/tex/generic/iftex/ifvtex.sty
 Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
 )
-\Gm@cnth=\count274
-\Gm@cntv=\count275
-\c@Gm@tempcnt=\count276
+\Gm@cnth=\count268
+\Gm@cntv=\count269
+\c@Gm@tempcnt=\count270
 \Gm@bindingoffset=\dimen154
 \Gm@wd@mp=\dimen155
 \Gm@odd@mp=\dimen156
@@ -100,56 +99,56 @@ Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
 \Gm@layoutheight=\dimen159
 \Gm@layouthoffset=\dimen160
 \Gm@layoutvoffset=\dimen161
-\Gm@dimlist=\toks17
+\Gm@dimlist=\toks16
 )
-(c:/texlive/2021/texmf-dist/tex/latex/base/size10.clo
-File: size10.clo 2021/02/12 v1.4n Standard LaTeX file (size option)
+(/usr/share/texlive/texmf-dist/tex/latex/base/size10.clo
+File: size10.clo 2020/04/10 v1.4m Standard LaTeX file (size option)
 )
-(c:/texlive/2021/texmf-dist/tex/latex/pgf/basiclayer/pgfcore.sty
-(c:/texlive/2021/texmf-dist/tex/latex/graphics/graphicx.sty
-Package: graphicx 2020/12/05 v1.2c Enhanced LaTeX Graphics (DPC,SPQR)
+(/usr/share/texlive/texmf-dist/tex/latex/pgf/basiclayer/pgfcore.sty
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 2020/09/09 v1.2b Enhanced LaTeX Graphics (DPC,SPQR)
 
-(c:/texlive/2021/texmf-dist/tex/latex/graphics/graphics.sty
-Package: graphics 2021/03/04 v1.4d Standard LaTeX Graphics (DPC,SPQR)
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2020/08/30 v1.4c Standard LaTeX Graphics (DPC,SPQR)
 
-(c:/texlive/2021/texmf-dist/tex/latex/graphics/trig.sty
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/trig.sty
 Package: trig 2016/01/03 v1.10 sin cos tan (DPC)
 )
-(c:/texlive/2021/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+(/usr/share/texlive/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
 File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
 )
-Package graphics Info: Driver file: pdftex.def on input line 107.
+Package graphics Info: Driver file: pdftex.def on input line 105.
 
-(c:/texlive/2021/texmf-dist/tex/latex/graphics-def/pdftex.def
+(/usr/share/texlive/texmf-dist/tex/latex/graphics-def/pdftex.def
 File: pdftex.def 2020/10/05 v1.2a Graphics/color driver for pdftex
 ))
 \Gin@req@height=\dimen162
 \Gin@req@width=\dimen163
 )
-(c:/texlive/2021/texmf-dist/tex/latex/pgf/systemlayer/pgfsys.sty
-(c:/texlive/2021/texmf-dist/tex/latex/pgf/utilities/pgfrcs.sty
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/utilities/pgfutil-common.tex
-\pgfutil@everybye=\toks18
+(/usr/share/texlive/texmf-dist/tex/latex/pgf/systemlayer/pgfsys.sty
+(/usr/share/texlive/texmf-dist/tex/latex/pgf/utilities/pgfrcs.sty
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/utilities/pgfutil-common.tex
+\pgfutil@everybye=\toks17
 \pgfutil@tempdima=\dimen164
 \pgfutil@tempdimb=\dimen165
 
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/utilities/pgfutil-common-lists.tex)
-) (c:/texlive/2021/texmf-dist/tex/generic/pgf/utilities/pgfutil-latex.def
-\pgfutil@abb=\box59
-)
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/utilities/pgfrcs.code.tex
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/pgf.revision.tex)
-Package: pgfrcs 2021/05/15 v3.1.9a (3.1.9a)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/utilities/pgfutil-common-lists.t
+ex)) (/usr/share/texlive/texmf-dist/tex/generic/pgf/utilities/pgfutil-latex.def
+\pgfutil@abb=\box56
+) (/usr/share/texlive/texmf-dist/tex/generic/pgf/utilities/pgfrcs.code.tex
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/pgf.revision.tex)
+Package: pgfrcs 2020/12/27 v3.1.8b (3.1.8b)
 ))
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/systemlayer/pgfsys.code.tex
-Package: pgfsys 2021/05/15 v3.1.9a (3.1.9a)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/systemlayer/pgfsys.code.tex
+Package: pgfsys 2020/12/27 v3.1.8b (3.1.8b)
 
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/utilities/pgfkeys.code.tex
-\pgfkeys@pathtoks=\toks19
-\pgfkeys@temptoks=\toks20
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/utilities/pgfkeys.code.tex
+\pgfkeys@pathtoks=\toks18
+\pgfkeys@temptoks=\toks19
 
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/utilities/pgfkeysfiltered.code.tex
-\pgfkeys@tmptoks=\toks21
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/utilities/pgfkeysfiltered.code.t
+ex
+\pgfkeys@tmptoks=\toks20
 ))
 \pgf@x=\dimen166
 \pgf@y=\dimen167
@@ -163,36 +162,39 @@ Package: pgfsys 2021/05/15 v3.1.9a (3.1.9a)
 \pgf@yd=\dimen175
 \w@pgf@writea=\write3
 \r@pgf@reada=\read2
-\c@pgf@counta=\count277
-\c@pgf@countb=\count278
-\c@pgf@countc=\count279
-\c@pgf@countd=\count280
-\t@pgf@toka=\toks22
-\t@pgf@tokb=\toks23
-\t@pgf@tokc=\toks24
-\pgf@sys@id@count=\count281
- (c:/texlive/2021/texmf-dist/tex/generic/pgf/systemlayer/pgf.cfg
-File: pgf.cfg 2021/05/15 v3.1.9a (3.1.9a)
+\c@pgf@counta=\count271
+\c@pgf@countb=\count272
+\c@pgf@countc=\count273
+\c@pgf@countd=\count274
+\t@pgf@toka=\toks21
+\t@pgf@tokb=\toks22
+\t@pgf@tokc=\toks23
+\pgf@sys@id@count=\count275
+ (/usr/share/texlive/texmf-dist/tex/generic/pgf/systemlayer/pgf.cfg
+File: pgf.cfg 2020/12/27 v3.1.8b (3.1.8b)
 )
 Driver file for pgf: pgfsys-pdftex.def
 
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-pdftex.def
-File: pgfsys-pdftex.def 2021/05/15 v3.1.9a (3.1.9a)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-pdftex.def
+File: pgfsys-pdftex.def 2020/12/27 v3.1.8b (3.1.8b)
 
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-common-pdf.def
-File: pgfsys-common-pdf.def 2021/05/15 v3.1.9a (3.1.9a)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-common-pdf.de
+f
+File: pgfsys-common-pdf.def 2020/12/27 v3.1.8b (3.1.8b)
 )))
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/systemlayer/pgfsyssoftpath.code.tex
-File: pgfsyssoftpath.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-\pgfsyssoftpath@smallbuffer@items=\count282
-\pgfsyssoftpath@bigbuffer@items=\count283
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/systemlayer/pgfsyssoftpath.code.
+tex
+File: pgfsyssoftpath.code.tex 2020/12/27 v3.1.8b (3.1.8b)
+\pgfsyssoftpath@smallbuffer@items=\count276
+\pgfsyssoftpath@bigbuffer@items=\count277
 )
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/systemlayer/pgfsysprotocol.code.tex
-File: pgfsysprotocol.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-)) (c:/texlive/2021/texmf-dist/tex/latex/xcolor/xcolor.sty
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/systemlayer/pgfsysprotocol.code.
+tex
+File: pgfsysprotocol.code.tex 2020/12/27 v3.1.8b (3.1.8b)
+)) (/usr/share/texlive/texmf-dist/tex/latex/xcolor/xcolor.sty
 Package: xcolor 2016/05/11 v2.12 LaTeX color extensions (UK)
 
-(c:/texlive/2021/texmf-dist/tex/latex/graphics-cfg/color.cfg
+(/usr/share/texlive/texmf-dist/tex/latex/graphics-cfg/color.cfg
 File: color.cfg 2016/01/02 v1.6 sample color configuration
 )
 Package xcolor Info: Driver file: pdftex.def on input line 225.
@@ -206,43 +208,44 @@ Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1369.
 Package xcolor Info: Model `Gray' substituted by `gray' on input line 1370.
 Package xcolor Info: Model `wave' substituted by `hsb' on input line 1371.
 )
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/basiclayer/pgfcore.code.tex
-Package: pgfcore 2021/05/15 v3.1.9a (3.1.9a)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcore.code.tex
+Package: pgfcore 2020/12/27 v3.1.8b (3.1.8b)
 
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/math/pgfmathcalc.code.tex
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/math/pgfmathutil.code.tex)
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/math/pgfmathparser.code.tex
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathcalc.code.tex
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathutil.code.tex)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathparser.code.tex
 \pgfmath@dimen=\dimen176
-\pgfmath@count=\count284
-\pgfmath@box=\box60
-\pgfmath@toks=\toks25
-\pgfmath@stack@operand=\toks26
-\pgfmath@stack@operation=\toks27
+\pgfmath@count=\count278
+\pgfmath@box=\box57
+\pgfmath@toks=\toks24
+\pgfmath@stack@operand=\toks25
+\pgfmath@stack@operation=\toks26
 )
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.code.tex
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.basic.code.te
-x)
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.trigonometric
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.code.tex
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.basic.code
+.tex)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.trigonomet
+ric.code.tex)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.random.cod
+e.tex)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.comparison
 .code.tex)
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.random.code.t
-ex)
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.comparison.co
-de.tex)
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.base.code.tex
-)
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.round.code.te
-x)
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.misc.code.tex
-)
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.integerarithm
-etics.code.tex)))
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/math/pgfmathfloat.code.tex
-\c@pgfmathroundto@lastzeros=\count285
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.base.code.
+tex)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.round.code
+.tex)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.misc.code.
+tex)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.integerari
+thmetics.code.tex)))
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathfloat.code.tex
+\c@pgfmathroundto@lastzeros=\count279
 ))
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/math/pgfint.code.tex)
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepoints.code.tex
-File: pgfcorepoints.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfint.code.tex)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepoints.code.te
+x
+File: pgfcorepoints.code.tex 2020/12/27 v3.1.8b (3.1.8b)
 \pgf@picminx=\dimen177
 \pgf@picmaxx=\dimen178
 \pgf@picminy=\dimen179
@@ -258,301 +261,377 @@ File: pgfcorepoints.code.tex 2021/05/15 v3.1.9a (3.1.9a)
 \pgf@zx=\dimen189
 \pgf@zy=\dimen190
 )
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathconstruct.cod
-e.tex
-File: pgfcorepathconstruct.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathconstruct.
+code.tex
+File: pgfcorepathconstruct.code.tex 2020/12/27 v3.1.8b (3.1.8b)
 \pgf@path@lastx=\dimen191
 \pgf@path@lasty=\dimen192
 )
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathusage.code.te
-x
-File: pgfcorepathusage.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathusage.code
+.tex
+File: pgfcorepathusage.code.tex 2020/12/27 v3.1.8b (3.1.8b)
 \pgf@shorten@end@additional=\dimen193
 \pgf@shorten@start@additional=\dimen194
 )
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/basiclayer/pgfcorescopes.code.tex
-File: pgfcorescopes.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-\pgfpic=\box61
-\pgf@hbox=\box62
-\pgf@layerbox@main=\box63
-\pgf@picture@serial@count=\count286
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcorescopes.code.te
+x
+File: pgfcorescopes.code.tex 2020/12/27 v3.1.8b (3.1.8b)
+\pgfpic=\box58
+\pgf@hbox=\box59
+\pgf@layerbox@main=\box60
+\pgf@picture@serial@count=\count280
 )
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/basiclayer/pgfcoregraphicstate.code
-.tex
-File: pgfcoregraphicstate.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcoregraphicstate.c
+ode.tex
+File: pgfcoregraphicstate.code.tex 2020/12/27 v3.1.8b (3.1.8b)
 \pgflinewidth=\dimen195
 )
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretransformations.c
-ode.tex
-File: pgfcoretransformations.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretransformation
+s.code.tex
+File: pgfcoretransformations.code.tex 2020/12/27 v3.1.8b (3.1.8b)
 \pgf@pt@x=\dimen196
 \pgf@pt@y=\dimen197
 \pgf@pt@temp=\dimen198
 )
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/basiclayer/pgfcorequick.code.tex
-File: pgfcorequick.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcorequick.code.tex
+File: pgfcorequick.code.tex 2020/12/27 v3.1.8b (3.1.8b)
 )
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreobjects.code.tex
-File: pgfcoreobjects.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreobjects.code.t
+ex
+File: pgfcoreobjects.code.tex 2020/12/27 v3.1.8b (3.1.8b)
 )
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathprocessing.co
-de.tex
-File: pgfcorepathprocessing.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathprocessing
+.code.tex
+File: pgfcorepathprocessing.code.tex 2020/12/27 v3.1.8b (3.1.8b)
 )
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/basiclayer/pgfcorearrows.code.tex
-File: pgfcorearrows.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcorearrows.code.te
+x
+File: pgfcorearrows.code.tex 2020/12/27 v3.1.8b (3.1.8b)
 \pgfarrowsep=\dimen199
 )
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreshade.code.tex
-File: pgfcoreshade.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreshade.code.tex
+File: pgfcoreshade.code.tex 2020/12/27 v3.1.8b (3.1.8b)
 \pgf@max=\dimen256
-\pgf@sys@shading@range@num=\count287
-\pgf@shadingcount=\count288
+\pgf@sys@shading@range@num=\count281
+\pgf@shadingcount=\count282
 )
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreimage.code.tex
-File: pgfcoreimage.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreimage.code.tex
+File: pgfcoreimage.code.tex 2020/12/27 v3.1.8b (3.1.8b)
 
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreexternal.code.tex
-File: pgfcoreexternal.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-\pgfexternal@startupbox=\box64
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreexternal.code.
+tex
+File: pgfcoreexternal.code.tex 2020/12/27 v3.1.8b (3.1.8b)
+\pgfexternal@startupbox=\box61
 ))
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/basiclayer/pgfcorelayers.code.tex
-File: pgfcorelayers.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcorelayers.code.te
+x
+File: pgfcorelayers.code.tex 2020/12/27 v3.1.8b (3.1.8b)
 )
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretransparency.code
-.tex
-File: pgfcoretransparency.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretransparency.c
+ode.tex
+File: pgfcoretransparency.code.tex 2020/12/27 v3.1.8b (3.1.8b)
 )
-(c:/texlive/2021/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepatterns.code.tex
-File: pgfcorepatterns.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-) (c:/texlive/2021/texmf-dist/tex/generic/pgf/basiclayer/pgfcorerdf.code.tex
-File: pgfcorerdf.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-))) (c:/texlive/2021/texmf-dist/tex/latex/pgf/utilities/xxcolor.sty
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepatterns.code.
+tex
+File: pgfcorepatterns.code.tex 2020/12/27 v3.1.8b (3.1.8b)
+)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcorerdf.code.tex
+File: pgfcorerdf.code.tex 2020/12/27 v3.1.8b (3.1.8b)
+))) (/usr/share/texlive/texmf-dist/tex/latex/pgf/utilities/xxcolor.sty
 Package: xxcolor 2003/10/24 ver 0.1
-\XC@nummixins=\count289
-\XC@countmixins=\count290
+\XC@nummixins=\count283
+\XC@countmixins=\count284
 )
-(c:/texlive/2021/texmf-dist/tex/latex/base/atbegshi-ltx.sty
-Package: atbegshi-ltx 2021/01/10 v1.0c Emulation of the original atbegshi
-package with kernel methods
+(/usr/share/texlive/texmf-dist/tex/latex/base/atbegshi-ltx.sty
+Package: atbegshi-ltx 2020/08/17 v1.0a Emulation of the original atbegshi packa
+ge
+with kernel methods
 )
-(c:/texlive/2021/texmf-dist/tex/latex/hyperref/hyperref.sty
-Package: hyperref 2021-06-07 v7.00m Hypertext links for LaTeX
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/hyperref.sty
+Package: hyperref 2020-05-15 v7.00e Hypertext links for LaTeX
 
-(c:/texlive/2021/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty
+(/usr/share/texlive/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty
 Package: ltxcmds 2020-05-10 v1.25 LaTeX kernel commands for general use (HO)
 )
-(c:/texlive/2021/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+(/usr/share/texlive/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
 Package: pdftexcmds 2020-06-27 v0.33 Utility functions of pdfTeX for LuaTeX (HO
 )
 
-(c:/texlive/2021/texmf-dist/tex/generic/infwarerr/infwarerr.sty
+(/usr/share/texlive/texmf-dist/tex/generic/infwarerr/infwarerr.sty
 Package: infwarerr 2019/12/03 v1.5 Providing info/warning/error messages (HO)
 )
 Package pdftexcmds Info: \pdf@primitive is available.
 Package pdftexcmds Info: \pdf@ifprimitive is available.
 Package pdftexcmds Info: \pdfdraftmode found.
 )
-(c:/texlive/2021/texmf-dist/tex/generic/kvsetkeys/kvsetkeys.sty
+(/usr/share/texlive/texmf-dist/tex/generic/kvsetkeys/kvsetkeys.sty
 Package: kvsetkeys 2019/12/15 v1.18 Key value parser (HO)
 )
-(c:/texlive/2021/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty
+(/usr/share/texlive/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty
 Package: kvdefinekeys 2019-12-19 v1.6 Define keys (HO)
 )
-(c:/texlive/2021/texmf-dist/tex/generic/pdfescape/pdfescape.sty
+(/usr/share/texlive/texmf-dist/tex/generic/pdfescape/pdfescape.sty
 Package: pdfescape 2019/12/09 v1.15 Implements pdfTeX's escape features (HO)
 )
-(c:/texlive/2021/texmf-dist/tex/latex/hycolor/hycolor.sty
+(/usr/share/texlive/texmf-dist/tex/latex/hycolor/hycolor.sty
 Package: hycolor 2020-01-27 v1.10 Color options for hyperref/bookmark (HO)
 )
-(c:/texlive/2021/texmf-dist/tex/latex/letltxmacro/letltxmacro.sty
+(/usr/share/texlive/texmf-dist/tex/latex/letltxmacro/letltxmacro.sty
 Package: letltxmacro 2019/12/03 v1.6 Let assignment for LaTeX macros (HO)
 )
-(c:/texlive/2021/texmf-dist/tex/latex/auxhook/auxhook.sty
+(/usr/share/texlive/texmf-dist/tex/latex/auxhook/auxhook.sty
 Package: auxhook 2019-12-17 v1.6 Hooks for auxiliary files (HO)
 )
-(c:/texlive/2021/texmf-dist/tex/latex/kvoptions/kvoptions.sty
+(/usr/share/texlive/texmf-dist/tex/latex/kvoptions/kvoptions.sty
 Package: kvoptions 2020-10-07 v3.14 Key value format for package options (HO)
 )
 \@linkdim=\dimen257
-\Hy@linkcounter=\count291
-\Hy@pagecounter=\count292
+\Hy@linkcounter=\count285
+\Hy@pagecounter=\count286
 
-(c:/texlive/2021/texmf-dist/tex/latex/hyperref/pd1enc.def
-File: pd1enc.def 2021-06-07 v7.00m Hyperref: PDFDocEncoding definition (HO)
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/pd1enc.def
+File: pd1enc.def 2020-05-15 v7.00e Hyperref: PDFDocEncoding definition (HO)
 Now handling font encoding PD1 ...
 ... no UTF-8 mapping file for font encoding PD1
 )
-(c:/texlive/2021/texmf-dist/tex/latex/hyperref/hyperref-langpatches.def
-File: hyperref-langpatches.def 2021-06-07 v7.00m Hyperref: patches for babel la
-nguages
-)
-(c:/texlive/2021/texmf-dist/tex/generic/intcalc/intcalc.sty
+(/usr/share/texlive/texmf-dist/tex/generic/intcalc/intcalc.sty
 Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
 )
-(c:/texlive/2021/texmf-dist/tex/generic/etexcmds/etexcmds.sty
+(/usr/share/texlive/texmf-dist/tex/generic/etexcmds/etexcmds.sty
 Package: etexcmds 2019/12/15 v1.7 Avoid name clashes with e-TeX commands (HO)
 )
-\Hy@SavedSpaceFactor=\count293
-
-(c:/texlive/2021/texmf-dist/tex/latex/hyperref/puenc.def
-File: puenc.def 2021-06-07 v7.00m Hyperref: PDF Unicode definition (HO)
-Now handling font encoding PU ...
-... no UTF-8 mapping file for font encoding PU
-)
-Package hyperref Info: Option `bookmarks' set `true' on input line 4073.
-Package hyperref Info: Option `bookmarksopen' set `true' on input line 4073.
-Package hyperref Info: Option `implicit' set `false' on input line 4073.
-Package hyperref Info: Hyper figures OFF on input line 4192.
-Package hyperref Info: Link nesting OFF on input line 4197.
-Package hyperref Info: Hyper index ON on input line 4200.
-Package hyperref Info: Plain pages OFF on input line 4207.
-Package hyperref Info: Backreferencing OFF on input line 4212.
+\Hy@SavedSpaceFactor=\count287
+Package hyperref Info: Option `bookmarks' set `true' on input line 4338.
+Package hyperref Info: Option `bookmarksopen' set `true' on input line 4338.
+Package hyperref Info: Option `implicit' set `false' on input line 4338.
+Package hyperref Info: Hyper figures OFF on input line 4464.
+Package hyperref Info: Link nesting OFF on input line 4469.
+Package hyperref Info: Hyper index ON on input line 4472.
+Package hyperref Info: Plain pages OFF on input line 4479.
+Package hyperref Info: Backreferencing OFF on input line 4484.
 Package hyperref Info: Implicit mode OFF; no redefinition of LaTeX internals.
-Package hyperref Info: Bookmarks ON on input line 4445.
-\c@Hy@tempcnt=\count294
+Package hyperref Info: Bookmarks ON on input line 4717.
+\c@Hy@tempcnt=\count288
 
-(c:/texlive/2021/texmf-dist/tex/latex/url/url.sty
+(/usr/share/texlive/texmf-dist/tex/latex/url/url.sty
 \Urlmuskip=\muskip16
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 )
-LaTeX Info: Redefining \url on input line 4804.
+LaTeX Info: Redefining \url on input line 5076.
 \XeTeXLinkMargin=\dimen258
 
-(c:/texlive/2021/texmf-dist/tex/generic/bitset/bitset.sty
+(/usr/share/texlive/texmf-dist/tex/generic/bitset/bitset.sty
 Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
 
-(c:/texlive/2021/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty
+(/usr/share/texlive/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty
 Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO
 )
 ))
-\Fld@menulength=\count295
+\Fld@menulength=\count289
 \Field@Width=\dimen259
 \Fld@charsize=\dimen260
-Package hyperref Info: Hyper figures OFF on input line 6076.
-Package hyperref Info: Link nesting OFF on input line 6081.
-Package hyperref Info: Hyper index ON on input line 6084.
-Package hyperref Info: backreferencing OFF on input line 6091.
-Package hyperref Info: Link coloring OFF on input line 6096.
-Package hyperref Info: Link coloring with OCG OFF on input line 6101.
-Package hyperref Info: PDF/A mode OFF on input line 6106.
-LaTeX Info: Redefining \ref on input line 6146.
-LaTeX Info: Redefining \pageref on input line 6150.
-\Hy@abspage=\count296
+Package hyperref Info: Hyper figures OFF on input line 6347.
+Package hyperref Info: Link nesting OFF on input line 6352.
+Package hyperref Info: Hyper index ON on input line 6355.
+Package hyperref Info: backreferencing OFF on input line 6362.
+Package hyperref Info: Link coloring OFF on input line 6367.
+Package hyperref Info: Link coloring with OCG OFF on input line 6372.
+Package hyperref Info: PDF/A mode OFF on input line 6377.
+LaTeX Info: Redefining \ref on input line 6417.
+LaTeX Info: Redefining \pageref on input line 6421.
+\Hy@abspage=\count290
 
 
 Package hyperref Message: Stopped early.
 
 )
 Package hyperref Info: Driver (autodetected): hpdftex.
- (c:/texlive/2021/texmf-dist/tex/latex/hyperref/hpdftex.def
-File: hpdftex.def 2021-06-07 v7.00m Hyperref driver for pdfTeX
+ (/usr/share/texlive/texmf-dist/tex/latex/hyperref/hpdftex.def
+File: hpdftex.def 2020-05-15 v7.00e Hyperref driver for pdfTeX
 
-(c:/texlive/2021/texmf-dist/tex/latex/base/atveryend-ltx.sty
+(/usr/share/texlive/texmf-dist/tex/latex/base/atveryend-ltx.sty
 Package: atveryend-ltx 2020/08/19 v1.0a Emulation of the original atvery packag
 e
 with kernel methods
 )
-\Fld@listcount=\count297
-\c@bookmark@seq@number=\count298
+\Fld@listcount=\count291
+\c@bookmark@seq@number=\count292
 
-(c:/texlive/2021/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
+(/usr/share/texlive/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
 Package: rerunfilecheck 2019/12/05 v1.9 Rerun checks for auxiliary files (HO)
 
-(c:/texlive/2021/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
+(/usr/share/texlive/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
 Package: uniquecounter 2019/12/15 v1.4 Provide unlimited unique counter (HO)
 )
 Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 86.
 ))
-(c:/texlive/2021/texmf-dist/tex/latex/beamer/beamerbaserequires.sty
-(c:/texlive/2021/texmf-dist/tex/latex/beamer/beamerbasecompatibility.sty)
-(c:/texlive/2021/texmf-dist/tex/latex/beamer/beamerbasefont.sty
-(c:/texlive/2021/texmf-dist/tex/latex/amsfonts/amssymb.sty
+(/usr/share/texlive/texmf-dist/tex/latex/beamer/beamerbaserequires.sty
+(/usr/share/texlive/texmf-dist/tex/latex/beamer/beamerbasecompatibility.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/beamer/beamerbasefont.sty
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/amssymb.sty
 Package: amssymb 2013/01/14 v3.01 AMS font symbols
 
-(c:/texlive/2021/texmf-dist/tex/latex/amsfonts/amsfonts.sty
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/amsfonts.sty
 Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
-\@emptytoks=\toks28
+\@emptytoks=\toks27
 \symAMSa=\mathgroup4
 \symAMSb=\mathgroup5
 LaTeX Font Info:    Redeclaring math symbol \hbar on input line 98.
 LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
 (Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
 ))
-(c:/texlive/2021/texmf-dist/tex/latex/sansmathaccent/sansmathaccent.sty
+(/usr/share/texlive/texmf-dist/tex/latex/sansmathaccent/sansmathaccent.sty
 Package: sansmathaccent 2020/01/31
 
-(c:/texlive/2021/texmf-dist/tex/latex/koma-script/scrlfile.sty
-Package: scrlfile 2021/06/25 v3.34 KOMA-Script package (file load hooks)
+(/usr/share/texlive/texmf-dist/tex/latex/koma-script/scrlfile.sty
+Package: scrlfile 2020/09/21 v3.32 KOMA-Script package (file load hooks)
 
-(c:/texlive/2021/texmf-dist/tex/latex/koma-script/scrlfile-hook.sty
-Package: scrlfile-hook 2021/06/25 v3.34 KOMA-Script package (using LaTeX hooks)
+(/usr/share/texlive/texmf-dist/tex/latex/koma-script/scrlfile-hook.sty
+Package: scrlfile-hook 2020/09/21 v3.32 KOMA-Script package (using LaTeX hooks)
 
 
-(c:/texlive/2021/texmf-dist/tex/latex/koma-script/scrlogo.sty
-Package: scrlogo 2021/06/25 v3.34 KOMA-Script package (logo)
+LaTeX3 Info: Defining command \BeforeFile with sig. 'm' on line 61.
+
+
+LaTeX3 Info: Defining command \AfterFile with sig. 'm' on line 65.
+
+
+LaTeX3 Info: Defining command \BeforeClass with sig. 'm' on line 69.
+
+
+LaTeX3 Info: Defining command \BeforePackage with sig. 'm' on line 73.
+
+
+LaTeX3 Info: Defining command \AfterAtEndOfClass with sig. 'smo+m' on line 83.
+
+
+LaTeX3 Info: Defining command \AfterAtEndOfPackage with sig. 'smo+m' on line
+(LaTeX3)     93.
+
+
+LaTeX3 Info: Defining command \scrlfile@AfterClass with sig. 'smo+m' on line
+(LaTeX3)     173.
+
+
+LaTeX3 Info: Defining command \AfterClass with sig. '' on line 174.
+
+
+LaTeX3 Info: Defining command \scrlfile@AfterPackage with sig. 'smo+m' on line
+(LaTeX3)     191.
+
+
+LaTeX3 Info: Defining command \AfterPackage with sig. '' on line 192.
+
+
+LaTeX3 Info: Defining command \ReplaceInput with sig. '' on line 193.
+
+
+LaTeX3 Info: Defining command \ReplaceClass with sig. 'mm' on line 196.
+
+
+LaTeX3 Info: Defining command \ReplacePackage with sig. 'mm' on line 199.
+
+
+LaTeX3 Info: Defining command \UnReplaceInput with sig. '' on line 200.
+
+
+LaTeX3 Info: Defining command \UnReplaceClass with sig. 'm' on line 203.
+
+
+LaTeX3 Info: Defining command \UnReplacePackage with sig. 'mm' on line 206.
+
+
+LaTeX3 Info: Defining command \PreventPackageFromLoading with sig. 's+om' on
+(LaTeX3)     line 234.
+
+
+LaTeX3 Info: Defining command \StorePreventPackageFromLoading with sig. 'm' on
+(LaTeX3)     line 242.
+
+
+LaTeX3 Info: Defining command \ResetPreventPackageFromLoading with sig. '' on
+(LaTeX3)     line 247.
+
+
+LaTeX3 Info: Defining command \UnPreventPackageFromLoading with sig. 'sm' on
+(LaTeX3)     line 261.
+
+
+LaTeX3 Info: Defining command \BeforeClosingMainAux with sig. 'om' on line
+(LaTeX3)     274.
+
+
+LaTeX3 Info: Defining command \AfterReadingMainAux with sig. 'om' on line 287.
+
+
+LaTeX3 Info: Defining command \protected@immediate@write with sig. 'm+m+m' on
+(LaTeX3)     line 298.
+
+
+(/usr/share/texlive/texmf-dist/tex/latex/koma-script/scrlogo.sty
+Package: scrlogo 2020/09/21 v3.32 KOMA-Script package (logo)
 )))))
-(c:/texlive/2021/texmf-dist/tex/latex/beamer/beamerbasetranslator.sty
-(c:/texlive/2021/texmf-dist/tex/latex/translator/translator.sty
-Package: translator 2021-05-31 v1.12d Easy translation of strings in LaTeX
+(/usr/share/texlive/texmf-dist/tex/latex/beamer/beamerbasetranslator.sty
+(/usr/share/texlive/texmf-dist/tex/latex/translator/translator.sty
+Package: translator 2020-08-03 v1.12c Easy translation of strings in LaTeX
 ))
-(c:/texlive/2021/texmf-dist/tex/latex/beamer/beamerbasemisc.sty)
-(c:/texlive/2021/texmf-dist/tex/latex/beamer/beamerbasetwoscreens.sty)
-(c:/texlive/2021/texmf-dist/tex/latex/beamer/beamerbaseoverlay.sty
-\beamer@argscount=\count299
+(/usr/share/texlive/texmf-dist/tex/latex/beamer/beamerbasemisc.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/beamer/beamerbasetwoscreens.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/beamer/beamerbaseoverlay.sty
+\beamer@argscount=\count293
 \beamer@lastskipcover=\skip50
-\beamer@trivlistdepth=\count300
+\beamer@trivlistdepth=\count294
 )
-(c:/texlive/2021/texmf-dist/tex/latex/beamer/beamerbasetitle.sty)
-(c:/texlive/2021/texmf-dist/tex/latex/beamer/beamerbasesection.sty
-\c@lecture=\count301
-\c@part=\count302
-\c@section=\count303
-\c@subsection=\count304
-\c@subsubsection=\count305
+(/usr/share/texlive/texmf-dist/tex/latex/beamer/beamerbasetitle.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/beamer/beamerbasesection.sty
+\c@lecture=\count295
+\c@part=\count296
+\c@section=\count297
+\c@subsection=\count298
+\c@subsubsection=\count299
 )
-(c:/texlive/2021/texmf-dist/tex/latex/beamer/beamerbaseframe.sty
-\beamer@framebox=\box65
-\beamer@frametitlebox=\box66
-\beamer@zoombox=\box67
-\beamer@zoomcount=\count306
-\beamer@zoomframecount=\count307
+(/usr/share/texlive/texmf-dist/tex/latex/beamer/beamerbaseframe.sty
+\beamer@framebox=\box62
+\beamer@frametitlebox=\box63
+\beamer@zoombox=\box64
+\beamer@zoomcount=\count300
+\beamer@zoomframecount=\count301
 \beamer@frametextheight=\dimen261
-\c@subsectionslide=\count308
+\c@subsectionslide=\count302
 \beamer@frametopskip=\skip51
 \beamer@framebottomskip=\skip52
 \beamer@frametopskipautobreak=\skip53
 \beamer@framebottomskipautobreak=\skip54
-\beamer@envbody=\toks29
+\beamer@envbody=\toks28
 \framewidth=\dimen262
-\c@framenumber=\count309
+\c@framenumber=\count303
 )
-(c:/texlive/2021/texmf-dist/tex/latex/beamer/beamerbaseverbatim.sty
+(/usr/share/texlive/texmf-dist/tex/latex/beamer/beamerbaseverbatim.sty
 \beamer@verbatimfileout=\write4
 )
-(c:/texlive/2021/texmf-dist/tex/latex/beamer/beamerbaseframesize.sty
-\beamer@splitbox=\box68
-\beamer@autobreakcount=\count310
+(/usr/share/texlive/texmf-dist/tex/latex/beamer/beamerbaseframesize.sty
+\beamer@splitbox=\box65
+\beamer@autobreakcount=\count304
 \beamer@autobreaklastheight=\dimen263
-\beamer@frametitletoks=\toks30
-\beamer@framesubtitletoks=\toks31
+\beamer@frametitletoks=\toks29
+\beamer@framesubtitletoks=\toks30
 )
-(c:/texlive/2021/texmf-dist/tex/latex/beamer/beamerbaseframecomponents.sty
-\beamer@footins=\box69
+(/usr/share/texlive/texmf-dist/tex/latex/beamer/beamerbaseframecomponents.sty
+\beamer@footins=\box66
 )
-(c:/texlive/2021/texmf-dist/tex/latex/beamer/beamerbasecolor.sty)
-(c:/texlive/2021/texmf-dist/tex/latex/beamer/beamerbasenotes.sty
-\beamer@frameboxcopy=\box70
+(/usr/share/texlive/texmf-dist/tex/latex/beamer/beamerbasecolor.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/beamer/beamerbasenotes.sty
+\beamer@frameboxcopy=\box67
 )
-(c:/texlive/2021/texmf-dist/tex/latex/beamer/beamerbasetoc.sty)
-(c:/texlive/2021/texmf-dist/tex/latex/beamer/beamerbasetemplates.sty
-\beamer@sbttoks=\toks32
+(/usr/share/texlive/texmf-dist/tex/latex/beamer/beamerbasetoc.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/beamer/beamerbasetemplates.sty
+\beamer@sbttoks=\toks31
 
-(c:/texlive/2021/texmf-dist/tex/latex/beamer/beamerbaseauxtemplates.sty
-(c:/texlive/2021/texmf-dist/tex/latex/beamer/beamerbaseboxes.sty
-\bmb@box=\box71
-\bmb@colorbox=\box72
+(/usr/share/texlive/texmf-dist/tex/latex/beamer/beamerbaseauxtemplates.sty
+(/usr/share/texlive/texmf-dist/tex/latex/beamer/beamerbaseboxes.sty
+\bmb@box=\box68
+\bmb@colorbox=\box69
 \bmb@boxwidth=\dimen264
 \bmb@boxheight=\dimen265
 \bmb@prevheight=\dimen266
@@ -563,134 +642,131 @@ Package: translator 2021-05-31 v1.12d Easy translation of strings in LaTeX
 )
 \beamer@blockheadheight=\dimen271
 ))
-(c:/texlive/2021/texmf-dist/tex/latex/beamer/beamerbaselocalstructure.sty
-(c:/texlive/2021/texmf-dist/tex/latex/tools/enumerate.sty
+(/usr/share/texlive/texmf-dist/tex/latex/beamer/beamerbaselocalstructure.sty
+(/usr/share/texlive/texmf-dist/tex/latex/tools/enumerate.sty
 Package: enumerate 2015/07/23 v3.00 enumerate extensions (DPC)
-\@enLab=\toks33
+\@enLab=\toks32
 )
-\beamer@bibiconwidth=\skip55
-\c@figure=\count311
-\c@table=\count312
-\abovecaptionskip=\skip56
-\belowcaptionskip=\skip57
+\c@figure=\count305
+\c@table=\count306
+\abovecaptionskip=\skip55
+\belowcaptionskip=\skip56
 )
-(c:/texlive/2021/texmf-dist/tex/latex/beamer/beamerbasenavigation.sty
+(/usr/share/texlive/texmf-dist/tex/latex/beamer/beamerbasenavigation.sty
 \beamer@section@min@dim=\dimen272
 )
-(c:/texlive/2021/texmf-dist/tex/latex/beamer/beamerbasetheorems.sty
-(c:/texlive/2021/texmf-dist/tex/latex/amsmath/amsmath.sty
-Package: amsmath 2021/04/20 v2.17j AMS math features
-\@mathmargin=\skip58
+(/usr/share/texlive/texmf-dist/tex/latex/beamer/beamerbasetheorems.sty
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsmath.sty
+Package: amsmath 2020/09/23 v2.17i AMS math features
+\@mathmargin=\skip57
 
 For additional information on amsmath, use the `?' option.
-(c:/texlive/2021/texmf-dist/tex/latex/amsmath/amstext.sty
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amstext.sty
 Package: amstext 2000/06/29 v2.01 AMS text
 
-(c:/texlive/2021/texmf-dist/tex/latex/amsmath/amsgen.sty
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsgen.sty
 File: amsgen.sty 1999/11/30 v2.0 generic functions
-\@emptytoks=\toks34
+\@emptytoks=\toks33
 \ex@=\dimen273
 ))
-(c:/texlive/2021/texmf-dist/tex/latex/amsmath/amsbsy.sty
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsbsy.sty
 Package: amsbsy 1999/11/29 v1.2d Bold Symbols
 \pmbraise@=\dimen274
 )
-(c:/texlive/2021/texmf-dist/tex/latex/amsmath/amsopn.sty
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsopn.sty
 Package: amsopn 2016/03/08 v2.02 operator names
 )
-\inf@bad=\count313
+\inf@bad=\count307
 LaTeX Info: Redefining \frac on input line 234.
-\uproot@=\count314
-\leftroot@=\count315
+\uproot@=\count308
+\leftroot@=\count309
 LaTeX Info: Redefining \overline on input line 399.
-\classnum@=\count316
-\DOTSCASE@=\count317
+\classnum@=\count310
+\DOTSCASE@=\count311
 LaTeX Info: Redefining \ldots on input line 496.
 LaTeX Info: Redefining \dots on input line 499.
 LaTeX Info: Redefining \cdots on input line 620.
-\Mathstrutbox@=\box73
-\strutbox@=\box74
+\Mathstrutbox@=\box70
+\strutbox@=\box71
 \big@size=\dimen275
 LaTeX Font Info:    Redeclaring font encoding OML on input line 743.
 LaTeX Font Info:    Redeclaring font encoding OMS on input line 744.
-\macc@depth=\count318
-\c@MaxMatrixCols=\count319
+\macc@depth=\count312
+\c@MaxMatrixCols=\count313
 \dotsspace@=\muskip17
-\c@parentequation=\count320
-\dspbrk@lvl=\count321
-\tag@help=\toks35
-\row@=\count322
-\column@=\count323
-\maxfields@=\count324
-\andhelp@=\toks36
+\c@parentequation=\count314
+\dspbrk@lvl=\count315
+\tag@help=\toks34
+\row@=\count316
+\column@=\count317
+\maxfields@=\count318
+\andhelp@=\toks35
 \eqnshift@=\dimen276
 \alignsep@=\dimen277
 \tagshift@=\dimen278
 \tagwidth@=\dimen279
 \totwidth@=\dimen280
 \lineht@=\dimen281
-\@envbody=\toks37
-\multlinegap=\skip59
-\multlinetaggap=\skip60
-\mathdisplay@stack=\toks38
+\@envbody=\toks36
+\multlinegap=\skip58
+\multlinetaggap=\skip59
+\mathdisplay@stack=\toks37
 LaTeX Info: Redefining \[ on input line 2923.
 LaTeX Info: Redefining \] on input line 2924.
 )
-(c:/texlive/2021/texmf-dist/tex/latex/amscls/amsthm.sty
+(/usr/share/texlive/texmf-dist/tex/latex/amscls/amsthm.sty
 Package: amsthm 2020/05/29 v2.20.6
-\thm@style=\toks39
-\thm@bodyfont=\toks40
-\thm@headfont=\toks41
-\thm@notefont=\toks42
-\thm@headpunct=\toks43
-\thm@preskip=\skip61
-\thm@postskip=\skip62
-\thm@headsep=\skip63
-\dth@everypar=\toks44
+\thm@style=\toks38
+\thm@bodyfont=\toks39
+\thm@headfont=\toks40
+\thm@notefont=\toks41
+\thm@headpunct=\toks42
+\thm@preskip=\skip60
+\thm@postskip=\skip61
+\thm@headsep=\skip62
+\dth@everypar=\toks43
 )
-\c@theorem=\count325
+\c@theorem=\count319
 )
-(c:/texlive/2021/texmf-dist/tex/latex/beamer/beamerbasethemes.sty))
-(c:/texlive/2021/texmf-dist/tex/latex/beamer/beamerthemedefault.sty
-(c:/texlive/2021/texmf-dist/tex/latex/beamer/beamerfontthemedefault.sty)
-(c:/texlive/2021/texmf-dist/tex/latex/beamer/beamercolorthemedefault.sty)
-(c:/texlive/2021/texmf-dist/tex/latex/beamer/beamerinnerthemedefault.sty
+(/usr/share/texlive/texmf-dist/tex/latex/beamer/beamerbasethemes.sty))
+(/usr/share/texlive/texmf-dist/tex/latex/beamer/beamerthemedefault.sty
+(/usr/share/texlive/texmf-dist/tex/latex/beamer/beamerfontthemedefault.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/beamer/beamercolorthemedefault.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/beamer/beamerinnerthemedefault.sty
 \beamer@dima=\dimen282
 \beamer@dimb=\dimen283
 )
-(c:/texlive/2021/texmf-dist/tex/latex/beamer/beamerouterthemedefault.sty)))
-(c:/texlive/2021/texmf-dist/tex/latex/framed/framed.sty
+(/usr/share/texlive/texmf-dist/tex/latex/beamer/beamerouterthemedefault.sty)))
+(/usr/share/texlive/texmf-dist/tex/latex/framed/framed.sty
 Package: framed 2011/10/22 v 0.96: framed or shaded text with page breaks
-\OuterFrameSep=\skip64
+\OuterFrameSep=\skip63
 \fb@frw=\dimen284
 \fb@frh=\dimen285
 \FrameRule=\dimen286
 \FrameSep=\dimen287
 )
-(c:/texlive/2021/texmf-dist/tex/latex/base/alltt.sty
-Package: alltt 2021/01/29 v2.0g defines alltt environment
+(/usr/share/texlive/texmf-dist/tex/latex/base/alltt.sty
+Package: alltt 1997/06/16 v2.0g defines alltt environment
 )
-(c:/texlive/texmf-local/tex/latex/beamer/themes/Utrecht/beamerthemeUtrecht.sty
-(c:/texlive/texmf-local/tex/latex/beamer/themes/Utrecht/beamerinnerthemeuufancy
-.sty
-\beamer@uufancy@lineup=\skip65
-\beamer@uufancy@linemid=\skip66
-\beamer@uufancy@linebottom=\skip67
-\beamer@uufancy@normalmargin=\skip68
+(/usr/local/share/texmf/tex/latex/beamer-utrecht/beamerthemeUtrecht.sty
+(/usr/local/share/texmf/tex/latex/beamer-utrecht/beamerinnerthemeuufancy.sty
+\beamer@uufancy@lineup=\skip64
+\beamer@uufancy@linemid=\skip65
+\beamer@uufancy@linebottom=\skip66
+\beamer@uufancy@normalmargin=\skip67
 )
-(c:/texlive/texmf-local/tex/latex/beamer/themes/Utrecht/beamerouterthemeuulines
-.sty
-\beamer@uulines@lineup=\skip69
-\beamer@uulines@linemid=\skip70
-\beamer@uulines@linebottom=\skip71
-\beamer@uulines@watermarkheightbottom=\skip72
-\beamer@uulines@watermarkheightupperorig=\skip73
+(/usr/local/share/texmf/tex/latex/beamer-utrecht/beamerouterthemeuulines.sty
+\beamer@uulines@lineup=\skip68
+\beamer@uulines@linemid=\skip69
+\beamer@uulines@linebottom=\skip70
+\beamer@uulines@watermarkheightbottom=\skip71
+\beamer@uulines@watermarkheightupperorig=\skip72
 )
-(c:/texlive/texmf-local/tex/latex/beamer/themes/Utrecht/beamercolorthemeuu.sty)
-(c:/texlive/2021/texmf-dist/tex/latex/opensans/opensans.sty
+(/usr/local/share/texmf/tex/latex/beamer-utrecht/beamercolorthemeuu.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/opensans/opensans.sty
 Package: opensans 2019/06/20 Style file for Open Sans.
 
-(c:/texlive/2021/texmf-dist/tex/latex/fontaxes/fontaxes.sty
+(/usr/share/texlive/texmf-dist/tex/latex/fontaxes/fontaxes.sty
 Package: fontaxes 2020/07/21 v1.0e Font selection axes
 LaTeX Info: Redefining \upshape on input line 29.
 LaTeX Info: Redefining \itshape on input line 31.
@@ -703,204 +779,206 @@ LaTeX Info: Redefining \textsw on input line 47.
 LaTeX Info: Redefining \textssc on input line 48.
 LaTeX Info: Redefining \textulc on input line 49.
 )
-(c:/texlive/2021/texmf-dist/tex/generic/iftex/ifluatex.sty
+(/usr/share/texlive/texmf-dist/tex/generic/iftex/ifluatex.sty
 Package: ifluatex 2019/10/25 v1.5 ifluatex legacy package. Use iftex instead.
 )
-(c:/texlive/2021/texmf-dist/tex/generic/iftex/ifxetex.sty
+(/usr/share/texlive/texmf-dist/tex/generic/iftex/ifxetex.sty
 Package: ifxetex 2019/10/25 v0.7 ifxetex legacy package. Use iftex instead.
 )
-(c:/texlive/2021/texmf-dist/tex/latex/xkeyval/xkeyval.sty
+(/usr/share/texlive/texmf-dist/tex/latex/xkeyval/xkeyval.sty
 Package: xkeyval 2020/11/20 v2.8 package option processing (HA)
 
-(c:/texlive/2021/texmf-dist/tex/generic/xkeyval/xkeyval.tex
-(c:/texlive/2021/texmf-dist/tex/generic/xkeyval/xkvutils.tex
-\XKV@toks=\toks45
-\XKV@tempa@toks=\toks46
+(/usr/share/texlive/texmf-dist/tex/generic/xkeyval/xkeyval.tex
+(/usr/share/texlive/texmf-dist/tex/generic/xkeyval/xkvutils.tex
+\XKV@toks=\toks44
+\XKV@tempa@toks=\toks45
 )
-\XKV@depth=\count326
+\XKV@depth=\count320
 File: xkeyval.tex 2014/12/03 v2.7a key=value parser (HA)
 )))
-(c:/texlive/2021/texmf-dist/tex/latex/merriweather/merriweather.sty
+(/usr/share/texlive/texmf-dist/tex/latex/merriweather/merriweather.sty
 Package: merriweather 2020/09/12 (Bob Tennent) Supports Merriweather(Sans) font
 s for all LaTeX engines. 
 
-(c:/texlive/2021/texmf-dist/tex/latex/base/textcomp.sty
+(/usr/share/texlive/texmf-dist/tex/latex/base/textcomp.sty
 Package: textcomp 2020/02/02 v2.0n Standard LaTeX package
 )
-(c:/texlive/2021/texmf-dist/tex/latex/base/fontenc.sty
-Package: fontenc 2021/04/29 v2.0v Standard LaTeX package
+(/usr/share/texlive/texmf-dist/tex/latex/base/fontenc.sty
+Package: fontenc 2020/08/10 v2.0s Standard LaTeX package
 LaTeX Font Info:    Trying to load font information for OT1+opensans-TLF on inp
 ut line 112.
 
-(c:/texlive/2021/texmf-dist/tex/latex/opensans/OT1opensans-TLF.fd
+(/usr/share/texlive/texmf-dist/tex/latex/opensans/OT1opensans-TLF.fd
 File: OT1opensans-TLF.fd 2019/06/24 Font definitions for OT1/opensans-TLF.
 )
 LaTeX Font Info:    Font shape `OT1/opensans-TLF/m/n' will be
 (Font)              scaled to size 9.49997pt on input line 112.
 ))
-(c:/texlive/2021/texmf-dist/tex/latex/beamer/beamerfontthemeserif.sty))
-(c:/texlive/2021/texmf-dist/tex/latex/apacite/apacite.sty
+(/usr/share/texlive/texmf-dist/tex/latex/beamer/beamerfontthemeserif.sty))
+(/usr/share/texlive/texmf-dist/tex/latex/apacite/apacite.sty
 Package: apacite 2013/07/21 v6.03 APA citation
-\c@BibCnt=\count327
-\bibleftmargin=\skip74
-\bibindent=\skip75
-\bibparsep=\skip76
-\bibitemsep=\skip77
-\biblabelsep=\skip78
+\c@BibCnt=\count321
+\bibleftmargin=\skip73
+\bibindent=\skip74
+\bibparsep=\skip75
+\bibitemsep=\skip76
+\biblabelsep=\skip77
 )
-(c:/texlive/2021/texmf-dist/tex/latex/natbib/natbib.sty
+(/usr/share/texlive/texmf-dist/tex/latex/natbib/natbib.sty
 Package: natbib 2010/09/13 8.31b (PWD, AO)
-\bibhang=\skip79
-\bibsep=\skip80
+\bibhang=\skip78
+\bibsep=\skip79
 LaTeX Info: Redefining \cite on input line 694.
-\c@NAT@ctr=\count328
+\c@NAT@ctr=\count322
 )
-LaTeX Info: Redefining \BBA on input line 72.
+LaTeX Info: Redefining \BBA on input line 61.
 
-(c:/texlive/2021/texmf-dist/tex/latex/newtx/newtxmath.sty
-Package: newtxmath 2021/10/21 v1.659
+(/usr/share/texlive/texmf-dist/tex/latex/newtx/newtxmath.sty
+Package: newtxmath 2020/12/20 v1.640
 
-`newtxmath' v1.659, 2021/10/21 Math macros based originally on txfonts (msharpe
-) (c:/texlive/2021/texmf-dist/tex/latex/base/ifthen.sty
-Package: ifthen 2020/11/24 v1.1c Standard LaTeX ifthen package (DPC)
+`newtxmath' v1.640, 2020/12/20 Math macros based originally on txfonts (msharpe
+) (/usr/share/texlive/texmf-dist/tex/latex/base/ifthen.sty
+Package: ifthen 2014/09/29 v1.1c Standard LaTeX ifthen package (DPC)
 )
-(c:/texlive/2021/texmf-dist/tex/latex/oberdiek/centernot.sty
+(/usr/share/texlive/texmf-dist/tex/latex/oberdiek/centernot.sty
 Package: centernot 2016/05/16 v1.4 Centers the not symbol horizontally (HO)
 )
-\tx@cntz=\count329
+\tx@cntz=\count323
 
-(c:/texlive/2021/texmf-dist/tex/generic/kastrup/binhex.tex)
-\tx@Isdigit=\count330
-\tx@IsAlNum=\count331
-\tx@tA=\toks47
-\tx@tB=\toks48
+(/usr/share/texlive/texmf-dist/tex/generic/kastrup/binhex.tex)
+\tx@Isdigit=\count324
+\tx@IsAlNum=\count325
+\tx@tA=\toks46
+\tx@tB=\toks47
 \tx@su=\read3
-LaTeX Font Info:    Redeclaring symbol font `operators' on input line 362.
+LaTeX Font Info:    Redeclaring symbol font `operators' on input line 360.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
-(Font)                  OT1/cmr/m/n --> OT1/Merriwthr-OsF/m/n on input line 362
+(Font)                  OT1/cmr/m/n --> OT1/Merriwthr-OsF/m/n on input line 360
 .
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
 (Font)                  OT1/cmr/bx/n --> OT1/Merriwthr-OsF/m/n on input line 36
-2.
+0.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
 (Font)                  OT1/Merriwthr-OsF/m/n --> OT1/Merriwthr-OsF/sb/n on inp
-ut line 363.
-LaTeX Font Info:    Redeclaring math alphabet \mathsf on input line 371.
+ut line 361.
+LaTeX Font Info:    Redeclaring math alphabet \mathsf on input line 369.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
-(Font)                  OT1/cmss/m/n --> OT1/opensans-TLF/m/n on input line 371
+(Font)                  OT1/cmss/m/n --> OT1/opensans-TLF/m/n on input line 369
 .
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/cmss/bx/n --> OT1/opensans-TLF/m/n on input line 37
-1.
-LaTeX Font Info:    Redeclaring math alphabet \mathit on input line 372.
+(Font)                  OT1/cmss/bx/n --> OT1/opensans-TLF/m/n on input line 36
+9.
+LaTeX Font Info:    Redeclaring math alphabet \mathit on input line 370.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
 (Font)                  OT1/cmr/m/it --> OT1/Merriwthr-OsF/m/it on input line 3
-72.
+70.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
 (Font)                  OT1/cmr/bx/it --> OT1/Merriwthr-OsF/m/it on input line 
-372.
-LaTeX Font Info:    Redeclaring math alphabet \mathtt on input line 373.
+370.
+LaTeX Font Info:    Redeclaring math alphabet \mathtt on input line 371.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
-(Font)                  OT1/cmtt/m/n --> OT1/cmtt/m/n on input line 373.
+(Font)                  OT1/cmtt/m/n --> OT1/cmtt/m/n on input line 371.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/cmtt/m/n --> OT1/cmtt/m/n on input line 373.
-LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 375.
+(Font)                  OT1/cmtt/m/n --> OT1/cmtt/m/n on input line 371.
+LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 373.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
 (Font)                  OT1/cmr/bx/n --> OT1/Merriwthr-OsF/sb/n on input line 3
-75.
+73.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
 (Font)                  OT1/cmr/bx/n --> OT1/Merriwthr-OsF/sb/n on input line 3
-75.
+73.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
 (Font)                  OT1/Merriwthr-OsF/m/it --> OT1/Merriwthr-OsF/sb/it on i
-nput line 376.
+nput line 374.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
 (Font)                  OT1/opensans-TLF/m/n --> OT1/opensans-TLF/b/n on input 
-line 377.
+line 375.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/cmtt/m/n --> OT1/cmtt/b/n on input line 378.
-LaTeX Font Info:    Redeclaring symbol font `letters' on input line 395.
+(Font)                  OT1/cmtt/m/n --> OT1/cmtt/b/n on input line 376.
+LaTeX Font Info:    Redeclaring symbol font `letters' on input line 393.
 LaTeX Font Info:    Overwriting symbol font `letters' in version `normal'
-(Font)                  OML/cmm/m/it --> OML/nxlmi/m/it on input line 395.
+(Font)                  OML/cmm/m/it --> OML/nxlmi/m/it on input line 393.
 LaTeX Font Info:    Overwriting symbol font `letters' in version `bold'
-(Font)                  OML/cmm/b/it --> OML/nxlmi/m/it on input line 395.
+(Font)                  OML/cmm/b/it --> OML/nxlmi/m/it on input line 393.
 LaTeX Font Info:    Overwriting symbol font `letters' in version `bold'
-(Font)                  OML/nxlmi/m/it --> OML/nxlmi/b/it on input line 396.
+(Font)                  OML/nxlmi/m/it --> OML/nxlmi/b/it on input line 394.
 \symlettersA=\mathgroup6
 LaTeX Font Info:    Overwriting symbol font `lettersA' in version `bold'
-(Font)                  U/ntxmia/m/it --> U/ntxmia/b/it on input line 535.
-LaTeX Font Info:    Redeclaring math alphabet \mathfrak on input line 537.
+(Font)                  U/ntxmia/m/it --> U/ntxmia/b/it on input line 542.
+LaTeX Font Info:    Redeclaring math alphabet \mathfrak on input line 544.
 Now handling font encoding LMS ...
 ... no UTF-8 mapping file for font encoding LMS
-LaTeX Font Info:    Redeclaring symbol font `symbols' on input line 556.
+LaTeX Font Info:    Redeclaring symbol font `symbols' on input line 563.
 LaTeX Font Info:    Encoding `OMS' has changed to `LMS' for symbol font
-(Font)              `symbols' in the math version `normal' on input line 556.
+(Font)              `symbols' in the math version `normal' on input line 563.
 LaTeX Font Info:    Overwriting symbol font `symbols' in version `normal'
-(Font)                  OMS/cmsy/m/n --> LMS/ntxsy/m/n on input line 556.
+(Font)                  OMS/cmsy/m/n --> LMS/ntxsy/m/n on input line 563.
 LaTeX Font Info:    Encoding `OMS' has changed to `LMS' for symbol font
-(Font)              `symbols' in the math version `bold' on input line 556.
+(Font)              `symbols' in the math version `bold' on input line 563.
 LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
-(Font)                  OMS/cmsy/b/n --> LMS/ntxsy/m/n on input line 556.
+(Font)                  OMS/cmsy/b/n --> LMS/ntxsy/m/n on input line 563.
 LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
-(Font)                  LMS/ntxsy/m/n --> LMS/ntxsy/b/n on input line 557.
+(Font)                  LMS/ntxsy/m/n --> LMS/ntxsy/b/n on input line 564.
 \symAMSm=\mathgroup7
 LaTeX Font Info:    Overwriting symbol font `AMSm' in version `bold'
-(Font)                  U/ntxsym/m/n --> U/ntxsym/b/n on input line 582.
+(Font)                  U/ntxsym/m/n --> U/ntxsym/b/n on input line 587.
 \symsymbolsC=\mathgroup8
 LaTeX Font Info:    Overwriting symbol font `symbolsC' in version `bold'
-(Font)                  U/ntxsyc/m/n --> U/ntxsyc/b/n on input line 603.
+(Font)                  U/ntxsyc/m/n --> U/ntxsyc/b/n on input line 608.
 Now handling font encoding LMX ...
 ... no UTF-8 mapping file for font encoding LMX
-LaTeX Font Info:    Redeclaring symbol font `largesymbols' on input line 616.
+LaTeX Font Info:    Redeclaring symbol font `largesymbols' on input line 621.
 LaTeX Font Info:    Encoding `OMX' has changed to `LMX' for symbol font
 (Font)              `largesymbols' in the math version `normal' on input line 6
-16.
+21.
 LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
-(Font)                  OMX/cmex/m/n --> LMX/ntxexx/m/n on input line 616.
+(Font)                  OMX/cmex/m/n --> LMX/ntxexx/m/n on input line 621.
 LaTeX Font Info:    Encoding `OMX' has changed to `LMX' for symbol font
-(Font)              `largesymbols' in the math version `bold' on input line 616
+(Font)              `largesymbols' in the math version `bold' on input line 621
 .
 LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
-(Font)                  OMX/cmex/m/n --> LMX/ntxexx/m/n on input line 616.
+(Font)                  OMX/cmex/m/n --> LMX/ntxexx/m/n on input line 621.
 LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
-(Font)                  LMX/ntxexx/m/n --> LMX/ntxexx/b/n on input line 617.
+(Font)                  LMX/ntxexx/m/n --> LMX/ntxexx/b/n on input line 622.
 \symlargesymbolsTXA=\mathgroup9
 LaTeX Font Info:    Overwriting symbol font `largesymbolsTXA' in version `bold'
 
-(Font)                  U/ntxexa/m/n --> U/ntxexa/b/n on input line 631.
-\tx@sbptoks=\toks49
-LaTeX Font Info:    Redeclaring math delimiter \lfloor on input line 854.
-LaTeX Font Info:    Redeclaring math delimiter \rfloor on input line 855.
-LaTeX Font Info:    Redeclaring math delimiter \lceil on input line 856.
-LaTeX Font Info:    Redeclaring math delimiter \rceil on input line 857.
-LaTeX Font Info:    Redeclaring math delimiter \lbrace on input line 858.
-LaTeX Font Info:    Redeclaring math delimiter \rbrace on input line 859.
-LaTeX Font Info:    Redeclaring math delimiter \langle on input line 860.
-LaTeX Font Info:    Redeclaring math delimiter \rangle on input line 862.
-LaTeX Font Info:    Redeclaring math delimiter \arrowvert on input line 866.
-LaTeX Font Info:    Redeclaring math delimiter \vert on input line 867.
-LaTeX Font Info:    Redeclaring math accent \dot on input line 938.
-LaTeX Font Info:    Redeclaring math accent \ddot on input line 939.
-LaTeX Font Info:    Redeclaring math accent \vec on input line 2008.
-LaTeX Info: Redefining \Bbbk on input line 2798.
-LaTeX Info: Redefining \not on input line 2947.
-LaTeX Info: Redefining \textsquare on input line 2977.
-LaTeX Info: Redefining \openbox on input line 2979.
+(Font)                  U/ntxexa/m/n --> U/ntxexa/b/n on input line 636.
+\tx@sbptoks=\toks48
+LaTeX Font Info:    Redeclaring math delimiter \lfloor on input line 858.
+LaTeX Font Info:    Redeclaring math delimiter \rfloor on input line 859.
+LaTeX Font Info:    Redeclaring math delimiter \lceil on input line 860.
+LaTeX Font Info:    Redeclaring math delimiter \rceil on input line 861.
+LaTeX Font Info:    Redeclaring math delimiter \lbrace on input line 862.
+LaTeX Font Info:    Redeclaring math delimiter \rbrace on input line 863.
+LaTeX Font Info:    Redeclaring math delimiter \langle on input line 864.
+LaTeX Font Info:    Redeclaring math delimiter \rangle on input line 866.
+LaTeX Font Info:    Redeclaring math delimiter \arrowvert on input line 870.
+LaTeX Font Info:    Redeclaring math delimiter \vert on input line 871.
+LaTeX Font Info:    Redeclaring math accent \dot on input line 942.
+LaTeX Font Info:    Redeclaring math accent \ddot on input line 943.
+LaTeX Font Info:    Redeclaring math accent \vec on input line 2006.
+LaTeX Font Info:    Redeclaring math symbol \imathscr on input line 2646.
+LaTeX Font Info:    Redeclaring math symbol \jmathscr on input line 2647.
+LaTeX Info: Redefining \Bbbk on input line 2780.
+LaTeX Info: Redefining \not on input line 2929.
+LaTeX Info: Redefining \textsquare on input line 2959.
+LaTeX Info: Redefining \openbox on input line 2961.
 )
-(c:/texlive/2021/texmf-dist/tex/latex/fancybox/fancybox.sty
+(/usr/share/texlive/texmf-dist/tex/latex/fancybox/fancybox.sty
 Package: fancybox 2010/05/15 1.4
 
 Style option: `fancybox' v1.4 <2010/05/15> (tvz)
-\@fancybox=\box75
+\@fancybox=\box72
 \shadowsize=\dimen288
-\@Sbox=\box76
-\do@VerbBox=\toks50
-\the@fancyput=\toks51
-\this@fancyput=\toks52
-\EndVerbatimTokens=\toks53
+\@Sbox=\box73
+\do@VerbBox=\toks49
+\the@fancyput=\toks50
+\this@fancyput=\toks51
+\EndVerbatimTokens=\toks52
 \Verbatim@Outfile=\write5
 \Verbatim@Infile=\read4
-) (c:/texlive/2021/texmf-dist/tex/latex/booktabs/booktabs.sty
+) (/usr/share/texlive/texmf-dist/tex/latex/booktabs/booktabs.sty
 Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
 \heavyrulewidth=\dimen289
 \lightrulewidth=\dimen290
@@ -912,74 +990,73 @@ Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
 \cmidrulesep=\dimen296
 \cmidrulekern=\dimen297
 \defaultaddspace=\dimen298
-\@cmidla=\count332
-\@cmidlb=\count333
+\@cmidla=\count326
+\@cmidlb=\count327
 \@aboverulesep=\dimen299
 \@belowrulesep=\dimen300
-\@thisruleclass=\count334
-\@lastruleclass=\count335
+\@thisruleclass=\count328
+\@lastruleclass=\count329
 \@thisrulewidth=\dimen301
 )
-(c:/texlive/2021/texmf-dist/tex/latex/relsize/relsize.sty
+(/usr/share/texlive/texmf-dist/tex/latex/relsize/relsize.sty
 Package: relsize 2013/03/29 ver 4.1
 )
-(c:/texlive/2021/texmf-dist/tex/latex/upquote/upquote.sty
+(/usr/share/texlive/texmf-dist/tex/latex/upquote/upquote.sty
 Package: upquote 2012/04/19 v1.3 upright-quote and grave-accent glyphs in verba
 tim
 )
-(c:/texlive/2021/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
-File: l3backend-pdftex.def 2021-10-18 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count336
-\l__pdf_internal_box=\box77
+(/usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
+File: l3backend-pdftex.def 2020-01-29 L3 backend support: PDF output (pdfTeX)
+\l__color_backend_stack_int=\count330
+\l__pdf_internal_box=\box74
 )
 (./sem_mediation.aux)
 \openout1 = `sem_mediation.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/nxlmi/m/it on input line 88.
+LaTeX Font Info:    Checking defaults for OML/nxlmi/m/it on input line 77.
 LaTeX Font Info:    Trying to load font information for OML+nxlmi on input line
- 88.
- (c:/texlive/2021/texmf-dist/tex/latex/newtx/omlnxlmi.fd
+ 77.
+
+(/usr/share/texlive/texmf-dist/tex/latex/newtx/omlnxlmi.fd
 File: omlnxlmi.fd 2013/11/19 Fontinst v1.933 font definitions for OML/nxlmi.
 )
-LaTeX Font Info:    ... okay on input line 88.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 88.
-LaTeX Font Info:    ... okay on input line 88.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 88.
-LaTeX Font Info:    ... okay on input line 88.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 88.
-LaTeX Font Info:    ... okay on input line 88.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 88.
-LaTeX Font Info:    ... okay on input line 88.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 88.
-LaTeX Font Info:    ... okay on input line 88.
-LaTeX Font Info:    Checking defaults for U/ntxexa/m/n on input line 88.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for U/ntxexa/m/n on input line 77.
 LaTeX Font Info:    Trying to load font information for U+ntxexa on input line 
-88.
+77.
 
-(c:/texlive/2021/texmf-dist/tex/latex/newtx/untxexa.fd
+(/usr/share/texlive/texmf-dist/tex/latex/newtx/untxexa.fd
 File: untxexa.fd 2012/04/16 Fontinst v1.933 font definitions for U/ntxexa.
 )
-LaTeX Font Info:    ... okay on input line 88.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 88.
-LaTeX Font Info:    ... okay on input line 88.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 88.
-LaTeX Font Info:    ... okay on input line 88.
-LaTeX Font Info:    Checking defaults for LMS/ntxsy/m/n on input line 88.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for LMS/ntxsy/m/n on input line 77.
 LaTeX Font Info:    Trying to load font information for LMS+ntxsy on input line
- 88.
+ 77.
 
-(c:/texlive/2021/texmf-dist/tex/latex/newtx/lmsntxsy.fd
+(/usr/share/texlive/texmf-dist/tex/latex/newtx/lmsntxsy.fd
 File: lmsntxsy.fd 2016/07/02 Fontinst v1.933 font definitions for LMS/ntxsy.
 )
-LaTeX Font Info:    ... okay on input line 88.
-LaTeX Font Info:    Checking defaults for LMX/ntxexx/m/n on input line 88.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for LMX/ntxexx/m/n on input line 77.
 LaTeX Font Info:    Trying to load font information for LMX+ntxexx on input lin
-e 88.
+e 77.
 
-(c:/texlive/2021/texmf-dist/tex/latex/newtx/lmxntxexx.fd
+(/usr/share/texlive/texmf-dist/tex/latex/newtx/lmxntxexx.fd
 File: lmxntxexx.fd 2016/07/03 Fontinst v1.933 font definitions for LMX/ntxexx.
 )
-LaTeX Font Info:    ... okay on input line 88.
+LaTeX Font Info:    ... okay on input line 77.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -1015,44 +1092,44 @@ LaTeX Font Info:    ... okay on input line 88.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-(c:/texlive/2021/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+(/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count337
+\scratchcounter=\count331
 \scratchdimen=\dimen302
-\scratchbox=\box78
-\nofMPsegments=\count338
-\nofMParguments=\count339
-\everyMPshowfont=\toks54
-\MPscratchCnt=\count340
+\scratchbox=\box75
+\nofMPsegments=\count332
+\nofMParguments=\count333
+\everyMPshowfont=\toks53
+\MPscratchCnt=\count334
 \MPscratchDim=\dimen303
-\MPnumerator=\count341
-\makeMPintoPDFobject=\count342
-\everyMPtoPDFconversion=\toks55
-) (c:/texlive/2021/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
+\MPnumerator=\count335
+\makeMPintoPDFobject=\count336
+\everyMPtoPDFconversion=\toks54
+) (/usr/share/texlive/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 85.
 
-(c:/texlive/2021/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+(/usr/share/texlive/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-Package hyperref Info: Link coloring OFF on input line 88.
+Package hyperref Info: Link coloring OFF on input line 77.
 
-(c:/texlive/2021/texmf-dist/tex/latex/hyperref/nameref.sty
-Package: nameref 2021-04-02 v2.47 Cross-referencing by name of section
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
+Package: nameref 2019/09/16 v2.46 Cross-referencing by name of section
 
-(c:/texlive/2021/texmf-dist/tex/latex/refcount/refcount.sty
+(/usr/share/texlive/texmf-dist/tex/latex/refcount/refcount.sty
 Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
 )
-(c:/texlive/2021/texmf-dist/tex/generic/gettitlestring/gettitlestring.sty
+(/usr/share/texlive/texmf-dist/tex/generic/gettitlestring/gettitlestring.sty
 Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
-\c@section@level=\count343
+\c@section@level=\count337
 )
-LaTeX Info: Redefining \ref on input line 88.
-LaTeX Info: Redefining \pageref on input line 88.
-LaTeX Info: Redefining \nameref on input line 88.
+LaTeX Info: Redefining \ref on input line 77.
+LaTeX Info: Redefining \pageref on input line 77.
+LaTeX Info: Redefining \nameref on input line 77.
 
 (./sem_mediation.out) (./sem_mediation.out)
 \@outlinefile=\write6
@@ -1062,164 +1139,166 @@ LaTeX Info: Redefining \nameref on input line 88.
 \sympureletters=\mathgroup11
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `normal'
 (Font)                  OT1/Merriwthr-OsF/m/n --> OT1/Merriwthr-OsF/m/n on inpu
-t line 88.
-LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 88.
+t line 77.
+LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 77.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
 (Font)                  OT1/Merriwthr-OsF/sb/n --> OT1/Merriwthr-OsF/b/n on inp
-ut line 88.
+ut line 77.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
 (Font)                  OT1/Merriwthr-OsF/sb/n --> OT1/Merriwthr-OsF/b/n on inp
-ut line 88.
-LaTeX Font Info:    Redeclaring math alphabet \mathsf on input line 88.
+ut line 77.
+LaTeX Font Info:    Redeclaring math alphabet \mathsf on input line 77.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
 (Font)                  OT1/opensans-TLF/m/n --> OT1/opensans-TLF/m/n on input 
-line 88.
+line 77.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
 (Font)                  OT1/opensans-TLF/b/n --> OT1/opensans-TLF/m/n on input 
-line 88.
-LaTeX Font Info:    Redeclaring math alphabet \mathit on input line 88.
+line 77.
+LaTeX Font Info:    Redeclaring math alphabet \mathit on input line 77.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
 (Font)                  OT1/Merriwthr-OsF/m/it --> OT1/Merriwthr-OsF/m/it on in
-put line 88.
+put line 77.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
 (Font)                  OT1/Merriwthr-OsF/sb/it --> OT1/Merriwthr-OsF/m/it on i
-nput line 88.
-LaTeX Font Info:    Redeclaring math alphabet \mathtt on input line 88.
+nput line 77.
+LaTeX Font Info:    Redeclaring math alphabet \mathtt on input line 77.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
-(Font)                  OT1/cmtt/m/n --> OT1/cmtt/m/n on input line 88.
+(Font)                  OT1/cmtt/m/n --> OT1/cmtt/m/n on input line 77.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/cmtt/b/n --> OT1/cmtt/m/n on input line 88.
+(Font)                  OT1/cmtt/b/n --> OT1/cmtt/m/n on input line 77.
 LaTeX Font Info:    Overwriting symbol font `numbers' in version `bold'
 (Font)                  OT1/Merriwthr-OsF/m/n --> OT1/Merriwthr-OsF/b/n on inpu
-t line 88.
+t line 77.
 LaTeX Font Info:    Overwriting symbol font `pureletters' in version `bold'
 (Font)                  OT1/Merriwthr-OsF/m/it --> OT1/Merriwthr-OsF/b/it on in
-put line 88.
+put line 77.
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `bold'
 (Font)                  OT1/Merriwthr-OsF/sb/n --> OT1/Merriwthr-OsF/b/n on inp
-ut line 88.
+ut line 77.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
 (Font)                  OT1/Merriwthr-OsF/b/n --> OT1/Merriwthr-OsF/b/n on inpu
-t line 88.
+t line 77.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
 (Font)                  OT1/opensans-TLF/m/n --> OT1/opensans-TLF/b/n on input 
-line 88.
+line 77.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
 (Font)                  OT1/Merriwthr-OsF/m/it --> OT1/Merriwthr-OsF/b/it on in
-put line 88.
+put line 77.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/cmtt/m/n --> OT1/cmtt/b/n on input line 88.
+(Font)                  OT1/cmtt/m/n --> OT1/cmtt/b/n on input line 77.
 
-(c:/texlive/2021/texmf-dist/tex/latex/translator/translator-basic-dictionary-En
-glish.dict
+(/usr/share/texlive/texmf-dist/tex/latex/translator/translator-basic-dictionary
+-English.dict
 Dictionary: translator-basic-dictionary, Language: English 
 )
-(c:/texlive/2021/texmf-dist/tex/latex/translator/translator-bibliography-dictio
-nary-English.dict
+(/usr/share/texlive/texmf-dist/tex/latex/translator/translator-bibliography-dic
+tionary-English.dict
 Dictionary: translator-bibliography-dictionary, Language: English 
 )
-(c:/texlive/2021/texmf-dist/tex/latex/translator/translator-environment-diction
-ary-English.dict
+(/usr/share/texlive/texmf-dist/tex/latex/translator/translator-environment-dict
+ionary-English.dict
 Dictionary: translator-environment-dictionary, Language: English 
 )
-(c:/texlive/2021/texmf-dist/tex/latex/translator/translator-months-dictionary-E
-nglish.dict
+(/usr/share/texlive/texmf-dist/tex/latex/translator/translator-months-dictionar
+y-English.dict
 Dictionary: translator-months-dictionary, Language: English 
 )
-(c:/texlive/2021/texmf-dist/tex/latex/translator/translator-numbers-dictionary-
-English.dict
+(/usr/share/texlive/texmf-dist/tex/latex/translator/translator-numbers-dictiona
+ry-English.dict
 Dictionary: translator-numbers-dictionary, Language: English 
 )
-(c:/texlive/2021/texmf-dist/tex/latex/translator/translator-theorem-dictionary-
-English.dict
+(/usr/share/texlive/texmf-dist/tex/latex/translator/translator-theorem-dictiona
+ry-English.dict
 Dictionary: translator-theorem-dictionary, Language: English 
 )
-\c@mv@tabular=\count344
-\c@mv@boldtabular=\count345
-\c@maskedRefs=\count346
- (c:/texlive/2021/texmf-dist/tex/latex/apacite/english.apc
+\c@mv@tabular=\count338
+\c@mv@boldtabular=\count339
+\c@maskedRefs=\count340
+ (/usr/share/texlive/texmf-dist/tex/latex/apacite/english.apc
 File: english.apc 2013/07/21 v6.03 apacite language file
 LaTeX Info: Redefining \BPBI on input line 129.
 LaTeX Info: Redefining \BHBI on input line 130.
 )
 (./sem_mediation.nav)
 LaTeX Font Info:    Font shape `OT1/opensans-TLF/m/n' will be
-(Font)              scaled to size 4.74998pt on input line 88.
+(Font)              scaled to size 4.74998pt on input line 77.
 LaTeX Font Info:    Font shape `OT1/opensans-TLF/m/n' will be
-(Font)              scaled to size 13.67995pt on input line 96.
+(Font)              scaled to size 13.67995pt on input line 85.
 LaTeX Font Info:    Trying to load font information for OT1+Merriwthr-OsF on in
-put line 96.
+put line 85.
 
-(c:/texlive/2021/texmf-dist/tex/latex/merriweather/OT1Merriwthr-OsF.fd
+(/usr/share/texlive/texmf-dist/tex/latex/merriweather/OT1Merriwthr-OsF.fd
 File: OT1Merriwthr-OsF.fd 2020/08/30 (autoinst) Font definitions for OT1/Merriw
 thr-OsF.
 )
 LaTeX Font Info:    Font shape `OT1/Merriwthr-OsF/m/n' will be
-(Font)              scaled to size 14.4pt on input line 96.
+(Font)              scaled to size 14.4pt on input line 85.
 LaTeX Font Info:    Font shape `OT1/Merriwthr-OsF/m/n' will be
-(Font)              scaled to size 10.0pt on input line 96.
-<images/logoUU.png, id=33, 324.7332pt x 128.1588pt>
+(Font)              scaled to size 10.0pt on input line 85.
+<images/logoUU.png, id=41, 324.7332pt x 128.1588pt>
 File: images/logoUU.png Graphic file (type png)
 <use images/logoUU.png>
-Package pdftex.def Info: images/logoUU.png  used on input line 96.
+Package pdftex.def Info: images/logoUU.png  used on input line 85.
 (pdftex.def)             Requested size: 227.31169pt x 89.71054pt.
 
-Overfull \hbox (67.06485pt too wide) in paragraph at lines 96--96
+Overfull \hbox (67.06485pt too wide) in paragraph at lines 85--85
  [][] 
  []
 
 LaTeX Font Info:    Font shape `OT1/Merriwthr-OsF/m/n' will be
-(Font)              scaled to size 7.3pt on input line 96.
+(Font)              scaled to size 7.3pt on input line 85.
 LaTeX Font Info:    Font shape `OT1/Merriwthr-OsF/m/n' will be
-(Font)              scaled to size 5.5pt on input line 96.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 96.
+(Font)              scaled to size 5.5pt on input line 85.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 85.
 
-(c:/texlive/2021/texmf-dist/tex/latex/amsfonts/umsa.fd
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 96.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 85.
 
 
-(c:/texlive/2021/texmf-dist/tex/latex/amsfonts/umsb.fd
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 LaTeX Font Info:    Trying to load font information for U+ntxmia on input line 
-96.
+85.
 
-(c:/texlive/2021/texmf-dist/tex/latex/newtx/untxmia.fd
+(/usr/share/texlive/texmf-dist/tex/latex/newtx/untxmia.fd
 File: untxmia.fd 2018/04/14 Fontinst v1.933 font definitions for U/ntxmia.
 )
 LaTeX Font Info:    Trying to load font information for U+ntxsym on input line 
-96.
+85.
 
-(c:/texlive/2021/texmf-dist/tex/latex/newtx/untxsym.fd
+(/usr/share/texlive/texmf-dist/tex/latex/newtx/untxsym.fd
 File: untxsym.fd 2015/03/20 Fontinst v1.933 font definitions for U/ntxsym.
 )
 LaTeX Font Info:    Trying to load font information for U+ntxsyc on input line 
-96.
+85.
 
-(c:/texlive/2021/texmf-dist/tex/latex/newtx/untxsyc.fd
+(/usr/share/texlive/texmf-dist/tex/latex/newtx/untxsyc.fd
 File: untxsyc.fd 2012/04/12 Fontinst v1.933 font definitions for U/ntxsyc.
 )
 LaTeX Font Info:    Font shape `OT1/Merriwthr-OsF/m/it' will be
-(Font)              scaled to size 10.0pt on input line 96.
+(Font)              scaled to size 10.0pt on input line 85.
 LaTeX Font Info:    Font shape `OT1/Merriwthr-OsF/m/it' will be
-(Font)              scaled to size 7.3pt on input line 96.
+(Font)              scaled to size 7.3pt on input line 85.
 LaTeX Font Info:    Font shape `OT1/Merriwthr-OsF/m/it' will be
-(Font)              scaled to size 5.5pt on input line 96.
+(Font)              scaled to size 5.5pt on input line 85.
 LaTeX Font Info:    Font shape `OT1/opensans-TLF/m/n' will be
-(Font)              scaled to size 6.64998pt on input line 96.
+(Font)              scaled to size 6.64998pt on input line 85.
  [1
 
-{c:/texlive/2021/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <c:/texlive/texm
-f-local/tex/latex/beamer/themes/Utrecht/images/logoUU.png>] (./sem_mediation.to
-c)
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} </usr/local/share/texmf/tex
+/latex/beamer-utrecht/images/logoUU.png>] (./sem_mediation.toc
 LaTeX Font Info:    Font shape `OT1/opensans-TLF/m/n' will be
-(Font)              scaled to size 3.79999pt on input line 102.
-<images/watermarkUU.png, id=48, 66.2475pt x 67.2111pt>
+(Font)              scaled to size 7.59998pt on input line 6.
+)
+LaTeX Font Info:    Font shape `OT1/opensans-TLF/m/n' will be
+(Font)              scaled to size 3.79999pt on input line 91.
+<images/watermarkUU.png, id=60, 66.2475pt x 67.2111pt>
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 102.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 91.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1228,30 +1307,25 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [2
 
- <c:/texlive/texmf-local/tex/latex/beamer/themes/Utrecht/images/watermarkUU.png
->]
+ </usr/local/share/texmf/tex/latex/beamer-utrecht/images/watermarkUU.png>]
 LaTeX Font Info:    Font shape `OT1/opensans-TLF/m/n' will be
-(Font)              scaled to size 8.54997pt on input line 125.
+(Font)              scaled to size 8.54997pt on input line 114.
 LaTeX Font Info:    Font shape `OT1/Merriwthr-OsF/m/n' will be
-(Font)              scaled to size 9.0pt on input line 125.
+(Font)              scaled to size 9.0pt on input line 114.
 LaTeX Font Info:    Font shape `OT1/Merriwthr-OsF/m/it' will be
-(Font)              scaled to size 9.0pt on input line 125.
+(Font)              scaled to size 9.0pt on input line 114.
 
 
-pdfTeX warning: pdflatex.exe (file ./figures/3_factor_cfa.pdf): PDF inclusion: 
-found PDF version <1.7>, but at most version <1.5> allowed
-<figures/3_factor_cfa.pdf, id=59, 963.6pt x 542.025pt>
+pdfTeX warning: pdflatex (file ./figures/3_factor_cfa.pdf): PDF inclusion: foun
+d PDF version <1.7>, but at most version <1.5> allowed
+<figures/3_factor_cfa.pdf, id=75, 1024.30678pt x 341.35529pt>
 File: figures/3_factor_cfa.pdf Graphic file (type pdf)
 <use figures/3_factor_cfa.pdf>
-Package pdftex.def Info: figures/3_factor_cfa.pdf  used on input line 125.
-(pdftex.def)             Requested size: 256.39594pt x 144.22314pt.
-
-Overfull \vbox (13.58987pt too high) detected at line 125
- []
-
+Package pdftex.def Info: figures/3_factor_cfa.pdf  used on input line 114.
+(pdftex.def)             Requested size: 256.39594pt x 85.44278pt.
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 125.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 114.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1262,27 +1336,27 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
  <./figures/3_factor_cfa.pdf>]
 
-pdfTeX warning: pdflatex.exe (file ./figures/simple_sem_diagram.pdf): PDF inclu
-sion: found PDF version <1.7>, but at most version <1.5> allowed
-<figures/simple_sem_diagram.pdf, id=71, 853.50871pt x 853.50871pt>
+pdfTeX warning: pdflatex (file ./figures/simple_sem_diagram.pdf): PDF inclusion
+: found PDF version <1.7>, but at most version <1.5> allowed
+<figures/simple_sem_diagram.pdf, id=87, 853.50871pt x 853.50871pt>
 File: figures/simple_sem_diagram.pdf Graphic file (type pdf)
 <use figures/simple_sem_diagram.pdf>
-Package pdftex.def Info: figures/simple_sem_diagram.pdf  used on input line 142
+Package pdftex.def Info: figures/simple_sem_diagram.pdf  used on input line 131
 .
 (pdftex.def)             Requested size: 160.24684pt x 160.24086pt.
 LaTeX Font Info:    Font shape `OT1/Merriwthr-OsF/m/n' will be
-(Font)              scaled to size 10.5pt on input line 142.
+(Font)              scaled to size 10.5pt on input line 131.
 LaTeX Font Info:    Font shape `OT1/Merriwthr-OsF/m/n' will be
-(Font)              scaled to size 7.9pt on input line 142.
+(Font)              scaled to size 7.9pt on input line 131.
 LaTeX Font Info:    Font shape `OT1/Merriwthr-OsF/m/it' will be
-(Font)              scaled to size 14.4pt on input line 142.
+(Font)              scaled to size 14.4pt on input line 131.
 LaTeX Font Info:    Font shape `OT1/Merriwthr-OsF/m/it' will be
-(Font)              scaled to size 10.5pt on input line 142.
+(Font)              scaled to size 10.5pt on input line 131.
 LaTeX Font Info:    Font shape `OT1/Merriwthr-OsF/m/it' will be
-(Font)              scaled to size 7.9pt on input line 142.
+(Font)              scaled to size 7.9pt on input line 131.
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 142.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 131.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1292,9 +1366,15 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [4
 
  <./figures/simple_sem_diagram.pdf>]
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <8> not available
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 6.
+)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 165.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 166.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1304,15 +1384,15 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [5
 
 ]
-LaTeX Font Info:    Font shape `OT1/opensans-TLF/m/n' will be
-(Font)              scaled to size 19.70294pt on input line 169.
-LaTeX Font Info:    Font shape `OT1/Merriwthr-OsF/m/n' will be
-(Font)              scaled to size 20.74pt on input line 169.
-LaTeX Font Info:    Font shape `OT1/Merriwthr-OsF/m/sc' will be
-(Font)              scaled to size 20.74pt on input line 169.
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
+Overfull \vbox (6.1404pt too high) detected at line 202
+ []
+
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 169.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 202.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1322,11 +1402,12 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [6
 
 ]
-LaTeX Font Info:    Font shape `OT1/opensans-TLF/m/it' will be
-(Font)              scaled to size 9.49997pt on input line 186.
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 186.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 225.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1336,9 +1417,15 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [7
 
 ]
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
+Overfull \vbox (6.1404pt too high) detected at line 261
+ []
+
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 186.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 261.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1348,9 +1435,15 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [8
 
 ]
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
+Overfull \vbox (6.1404pt too high) detected at line 297
+ []
+
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 204.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 297.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1360,15 +1453,12 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [9
 
 ]
-<figures/focalEffectDiagram.pdf, id=110, 963.6pt x 542.025pt>
-File: figures/focalEffectDiagram.pdf Graphic file (type pdf)
-<use figures/focalEffectDiagram.pdf>
-Package pdftex.def Info: figures/focalEffectDiagram.pdf  used on input line 228
-.
-(pdftex.def)             Requested size: 320.4937pt x 180.2748pt.
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 228.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 332.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1377,15 +1467,16 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [10
 
- <./figures/focalEffectDiagram.pdf>]
-<figures/mediationDiagram.pdf, id=122, 963.6pt x 542.025pt>
-File: figures/mediationDiagram.pdf Graphic file (type pdf)
-<use figures/mediationDiagram.pdf>
-Package pdftex.def Info: figures/mediationDiagram.pdf  used on input line 249.
-(pdftex.def)             Requested size: 256.39594pt x 144.22314pt.
+]
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
+Overfull \vbox (6.1404pt too high) detected at line 368
+ []
+
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 249.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 368.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1394,20 +1485,13 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [11
 
- <./figures/mediationDiagram.pdf>]
-<figures/moderationDiagram.pdf, id=133, 963.6pt x 542.025pt>
-File: figures/moderationDiagram.pdf Graphic file (type pdf)
-<use figures/moderationDiagram.pdf>
-Package pdftex.def Info: figures/moderationDiagram.pdf  used on input line 272.
+]
+\openout4 = `sem_mediation.vrb'.
 
-(pdftex.def)             Requested size: 256.39594pt x 144.22314pt.
-
-Overfull \vbox (19.58987pt too high) detected at line 272
- []
-
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 272.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 394.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1416,10 +1500,16 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [12
 
- <./figures/moderationDiagram.pdf>]
+]
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
+Overfull \vbox (6.1404pt too high) detected at line 430
+ []
+
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 286.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 430.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1429,9 +1519,15 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [13
 
 ]
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
+Overfull \vbox (6.1404pt too high) detected at line 466
+ []
+
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 294.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 466.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1441,15 +1537,9 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [14
 
 ]
-<figures/simpleMediationPathDiagram.pdf, id=156, 963.6pt x 542.025pt>
-File: figures/simpleMediationPathDiagram.pdf Graphic file (type pdf)
-<use figures/simpleMediationPathDiagram.pdf>
-Package pdftex.def Info: figures/simpleMediationPathDiagram.pdf  used on input 
-line 422.
-(pdftex.def)             Requested size: 320.4937pt x 180.2748pt.
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 422.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 489.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1458,10 +1548,16 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [15
 
- <./figures/simpleMediationPathDiagram.pdf>]
+]
+LaTeX Font Info:    Font shape `OT1/opensans-TLF/m/n' will be
+(Font)              scaled to size 19.70294pt on input line 493.
+LaTeX Font Info:    Font shape `OT1/Merriwthr-OsF/m/n' will be
+(Font)              scaled to size 20.74pt on input line 493.
+LaTeX Font Info:    Font shape `OT1/Merriwthr-OsF/m/sc' will be
+(Font)              scaled to size 20.74pt on input line 493.
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 446.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 493.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1471,9 +1567,11 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [16
 
 ]
+LaTeX Font Info:    Font shape `OT1/opensans-TLF/m/it' will be
+(Font)              scaled to size 9.49997pt on input line 509.
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 479.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 509.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1485,7 +1583,7 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 ]
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 511.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 527.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1496,17 +1594,17 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 ]
 
-pdfTeX warning: pdflatex.exe (file ./figures/adamsKlpsExample1_two_models.pdf):
- PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<figures/adamsKlpsExample1_two_models.pdf, id=192, 963.6pt x 542.025pt>
-File: figures/adamsKlpsExample1_two_models.pdf Graphic file (type pdf)
-<use figures/adamsKlpsExample1_two_models.pdf>
-Package pdftex.def Info: figures/adamsKlpsExample1_two_models.pdf  used on inpu
-t line 523.
-(pdftex.def)             Requested size: 256.39594pt x 144.22314pt.
+pdfTeX warning: pdflatex (file ./figures/focalEffectDiagram.pdf): PDF inclusion
+: found PDF version <1.7>, but at most version <1.5> allowed
+<figures/focalEffectDiagram.pdf, id=175, 1024.30678pt x 341.35529pt>
+File: figures/focalEffectDiagram.pdf Graphic file (type pdf)
+<use figures/focalEffectDiagram.pdf>
+Package pdftex.def Info: figures/focalEffectDiagram.pdf  used on input line 547
+.
+(pdftex.def)             Requested size: 320.4937pt x 106.80347pt.
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 523.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 547.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1515,18 +1613,15 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [19
 
- <./figures/adamsKlpsExample1_two_models.pdf>]
-\openout4 = `sem_mediation.vrb'.
-
- (./sem_mediation.vrb
-LaTeX Font Info:    Font shape `OT1/opensans-TLF/m/n' will be
-(Font)              scaled to size 7.59998pt on input line 3.
-LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <8> not available
-(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 10.
-)
+ <./figures/focalEffectDiagram.pdf>]
+<figures/mediationDiagram.pdf, id=189, 963.6pt x 542.025pt>
+File: figures/mediationDiagram.pdf Graphic file (type pdf)
+<use figures/mediationDiagram.pdf>
+Package pdftex.def Info: figures/mediationDiagram.pdf  used on input line 568.
+(pdftex.def)             Requested size: 256.39594pt x 144.22314pt.
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 546.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 568.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1535,13 +1630,20 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [20
 
-]
-\openout4 = `sem_mediation.vrb'.
+ <./figures/mediationDiagram.pdf>]
+<figures/moderationDiagram.pdf, id=200, 963.6pt x 542.025pt>
+File: figures/moderationDiagram.pdf Graphic file (type pdf)
+<use figures/moderationDiagram.pdf>
+Package pdftex.def Info: figures/moderationDiagram.pdf  used on input line 591.
 
- (./sem_mediation.vrb)
+(pdftex.def)             Requested size: 256.39594pt x 144.22314pt.
+
+Overfull \vbox (19.58987pt too high) detected at line 591
+ []
+
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 581.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 591.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1550,13 +1652,10 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [21
 
-]
-\openout4 = `sem_mediation.vrb'.
-
- (./sem_mediation.vrb)
+ <./figures/moderationDiagram.pdf>]
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 616.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 605.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1566,12 +1665,18 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [22
 
 ]
-\openout4 = `sem_mediation.vrb'.
 
- (./sem_mediation.vrb)
+pdfTeX warning: pdflatex (file ./figures/simpleMediationPathDiagram.pdf): PDF i
+nclusion: found PDF version <1.7>, but at most version <1.5> allowed
+<figures/simpleMediationPathDiagram.pdf, id=216, 963.6pt x 542.025pt>
+File: figures/simpleMediationPathDiagram.pdf Graphic file (type pdf)
+<use figures/simpleMediationPathDiagram.pdf>
+Package pdftex.def Info: figures/simpleMediationPathDiagram.pdf  used on input 
+line 741.
+(pdftex.def)             Requested size: 320.4937pt x 180.2748pt.
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 651.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 741.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1580,16 +1685,10 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [23
 
-]
-\openout4 = `sem_mediation.vrb'.
-
- (./sem_mediation.vrb)
-Overfull \vbox (7.91817pt too high) detected at line 687
- []
-
+ <./figures/simpleMediationPathDiagram.pdf>]
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 687.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 765.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1599,12 +1698,9 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [24
 
 ]
-\openout4 = `sem_mediation.vrb'.
-
- (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 720.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 798.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1616,7 +1712,7 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 ]
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 741.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 830.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1626,12 +1722,18 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [26
 
 ]
-\openout4 = `sem_mediation.vrb'.
 
- (./sem_mediation.vrb)
+pdfTeX warning: pdflatex (file ./figures/adamsKlpsExample1_two_models.pdf): PDF
+ inclusion: found PDF version <1.7>, but at most version <1.5> allowed
+<figures/adamsKlpsExample1_two_models.pdf, id=263, 963.6pt x 542.025pt>
+File: figures/adamsKlpsExample1_two_models.pdf Graphic file (type pdf)
+<use figures/adamsKlpsExample1_two_models.pdf>
+Package pdftex.def Info: figures/adamsKlpsExample1_two_models.pdf  used on inpu
+t line 842.
+(pdftex.def)             Requested size: 256.39594pt x 144.22314pt.
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 779.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 842.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1640,15 +1742,13 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [27
 
-]
-File: figures/simpleMediationPathDiagram.pdf Graphic file (type pdf)
-<use figures/simpleMediationPathDiagram.pdf>
-Package pdftex.def Info: figures/simpleMediationPathDiagram.pdf  used on input 
-line 789.
-(pdftex.def)             Requested size: 320.4937pt x 180.2748pt.
+ <./figures/adamsKlpsExample1_two_models.pdf>]
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 789.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 865.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1658,9 +1758,12 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [28
 
 ]
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 848.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 900.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1670,9 +1773,12 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [29
 
 ]
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 848.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 935.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1682,18 +1788,12 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [30
 
 ]
+\openout4 = `sem_mediation.vrb'.
 
-LaTeX Font Warning: Font shape `OT1/opensans-TLF/m/sc' undefined
-(Font)              using `OT1/opensans-TLF/m/n' instead on input line 861.
-
-File: figures/simpleMediationPathDiagram.pdf Graphic file (type pdf)
-<use figures/simpleMediationPathDiagram.pdf>
-Package pdftex.def Info: figures/simpleMediationPathDiagram.pdf  used on input 
-line 861.
-(pdftex.def)             Requested size: 256.39594pt x 144.22314pt.
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 861.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 970.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1703,17 +1803,15 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [31
 
 ]
-LaTeX Font Info:    Font shape `OT1/opensans-TLF/m/sc' will be
-(Font)              scaled to size 9.49997pt on input line 873.
-<figures/mediationTriadPathDiagram.pdf, id=284, 963.6pt x 542.025pt>
-File: figures/mediationTriadPathDiagram.pdf Graphic file (type pdf)
-<use figures/mediationTriadPathDiagram.pdf>
-Package pdftex.def Info: figures/mediationTriadPathDiagram.pdf  used on input l
-ine 873.
-(pdftex.def)             Requested size: 256.39594pt x 144.22314pt.
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
+Overfull \vbox (7.91817pt too high) detected at line 1006
+ []
+
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 873.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1006.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1722,16 +1820,13 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [32
 
- <./figures/mediationTriadPathDiagram.pdf>]
-<figures/multipleMediationPathDiagrams.pdf, id=310, 963.6pt x 542.025pt>
-File: figures/multipleMediationPathDiagrams.pdf Graphic file (type pdf)
-<use figures/multipleMediationPathDiagrams.pdf>
-Package pdftex.def Info: figures/multipleMediationPathDiagrams.pdf  used on inp
-ut line 883.
-(pdftex.def)             Requested size: 320.4937pt x 180.2748pt.
+]
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 883.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1039.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1740,18 +1835,10 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [33
 
- <./figures/multipleMediationPathDiagrams.pdf>]
-LaTeX Font Info:    Font shape `OT1/opensans-TLF/b/n' will be
-(Font)              scaled to size 9.49997pt on input line 895.
-<figures/adamsKlpsExample1PathDiagram.pdf, id=335, 963.6pt x 542.025pt>
-File: figures/adamsKlpsExample1PathDiagram.pdf Graphic file (type pdf)
-<use figures/adamsKlpsExample1PathDiagram.pdf>
-Package pdftex.def Info: figures/adamsKlpsExample1PathDiagram.pdf  used on inpu
-t line 895.
-(pdftex.def)             Requested size: 320.4937pt x 180.2748pt.
+]
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 895.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1060.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1760,13 +1847,13 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [34
 
- <./figures/adamsKlpsExample1PathDiagram.pdf>]
+]
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 919.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1098.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1776,12 +1863,14 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [35
 
 ]
-\openout4 = `sem_mediation.vrb'.
-
- (./sem_mediation.vrb)
+File: figures/simpleMediationPathDiagram.pdf Graphic file (type pdf)
+<use figures/simpleMediationPathDiagram.pdf>
+Package pdftex.def Info: figures/simpleMediationPathDiagram.pdf  used on input 
+line 1108.
+(pdftex.def)             Requested size: 320.4937pt x 180.2748pt.
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 948.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1108.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1791,12 +1880,9 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [36
 
 ]
-\openout4 = `sem_mediation.vrb'.
-
- (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 971.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1167.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1806,12 +1892,9 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [37
 
 ]
-\openout4 = `sem_mediation.vrb'.
-
- (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1004.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1167.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1821,12 +1904,16 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [38
 
 ]
-\openout4 = `sem_mediation.vrb'.
-
- (./sem_mediation.vrb)
+LaTeX Font Info:    Font shape `OT1/Merriwthr-OsF/m/sc' will be
+(Font)              scaled to size 10.0pt on input line 1180.
+File: figures/simpleMediationPathDiagram.pdf Graphic file (type pdf)
+<use figures/simpleMediationPathDiagram.pdf>
+Package pdftex.def Info: figures/simpleMediationPathDiagram.pdf  used on input 
+line 1180.
+(pdftex.def)             Requested size: 256.39594pt x 144.22314pt.
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1029.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1180.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1836,17 +1923,18 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [39
 
 ]
-<figures/adamsKlpsExample1PathDiagramWithValues.pdf, id=387, 963.6pt x 542.025p
-t>
-File: figures/adamsKlpsExample1PathDiagramWithValues.pdf Graphic file (type pdf
-)
-<use figures/adamsKlpsExample1PathDiagramWithValues.pdf>
-Package pdftex.def Info: figures/adamsKlpsExample1PathDiagramWithValues.pdf  us
-ed on input line 1041.
-(pdftex.def)             Requested size: 320.4937pt x 180.2748pt.
+
+pdfTeX warning: pdflatex (file ./figures/mediationTriadPathDiagram.pdf): PDF in
+clusion: found PDF version <1.7>, but at most version <1.5> allowed
+<figures/mediationTriadPathDiagram.pdf, id=353, 1024.30678pt x 341.35529pt>
+File: figures/mediationTriadPathDiagram.pdf Graphic file (type pdf)
+<use figures/mediationTriadPathDiagram.pdf>
+Package pdftex.def Info: figures/mediationTriadPathDiagram.pdf  used on input l
+ine 1192.
+(pdftex.def)             Requested size: 256.39594pt x 85.44278pt.
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1041.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1192.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1855,10 +1943,16 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [40
 
- <./figures/adamsKlpsExample1PathDiagramWithValues.pdf>]
+ <./figures/mediationTriadPathDiagram.pdf>]
+<figures/multipleMediationPathDiagrams.pdf, id=376, 963.6pt x 542.025pt>
+File: figures/multipleMediationPathDiagrams.pdf Graphic file (type pdf)
+<use figures/multipleMediationPathDiagrams.pdf>
+Package pdftex.def Info: figures/multipleMediationPathDiagrams.pdf  used on inp
+ut line 1202.
+(pdftex.def)             Requested size: 320.4937pt x 180.2748pt.
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1063.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1202.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1867,10 +1961,22 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [41
 
-]
+ <./figures/multipleMediationPathDiagrams.pdf>]
+LaTeX Font Info:    Font shape `OT1/opensans-TLF/b/n' will be
+(Font)              scaled to size 9.49997pt on input line 1214.
+
+
+pdfTeX warning: pdflatex (file ./figures/adamsKlpsExample1PathDiagram.pdf): PDF
+ inclusion: found PDF version <1.7>, but at most version <1.5> allowed
+<figures/adamsKlpsExample1PathDiagram.pdf, id=401, 1024.30678pt x 341.35529pt>
+File: figures/adamsKlpsExample1PathDiagram.pdf Graphic file (type pdf)
+<use figures/adamsKlpsExample1PathDiagram.pdf>
+Package pdftex.def Info: figures/adamsKlpsExample1PathDiagram.pdf  used on inpu
+t line 1214.
+(pdftex.def)             Requested size: 320.4937pt x 106.80347pt.
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1086.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1214.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1879,10 +1985,13 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [42
 
-]
+ <./figures/adamsKlpsExample1PathDiagram.pdf>]
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1104.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1238.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1892,15 +2001,12 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [43
 
 ]
-<figures/bootstrappingDiagram.pdf, id=432, 963.6pt x 542.025pt>
-File: figures/bootstrappingDiagram.pdf Graphic file (type pdf)
-<use figures/bootstrappingDiagram.pdf>
-Package pdftex.def Info: figures/bootstrappingDiagram.pdf  used on input line 1
-116.
-(pdftex.def)             Requested size: 320.4937pt x 180.2748pt.
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1116.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1267.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1909,14 +2015,13 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [44
 
- <./figures/bootstrappingDiagram.pdf>]
-LaTeX Font Info:    Font shape `OT1/opensans-TLF/m/n' will be
-(Font)              scaled to size 6.93497pt on input line 1164.
-LaTeX Font Info:    Font shape `OT1/opensans-TLF/m/n' will be
-(Font)              scaled to size 5.22498pt on input line 1164.
+]
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1164.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1290.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1926,9 +2031,12 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [45
 
 ]
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1164.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1323.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1937,24 +2045,13 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [46
 
-
 ]
 \openout4 = `sem_mediation.vrb'.
 
- (./sem_mediation.vrb
-LaTeX Font Info:    Trying to load font information for OMS+cmtt on input line 
-21.
-LaTeX Font Info:    No file OMScmtt.fd. on input line 21.
-
-
-LaTeX Font Warning: Font shape `OMS/cmtt/m/n' undefined
-(Font)              using `OMS/cmsy/m/n' instead
-(Font)              for symbol `textbraceleft' on input line 21.
-
-)
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1196.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1348.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1964,19 +2061,21 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [47
 
 ]
-\openout4 = `sem_mediation.vrb'.
 
- (./sem_mediation.vrb
-<figure/sem-unnamed-chunk-16-1.pdf, id=473, 505.89pt x 505.89pt>
-File: figure/sem-unnamed-chunk-16-1.pdf Graphic file (type pdf)
-<use figure/sem-unnamed-chunk-16-1.pdf>
-Package pdftex.def Info: figure/sem-unnamed-chunk-16-1.pdf  used on input line 
-6.
-(pdftex.def)             Requested size: 208.31894pt x 208.31938pt.
+pdfTeX warning: pdflatex (file ./figures/adamsKlpsExample1PathDiagramWithValues
+.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowe
+d
+<figures/adamsKlpsExample1PathDiagramWithValues.pdf, id=452, 1024.30678pt x 341
+.35529pt>
+File: figures/adamsKlpsExample1PathDiagramWithValues.pdf Graphic file (type pdf
 )
+<use figures/adamsKlpsExample1PathDiagramWithValues.pdf>
+Package pdftex.def Info: figures/adamsKlpsExample1PathDiagramWithValues.pdf  us
+ed on input line 1360.
+(pdftex.def)             Requested size: 320.4937pt x 106.80347pt.
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1212.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1360.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1985,13 +2084,10 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [48
 
- <./figure/sem-unnamed-chunk-16-1.pdf>]
-\openout4 = `sem_mediation.vrb'.
-
- (./sem_mediation.vrb)
+ <./figures/adamsKlpsExample1PathDiagramWithValues.pdf>]
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1239.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1382.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2003,7 +2099,7 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 ]
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1260.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1405.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2013,11 +2109,9 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [50
 
 ]
-LaTeX Font Info:    Font shape `OT1/Merriwthr-OsF/m/sc' will be
-(Font)              scaled to size 10.0pt on input line 1278.
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1278.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1423.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2027,12 +2121,15 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [51
 
 ]
-\openout4 = `sem_mediation.vrb'.
-
- (./sem_mediation.vrb)
+<figures/bootstrappingDiagram.pdf, id=494, 963.6pt x 542.025pt>
+File: figures/bootstrappingDiagram.pdf Graphic file (type pdf)
+<use figures/bootstrappingDiagram.pdf>
+Package pdftex.def Info: figures/bootstrappingDiagram.pdf  used on input line 1
+435.
+(pdftex.def)             Requested size: 320.4937pt x 180.2748pt.
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1303.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1435.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2041,20 +2138,14 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [52
 
-]
-\openout4 = `sem_mediation.vrb'.
-
- (./sem_mediation.vrb
-<figure/sem-unnamed-chunk-19-1.pdf, id=506, 505.89pt x 505.89pt>
-File: figure/sem-unnamed-chunk-19-1.pdf Graphic file (type pdf)
-<use figure/sem-unnamed-chunk-19-1.pdf>
-Package pdftex.def Info: figure/sem-unnamed-chunk-19-1.pdf  used on input line 
-6.
-(pdftex.def)             Requested size: 208.31894pt x 208.31938pt.
-)
+ <./figures/bootstrappingDiagram.pdf>]
+LaTeX Font Info:    Font shape `OT1/opensans-TLF/m/n' will be
+(Font)              scaled to size 6.93497pt on input line 1483.
+LaTeX Font Info:    Font shape `OT1/opensans-TLF/m/n' will be
+(Font)              scaled to size 5.22498pt on input line 1483.
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1319.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1483.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2063,13 +2154,10 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [53
 
- <./figure/sem-unnamed-chunk-19-1.pdf>]
-\openout4 = `sem_mediation.vrb'.
-
- (./sem_mediation.vrb)
+]
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1339.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1483.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2078,13 +2166,22 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [54
 
+
 ]
 \openout4 = `sem_mediation.vrb'.
 
- (./sem_mediation.vrb)
+ (./sem_mediation.vrb
+LaTeX Font Info:    Trying to load font information for OMS+cmtt on input line 
+21.
+ (/usr/share/texmf/tex/latex/R/tex/latex/omscmtt.fd
+File: omscmtt.fd 
+)
+LaTeX Font Info:    Font shape `OMS/cmtt/m/n' in size <8> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 21.
+)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1366.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1515.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2094,11 +2191,19 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [55
 
 ]
-LaTeX Font Info:    Font shape `OT1/opensans-TLF/m/it' will be
-(Font)              scaled to size 8.54997pt on input line 1404.
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb
+<figure/sem-unnamed-chunk-26-1.pdf, id=536, 505.89pt x 505.89pt>
+File: figure/sem-unnamed-chunk-26-1.pdf Graphic file (type pdf)
+<use figure/sem-unnamed-chunk-26-1.pdf>
+Package pdftex.def Info: figure/sem-unnamed-chunk-26-1.pdf  used on input line 
+6.
+(pdftex.def)             Requested size: 208.31894pt x 208.31938pt.
+)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1404.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1531.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2107,13 +2212,13 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [56
 
-]
+ <./figure/sem-unnamed-chunk-26-1.pdf>]
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1433.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1558.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2123,12 +2228,9 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [57
 
 ]
-\openout4 = `sem_mediation.vrb'.
-
- (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1466.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1579.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2138,19 +2240,9 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [58
 
 ]
-\openout4 = `sem_mediation.vrb'.
-
- (./sem_mediation.vrb
-<figure/sem-unnamed-chunk-25-1.pdf, id=545, 505.89pt x 505.89pt>
-File: figure/sem-unnamed-chunk-25-1.pdf Graphic file (type pdf)
-<use figure/sem-unnamed-chunk-25-1.pdf>
-Package pdftex.def Info: figure/sem-unnamed-chunk-25-1.pdf  used on input line 
-27.
-(pdftex.def)             Requested size: 320.4937pt x 320.49551pt.
-)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1519.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1597.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2160,12 +2252,12 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [59
 
 ]
-Overfull \vbox (174.6359pt too high) detected at line 1519
- []
+\openout4 = `sem_mediation.vrb'.
 
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1519.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1622.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2174,11 +2266,20 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [60
 
+]
+\openout4 = `sem_mediation.vrb'.
 
- <./figure/sem-unnamed-chunk-25-1.pdf>]
+ (./sem_mediation.vrb
+<figure/sem-unnamed-chunk-29-1.pdf, id=569, 505.89pt x 505.89pt>
+File: figure/sem-unnamed-chunk-29-1.pdf Graphic file (type pdf)
+<use figure/sem-unnamed-chunk-29-1.pdf>
+Package pdftex.def Info: figure/sem-unnamed-chunk-29-1.pdf  used on input line 
+6.
+(pdftex.def)             Requested size: 208.31894pt x 208.31938pt.
+)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1537.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1638.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2187,15 +2288,13 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [61
 
-]
-File: figures/simpleMediationPathDiagram.pdf Graphic file (type pdf)
-<use figures/simpleMediationPathDiagram.pdf>
-Package pdftex.def Info: figures/simpleMediationPathDiagram.pdf  used on input 
-line 1547.
-(pdftex.def)             Requested size: 320.4937pt x 180.2748pt.
+ <./figure/sem-unnamed-chunk-29-1.pdf>]
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1547.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1658.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2205,9 +2304,12 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [62
 
 ]
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1564.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1685.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2217,14 +2319,9 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [63
 
 ]
-<figures/parallelDiagram.pdf, id=581, 963.6pt x 542.025pt>
-File: figures/parallelDiagram.pdf Graphic file (type pdf)
-<use figures/parallelDiagram.pdf>
-Package pdftex.def Info: figures/parallelDiagram.pdf  used on input line 1573.
-(pdftex.def)             Requested size: 320.4937pt x 180.2748pt.
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1573.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1888.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2233,10 +2330,15 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [64
 
- <./figures/parallelDiagram.pdf>]
+]
+<figures/parallelDiagram.pdf, id=596, 963.6pt x 542.025pt>
+File: figures/parallelDiagram.pdf Graphic file (type pdf)
+<use figures/parallelDiagram.pdf>
+Package pdftex.def Info: figures/parallelDiagram.pdf  used on input line 1897.
+(pdftex.def)             Requested size: 256.39594pt x 144.22314pt.
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1599.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1897.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2245,15 +2347,10 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [65
 
-]
-File: figures/adamsKlpsExample1PathDiagram.pdf Graphic file (type pdf)
-<use figures/adamsKlpsExample1PathDiagram.pdf>
-Package pdftex.def Info: figures/adamsKlpsExample1PathDiagram.pdf  used on inpu
-t line 1617.
-(pdftex.def)             Requested size: 320.4937pt x 180.2748pt.
+ <./figures/parallelDiagram.pdf>]
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1617.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1927.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2263,15 +2360,14 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [66
 
 ]
-<figures/adamsKlpsParallel.pdf, id=616, 963.6pt x 542.025pt>
-File: figures/adamsKlpsParallel.pdf Graphic file (type pdf)
-<use figures/adamsKlpsParallel.pdf>
-Package pdftex.def Info: figures/adamsKlpsParallel.pdf  used on input line 1629
-.
-(pdftex.def)             Requested size: 320.4937pt x 180.2748pt.
+File: figures/adamsKlpsExample1PathDiagram.pdf Graphic file (type pdf)
+<use figures/adamsKlpsExample1PathDiagram.pdf>
+Package pdftex.def Info: figures/adamsKlpsExample1PathDiagram.pdf  used on inpu
+t line 1945.
+(pdftex.def)             Requested size: 256.39594pt x 85.44278pt.
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1629.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1945.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2280,14 +2376,16 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [67
 
- <./figures/adamsKlpsParallel.pdf>]
-
-Class beamer Warning: Frame text is shrunk by a factor of 13.69019 percent inst
-ead of 5 percent on input line 1665.
-
+]
+<figures/adamsKlpsParallel.pdf, id=632, 963.6pt x 542.025pt>
+File: figures/adamsKlpsParallel.pdf Graphic file (type pdf)
+<use figures/adamsKlpsParallel.pdf>
+Package pdftex.def Info: figures/adamsKlpsParallel.pdf  used on input line 1957
+.
+(pdftex.def)             Requested size: 256.39594pt x 144.22314pt.
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1665.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1957.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2296,13 +2394,10 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [68
 
-]
-\openout4 = `sem_mediation.vrb'.
-
- (./sem_mediation.vrb)
+ <./figures/adamsKlpsParallel.pdf>]
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1715.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1993.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2312,12 +2407,12 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [69
 
 ]
-Overfull \vbox (163.1404pt too high) detected at line 1715
- []
+\openout4 = `sem_mediation.vrb'.
 
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1715.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2027.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2326,14 +2421,13 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [70
 
-
 ]
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1731.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2057.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2343,9 +2437,12 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [71
 
 ]
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1754.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2087.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2355,9 +2452,12 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [72
 
 ]
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1754.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2109.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2372,7 +2472,7 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
  (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1812.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2132.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2382,12 +2482,9 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [74
 
 ]
-Overfull \vbox (240.7515pt too high) detected at line 1812
- []
-
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1812.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2153.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2396,14 +2493,10 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [75
 
-
 ]
-\openout4 = `sem_mediation.vrb'.
-
- (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1852.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2153.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2413,12 +2506,12 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [76
 
 ]
-Overfull \vbox (67.47372pt too high) detected at line 1852
- []
+\openout4 = `sem_mediation.vrb'.
 
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1852.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2185.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2427,14 +2520,13 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [77
 
-
 ]
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1868.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2215.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2444,14 +2536,12 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [78
 
 ]
-<figures/serialDiagram.pdf, id=698, 963.6pt x 542.025pt>
-File: figures/serialDiagram.pdf Graphic file (type pdf)
-<use figures/serialDiagram.pdf>
-Package pdftex.def Info: figures/serialDiagram.pdf  used on input line 1878.
-(pdftex.def)             Requested size: 320.4937pt x 180.2748pt.
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1878.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2245.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2460,10 +2550,13 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [79
 
- <./figures/serialDiagram.pdf>]
+]
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1900.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2267.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2473,14 +2566,12 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [80
 
 ]
-File: figures/adamsKlpsExample1PathDiagram.pdf Graphic file (type pdf)
-<use figures/adamsKlpsExample1PathDiagram.pdf>
-Package pdftex.def Info: figures/adamsKlpsExample1PathDiagram.pdf  used on inpu
-t line 1918.
-(pdftex.def)             Requested size: 320.4937pt x 180.2748pt.
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1918.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2289.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2490,15 +2581,12 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [81
 
 ]
-<figures/adamsKlpsSerial1.pdf, id=735, 963.6pt x 542.025pt>
-File: figures/adamsKlpsSerial1.pdf Graphic file (type pdf)
-<use figures/adamsKlpsSerial1.pdf>
-Package pdftex.def Info: figures/adamsKlpsSerial1.pdf  used on input line 1930.
+\openout4 = `sem_mediation.vrb'.
 
-(pdftex.def)             Requested size: 320.4937pt x 180.2748pt.
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1930.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2321.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2507,10 +2595,13 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [82
 
- <./figures/adamsKlpsSerial1.pdf>]
+]
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1958.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2351.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2520,9 +2611,12 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [83
 
 ]
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1979.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2381.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2537,7 +2631,7 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
  (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2013.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2404.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2547,12 +2641,12 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [85
 
 ]
-Overfull \vbox (10.47372pt too high) detected at line 2013
- []
+\openout4 = `sem_mediation.vrb'.
 
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2013.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2428.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2561,14 +2655,18 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [86
 
-
 ]
-\openout4 = `sem_mediation.vrb'.
 
- (./sem_mediation.vrb)
+pdfTeX warning: pdflatex (file ./figures/serialDiagram.pdf): PDF inclusion: fou
+nd PDF version <1.7>, but at most version <1.5> allowed
+<figures/serialDiagram.pdf, id=752, 1024.30678pt x 341.35529pt>
+File: figures/serialDiagram.pdf Graphic file (type pdf)
+<use figures/serialDiagram.pdf>
+Package pdftex.def Info: figures/serialDiagram.pdf  used on input line 2442.
+(pdftex.def)             Requested size: 320.4937pt x 106.80347pt.
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2029.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2442.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2577,16 +2675,10 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [87
 
-]
-<figures/adamsKlpsSerial1_restricted.pdf, id=787, 963.6pt x 542.025pt>
-File: figures/adamsKlpsSerial1_restricted.pdf Graphic file (type pdf)
-<use figures/adamsKlpsSerial1_restricted.pdf>
-Package pdftex.def Info: figures/adamsKlpsSerial1_restricted.pdf  used on input
- line 2058.
-(pdftex.def)             Requested size: 160.24684pt x 90.13326pt.
+ <./figures/serialDiagram.pdf>]
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2058.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2464.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2595,13 +2687,15 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [88
 
- <./figures/adamsKlpsSerial1_restricted.pdf>]
-\openout4 = `sem_mediation.vrb'.
-
- (./sem_mediation.vrb)
+]
+File: figures/adamsKlpsExample1PathDiagram.pdf Graphic file (type pdf)
+<use figures/adamsKlpsExample1PathDiagram.pdf>
+Package pdftex.def Info: figures/adamsKlpsExample1PathDiagram.pdf  used on inpu
+t line 2478.
+(pdftex.def)             Requested size: 320.4937pt x 106.80347pt.
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2088.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2478.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2611,12 +2705,18 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [89
 
 ]
-\openout4 = `sem_mediation.vrb'.
 
- (./sem_mediation.vrb)
+pdfTeX warning: pdflatex (file ./figures/adamsKlpsSerial1.pdf): PDF inclusion: 
+found PDF version <1.7>, but at most version <1.5> allowed
+<figures/adamsKlpsSerial1.pdf, id=785, 1024.30678pt x 341.35529pt>
+File: figures/adamsKlpsSerial1.pdf Graphic file (type pdf)
+<use figures/adamsKlpsSerial1.pdf>
+Package pdftex.def Info: figures/adamsKlpsSerial1.pdf  used on input line 2490.
+
+(pdftex.def)             Requested size: 320.4937pt x 106.80347pt.
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2104.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2490.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2625,13 +2725,10 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [90
 
-]
-\openout4 = `sem_mediation.vrb'.
-
- (./sem_mediation.vrb)
+ <./figures/adamsKlpsSerial1.pdf>]
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2163.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2522.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2641,12 +2738,9 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [91
 
 ]
-Overfull \vbox (221.7515pt too high) detected at line 2163
- []
-
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2163.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2542.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2655,16 +2749,13 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [92
 
-
 ]
-File: figures/adamsKlpsSerial1.pdf Graphic file (type pdf)
-<use figures/adamsKlpsSerial1.pdf>
-Package pdftex.def Info: figures/adamsKlpsSerial1.pdf  used on input line 2182.
+\openout4 = `sem_mediation.vrb'.
 
-(pdftex.def)             Requested size: 320.4937pt x 180.2748pt.
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2182.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2568.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2674,15 +2765,12 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [93
 
 ]
-<figures/adamsKlpsSerial2.pdf, id=838, 963.6pt x 542.025pt>
-File: figures/adamsKlpsSerial2.pdf Graphic file (type pdf)
-<use figures/adamsKlpsSerial2.pdf>
-Package pdftex.def Info: figures/adamsKlpsSerial2.pdf  used on input line 2194.
+\openout4 = `sem_mediation.vrb'.
 
-(pdftex.def)             Requested size: 320.4937pt x 180.2748pt.
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2194.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2596.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2691,10 +2779,13 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [94
 
- <./figures/adamsKlpsSerial2.pdf>]
+]
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2237.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2624.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2704,9 +2795,12 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [95
 
 ]
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2237.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2647.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2716,12 +2810,18 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [96
 
 ]
-\openout4 = `sem_mediation.vrb'.
 
- (./sem_mediation.vrb)
+pdfTeX warning: pdflatex (file ./figures/adamsKlpsSerial1_restricted.pdf): PDF 
+inclusion: found PDF version <1.7>, but at most version <1.5> allowed
+<figures/adamsKlpsSerial1_restricted.pdf, id=841, 1024.30678pt x 341.35529pt>
+File: figures/adamsKlpsSerial1_restricted.pdf Graphic file (type pdf)
+<use figures/adamsKlpsSerial1_restricted.pdf>
+Package pdftex.def Info: figures/adamsKlpsSerial1_restricted.pdf  used on input
+ line 2675.
+(pdftex.def)             Requested size: 224.3446pt x 74.75983pt.
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2279.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2675.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2730,13 +2830,13 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [97
 
-]
-Overfull \vbox (86.47372pt too high) detected at line 2279
- []
+ <./figures/adamsKlpsSerial1_restricted.pdf>]
+\openout4 = `sem_mediation.vrb'.
 
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2279.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2697.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2745,14 +2845,13 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [98
 
-
 ]
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2295.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2732.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2762,14 +2861,12 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [99
 
 ]
-<figures/adamsKlpsHybrid.pdf, id=890, 963.6pt x 542.025pt>
-File: figures/adamsKlpsHybrid.pdf Graphic file (type pdf)
-<use figures/adamsKlpsHybrid.pdf>
-Package pdftex.def Info: figures/adamsKlpsHybrid.pdf  used on input line 2307.
-(pdftex.def)             Requested size: 320.4937pt x 180.2748pt.
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2307.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2756.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2778,13 +2875,13 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [100
 
- <./figures/adamsKlpsHybrid.pdf>]
+]
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2348.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2787.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2794,12 +2891,12 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [101
 
 ]
-Overfull \vbox (76.97372pt too high) detected at line 2348
- []
+\openout4 = `sem_mediation.vrb'.
 
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2348.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2814.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2808,14 +2905,13 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [102
 
-
 ]
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2364.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2842.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2825,14 +2921,12 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [103
 
 ]
-<figures/practiceDiagram.pdf, id=931, 963.6pt x 542.025pt>
-File: figures/practiceDiagram.pdf Graphic file (type pdf)
-<use figures/practiceDiagram.pdf>
-Package pdftex.def Info: figures/practiceDiagram.pdf  used on input line 2376.
-(pdftex.def)             Requested size: 320.4937pt x 180.2748pt.
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2376.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2864.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2841,15 +2935,15 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [104
 
- <./figures/practiceDiagram.pdf>]
-File: figures/simpleMediationPathDiagram.pdf Graphic file (type pdf)
-<use figures/simpleMediationPathDiagram.pdf>
-Package pdftex.def Info: figures/simpleMediationPathDiagram.pdf  used on input 
-line 2389.
-(pdftex.def)             Requested size: 256.39594pt x 144.22314pt.
+]
+File: figures/adamsKlpsSerial1.pdf Graphic file (type pdf)
+<use figures/adamsKlpsSerial1.pdf>
+Package pdftex.def Info: figures/adamsKlpsSerial1.pdf  used on input line 2879.
+
+(pdftex.def)             Requested size: 320.4937pt x 106.80347pt.
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2389.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2879.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2859,14 +2953,15 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [105
 
 ]
-<figures/semMedDiagram.pdf, id=961, 963.6pt x 542.025pt>
-File: figures/semMedDiagram.pdf Graphic file (type pdf)
-<use figures/semMedDiagram.pdf>
-Package pdftex.def Info: figures/semMedDiagram.pdf  used on input line 2403.
-(pdftex.def)             Requested size: 256.39594pt x 144.22314pt.
+<figures/adamsKlpsSerial2.pdf, id=906, 963.6pt x 542.025pt>
+File: figures/adamsKlpsSerial2.pdf Graphic file (type pdf)
+<use figures/adamsKlpsSerial2.pdf>
+Package pdftex.def Info: figures/adamsKlpsSerial2.pdf  used on input line 2891.
+
+(pdftex.def)             Requested size: 320.4937pt x 180.2748pt.
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2403.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2891.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2875,13 +2970,10 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [106
 
- <./figures/semMedDiagram.pdf>]
-\openout4 = `sem_mediation.vrb'.
-
- (./sem_mediation.vrb)
+ <./figures/adamsKlpsSerial2.pdf>]
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2477.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2934.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2891,12 +2983,9 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [107
 
 ]
-Overfull \vbox (365.02928pt too high) detected at line 2477
- []
-
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2477.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2934.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2905,11 +2994,13 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [108
 
-
 ]
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2512.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2968.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2919,9 +3010,12 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [109
 
 ]
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2531.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 3000.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2931,9 +3025,12 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [110
 
 ]
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2549.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 3033.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2943,9 +3040,15 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [111
 
 ]
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
+Overfull \vbox (15.6404pt too high) detected at line 3070
+ []
+
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2569.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 3070.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2955,9 +3058,14 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [112
 
 ]
+<figures/adamsKlpsHybrid.pdf, id=963, 963.6pt x 542.025pt>
+File: figures/adamsKlpsHybrid.pdf Graphic file (type pdf)
+<use figures/adamsKlpsHybrid.pdf>
+Package pdftex.def Info: figures/adamsKlpsHybrid.pdf  used on input line 3082.
+(pdftex.def)             Requested size: 320.4937pt x 180.2748pt.
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2590.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 3082.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2966,10 +3074,13 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [113
 
-]
+ <./figures/adamsKlpsHybrid.pdf>]
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2615.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 3115.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2979,9 +3090,12 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [114
 
 ]
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2637.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 3146.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2991,9 +3105,12 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [115
 
 ]
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2682.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 3173.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -3008,7 +3125,7 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
  (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2817.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 3197.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -3018,12 +3135,12 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [117
 
 ]
-Overfull \vbox (552.41815pt too high) detected at line 2817
- []
+\openout4 = `sem_mediation.vrb'.
 
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2817.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 3231.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -3032,14 +3149,15 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [118
 
-
 ]
-\openout4 = `sem_mediation.vrb'.
-
- (./sem_mediation.vrb)
+<figures/practiceDiagram.pdf, id=1014, 963.6pt x 542.025pt>
+File: figures/practiceDiagram.pdf Graphic file (type pdf)
+<use figures/practiceDiagram.pdf>
+Package pdftex.def Info: figures/practiceDiagram.pdf  used on input line 3243.
+(pdftex.def)             Requested size: 320.4937pt x 180.2748pt.
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2916.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 3243.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -3048,13 +3166,19 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [119
 
-]
-Overfull \vbox (283.47372pt too high) detected at line 2916
+ <./figures/practiceDiagram.pdf>]
+File: figures/simpleMediationPathDiagram.pdf Graphic file (type pdf)
+<use figures/simpleMediationPathDiagram.pdf>
+Package pdftex.def Info: figures/simpleMediationPathDiagram.pdf  used on input 
+line 3262.
+(pdftex.def)             Requested size: 320.4937pt x 180.2748pt.
+
+Overfull \vbox (12.77641pt too high) detected at line 3262
  []
 
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2916.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 3262.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -3063,11 +3187,15 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [120
 
-
 ]
+<figures/semMedDiagram.pdf, id=1043, 963.6pt x 542.025pt>
+File: figures/semMedDiagram.pdf Graphic file (type pdf)
+<use figures/semMedDiagram.pdf>
+Package pdftex.def Info: figures/semMedDiagram.pdf  used on input line 3277.
+(pdftex.def)             Requested size: 256.39594pt x 144.22314pt.
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2955.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 3277.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -3076,10 +3204,13 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [121
 
-] (./sem_mediation.bbl)
+ <./figures/semMedDiagram.pdf>]
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2964.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 3309.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -3087,6 +3218,120 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
  []
 
 [122
+
+]
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
+File: images/watermarkUU.png Graphic file (type png)
+<use images/watermarkUU.png>
+Package pdftex.def Info: images/watermarkUU.png  used on input line 3335.
+(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
+
+Overfull \hbox (0.82268pt too wide) has occurred while \output is active
+[][] []
+ []
+
+[123
+
+]
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
+File: images/watermarkUU.png Graphic file (type png)
+<use images/watermarkUU.png>
+Package pdftex.def Info: images/watermarkUU.png  used on input line 3366.
+(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
+
+Overfull \hbox (0.82268pt too wide) has occurred while \output is active
+[][] []
+ []
+
+[124
+
+]
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
+File: images/watermarkUU.png Graphic file (type png)
+<use images/watermarkUU.png>
+Package pdftex.def Info: images/watermarkUU.png  used on input line 3393.
+(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
+
+Overfull \hbox (0.82268pt too wide) has occurred while \output is active
+[][] []
+ []
+
+[125
+
+]
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
+File: images/watermarkUU.png Graphic file (type png)
+<use images/watermarkUU.png>
+Package pdftex.def Info: images/watermarkUU.png  used on input line 3427.
+(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
+
+Overfull \hbox (0.82268pt too wide) has occurred while \output is active
+[][] []
+ []
+
+[126
+
+]
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
+File: images/watermarkUU.png Graphic file (type png)
+<use images/watermarkUU.png>
+Package pdftex.def Info: images/watermarkUU.png  used on input line 3457.
+(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
+
+Overfull \hbox (0.82268pt too wide) has occurred while \output is active
+[][] []
+ []
+
+[127
+
+]
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
+File: images/watermarkUU.png Graphic file (type png)
+<use images/watermarkUU.png>
+Package pdftex.def Info: images/watermarkUU.png  used on input line 3479.
+(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
+
+Overfull \hbox (0.82268pt too wide) has occurred while \output is active
+[][] []
+ []
+
+[128
+
+]
+File: images/watermarkUU.png Graphic file (type png)
+<use images/watermarkUU.png>
+Package pdftex.def Info: images/watermarkUU.png  used on input line 3513.
+(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
+
+Overfull \hbox (0.82268pt too wide) has occurred while \output is active
+[][] []
+ []
+
+[129
+
+] (./sem_mediation.bbl)
+File: images/watermarkUU.png Graphic file (type png)
+<use images/watermarkUU.png>
+Package pdftex.def Info: images/watermarkUU.png  used on input line 4034.
+(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
+
+Overfull \hbox (0.82268pt too wide) has occurred while \output is active
+[][] []
+ []
+
+[130
 
 ]
 \tf@nav=\write7
@@ -3099,43 +3344,39 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout9 = `sem_mediation.snm'.
 
  (./sem_mediation.aux)
-
-LaTeX Font Warning: Some font shapes were not available, defaults substituted.
-
 Package rerunfilecheck Info: File `sem_mediation.out' has not changed.
-(rerunfilecheck)             Checksum: 935DCA370F49B8868566CF6DA1C9E863;634.
+(rerunfilecheck)             Checksum: C8951ECB850A809641AD5A67A7A12ABD;415.
  ) 
 Here is how much of TeX's memory you used:
- 25906 strings out of 478579
- 459856 string characters out of 5857458
- 753803 words of memory out of 5000000
- 42820 multiletter control sequences out of 15000+600000
- 506993 words of font info for 167 fonts, out of 8000000 for 9000
+ 22996 strings out of 479304
+ 417120 string characters out of 5869780
+ 725011 words of memory out of 5000000
+ 39128 multiletter control sequences out of 15000+600000
+ 504726 words of font info for 161 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 128i,18n,124p,488b,663s stack positions out of 5000i,500n,10000p,200000b,80000s
-{c:/texlive/2021/texmf-dist/fonts/enc/dvips/opensans/a_n3lhbv.enc}{c:/texlive
-/2021/texmf-dist/fonts/enc/dvips/merriweather/merriwthr_jjwbah.enc}{c:/texlive/
-2021/texmf-dist/fonts/enc/dvips/opensans/a_iz27ck.enc}{c:/texlive/2021/texmf-di
-st/fonts/enc/dvips/merriweather/merriwthr_okb76x.enc}<c:/texlive/2021/texmf-dis
-t/fonts/type1/public/newtx/LibertineMathMI.pfb><c:/texlive/2021/texmf-dist/font
-s/type1/public/newtx/LibertineMathMI7.pfb><c:/texlive/2021/texmf-dist/fonts/typ
-e1/public/newtx/LibertineMathRM.pfb><c:/texlive/2021/texmf-dist/fonts/type1/sor
-kin/merriweather/Merriwthr-Italic.pfb><c:/texlive/2021/texmf-dist/fonts/type1/s
-orkin/merriweather/Merriwthr-Regular.pfb><c:/texlive/2021/texmf-dist/fonts/type
-1/public/newtx/NewTXMI.pfb><c:/texlive/2021/texmf-dist/fonts/type1/ascender/ope
-nsans/OpenSans-Bold.pfb><c:/texlive/2021/texmf-dist/fonts/type1/ascender/opensa
-ns/OpenSans-Italic.pfb><c:/texlive/2021/texmf-dist/fonts/type1/ascender/opensan
-s/OpenSans-Regular.pfb><c:/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/
-cm/cmitt10.pfb><c:/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8
-.pfb><c:/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb><c:/
-texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.pfb><c:/texlive/20
-21/texmf-dist/fonts/type1/public/newtx/txexs.pfb><c:/texlive/2021/texmf-dist/fo
-nts/type1/public/newtx/txmiaX.pfb><c:/texlive/2021/texmf-dist/fonts/type1/publi
-c/newtx/txsys.pfb>
-Output written on sem_mediation.pdf (122 pages, 1735306 bytes).
+ 131i,15n,132p,489b,657s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/share/texlive/texmf-dist/fonts/enc/dvips/opensans/a_n3lhbv.enc}{/usr/sh
+are/texlive/texmf-dist/fonts/enc/dvips/merriweather/merriwthr_jjwbah.enc}{/usr/
+share/texlive/texmf-dist/fonts/enc/dvips/opensans/a_iz27ck.enc}{/usr/share/texl
+ive/texmf-dist/fonts/enc/dvips/merriweather/merriwthr_okb76x.enc}</usr/share/te
+xlive/texmf-dist/fonts/type1/public/newtx/LibertineMathMI.pfb></usr/share/texli
+ve/texmf-dist/fonts/type1/public/newtx/LibertineMathMI7.pfb></usr/share/texlive
+/texmf-dist/fonts/type1/public/newtx/LibertineMathRM.pfb></usr/share/texlive/te
+xmf-dist/fonts/type1/sorkin/merriweather/Merriwthr-Italic.pfb></usr/share/texli
+ve/texmf-dist/fonts/type1/sorkin/merriweather/Merriwthr-Regular.pfb></usr/share
+/texlive/texmf-dist/fonts/type1/ascender/opensans/OpenSans-Bold.pfb></usr/share
+/texlive/texmf-dist/fonts/type1/ascender/opensans/OpenSans-Italic.pfb></usr/sha
+re/texlive/texmf-dist/fonts/type1/ascender/opensans/OpenSans-Regular.pfb></usr/
+share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmitt10.pfb></usr/share
+/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texliv
+e/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.pfb></usr/share/texlive/texmf
+-dist/fonts/type1/public/newtx/txexs.pfb></usr/share/texlive/texmf-dist/fonts/t
+ype1/public/newtx/txmiaX.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/
+newtx/txsys.pfb>
+Output written on sem_mediation.pdf (130 pages, 1282419 bytes).
 PDF statistics:
- 1199 PDF objects out of 1200 (max. 8388607)
- 913 compressed objects within 10 object streams
- 259 named destinations out of 1000 (max. 500000)
- 213 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1234 PDF objects out of 1440 (max. 8388607)
+ 978 compressed objects within 10 object streams
+ 277 named destinations out of 1000 (max. 500000)
+ 224 words of extra memory for PDF output out of 10000 (max. 10000000)
 
