@@ -1,9 +1,2 @@
-install.packages(c("knitr",
-                   "ggplot2",
-                   "MASS",
-                   "DAAG",
-                   "xtable",
-                   "MLmetrics",
-                   "dplyr",
-                   "mvtnorm"),
+install.packages("semTools",
                  repos = "http://cloud.r-project.org")
