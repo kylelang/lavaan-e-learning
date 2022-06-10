@@ -1,14 +1,24 @@
 ### Title:    Support Functions for Examples
 ### Author:   Kyle M. Lang
 ### Created:  2017-08-24
-### Modified: 2020-02-24
+### Modified: 2022-06-03
 
 
 ## Create an basic ggplot object using my preferred styling:
-gg0 <- function(x, y, points = TRUE) {
-    p0 <- ggplot(mapping = aes(x = x, y = y)) +
+gg0 <- function(x, y = NULL, points = TRUE) {
+    if(is.null(y))
+        p0 <- ggplot(mapping = aes(x = x))
+    else
+        p0 <- ggplot(mapping = aes(x = x, y = y))
+
+    p0 <- p0 +
         theme_classic() +
-        theme(text = element_text(family = "Courier", size = 16))
+        theme(text = element_text(family = "Courier", size = 16),
+              plot.title = element_text(family = "Courier",
+                                        size = 16,
+                                        face = "bold",
+                                        hjust = 0.5)
+              )
 
     if(points) p0 + geom_point()
     else       p0
@@ -57,22 +67,32 @@ wrap <- function(x, w = 60) {
 ### http://r.789695.n4.nabble.com/Sweave-and-Slides-Beamer-td3451049.html
 
 ## Break up long output into "paragraphs":
-paragraphs <- function(x) {
+paragraphs <- function(x, lines = NULL) {
+    #if(class(x) == "paragraphs") {
+    #    text <- unlist(x)
+    #    if(!is.null(lines))
+    #        text <- text[lines]
+    #}
+    #else
     text <- capture.output(x)
 
-    if(text[length(text)] == "") text <- text[-length(text)]
+    if(tail(text, 1) == "") text <- text[-length(text)]
 
     blanks <- which(text == "")
-    if(blanks[1] != 1) blanks <- c(-1, blanks)
+    if(length(blanks) > 0) {
+        if(blanks[1] != 1) blanks <- c(-1, blanks)
 
-    starts <- blanks + 1
-    ends   <- c(blanks[-1] - 1, length(text))
-
-    res <- list()
-    for(i in 1 : length(starts))
-        res <- c(res, list(text[starts[i] : ends[i]]))
-
-    class(res) <- c("paragraphs", res$class)
+        starts <- blanks + 1
+        ends   <- c(blanks[-1] - 1, length(text))
+        
+        res <- list()
+        for(i in 1 : length(starts))
+            res <- c(res, list(text[starts[i] : ends[i]]))
+    }
+    else
+        res <- text
+    
+    class(res) <- c("paragraphs", class(res))
     res
 }
 
@@ -100,12 +120,15 @@ print.paragraphs <- function(x, ...) {
 ###--------------------------------------------------------------------------###
 
 ## Print only a subset of a summary object:
-partSummary <- function(x, which = Inf, stars = FALSE) {
-    tmp <- paragraphs(print(summary(x), signif.stars = stars))
+partSummary <- function(x, which = Inf, lines = NULL, stars = FALSE) {
+    out <- paragraphs(print(summary(x), signif.stars = stars))
 
     check <- length(which) == 1 && is.infinite(which)
-    if(check) tmp
-    else      tmp[which]
+    if(!check) out <- out[which]
+
+    if(!is.null(lines)) out <- paragraphs(out, lines)
+
+    out
 }
 
 ###--------------------------------------------------------------------------###

@@ -66,45 +66,11 @@ knit_theme$set('edit-kwrite')
 
 %%%--------------------------------------------------------------------------%%%
 
-\section{Moderation}
+\section{Moderation Basics}
 
 %%%--------------------------------------------------------------------------%%%
 
-\begin{frame}{Mediation vs. Moderation}
-
-  What do we mean by \emph{mediation} and \emph{moderation}?\\
-  \va
-  Mediation and moderation are types of hypotheses, not statistical methods or
-  models.
-  \begin{itemize}
-  \item Mediation tells us \emph{how} one variable influences another.
-    \vb
-  \item Moderation tells us \emph{when} one variable influences another.
-  \end{itemize}
-  
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}{Contextualizing Example}
-
-  Say we wish to explore the process underlying exercise habits.\\
-  \va
-  Our first task is to operationalize ``exercise habits''
-  \begin{itemize}
-    \item DV: Hours per week spent in vigorous exercise (\emph{exerciseAmount}).
-  \end{itemize}
-  \va
-  We may initial ask: what predicts devoting more time to exercise?
-  \begin{itemize}
-    \item IV: Concerns about negative health outcomes (\emph{healthConcerns}).
-  \end{itemize}
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}{Focal Effect Only}
+\begin{frame}{Refresher: Focal Effect Only}
 
   The $healthConcerns \rightarrow exerciseAmount$ relation is our \emph{focal
   effect}
@@ -124,10 +90,10 @@ knit_theme$set('edit-kwrite')
 
 %%%--------------------------------------------------------------------------%%%
 
-\begin{frame}{The Mediation Hypothesis}
-
+\begin{frame}{Refresher: Mediation Hypothesis}
+  
   A mediation analysis will attempt to describe how health concerns affect
-amount of exercise.
+  amount of exercise.
   \va
   \begin{itemize}
   \item The \emph{how} is operationalized in terms of intermediary variables.
@@ -145,7 +111,7 @@ amount of exercise.
 
 %%%--------------------------------------------------------------------------%%%
 
-\begin{frame}{Moderation Hypothesis}
+\begin{frame}{Refresher: Moderation Hypothesis}
 
   A moderation hypothesis will attempt to describe when health concerns affect
   amount of exercise.
@@ -167,50 +133,6 @@ amount of exercise.
 \end{frame}
 
 %%%--------------------------------------------------------------------------%%%
-\comment{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Conditional Process Analysis}
-
-  Conditional process analysis combines the mediation and moderation hypotheses
-  into models of moderated mediation.
-  \va
-  \begin{itemize}
-  \item Given a mediation model describing \emph{how} health concerns affect
-    exercise amount, what other variables may modulate the indirect effect.
-  \end{itemize}
-  
-\end{frame}
-}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}{Moderation}
-
-  So far we've been discussing \emph{additive models}.
-  \vb
-  \begin{itemize}
-  \item Additive models allow us to examine the partial effects of several
-    predictors on some outcome.
-    \vc
-    \begin{itemize}
-    \item The effect of one predictor does not change based on the values of
-      other predictors.
-    \end{itemize}
-  \end{itemize}
-  \va
-  Now, we'll discuss \emph{moderation}.
-  \vb
-  \begin{itemize}
-  \item Moderation allows us to ask \emph{when} one variable, $X$, affects
-    another variable, $Y$.
-    \vc
-    \begin{itemize}
-    \item We're considering the conditional effects of $X$ on $Y$ given certain
-      levels of a third variable $Z$.
-    \end{itemize}
-  \end{itemize}
-
-\end{frame}
-
-%------------------------------------------------------------------------------%
 
 \begin{frame}{Equations}
 
@@ -218,8 +140,8 @@ amount of exercise.
   \begin{align*}
     Y = \beta_0 + \beta_1X + \beta_2Z + \varepsilon
   \end{align*}
-  This additive equation assumes that $X$ and $Z$ are independent
-  predictors of $Y$.\\
+  This additive equation assumes that $X$ and $Z$ are independent predictors of 
+  $Y$.\\
   \va
   When $X$ and $Z$ are independent predictors, the following are true:
   \vb
@@ -323,9 +245,40 @@ amount of exercise.
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Conceptual vs. Analytic Diagrams}
+  
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      
+      \begin{figure}
+        \includegraphics[width=\textwidth]{figures/modConcept.pdf}
+      \end{figure}
+      
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      
+      \only<1>{
+        \begin{figure}
+          \includegraphics[width=\textwidth]{figures/modAnalytic1.pdf}
+        \end{figure}
+      }
+      \only<2>{
+        \begin{figure}
+          \includegraphics[width=\textwidth]{figures/modAnalytic2.pdf}
+        \end{figure}
+      }
+      
+    \end{column}
+  \end{columns}
+  
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
 
 \begin{frame}{Testing Moderation}
+  
   Now, we have an estimable regression model that quantifies the linear
   moderation we hypothesized.
   \vb
@@ -380,7 +333,7 @@ amount of exercise.
 
 \begin{frame}{Example}
 
-  Still looking at the \emph{diabetes} dataset.
+  Looking at the \emph{diabetes} dataset.
   \va
   \begin{itemize}
   \item We suspect that patients' BMIs are predictive of their average blood
@@ -392,15 +345,37 @@ amount of exercise.
 
 \end{frame}
 
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Diagrams}
+  
+  
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      
+      \begin{figure}
+        \includegraphics[width=\textwidth]{figures/diabetes_example_concept.pdf}
+      \end{figure}
+      
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      
+      \begin{figure}
+        \includegraphics[width=\textwidth]{figures/diabetes_example_analytic.pdf}
+      \end{figure}
+      
+    \end{column}
+  \end{columns}
+    
+\end{frame}
+
 \watermarkoff%-----------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
-<<echo = FALSE>>=
-dDat <- readRDS("../data/diabetes.rds")
-@
-
 <<>>=
+dDat <- readRDS("../data/diabetes.rds")
+
 ## Focal Effect:
 out0 <- lm(bp ~ bmi, data = dDat)
 partSummary(out0, -c(1, 2))
@@ -499,9 +474,1247 @@ p2 + scale_colour_manual(name = "", values = c("Mean LDL" = "black",
 
 \end{frame}
 
+%------------------------------------------------------------------------------%
+
+\begin{frame}[fragile]{Example}
+
+  Of course, we can fit the same model in \pkg{lavaan}.
+  
+<<>>=
+library(lavaan)
+
+## Specify the model:
+mod <- "bp ~ 1 + bmi + ldl + bmi:ldl"
+
+## Use a dplyr pipeline to create the product term and estimate the model:
+lavOut <- sem(mod1, data = dDat)
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile]{Example}
+ 
+<<>>=
+partSummary(lavOut, 5:7)
+@
+
+\end{frame}
+   
+%%%--------------------------------------------------------------------------%%%
+
+\sectionslide{Post Hoc Analysis}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Probing the Interaction}
+
+  A significant estimate of $\beta_3$ tells us that the effect of $X$ on $Y$ 
+  depends on the level of $Z$, but nothing more.
+  \vb
+  \begin{itemize}
+  \item The plot above gives a descriptive illustration of the pattern, but does 
+    not support statistical inference.
+    \vc
+    \begin{itemize}
+    \item The three conditional effects we plotted look different, but we cannot 
+      say much about how they differ with only the plot and $\hat{\beta}_3$.
+    \end{itemize}
+    \vb
+  \item This is the purpose of \emph{probing} the interaction.
+    \vc
+    \begin{itemize}
+    \item Try to isolate areas of $Z$'s distribution in which $X \rightarrow Y$
+      effect is significant and areas where it is not.
+    \end{itemize}
+  \end{itemize}
+  
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{Probing the Interaction}
+
+  The most popular method of probing interactions is to do a so-called 
+  \emph{simple slopes} analysis.
+  \vc
+  \begin{itemize}
+  \item Pick-a-point approach
+    \vc
+  \item Spotlight analysis
+  \end{itemize}
+  \vb
+  In simple slopes analysis, we test if the slopes of the conditional effects 
+  plotted above are significantly different from zero.
+  \vc
+  \begin{itemize}
+  \item To do so, we test the significance of \emph{simple slopes}.
+  \end{itemize}
+  
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{Simple Slopes}
+
+  Recall the derivation of our moderated equation:
+  \begin{align*}
+    Y = \beta_0 + \beta_1X + \beta_2Z + \beta_3XZ + \varepsilon
+  \end{align*}
+  We can reverse the process by factoring out $X$ and reordering terms:
+  \begin{align*}
+    Y = \beta_0 + (\beta_1 + \beta_3Z)X + \beta_2Z + \varepsilon
+  \end{align*}
+  Where $f(Z) = \beta_1 + \beta_3Z$ is the linear function that shows how the 
+  relationship between $X$ and $Y$ changes as a function of $Z$.\\
+  \vc
+  \begin{center}
+  \ovalbox{$f(Z)$ is the \emph{simple slope}.}
+  \end{center}
+  \begin{itemize}
+  \item By plugging different values of $Z$ into $f(Z)$, we get the value of the 
+    conditional effect of $X$ on $Y$ at the chosen level of $Z$.
+  \end{itemize}
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{Significance Testing of Simple Slopes}
+
+  The values of $Z$ used to define the simple slopes are arbitrary.
+  \vc
+  \begin{itemize}
+  \item The most common choice is: $\left\{ (\bar{Z} - SD_Z), \bar{Z},
+    (\bar{Z} + SD_Z) \right\}$
+    \vc
+  \item You could also use interesting percentiles of $Z$'s distribution.
+  \end{itemize}
+  \vb
+  The standard error of a simple slope is given by:
+  \begin{align*}
+    SE_{f(Z)} = \sqrt{SE_{\beta_1}^2 + 2Z \cdot \text{COV}(\beta_1, \beta_3) + 
+      Z^2 SE_{\beta_3}^2}
+  \end{align*}
+  So, you can test the significance of a simple slope by constructing a Wald 
+  statistic or confidence interval using $\hat{f}(Z)$ and $SE_{f(Z)}$:
+  \begin{align*}
+    t = \frac{\hat{f}(Z)}{SE_{f(Z)}},~~
+    CI = \hat{f}(Z) \pm t_{crit} \times SE_{f(Z)}
+  \end{align*}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile]{Example}
+
+<<out.width = "50%">>=
+library(rockchalk)
+
+## Prepare the metadata with rockchalk::plotSlopes():
+psOut <- plotSlopes(out2, plotx = "bmi", modx = "ldl")
+@ 
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile]{Example}
+
+<<>>=
+## Test the simple slopes with rockchalk::testSlopes():
+tsOut <- testSlopes(psOut)
+
+tsOut$hypotests
+@ 
+  
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile]{Example}
+
+We can use \pkg{semTools} routines to probe interaction in \pkg{lavaan} models.
+\vc
+\begin{itemize}
+\item \src{probe2WayMC()}: simple slopes/intercepts analysis
+\vc
+\item \src{plotProbe()}: simple slopes plots
+\end{itemize}
+
+<<>>=
+library(semTools)
+
+## Estimate and test simple slopes and simple intercepts:
+ssOut <- probe2WayMC(lavOut, 
+                     nameX = c("bmi", "ldl", "bmi:ldl"),
+                     nameY = "bp",
+                     modVar = "ldl",
+                     valProbe = quantile(dDat$ldl, c(0.25, 0.50, 0.75))
+                     )
+@ 
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile]{Example}
+
+<<>>=
+## View the results:
+ssOut
+@ 
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile]{Example}
+
+<<out.width = "55%">>=
+## Plot the simple slopes:
+plotProbe(ssOut, xlim = range(dDat$bmi), xlab = "BMI", ylab = "BP")
+@ 
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\sectionslide{Latent Variable Interactions}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[shrink = 5]{Latent Variable Interactions}
+  
+  When we have two observed variables interacting to predict a latent variable,
+  our job is easy:
+  \begin{enumerate}
+    \item Construct the product term of the observed focal and moderator
+      variables
+    \item Use the observed focal, moderator, and interaction variables to
+      predict the latent DV
+  \end{enumerate}
+  \va If we want to model moderation when at least on of the predictors is
+  latent, things get more difficult.
+  \begin{itemize}
+  \item If the moderator is observed and discrete, we can use multiple group
+    modeling
+  \item If the moderator is continuous and/or latent, then we need fancier
+    methods
+  \end{itemize}
+  \va
+  Two basic approaches:
+  \begin{enumerate}
+  \item Methods based on products of manifest variables
+  \item Methods based on directly estimating the products of latent variables
+  \end{enumerate}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\subsection{Products of Manifest Variables}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Computing Interaction Indicators}
+  
+  The simplest approach is to create observed product terms and directly use 
+  those terms as indicators of the interaction construct.  
+  \vb
+  \begin{itemize}
+  \item Naively indicating an interaction construct with the raw product terms
+    is probably sub-optimal 
+    \vb
+  \item Collinearity among the interaction indicators and the raw items can
+    cause estimation problems 
+    \vb
+  \item From a modeling perspective, we'd like to interpret out final model
+    holistically
+  \end{itemize}
+  \va
+  Two recommended approaches:
+  \vb
+  \begin{enumerate}
+  \item Orthogonalization through residual centering \citep{littleEtAl:2006}.
+    \vb
+  \item Double mean centering \citep{linEtAl:2010}.
+  \end{enumerate}
+  
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[allowframebreaks]{Orthogonalization}
+  
+  Say we want to estimate the moderated effect of $Z$ on the $X \rightarrow Y$
+  effect, where $X$, $Y$, and $Z$ are latent variables indicated by $\{x_1, x_2,
+  x_3\}$, $\{y_1, y_2, y_3\}$, and $\{z_1, z_2, z_3\}$, respectively.\\ 
+  \va
+  Orthogonalization is performed by: 
+  \vb
+  \begin{enumerate}
+  \item Construct all possible product terms: 
+    $\{x_1z_1, x_1z_2, x_1z_3, x_2z_1, x_2z_2, x_2z_3, x_3z_1, x_3z_2, x_3z_3\}$.
+    \vb
+  \item Regress each product term onto all observed indicators of $X$ and $Z$:
+    \begin{align*}
+      \widehat{x_1z_1} &= \alpha + \beta_1x_1 + \beta_2x_2 + \beta_2x_3 + 
+      \beta_4z_1 + \beta_5z_2 + \beta_6z_3\\
+      \widehat{x_2z_1} &= \alpha + \beta_1x_1 + \beta_2x_2 + \beta_2x_3 + 
+      \beta_4z_1 + \beta_5z_2 + \beta_6z_3\\
+      &~~~\vdots\\
+      \widehat{x_3z_3} &= \alpha + \beta_1x_1 + \beta_2x_2 + \beta_2x_3 + 
+      \beta_4z_1 + \beta_5z_2 + \beta_6z_3
+    \end{align*}
+    
+    \pagebreak
+    
+  \item Calculate each product term's residual:
+    \begin{align*}
+      \delta_{x1z1} &= x_1z_1 - \widehat{x_1z_1}\\
+      \delta_{x1z1} &= x_2z_1 - \widehat{x_2z_1}\\
+      &~~~\vdots\\
+      \delta_{x3z3} &= x_3z_3 - \widehat{x_3z_3}
+    \end{align*}
+    \vb
+  \item Use these residuals to indicate a latent interaction construct.
+  \end{enumerate}
+  
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Orthogonalization}
+  
+  \begin{figure}
+    \includegraphics[width=\textwidth]{figures/orthoDiagram.pdf} 
+  \end{figure}
+  
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile, allowframebreaks]{Example}
+  
+<<>>=
+dat1 <- readRDS("../data/lecture12Data.rds")
+
+mod1 <- "
+fX =~ x1 + x2 + x3
+fZ =~ z1 + z2 + z3
+fY =~ y1 + y2 + y3
+"
+
+out1 <- cfa(mod1, data = dat1, std.lv = TRUE)
+@ 
+
+\pagebreak
+
+<<>>=
+partSummary(out1, 1:4)
+@ 
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile, allowframebreaks]{Example}
+
+<<>>=
+partSummary(out1, 5)
+@ 
+
+\pagebreak
+
+<<>>=
+partSummary(out1, 6)
+@ 
+
+\pagebreak
+
+<<>>=
+partSummary(out1, 7)
+@ 
+
+\pagebreak
+
+<<>>=
+fitMeasures(out1, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "srmr"))
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile, allowframebreaks]{Example}
+  
+  Now, we'll fit the additive model as an SEM.
+  
+<<>>=
+mod2 <- "
+fX =~ x1 + x2 + x3
+fZ =~ z1 + z2 + z3
+fY =~ y1 + y2 + y3
+
+fY ~ fX + fZ
+"
+
+out2 <- sem(mod2, data = dat1, std.lv = TRUE)
+@ 
+
+\pagebreak
+
+<<>>=
+partSummary(out2, 1:4)
+@ 
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile, allowframebreaks]{Example}
+
+<<>>=
+partSummary(out2, 5)
+@ 
+
+\pagebreak
+
+<<>>=
+partSummary(out2, 6:7)
+@ 
+
+\pagebreak
+
+<<>>=
+partSummary(out2, 8)
+@ 
+
+\pagebreak
+
+<<>>=
+fitMeasures(out2, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "srmr"))
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile, allowframebreaks]{Example}
+  
+<<>>=
+library(dplyr)
+
+## Set aside a copy of the predictor data for later use:
+preds <- select(dat1, matches("x\\d|z\\d")) %>% as.matrix()
+
+## Construct product terms:
+products <- mutate(dat1,
+                   x1z1 = x1 * z1,
+                   x1z2 = x1 * z2,
+                   x1z3 = x1 * z3,
+                   
+                   x2z1 = x2 * z1,
+                   x2z2 = x2 * z2,
+                   x2z3 = x2 * z3,
+                   
+                   x3z1 = x3 * z1,
+                   x3z2 = x3 * z2,
+                   x3z3 = x3 * z3,
+                   .keep = "none")
+@ 
+
+\pagebreak
+
+<<>>=
+## Residualize the product terms:
+products <- sapply(products, 
+                   function(y, x) lm(y ~ x)$resid, 
+                   x = preds)
+
+## Join data pieces:
+dat2 <- data.frame(dat1, products)
+@ 
+
+\pagebreak
+
+<<>>=
+mod3 <- "
+fX  =~ x1 + x2 + x3
+fZ  =~ z1 + z2 + z3
+fY  =~ y1 + y2 + y3
+fXZ =~ x1z1 + x1z2 + x1z3 + x2z1 + x2z2 + x2z3 + x3z1 + x3z2 + x3z3
+
+fY ~ fX + fZ + fXZ
+
+fX ~~ 0*fXZ
+fZ ~~ 0*fXZ
+
+x1z1 ~~ x1z2 + x1z3 + x2z1 + x3z1
+x1z2 ~~ x1z3 + x2z2 + x3z2
+x1z3 ~~ x2z3 + x3z3
+
+x2z1 ~~ x2z2 + x2z3 + x3z1
+x2z2 ~~ x2z3 + x3z2
+x2z3 ~~ x3z3
+
+x3z1 ~~ x3z2 + x3z3
+x3z2 ~~ x3z3
+"
+@
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile, allowframebreaks]{Example}
+ 
+<<>>=
+out3 <- sem(mod3, data = dat2, std.lv = TRUE, meanstructure = TRUE)
+
+partSummary(out3, 5, 1:14)
+@ 
+
+\pagebreak
+
+<<>>=
+partSummary(out3, 5, c(1, 2, 15:24))
+@ 
+
+\pagebreak
+
+<<>>=
+partSummary(out3, 6:7, -(14:39))
+@ 
+
+\pagebreak
+
+<<>>=
+fitMeasures(out3, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "srmr"))
+
+probeOut3 <- probe2WayRC(fit      = out3,
+                         nameX    = c("fX", "fZ", "fXZ"),
+                         nameY    = "fY",
+                         modVar   = "fZ",
+                         valProbe = c(-1, 0, 1)
+                         )
+
+probeOut3$SimpleSlope
+@ 
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile]{Example}
+
+<<out.width = "55%">>=
+plotProbe(probeOut3, xlim = c(-3, 3), xlab = "fX", ylab = "fY")
+@ 
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+\comment{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Matched Pair Variation}
+  
+  If you are willing to assume exchangeable indicators (i.e.,
+  \emph{essential tau equivalence}), then you don't need to compute
+  all possible interaction terms.\\ 
+  \va 
+  The so-called \emph{matched pair} strategy suggests constructing only 
+  three product variables (when each first order construct has three indicators).
+  \va
+  \begin{itemize}
+    \item Each product variable is simply constructed from paired
+      indicators of the two first-order constructs:
+      \begin{align*}
+        x_1z_1 &= x_1 \times z_1\\
+        x_2z_2 &= x_2 \times z_2\\
+        x_3z_3 &= x_3 \times z_3
+      \end{align*}
+  \end{itemize}   
+
+\end{frame}
+  
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile, allowframebreaks]{Example}
+  
+<<eval = FALSE>>=
+mod4 <- "
+fX =~ x1 + x2 + x3
+fZ =~ z1 + z2 + z3
+fY =~ y1 + y2 + y3
+fXZ =~ x1z1R + x2z2R + x3z3R
+
+fY ~ fX + fZ + fXZ
+
+fX ~~ fZ
+fX ~~ 0*fXZ
+fZ ~~ 0*fXZ
+"
+
+out4 <- 
+    sem(mod4, data = dat2, std.lv = TRUE, meanstructure = TRUE)
+summary(out4)
+@ 
+
+\pagebreak
+
+<<eval = FALSE>>=
+round(fitMeasures(out4)[c("chisq", "df", "pvalue", "cfi", 
+                          "tli", "rmsea", "srmr")], 3)
+
+fitMeasures(out3)[c("aic", "bic")]
+fitMeasures(out4)[c("aic", "bic")]
+
+probeOut4 <- probe2WayRC(fit = out4,
+                         nameX = c("fX", "fZ", "fXZ"),
+                         nameY = "fY",
+                         modVar = "fZ",
+                         valProbe = c(-1, 0, 1)
+                         )
+
+probeOut4$SimpleSlope
+@
+
+\end{frame}
+}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[allowframebreaks]{Double Mean Centering}
+  
+  We could also specify the interaction factor using double mean centering. 
+  \vb
+  \begin{enumerate}
+  \item Mean center every indicator of $X$ and $Z$:
+    \begin{align*}
+      x_1^c &= x_1 - \bar{x}_1\\
+      &~~~\vdots\\
+      z_1^c &= z_1 - \bar{z}_1\\
+      &~~~\vdots
+    \end{align*}
+  \item Use the centered indicators to construct all possible product terms: 
+    $\{x_1^cz_1^c,$ $x_1^cz_2^c,$ $x_1^cz_3^c,$ $x_2^cz_1^c,$
+    $x_2^cz_2^c,$ $x_2^cz_3^c,$ $x_3^cz_1^c,$ $x_3^cz_2^c,$ $x_3^cz_3^c\}$.
+    
+    \pagebreak
+    
+  \item Mean center each product term:
+    \begin{align*}
+      (x_1z_1)^c &= x_1^cz_1^c - \overline{x_1^cz_1^c}\\
+      (x_1z_2)^c &= x_1^cz_2^c - \overline{x_1^cz_2^c}\\
+      &~~~\vdots\\
+      (x_3z_3)^c &= x_3^cz_3^c - \overline{x_3^cz_3^c}
+    \end{align*}
+    \vb
+  \item Use the mean centered indicators of $X$ and $Z$, and the
+    ``double mean centered'' product terms to specify the latent
+    interaction model.
+  \end{enumerate}
+  
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Double Mean Centering}
+  
+  \begin{figure}
+    \includegraphics[width=\textwidth]{figures/dmcDiagram.pdf}
+  \end{figure}
+  
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile]{Example}
+  
+<<>>=
+## Mean-center the predictor variables:
+preds <- scale(preds, scale = FALSE) %>% as.data.frame()
+
+## Construct and mean-center the product terms:
+products <- mutate(preds,
+                   x1z1 = x1 * z1,
+                   x1z2 = x1 * z2,
+                   x1z3 = x1 * z3,
+                   
+                   x2z1 = x2 * z1,
+                   x2z2 = x2 * z2,
+                   x2z3 = x2 * z3,
+                   
+                   x3z1 = x3 * z1,
+                   x3z2 = x3 * z2,
+                   x3z3 = x3 * z3,
+                   .keep = "none") %>%
+    scale(scale = FALSE)
+
+## Join the data pieces:
+dat3 <- select(dat1, matches("y\\d")) %>% data.frame(preds, products)
+@ 
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile]{Example}
+
+<<>>=
+mod4 <- "
+fX =~ x1 + x2 + x3
+fZ =~ z1 + z2 + z3
+fY =~ y1 + y2 + y3
+fXZ =~ x1z1 + x1z2 + x1z3 + x2z1 + x2z2 + x2z3 + x3z1 + x3z2 + x3z3
+
+fY ~ fX + fZ + fXZ
+
+x1z1 ~~ x1z2 + x1z3 + x2z1 + x3z1
+x1z2 ~~ x1z3 + x2z2 + x3z2
+x1z3 ~~ x2z3 + x3z3
+
+x2z1 ~~ x2z2 + x2z3 + x3z1
+x2z2 ~~ x2z3 + x3z2
+x2z3 ~~ x3z3
+
+x3z1 ~~ x3z2 + x3z3
+x3z2 ~~ x3z3
+"
+@ 
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile, allowframebreaks]{Example}
+ 
+<<>>=
+## Estimate the model:
+out4 <- sem(mod4, data = dat3, std.lv = TRUE)
+
+partSummary(out4, 5, 1:14)
+@ 
+
+\pagebreak
+
+<<>>=
+partSummary(out4, 5, c(1, 2, 15:24))
+@ 
+
+\pagebreak
+
+<<>>=
+partSummary(out4, 6:7, -(10:35))
+@ 
+
+\pagebreak
+
+<<>>=
+fitMeasures(out4, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "srmr"))
+
+probeOut4 <- probe2WayMC(fit      = out4,
+                         nameX    = c("fX", "fZ", "fXZ"),
+                         nameY    = "fY",
+                         modVar   = "fZ",
+                         valProbe = c(-1, 0, 1)
+                         )
+
+probeOut4$SimpleSlope
+@ 
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile]{Example}
+
+<<out.width = "55%">>=
+plotProbe(probeOut4, xlim = c(-3, 3), xlab = "fX", ylab = "fY")
+@ 
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Orthogonalization vs. Double Mean Centering}
+  
+  Orthogonalization and double mean centering tend to behave comparably, but 
+  each has its own strengths: 
+  \vb
+  \begin{itemize}
+    \item When $X$ and $Z$ are bivariate normally distributed, both methods 
+      produce the same results.
+      \vb
+    \item As $X$ and/or $Z$ stray from normality, orthogonalization produces 
+      biased estimates of the interaction effect, but double mean centering does 
+      not.
+      \vb
+    \item Orthogonalization ensures that the latent $XZ$ is perfectly 
+      independent of $X$ and $Z$.
+      \vc
+      \begin{itemize}
+        \item The $X$ and $Z$ parameters can be directly interpreted, without 
+          any conditioning
+      \end{itemize}
+  \end{itemize}
+  
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile, allowframebreaks]{Example}
+  
+  We can also use the \src{indProd()} function from \pkg{semTools} to create the 
+  product indicators.
+
+<<>>=
+## Use semTools to orthogonalize:
+dat2.2 <- indProd(data      = dat1,
+                  var1      = c("x1", "x2", "x3"),
+                  var2      = c("z1", "z2", "z3"),
+                  match     = FALSE,
+                  meanC     = FALSE,
+                  doubleMC  = FALSE,
+                  residualC = TRUE,
+                  namesProd = colnames(products)
+                  )
+
+## Compare to our manual results:
+all.equal(dat2[colnames(products)], 
+          dat2.2[colnames(products)],
+          check.attributes = FALSE)
+@ 
+
+\pagebreak
+
+<<>>=
+## Use semTools to double mean center:
+dat3.2 <- indProd(data      = dat1,
+                  var1      = c("x1", "x2", "x3"),
+                  var2      = c("z1", "z2", "z3"),
+                  match     = FALSE,
+                  meanC     = TRUE,
+                  doubleMC  = TRUE,
+                  residualC = FALSE,
+                  namesProd = colnames(products)
+                  )
+
+all.equal(dat3[colnames(products)], 
+          dat3.2[colnames(products)],
+          check.attributes = FALSE)
+@ 
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\subsection{Products of Latent Variables}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Estimating Products of Latent Variables}
+  
+  We can directly estimate the interaction between two latent variables with the
+  \emph{latent moderated structural equations} (LMS) method.
+  \va
+  \begin{itemize}
+  \item Introduced by \citet{kleinEtAl:1997} and formalized by
+    \citet{kleinMoosbrugger:2000} 
+    \vb
+  \item Currently only available in Mplus (via the \src{Xwith} command).
+    \vb
+  \item Uses numerical integration to estimate the unobserved latent interaction 
+    term
+  \end{itemize}
+  
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Estimating Products of Latent Variables}
+  
+  \textsc{LMS Strengths:}
+  \begin{itemize}
+    \item Tends to perform the best out of all available methods
+      \vb
+    \item No need to pre-process the data by manually computing
+      product terms
+      \vb
+    \item Pretty easy to implement if you have Mplus (see users guide
+      for examples).
+  \end{itemize}
+  \va
+  \textsc{LMS Weaknesses:}
+  \begin{itemize}
+  \item Only available in one (proprietary) software package
+    \vb
+  \item Numerical integration is very slow and precludes calculation
+    of most fit indices
+    \vb
+  \item LMS does not work with categorical observed moderators
+  \end{itemize}
+  
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile]{BSEM Example}
+
+<<eval = FALSE>>=
+mod <- "
+fX =~ x1 + x2 + x3
+fZ =~ z1 + z2 + z3
+fY =~ y1 + y2 + y3
+
+fY ~ fX + fZ + fX:fZ
+"
+
+out <- bsem(mod, data = dat1, std.lv = TRUE)
+
+summary(out)
+@ 
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\sectionslide{Multiple Moderation}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Starting Point}
+
+  So far, we've been looking at this type of model:
+
+  \begin{figure}
+    \includegraphics[width=0.7\textwidth]{figures/simpleConceptual.pdf}
+  \end{figure}
+
+  We've had one focal variable and one moderator.
+  \begin{itemize}
+    \item We've been asking questions about how the focal effect changes as a 
+      function of the moderator.
+    \item There's no reason we need to restrict ourselves to a single moderator.
+  \end{itemize}
+  
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Multiple Moderation}
+  
+  Maybe we suspect that the focal effect changes as a function of two other 
+  variables.
+  \begin{itemize}
+    \item We could fit this type of model:
+  \end{itemize}
+
+  \begin{figure}
+    \includegraphics[width=0.7\textwidth]{figures/twoModConceptual.pdf}
+  \end{figure}
+
+  Now, the focal effect of $X$ on $Y$ changes as a function of both $Z$ and $W$.
+  
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Multiple Moderation}
+  
+  The preceding diagram implies the following formula:
+  \begin{align*}
+    Y = \alpha + f(Z, W) X + \beta_2Z + \beta_3W + e,
+  \end{align*}\\
+  \va 
+  Taking $f(Z, W)$ to be the following simple slope:
+  \begin{align*}
+    f(Z, W) = \beta_1 + \beta_4Z + \beta_5W
+  \end{align*}\\
+  \va 
+  Produces the following analytic equation:
+  \begin{align*}
+    Y = \alpha + \beta_1X + \beta_2Z + \beta_3W + \beta_4XZ + \beta_5XW + e
+  \end{align*}\\
+  \va
+  We can easily fit this model in any regression software
+  \vb
+  \begin{itemize}
+  \item We can test for significant moderating effects of $Z$ and $W$ by testing 
+    for non-zero $\beta_4$ and $\beta_5$, respectively.
+  \end{itemize}
+  
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Multiple Moderation}
+  
+  Our analytic diagram is predictably extended:
+
+  \begin{figure}
+    \includegraphics[width=\textwidth]{figures/twoModAnalytic.pdf}
+  \end{figure}
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile, allowframebreaks]{Example}
+    
+<<>>=
+library(psych)
+library(rockchalk)
+dat1 <- readRDS("../data/bfiData1.rds")
+
+## Additive model:
+out1.1 <- lm(agree ~ conc + open + neuro, data = dat1)
+summary(out1.1)
+@
+
+\pagebreak
+
+<<>>=
+## Additive two-way interaction model:
+out1.2 <- lm(agree ~ open*conc + open*neuro, data = dat1)
+summary(out1.2)
+@
+
+\pagebreak
+
+<<>>=
+## Center 'conc' on interesting values for SS analysis:
+dat1$concLo  <- with(dat1, conc - quantile(conc, 0.25, na.rm = TRUE))
+dat1$concMid <- with(dat1, conc - quantile(conc, 0.5, na.rm = TRUE))
+dat1$concHi  <- with(dat1, conc - quantile(conc, 0.75, na.rm = TRUE))
+@
+
+\pagebreak
+
+<<>>=
+## Test simple slopes via centering:
+out1.2.1 <- lm(agree ~ open*concLo + neuro, data = dat1)
+summary(out1.2.1)
+@
+
+\pagebreak
+
+<<>>=
+out1.2.2 <- lm(agree ~ open*concMid + neuro, data = dat1)
+summary(out1.2.2)
+@ 
+
+\pagebreak
+
+<<>>=
+out1.2.3 <- lm(agree ~ open*concHi + neuro, data = dat1)
+summary(out1.2.3)
+@
+
+\pagebreak
+
+<<>>=
+## Plot the simple slopes:
+par(family = "serif", cex = 0.75)
+plotOut1.2 <- plotSlopes(model = out1.2,
+                         plotx = "open",
+                         modx = "conc",
+                         plotPoints = FALSE,
+                         modxVals =
+                             quantile(dat1$conc,
+                                      c(0.25, 0.5, 0.75),
+                                      na.rm = TRUE)
+                         )
+@ 
+
+\pagebreak
+
+<<>>=
+par(family = "serif", cex = 0.75)
+testOut1.2 <- testSlopes(plotOut1.2)
+plot(testOut1.2)
+@ 
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Moderated Moderation}
+  
+  The additive two-way interaction model is more flexible than the simple 
+  single-moderator model, but it still imposes constraints.
+  \va
+  \begin{itemize}
+    \item The moderating effect of $Z$ (or $W$) on the $X \rightarrow Y$ 
+      relation is assumed to be constant across levels of $W$ (or $Z$).
+      \vb
+    \item I.e., the moderation is not moderated
+  \end{itemize}
+  
+  \va
+  We can relax this constraint by modeling moderation of the moderated effect 
+  using a three-way interaction.
+  
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Moderated Moderation}
+  
+  Moderated moderation implies the following conceptual diagram:
+  
+  \begin{figure}
+    \includegraphics[width=\textwidth]{figures/threeWayConceptual.pdf}
+  \end{figure}
+  
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Moderated Moderation}
+  
+  The preceding conceptual diagram implies this analytic diagram:
+  
+  \begin{figure}
+    \includegraphics[width=\textwidth]{figures/threeWayAnalytic.pdf}
+  \end{figure}
+  
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[shrink = 5]{Moderated Moderation}
+  
+  The preceding diagram represents the following equation:
+  \begin{align*}
+    Y =& ~ \alpha + \beta_1X + \beta_2Z + \beta_3W +\\
+    &\beta_4XZ + \beta_5XW + \beta_6ZW + \beta_7XZW + e
+  \end{align*}\\
+  \vb
+  Which can be restructured into:
+  \begin{align*}
+    Y =& ~ \alpha + (\beta_1 + \beta_4Z + \beta_5W + \beta_7ZW)X + \\
+    &\beta_2Z + \beta_3W + \beta_6ZW + e\\
+    =& ~ \alpha + g(Z, W)X + \beta_2Z + \beta_3W + \beta_6ZW + e
+  \end{align*}\\
+  \vb 
+  With moderated moderation, the simple slope is given by:
+  \begin{align*}
+    g(Z, W) = \beta_1 + \beta_4Z + \beta_5W + \beta_7ZW
+  \end{align*}\\
+  \vb 
+  Which has the same structure as a single moderator model.
+  \vc
+  \begin{itemize}
+  \item Three-way simple slopes represent the moderated effect of $Z$ on the 
+    $X \rightarrow Y$ relation at conditional values of $W$.
+  \end{itemize}
+  
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile, allowframebreaks]{Example}
+    
+<<>>=
+## Three-way interaction model:
+out1.3 <- lm(agree ~ open*conc*neuro, data = dat1)
+summary(out1.3)
+@ 
+
+\pagebreak
+
+<<>>=
+## Test simple slopes via centering:
+dat1$neuroLo <-
+    with(dat1,
+         neuro - quantile(neuro, 0.05, na.rm = TRUE)
+         )
+dat1$neuroMid <- 
+    with(dat1, 
+         neuro - quantile(neuro, 0.5, na.rm = TRUE)
+         )
+dat1$neuroHi <-
+    with(dat1,
+         neuro - quantile(neuro, 0.95, na.rm = TRUE)
+         )
+@
+
+\pagebreak
+
+<<>>=
+out1.4.1 <- lm(agree ~ open*conc*neuroLo, data = dat1)
+summary(out1.4.1)
+@ 
+
+\pagebreak
+
+<<>>=
+out1.4.2 <- lm(agree ~ open*conc*neuroMid, data = dat1)
+summary(out1.4.2)
+@
+
+\pagebreak
+
+<<>>=
+out1.4.3 <- lm(agree ~ open*conc*neuroHi, data = dat1)
+summary(out1.4.3)
+@
+
+\pagebreak
+
+<<>>=
+## Construct product terms to facilitate J-N technique:
+dat1$openXneuro <- with(dat1, neuro*open)
+dat1$concXneuro <- with(dat1, neuro*conc)
+dat1$openXconc <- with(dat1, open*conc)
+dat1$openXconcXneuro <- with(dat1, open*conc*neuro)
+@
+
+\pagebreak
+
+<<>>=
+out1.5 <- lm(agree ~ open + conc + neuro +
+                 openXconc + openXneuro + concXneuro + openXconc*neuro,
+             data = dat1)
+summary(out1.5)
+sum(coef(out1.3) - coef(out1.5))# Same as above
+@ 
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile, allowframebreaks]{Example}
+  
+<<>>=
+par(family = "serif", cex = 0.75)
+plotOut1.5 <- plotSlopes(model = out1.5,
+                         plotx = "openXconc",
+                         modx = "neuro",
+                         plotPoints = FALSE,
+                         modxVals = 
+                         quantile(dat1$neuro,
+                                  c(0.25, 0.5, 0.75),
+                                  na.rm = TRUE)
+                         )
+@ 
+
+\pagebreak
+
+<<>>=
+par(family = "serif", cex = 0.75)
+testOut1.5 <- testSlopes(plotOut1.5)
+plot(testOut1.5)
+@ 
+
+\end{frame}
+
 \watermarkon %-----------------------------------------------------------------%
 
-\subsection{Categorical Moderators}
+\sectionslide{Categorical Moderators}
 
 %------------------------------------------------------------------------------%
 
@@ -625,1285 +1838,6 @@ p4 + geom_abline(slope     = coef(out66)["tangiblesat"],
 
 \end{column}
 \end{columns}
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}{Equations}
-
-  In simple additive MLR, we might have the following equation:
-  \begin{align}
-    Y = \alpha + \beta_1X + \beta_2Z + e_i \label{additiveEq}
-  \end{align}
-  This additive equation assumes that $X$ and $Z$ are independent
-  predictors of $Y$.\\
-  \va
-  When $X$ and $Z$ are independent predictors, the following
-  points are true:
-  \vb
-  \begin{itemize}
-  \item $X$ and $Z$ \emph{can} be correlated
-    \vb
-  \item $\beta_1$ and $\beta_2$ are \emph{partial} regression
-    coefficients
-    \vb
-  \item \red{The effect of $X$ on $Y$ is the same at \textbf{all levels} of
-    $Z$, and the effect of $Z$ on $Y$ is the same at \textbf{all
-      levels} of $X$}
-  \end{itemize}
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}{Equations}
-
-  When testing moderation, we hypothesize that the effect of $X$ on
-  $Y$ in Equation \ref{additiveEq} varies as a function of $Z$.\\
-  \va
-  We can represent this concept with the following equation:
-  \begin{align}
-    Y = \alpha + f(Z)X + \beta_2Z + e_i
-  \end{align}
-  \pause
-  If we assume that $Z$ linearly affects the relationship between $X$
-  and $Y$, then we can take:
-  \begin{align}
-    f(Z) = \beta_1 + \beta_3Z
-  \end{align}
-  \pause
-  Which, after substitution, leads to:
-  \begin{align}
-    Y = \alpha + (\beta_1 + \beta_3Z)X + \beta_2Z + e_i
-  \end{align}
-  \pause
-  Which, after distributing $X$ and reordering terms, becomes:
-  \begin{align}
-    Y = \alpha + \beta_1X + \beta_2Z + \beta_3XZ + e_i
-  \end{align}
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}{Analytical Model}
-
-  We can diagrammatically represent the analytical model we'll actually
-  be fitting with:
-
-  \begin{figure}
-    \includegraphics[width=\textwidth]{figures/modAnalytic.pdf}
-  \end{figure}
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}{Analytical Model}
-
-  By adding the appropriate path labels, we get:
-
-  \begin{figure}
-    \includegraphics[width=\textwidth]{figures/modAnalytic2.pdf}
-  \end{figure}
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}{Testing Moderation}
-
-  This is the equation we'll be working with:\\
-  \begin{center}\ovalbox{$Y = \alpha + \beta_1X + \beta_2Z + \beta_3XZ + e_i$}\end{center}
-  \va
-  Or, after fitting the above to some data:
-  \begin{center}\ovalbox{$\hat{Y} = \hat{\alpha} + \hat{\beta}_1X + \hat{\beta}_2Z + \hat{\beta}_3XZ$}\end{center}
-  \va
-  To test for significant moderation, we simply need to see if
-  $\hat{\beta}_3$ is significantly different from zero.\\
-  \va
-  We do so using simple linear regression modeling.
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}{Example}
-
-Data from the \emph{National Longitudinal Survey of Youth}\\
-\va
-We suspect that participants' weight to height ratio is predictive of
-their levels of depression.\\
-\va
-We further suspect that this effect may be differentially expressed
-depending on how the participants perceive their own weight.
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}{Example}
-
-  This is the conceptual diagram for the model we'll fit:
-
-  \begin{figure}
-    \includegraphics[width=\textwidth]{figures/modExample1.pdf}
-  \end{figure}
-
-\end{frame}
-
-
-\begin{frame}[fragile, allowframebreaks]{Example}
-
-<<echo = FALSE>>=
-## Read in the data:
-dataDir <- "../data/"
-fileName <- "nlsyData.rds"
-dat1 <- readRDS(paste0(dataDir, fileName))
-@
-
-<<>>=
-## Focal Effect:
-out1 <- lm(depress1 ~ ratio1, data = dat1)
-summary(out1)
-@
-\pagebreak
-<<>>=
-## Additive Model:
-out2 <- lm(depress1 ~ ratio1 + perception1, data = dat1)
-summary(out2)
-@
-\pagebreak
-<<>>=
-## Moderated Model:
-out3 <- lm(depress1 ~ ratio1*perception1, data = dat1)
-summary(out3)
-@
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}{Visualizing the Interaction}
-
-  We can get a better idea of the patterns of moderation by plotting
-  the focal effect at conditional values of the moderator:\\
-  \vb
-<<echo = FALSE>>=
-par(cex = 0.75,
-    family = "serif")
-## Plot the conditional effects:
-meanX <- mean(dat1$ratio1)
-meanZ <- mean(dat1$perception1)
-sdX <- sd(dat1$ratio1)
-sdZ <- sd(dat1$perception1)
-
-xVals <- c(meanX - sdX, meanX, meanX + sdX)
-
-preds1 <- cbind(1,
-                xVals,
-                meanZ - sdZ,
-                xVals * (meanZ - sdZ)
-                )
-preds2 <- cbind(1,
-                xVals,
-                meanZ,
-                xVals * meanZ
-                )
-preds3 <- cbind(1,
-                xVals,
-                meanZ + sdZ,
-                xVals * (meanZ + sdZ)
-                )
-
-yHats1 <- preds1 %*% matrix(coef(out3))
-yHats2 <- preds2 %*% matrix(coef(out3))
-yHats3 <- preds3 %*% matrix(coef(out3))
-
-plot(yHats1,
-     ylim = range(c(yHats1, yHats2, yHats3)),
-     type = "l",
-     lty = 3,
-     xlab = "Weight:Height Ratio",
-     ylab = "Predicted Depression",
-     main = "Conditional Effects of\nWeight:Height Ratio on Depression Scores")
-lines(yHats2)
-lines(yHats3,
-      lty = 5)
-
-legend(x = "topleft",
-       inset = 0.05,
-       legend =
-           c("Mean Perception -1 SD",
-             "Mean Perception",
-             "Mean Perception +1 SD"),
-       lty = c(3, 1, 5)
-       )
-@
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}{Probing the Interaction}
-
-  A significant estimate of $\beta_3$ tells us that the effect of $X$
-  on $Y$ depends on the level of $Z$, but nothing more.\\
-  \va
-  The plot on the previous slide gives a descriptive illustration of the
-  pattern, but does not support statistical inference.
-  \vb
-  \begin{itemize}
-  \item The three conditional effects we plotted look different, but
-    we cannot say that they differ in any meaningful way by only the
-    plot and $\hat{\beta}_3$.
-  \end{itemize}
-  \va
-  This is the purpose of \emph{probing} the interaction.
-  \vb
-  \begin{itemize}
-  \item Try to isolate areas of $Z$'s distribution in which
-      $\hat{\beta}_3$ is significant and areas where it is not.
-  \end{itemize}
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}{Probing the Interaction}
-
-  The most popular approach to probing the interaction is the
-  \emph{pick-a-point} approach AKA \emph{simple slopes analysis} or
-  \emph{spotlight analysis}.\\
-  \va
-  The pick-a-point approach tests if the slopes of the conditional
-  effects plotted above are
-  significantly different from zero.\\
-  \va
-  To do so, pick-a-point tests the significance of \emph{simple
-    slopes}.
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}{Simple Slopes}
-
-  Recall the derivation of our moderated equation:
-  \begin{align*}
-    Y = \alpha + \beta_1X + \beta_2Z + \beta_3XZ + e_i
-  \end{align*}
-  We can reverse the process by factoring out $X$ and reordering terms
-  to get back to:
-  \begin{align*}
-    Y = \alpha + (\beta_1 + \beta_3Z)X + \beta_2Z + e_i
-  \end{align*}
-  Where $f(Z) = \beta_1 + \beta_3Z$ is the linear function that shows
-  how the relationship between $X$ and $Y$ changes as a function of
-  $Z$.\\
-  \va
-  \underline{$f(Z)$ is actually our \emph{simple slope}.}
-  \vb
-  \begin{itemize}
-  \item By plugging different values of $Z$ into $f(Z)$, we get the
-    slope of the conditional effect of $X$ on $Y$ at the chosen
-    value of $Z$.
-  \end{itemize}
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}{Significance Testing of Simple Slopes}
-
-  The conditional values of $Z$ used to define the simple slopes in
-  the pick-a-point approach are totally arbitrary
-  \vb
-  \begin{itemize}
-  \item The most popular choice is: $\left\{ (\bar{Z} - SD_Z), \bar{Z},
-    (\bar{Z} + SD_Z) \right\}$
-    \vc
-  \item You could also use interesting percentiles of $Z$'s
-    distribution
-  \end{itemize}
-  \va
-  The standard error of a simple slope is given by:
-  \begin{align}
-    SE_{SS} = \sqrt{SE_{\beta_1}^2 + 2Z \cdot \text{COV}(\beta_1, \beta_3) + Z^2 SE_{\beta_3}^2}
-  \end{align}
-  So, you can test the significance of a simple slope by constructing
-  a Wald statistic or confidence interval using $SE_{SS}$:
-  \begin{align*}
-    Wald_{SS} &= \frac{\hat{f}(Z)}{SE_{SS}}\\
-    95\% CI_{SS} &= \hat{f}(Z) \pm 1.96 \cdot SE_{SS}
-  \end{align*}
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}[fragile, allowframebreaks]{Example}
-
-<<>>=
-## Specify function to compute simple slopes:
-getSS <- function(z, lmOut) {
-    tmp <- coef(lmOut)
-    tmp[2] + tmp[4]*z
-}
-##
-## Specify function to compute SE for simple slopes:
-getSE <- function(z, lmOut) {
-    tmp <- vcov(lmOut)
-    varB1 <- tmp[2, 2]
-    varB3 <- tmp[4, 4]
-    covB13 <- tmp[4, 2]
-
-    sqrt(varB1 + 2 * z * covB13 + z^2 * varB3)
-}
-@
-\pagebreak
-<<>>=
-## Compute vector of simple slopes:
-ssVec <- sapply(c(meanZ - sdZ,
-                  meanZ,
-                  meanZ + sdZ),
-                FUN = getSS,
-                lmOut = out3)
-##
-## Compute vector of SEs for simple slopes:
-seVec <- sapply(c(meanZ - sdZ,
-                  meanZ,
-                  meanZ + sdZ),
-                FUN = getSE,
-                lmOut = out3)
-@
-\pagebreak
-<<>>=
-## Compute Wald Statistics:
-waldVec <- ssVec / seVec
-names(waldVec) <- c("Mean - SD", "Mean", "Mean + SD")
-waldVec
-##
-## Compute CIs:
-ciMat <- cbind(ssVec - 1.96 * seVec,
-               ssVec + 1.96 * seVec)
-rownames(ciMat) <- c("Mean - SD", "Mean", "Mean + SD")
-colnames(ciMat) <- c("LB", "UB")
-ciMat
-@
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}[shrink = 5]{Latent Variable Interactions}
-  
-  When we have two observed variables interacting to predict a latent
-  variable, our job is easy:
-  \begin{enumerate}
-    \item Construct the product term of the observed focal and
-      moderator variables
-    \item Use the observed focal, moderator, and interaction variables
-      to predict the latent DV
-  \end{enumerate}\\
-  \va If we want to model moderation when at least on of the
-  predictors is latent, things get more difficult.
-  \begin{itemize}
-  \item If the moderator is observed and discrete, we can use multiple
-    group modeling
-  \item If the moderator is continuous and/or latent, then we need
-    fancier methods
-  \end{itemize}\\
-  \va
-  Two basic approaches:
-  \begin{enumerate}
-  \item Methods based on products of manifest variables
-  \item Methods based on directly estimating the products of latent
-    variables
-  \end{enumerate}
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}{Estimating Products of Latent Variables}
-  
-  We can directly estimate the interaction between two latent
-  variables with the \emph{latent moderated structural equations}
-  (LMS) method.
-  \va
-  \begin{itemize}
-  \item Introduced by \citet{kleinEtAl:1997} and formalized by
-    \citet{kleinMoosbrugger:2000} 
-    \vb
-  \item Currently only available in Mplus (via the \texttt{Xwith}
-    command).
-    \vb
-  \item Uses numerical integration to estimate the unobserved latent
-    interaction term
-  \end{itemize}
-  
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}{Estimating Products of Latent Variables}
-  
-  \textsc{LMS Strengths:}
-  \begin{itemize}
-    \item Tends to perform the best out of all available methods
-      \vb
-    \item No need to pre-process the data by manually computing
-      product terms
-      \vb
-    \item Pretty easy to implement if you have Mplus (see users guide
-      for examples).
-  \end{itemize}
-  \va
-  \textsc{LMS Weaknesses:}
-  \begin{itemize}
-  \item Only available in one (proprietary) software package
-    \vb
-  \item Numerical integration is very slow and precludes calculation
-    of most fit indices
-    \vb
-  \item LMS does not work with categorical observed moderators
-  \end{itemize}
-  
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}{Computing Interaction Indicators}
-  
-  The alternative to the LMS-type approach is to create observed
-  product terms and directly use those terms as indicators of the
-  interaction construct.
-  \vb
-  \begin{itemize}
-  \item Naively indicating an interaction construct with the raw
-    product terms is probably sub-optimal
-    \vb
-  \item Collinearity among the interaction indicators and the raw
-    items can cause estimation problems
-    \vb
-  \item From a modeling perspective, we'd like to interpret out final
-    model holistically
-  \end{itemize}
-  \va
-  Two recommended approaches:
-  \vb
-  \begin{enumerate}
-  \item Orthogonalization through residual centering
-    \citep{littleEtAl:2006}.
-    \vb
-  \item Double mean centering \citep{linEtAl:2010}.
-  \end{enumerate}
-  
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}[allowframebreaks]{Orthogonalization}
-  
-  Say we want to estimate the moderated effect of $Z$ on the $X
-  \rightarrow Y$ effect, where $X$, $Y$, and $Z$ are latent variables
-  indicated by $\{x_1, x_2, x_3\}$, $\{y_1, y_2, y_3\}$, and $\{z_1,
-  z_2, z_3\}$, respectively.\\
-  \va
-  Orthogonalization is performed by:
-  \vb
-  \begin{enumerate}
-  \item Construct all possible product terms: $\{x_1z_1, x_1z_2, x_1z_3, x_2z_1, x_2z_2, x_2z_3, x_3z_1, x_3z_2, x_3z_3\}$.
-    \vb
-  \item Regress each product term onto all observed indicators of $X$ and $Z$:
-    \begin{align*}
-      \widehat{x_1z_1} &= \alpha + \beta_1x_1 + \beta_2x_2 + \beta_2x_3 + 
-      \beta_4z_1 + \beta_5z_2 + \beta_6z_3\\
-      \widehat{x_2z_1} &= \alpha + \beta_1x_1 + \beta_2x_2 + \beta_2x_3 + 
-      \beta_4z_1 + \beta_5z_2 + \beta_6z_3\\
-      &~~~\vdots\\
-      \widehat{x_3z_3} &= \alpha + \beta_1x_1 + \beta_2x_2 + \beta_2x_3 + 
-      \beta_4z_1 + \beta_5z_2 + \beta_6z_3
-    \end{align*}
-    
-    \pagebreak
-    
-  \item Calculate each product term's residual:
-    \begin{align*}
-      \delta_{x1z1} &= x_1z_1 - \widehat{x_1z_1}\\
-      \delta_{x1z1} &= x_2z_1 - \widehat{x_2z_1}\\
-      &~~~\vdots\\
-      \delta_{x3z3} &= x_3z_3 - \widehat{x_3z_3}
-    \end{align*}
-    \vb
-  \item Use these residuals to indicate a latent interaction construct
-    as represented in the following figure.
-  \end{enumerate}
-  
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}{Orthogonalization}
-  
-  \begin{figure}
-    \includegraphics[width=\textwidth]{figures/orthoDiagram.pdf} 
-  \end{figure}
-  
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}[fragile, allowframebreaks]{Example}
-  
-<<>>=
-library(lavaan)
-dat1 <- readRDS("../data/lecture12Data.rds")
-
-mod1 <- "
-fX =~ x1 + x2 + x3
-fZ =~ z1 + z2 + z3
-fY =~ y1 + y2 + y3
-"
-
-out1 <- cfa(mod1, data = dat1, std.lv = TRUE)
-summary(out1)
-@ 
-
-\pagebreak
-
-<<>>=
-round(fitMeasures(out1)[c("chisq", "df", "pvalue", "cfi", 
-                          "tli", "rmsea", "srmr")], 3)
-@
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}[fragile, allowframebreaks]{Example}
-  
-<<>>=
-mod2 <- "
-fX =~ x1 + x2 + x3
-fZ =~ z1 + z2 + z3
-fY =~ y1 + y2 + y3
-
-fY ~ fX + fZ
-"
-
-out2 <- sem(mod2, data = dat1, std.lv = TRUE)
-summary(out2)
-@ 
-
-\pagebreak
-
-<<>>=
-round(fitMeasures(out2)[c("chisq", "df", "pvalue", "cfi", 
-                          "tli", "rmsea", "srmr")], 3)
-@
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}[fragile, allowframebreaks]{Example}
-  
-<<>>=
-predDat <- as.matrix(dat1[ , -grep("y", colnames(dat1))])
-dat2 <- dat1
-
-## Construct product terms:
-x1z1 <- with(dat2, x1*z1)
-x1z2 <- with(dat2, x1*z2)
-x1z3 <- with(dat2, x1*z3)
-
-x2z1 <- with(dat2, x2*z1)
-x2z2 <- with(dat2, x2*z2)
-x2z3 <- with(dat2, x2*z3)
-
-x3z1 <- with(dat2, x3*z1)
-x3z2 <- with(dat2, x3*z2)
-x3z3 <- with(dat2, x3*z3)
-
-## Residualize the product terms:
-dat2$x1z1R <- lm(x1z1 ~ predDat)$resid
-dat2$x1z2R <- lm(x1z2 ~ predDat)$resid
-dat2$x1z3R <- lm(x1z3 ~ predDat)$resid
-
-dat2$x2z1R <- lm(x2z1 ~ predDat)$resid
-dat2$x2z2R <- lm(x2z2 ~ predDat)$resid
-dat2$x2z3R <- lm(x2z3 ~ predDat)$resid
-
-dat2$x3z1R <- lm(x3z1 ~ predDat)$resid
-dat2$x3z2R <- lm(x3z2 ~ predDat)$resid
-dat2$x3z3R <- lm(x3z3 ~ predDat)$resid
-@ 
-
-\pagebreak
-
-<<>>=
-mod3 <- "
-fX =~ x1 + x2 + x3
-fZ =~ z1 + z2 + z3
-fY =~ y1 + y2 + y3
-fXZ =~ x1z1R + x1z2R + x1z3R +
-x2z1R + x2z2R + x2z3R +
-x3z1R + x3z2R + x3z3R
-
-fY ~ fX + fZ + fXZ
-
-fX ~~ fZ
-fX ~~ 0*fXZ
-fZ ~~ 0*fXZ
-
-x1z1R ~~ x1z2R + x1z3R + x2z1R + x3z1R
-x1z2R ~~ x1z3R + x2z2R + x3z2R
-x1z3R ~~ x2z3R + x3z3R
-
-x2z1R ~~ x2z2R + x2z3R + x3z1R
-x2z2R ~~ x2z3R + x3z2R
-x2z3R ~~ x3z3R
-
-x3z1R ~~ x3z2R + x3z3R
-x3z2R ~~ x3z3R
-"
-
-out3 <- sem(mod3, data = dat2, std.lv = TRUE)
-summary(out3)
-@ 
-
-\pagebreak
-
-<<>>=
-round(fitMeasures(out3)[c("chisq", "df", "pvalue", "cfi", 
-                          "tli", "rmsea", "srmr")], 3)
-library(semTools)
-
-out3.2 <- 
-    sem(mod3, data = dat2, std.lv = TRUE, meanstructure = TRUE)
-probeOut3 <- probe2WayRC(fit = out3.2,
-                         nameX = c("fX", "fZ", "fXZ"),
-                         nameY = "fY",
-                         modVar = "fZ",
-                         valProbe = c(-1, 0, 1)
-                         )
-probeOut3$SimpleSlope
-@ 
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}{Matched Pair Variation}
-  
-  If you are willing to assume exchangeable indicators (i.e.,
-  \emph{essential tau equivalence}), then you don't need to compute
-  all possible interaction terms.\\ 
-  \va 
-  The so-called \emph{matched pair} strategy suggests constructing only 
-  three product variables (when each first order construct has three indicators).
-  \va
-  \begin{itemize}
-    \item Each product variable is simply constructed from paired
-      indicators of the two first-order constructs:
-      \begin{align*}
-        x_1z_1 &= x_1 \times z_1\\
-        x_2z_2 &= x_2 \times z_2\\
-        x_3z_3 &= x_3 \times z_3
-      \end{align*}
-  \end{itemize}   
-
-\end{frame}
-  
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}[fragile, allowframebreaks]{Example}
-  
-<<>>=
-mod4 <- "
-fX =~ x1 + x2 + x3
-fZ =~ z1 + z2 + z3
-fY =~ y1 + y2 + y3
-fXZ =~ x1z1R + x2z2R + x3z3R
-
-fY ~ fX + fZ + fXZ
-
-fX ~~ fZ
-fX ~~ 0*fXZ
-fZ ~~ 0*fXZ
-"
-
-out4 <- 
-    sem(mod4, data = dat2, std.lv = TRUE, meanstructure = TRUE)
-summary(out4)
-@ 
-
-\pagebreak
-
-<<>>=
-round(fitMeasures(out4)[c("chisq", "df", "pvalue", "cfi", 
-                          "tli", "rmsea", "srmr")], 3)
-
-fitMeasures(out3)[c("aic", "bic")]
-fitMeasures(out4)[c("aic", "bic")]
-
-probeOut4 <- probe2WayRC(fit = out4,
-                         nameX = c("fX", "fZ", "fXZ"),
-                         nameY = "fY",
-                         modVar = "fZ",
-                         valProbe = c(-1, 0, 1)
-                         )
-
-probeOut4$SimpleSlope
-@
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}[allowframebreaks]{Double Mean Centering}
-  
-  Using the same problem setup as above, we could perform double mean
-  centering by:\\ 
-  \vb
-  \begin{enumerate}
-  \item Mean center every indicator of $X$ and $Z$:
-    \begin{align*}
-      x_1^c &= x_1 - \bar{x}_1\\
-      &~~~\vdots\\
-      z_1^c &= z_1 - \bar{z}_1\\
-      &~~~\vdots
-    \end{align*}
-  \item Use the centered indicators to construct all possible product
-    terms: $\{x_1^cz_1^c,$ $x_1^cz_2^c,$ $x_1^cz_3^c,$ $x_2^cz_1^c,$
-    $x_2^cz_2^c,$ $x_2^cz_3^c,$ $x_3^cz_1^c,$ $x_3^cz_2^c,$ $x_3^cz_3^c\}$.
-    
-    \pagebreak
-    
-  \item Mean center each product term:
-    \begin{align*}
-      (x_1z_1)^c &= x_1^cz_1^c - \overline{x_1^cz_1^c}\\
-      (x_1z_2)^c &= x_1^cz_2^c - \overline{x_1^cz_2^c}\\
-      &~~~\vdots\\
-      (x_3z_3)^c &= x_3^cz_3^c - \overline{x_3^cz_3^c}
-    \end{align*}
-    \vb
-  \item Use the mean centered indicators of $X$ and $Z$, and the
-    ``double mean centered'' product terms to specify the latent
-    interaction model as represented in the following figure.
-  \end{enumerate}
-  
-\end{frame}
-
-
-\begin{frame}{Double Mean Centering}
-  
-  \begin{figure}
-    \includegraphics[width=\textwidth]{figures/dmcDiagram.pdf}
-  \end{figure}
-  
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}[fragile, allowframebreaks]{Example}
-  
-<<>>=
-dat3 <- data.frame(lapply(dat1, scale, scale = FALSE)) 
-
-tmpDat <- data.frame(
-    x1z1 = with(dat3, x1*z1),
-    x1z2 = with(dat3, x1*z2),
-    x1z3 = with(dat3, x1*z3),
-    
-    x2z1 = with(dat3, x2*z1),
-    x2z2 = with(dat3, x2*z2),
-    x2z3 = with(dat3, x2*z3),
-    
-    x3z1 = with(dat3, x3*z1),
-    x3z2 = with(dat3, x3*z2),
-    x3z3 = with(dat3, x3*z3)
-)
-
-dat3 <- data.frame(dat3,
-                   lapply(tmpDat, scale, scale = FALSE)
-                   )
-@ 
-
-\pagebreak
-
-<<>>=
-mod5 <- "
-fX =~ x1 + x2 + x3
-fZ =~ z1 + z2 + z3
-fY =~ y1 + y2 + y3
-fXZ =~ x1z1 + x1z2 + x1z3 +
-       x2z1 + x2z2 + x2z3 +
-       x3z1 + x3z2 + x3z3
-
-fY ~ fX + fZ + fXZ
-
-fX ~~ fZ
-
-x1z1 ~~ x1z2 + x1z3 + x2z1 + x3z1
-x1z2 ~~ x1z3 + x2z2 + x3z2
-x1z3 ~~ x2z3 + x3z3
-
-x2z1 ~~ x2z2 + x2z3 + x3z1
-x2z2 ~~ x2z3 + x3z2
-x2z3 ~~ x3z3
-
-x3z1 ~~ x3z2 + x3z3
-x3z2 ~~ x3z3
-"
-
-out5 <- sem(mod5, data = dat3, std.lv = TRUE)
-summary(out5)
-@ 
-
-\pagebreak
-
-<<>>=
-round(fitMeasures(out5)[c("chisq", "df", "pvalue", "cfi", 
-                          "tli", "rmsea", "srmr")], 3)
-
-out5.2 <- 
-    sem(mod5, data = dat3, std.lv = TRUE, meanstructure = TRUE)
-
-probeOut5 <- probe2WayMC(fit = out5.2,
-                         nameX = c("fX", "fZ", "fXZ"),
-                         nameY = "fY",
-                         modVar = "fZ",
-                         valProbe = c(-1, 0, 1)
-                         )
-probeOut5$SimpleSlope
-@
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}[fragile, allowframebreaks]{Example}
-  
-<<>>=
-mod6 <- "
-fX =~ x1 + x2 + x3
-fZ =~ z1 + z2 + z3
-fY =~ y1 + y2 + y3
-fXZ =~ x1z1 + x2z2 + x3z3
-
-fY ~ fX + fZ + fXZ
-
-fX ~~ fZ
-"
-
-out6 <- 
-    sem(mod6, data = dat3, std.lv = TRUE, meanstructure = TRUE)
-nsummary(out6)
-@ 
-
-\pagebreak
-
-<<>>=
-round(fitMeasures(out6)[c("chisq", "df", "pvalue", "cfi", 
-                          "tli", "rmsea", "srmr")], 3)
-
-fitMeasures(out5)[c("aic", "bic")]
-fitMeasures(out6)[c("aic", "bic")]
-
-probeOut6 <- probe2WayMC(fit = out6,
-                         nameX = c("fX", "fZ", "fXZ"),
-                         nameY = "fY",
-                         modVar = "fZ",
-                         valProbe = c(-1, 0, 1)
-                         )
-
-probeOut6$SimpleSlope
-@
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}{Orthogonalization vs. Double Mean Centering}
-  
-  Orthogonalization and double mean centering tend to behave
-  comparably, but each has its own strengths: 
-  \vb
-  \begin{itemize}
-    \item When $X$ and $Z$ are bivariate normally distributed, both
-      methods produce the same results.
-      \vb
-    \item As $X$ and/or $Z$ stray from normality, orthogonalization
-      produces biased estimates of the interaction effect, but double
-      mean centering does not.
-      \vb
-    \item Orthogonalization ensures that the latent $XZ$ is perfectly
-      independent of $X$ and $Z$.
-      \vc
-      \begin{itemize}
-        \item The $X$ and $Z$ parameters can be directly interpreted,
-          without any conditioning
-      \end{itemize}
-  \end{itemize}
-  
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}[fragile, allowframebreaks]{Example}
-  
-<<>>=
-## Use semTools to orthogonalize:
-dat2.2 <- indProd(data = dat1,
-                  var1 = c("x1", "x2", "x3"),
-                  var2 = c("z1", "z2", "z3"),
-                  match = FALSE,
-                  residualC = TRUE)
-
-sum(dat2 - dat2.2)
-##
-## Use semTools to double mean center:
-dat3.2 <- indProd(data = dat1,
-                  var1 = c("x1", "x2", "x3"),
-                  var2 = c("z1", "z2", "z3"),
-                  match = FALSE,
-                  doubleMC = TRUE)
-
-sum(dat3[ , -c(1 : 9)] - dat3.2[ , -c(1 : 9)])
-@ 
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}{Starting Point}
-
-  So far, we've been looking at this type of model:
-
-  \begin{figure}
-    \includegraphics[width=0.7\textwidth]{figures/simpleConceptual.pdf}
-  \end{figure}
-
-  We've had one focal variable and one moderator.
-  \begin{itemize}
-    \item We've been asking questions about how the focal effect
-      changes as a function of the moderator.
-    \item There's no reason we need to restrict ourselves to a single
-      moderator.
-  \end{itemize}
-  
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}{Multiple Moderation}
-  
-  Maybe we suspect that the focal effect changes as a function of two other variables.
-  \begin{itemize}
-    \item We could fit this type of model:
-  \end{itemize}
-
-  \begin{figure}
-    \includegraphics[width=0.7\textwidth]{figures/twoModConceptual.pdf}
-  \end{figure}
-
-  Now, the focal effect of $X$ on $Y$ changes as a function of both
-  $Z$ and $W$.
-  
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}{Multiple Moderation}
-  
-  The preceding diagram implies the following formula:
-  \begin{align*}
-    Y = \alpha + f(Z, W) X + \beta_2Z + \beta_3W + e,
-  \end{align*}\\
-  \va 
-  Taking $f(Z, W)$ to be the following simple slope:
-  \begin{align*}
-    f(Z, W) = \beta_1 + \beta_4Z + \beta_5W
-  \end{align*}\\
-  \va 
-  Produces the following analytic equation:
-  \begin{align*}
-    Y = \alpha + \beta_1X + \beta_2Z + \beta_3W + \beta_4XZ + \beta_5XW + e
-  \end{align*}\\
-  \va
-  We can easily fit this model in any regression software
-  \vb
-  \begin{itemize}
-  \item We can test for significant moderating effects of $Z$ and $W$
-    by testing for non-zero $\beta_4$ and $\beta_5$, respectively.
-  \end{itemize}
-  
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}{Multiple Moderation}
-  
-  Our analytic diagram is predictably extended:
-
-  \begin{figure}
-    \includegraphics[width=\textwidth]{figures/twoModAnalytic.pdf}
-  \end{figure}
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}[fragile, allowframebreaks]{Example}
-    
-<<>>=
-library(psych)
-library(rockchalk)
-dat1 <- readRDS("../data/bfiData1.rds")
-
-## Additive model:
-out1.1 <- lm(agree ~ conc + open + neuro, data = dat1)
-summary(out1.1)
-@
-
-\pagebreak
-
-<<>>=
-## Additive two-way interaction model:
-out1.2 <- lm(agree ~ open*conc + open*neuro, data = dat1)
-summary(out1.2)
-@
-
-\pagebreak
-
-<<>>=
-## Center 'conc' on interesting values for SS analysis:
-dat1$concLo  <- with(dat1, conc - quantile(conc, 0.25, na.rm = TRUE))
-dat1$concMid <- with(dat1, conc - quantile(conc, 0.5, na.rm = TRUE))
-dat1$concHi  <- with(dat1, conc - quantile(conc, 0.75, na.rm = TRUE))
-@
-
-\pagebreak
-
-<<>>=
-## Test simple slopes via centering:
-out1.2.1 <- lm(agree ~ open*concLo + neuro, data = dat1)
-summary(out1.2.1)
-@
-
-\pagebreak
-
-<<>>=
-out1.2.2 <- lm(agree ~ open*concMid + neuro, data = dat1)
-summary(out1.2.2)
-@ 
-
-\pagebreak
-
-<<>>=
-out1.2.3 <- lm(agree ~ open*concHi + neuro, data = dat1)
-summary(out1.2.3)
-@
-
-\pagebreak
-
-<<>>=
-## Plot the simple slopes:
-par(family = "serif", cex = 0.75)
-plotOut1.2 <- plotSlopes(model = out1.2,
-                         plotx = "open",
-                         modx = "conc",
-                         plotPoints = FALSE,
-                         modxVals =
-                             quantile(dat1$conc,
-                                      c(0.25, 0.5, 0.75),
-                                      na.rm = TRUE)
-                         )
-@ 
-
-\pagebreak
-
-<<>>=
-par(family = "serif", cex = 0.75)
-testOut1.2 <- testSlopes(plotOut1.2)
-plot(testOut1.2)
-@ 
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}{Moderated Moderation}
-  
-  The additive two-way interaction model is more flexible than the
-  simple single-moderator model, but it still imposes constraints.
-  \va
-  \begin{itemize}
-    \item The moderating effect of $Z$ (or $W$) on the $X \rightarrow
-      Y$ relation is assumed to be constant across levels of $W$ (or
-      $Z$).
-      \vb
-    \item I.e., the moderation is not moderated
-  \end{itemize}
-  
-  \va
-  We can relax this constraint by modeling moderation of the moderated
-  effect using a three-way interaction.
-  
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}{Moderated Moderation}
-  
-  Moderated moderation implies the following conceptual diagram:
-  \begin{figure}
-    \includegraphics[width=\textwidth]{figures/threeWayConceptual.pdf}
-  \end{figure}
-  
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}{Moderated Moderation}
-  
-  The preceding conceptual diagram implies this analytic diagram:
-  \begin{figure}
-    \includegraphics[width=\textwidth]{figures/threeWayAnalytic.pdf}
-  \end{figure}
-  
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}[shrink = 5]{Moderated Moderation}
-  
-  The preceding diagram represents the following equation:
-  \begin{align*}
-    Y =& ~ \alpha + \beta_1X + \beta_2Z + \beta_3W +\\
-    &\beta_4XZ + \beta_5XW + \beta_6ZW + \beta_7XZW + e
-  \end{align*}\\
-  \vb
-  Which can be restructured into:
-  \begin{align*}
-    Y =& ~ \alpha + (\beta_1 + \beta_4Z + \beta_5W + \beta_7ZW)X + \\
-    &\beta_2Z + \beta_3W + \beta_6ZW + e\\
-    =& ~ \alpha + g(Z, W)X + \beta_2Z + \beta_3W + \beta_6ZW + e
-  \end{align*}\\
-  \vb 
-  With moderated moderation, the simple slope is given by:
-  \begin{align*}
-    g(Z, W) = \beta_1 + \beta_4Z + \beta_5W + \beta_7ZW
-  \end{align*}\\
-  \vb 
-  Which has the same structure as a single moderator model.
-  \vc
-  \begin{itemize}
-  \item Three-way simple slopes represent the moderated effect of
-    $Z$ on the $X \rightarrow Y$ relation at conditional values of $W$.
-  \end{itemize}
-  
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}[fragile, allowframebreaks]{Example}
-    
-<<>>=
-## Three-way interaction model:
-out1.3 <- lm(agree ~ open*conc*neuro, data = dat1)
-summary(out1.3)
-@ 
-
-\pagebreak
-
-<<>>=
-## Test simple slopes via centering:
-dat1$neuroLo <-
-    with(dat1,
-         neuro - quantile(neuro, 0.05, na.rm = TRUE)
-         )
-dat1$neuroMid <- 
-    with(dat1, 
-         neuro - quantile(neuro, 0.5, na.rm = TRUE)
-         )
-dat1$neuroHi <-
-    with(dat1,
-         neuro - quantile(neuro, 0.95, na.rm = TRUE)
-         )
-@
-
-\pagebreak
-
-<<>>=
-out1.4.1 <- lm(agree ~ open*conc*neuroLo, data = dat1)
-summary(out1.4.1)
-@ 
-
-\pagebreak
-
-<<>>=
-out1.4.2 <- lm(agree ~ open*conc*neuroMid, data = dat1)
-summary(out1.4.2)
-@
-
-\pagebreak
-
-<<>>=
-out1.4.3 <- lm(agree ~ open*conc*neuroHi, data = dat1)
-summary(out1.4.3)
-@
-
-\pagebreak
-
-<<>>=
-## Construct product terms to facilitate J-N technique:
-dat1$openXneuro <- with(dat1, neuro*open)
-dat1$concXneuro <- with(dat1, neuro*conc)
-dat1$openXconc <- with(dat1, open*conc)
-dat1$openXconcXneuro <- with(dat1, open*conc*neuro)
-@
-
-\pagebreak
-
-<<>>=
-out1.5 <- lm(agree ~ open + conc + neuro +
-                 openXconc + openXneuro + concXneuro + openXconc*neuro,
-             data = dat1)
-summary(out1.5)
-sum(coef(out1.3) - coef(out1.5))# Same as above
-@ 
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}[fragile, allowframebreaks]{Example}
-  
-<<>>=
-par(family = "serif", cex = 0.75)
-plotOut1.5 <- plotSlopes(model = out1.5,
-                         plotx = "openXconc",
-                         modx = "neuro",
-                         plotPoints = FALSE,
-                         modxVals = 
-                         quantile(dat1$neuro,
-                                  c(0.25, 0.5, 0.75),
-                                  na.rm = TRUE)
-                         )
-@ 
-
-\pagebreak
-
-<<>>=
-par(family = "serif", cex = 0.75)
-testOut1.5 <- testSlopes(plotOut1.5)
-plot(testOut1.5)
-@ 
 
 \end{frame}
 

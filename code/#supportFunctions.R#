@@ -1,7 +1,7 @@
 ### Title:    Support Functions for Examples
 ### Author:   Kyle M. Lang
 ### Created:  2017-08-24
-### Modified: 2022-06-10
+### Modified: 2022-06-03
 
 
 ## Create an basic ggplot object using my preferred styling:
@@ -67,10 +67,14 @@ wrap <- function(x, w = 60) {
 ### http://r.789695.n4.nabble.com/Sweave-and-Slides-Beamer-td3451049.html
 
 ## Break up long output into "paragraphs":
-paragraphs <- as.paragraphs <- function(x, lines = NULL) {
-    text <- capture.output(x)
+paragraphs <- function(x, lines = NULL) {
+    #if(!"paragraphs" %in% class(x)) {
+        text <- capture.output(x)
 
     if(!is.null(lines)) text <- text[lines]
+    #} else {
+    #    text <- unlist(x)
+    #}
     
     if(tail(text, 1) == "") text <- text[-length(text)]
 
@@ -92,7 +96,7 @@ paragraphs <- as.paragraphs <- function(x, lines = NULL) {
     res
 }
 
-###--------------------------------------------------------------------------###
+as.paragraphs <- paragraphs
 
 ## Make sure subsets of 'paragraphs' objects are also 'paragraphs' objects:
 assign("[.paragraphs",
@@ -105,8 +109,6 @@ assign("[.paragraphs",
 
            val
        })
-
-###--------------------------------------------------------------------------###
 
 print.paragraphs <- function(x, ...) {
     for (i in 1 : (length(x))) {
