@@ -1,7 +1,7 @@
 %%% Title:    Lavaan E-Learning: Moderation
 %%% Author:   Kyle M. Lang
 %%% Created:  2016-XX-XX
-%%% Modified: 2022-06-09
+%%% Modified: 2022-06-13
 
 \documentclass[10pt]{beamer}
 \usetheme{Utrecht}
@@ -1317,6 +1317,36 @@ all.equal(dat3[colnames(products)],
 
 \begin{frame}{Estimating Products of Latent Variables}
   
+  In theory, we can directly estimate a latent variable defined as the product
+  of two (or more) other latent variables.
+  \vc
+  \begin{itemize}
+  \item We cannot use ordinary ML estimation methods.
+  \end{itemize}
+  \va
+  Three approaches have been proposed. 
+  \vc
+  \begin{enumerate}
+  \item Latent moderated structural equations \citep[LMS;][]{kleinEtAl:1997, 
+    kleinMoosbrugger:2000}. 
+    \vc
+  \item Structural-after-measurement (SAM) estimation \citep{rosseelLoh:inPress}.
+    \vc
+  \item Bayesian SEM. 
+  \end{enumerate}
+  \va
+  None of the above is currently implemented in \pkg{lavaan}.
+  \vc
+  \begin{itemize}
+  \item The SAM approach should be available soon.
+  \end{itemize}
+  
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+\comment{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Estimating Products of Latent Variables}
+  
   We can directly estimate the interaction between two latent variables with the
   \emph{latent moderated structural equations} (LMS) method.
   \va
@@ -1378,7 +1408,7 @@ summary(out)
 @ 
 
 \end{frame}
-
+}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%--------------------------------------------------------------------------%%%
 
 \sectionslide{Multiple Moderation}
@@ -1439,7 +1469,7 @@ summary(out)
     Y = \alpha + \beta_1X + \beta_2Z + \beta_3W + \beta_4XZ + \beta_5XW + e
   \end{align*}\\
   \va
-  We can easily fit this model in any regression software
+  We can easily fit this model in any regression (or path modeling) software.
   \vb
   \begin{itemize}
   \item We can test for significant moderating effects of $Z$ and $W$ by testing 
@@ -1461,7 +1491,7 @@ summary(out)
 \end{frame}
 
 %%%--------------------------------------------------------------------------%%%
-
+\comment{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[fragile, allowframebreaks]{Example}
     
 <<>>=
@@ -1538,7 +1568,7 @@ plot(testOut1.2)
 @ 
 
 \end{frame}
-
+}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%--------------------------------------------------------------------------%%%
 
 \begin{frame}{Moderated Moderation}
@@ -1552,7 +1582,6 @@ plot(testOut1.2)
       \vb
     \item I.e., the moderation is not moderated
   \end{itemize}
-  
   \va
   We can relax this constraint by modeling moderation of the moderated effect 
   using a three-way interaction.
@@ -1585,18 +1614,16 @@ plot(testOut1.2)
 
 %%%--------------------------------------------------------------------------%%%
 
-\begin{frame}[shrink = 5]{Moderated Moderation}
+\begin{frame}{Moderated Moderation}
   
   The preceding diagram represents the following equation:
   \begin{align*}
-    Y =& ~ \alpha + \beta_1X + \beta_2Z + \beta_3W +\\
-    &\beta_4XZ + \beta_5XW + \beta_6ZW + \beta_7XZW + e
+    Y =& ~ \alpha + \beta_1X + \beta_2Z + \beta_3W + \beta_4XZ + \beta_5XW + \beta_6ZW + \beta_7XZW + e
   \end{align*}\\
   \vb
   Which can be restructured into:
   \begin{align*}
-    Y =& ~ \alpha + (\beta_1 + \beta_4Z + \beta_5W + \beta_7ZW)X + \\
-    &\beta_2Z + \beta_3W + \beta_6ZW + e\\
+    Y =& ~ \alpha + (\beta_1 + \beta_4Z + \beta_5W + \beta_7ZW)X + \beta_2Z + \beta_3W + \beta_6ZW + e\\[6pt]
     =& ~ \alpha + g(Z, W)X + \beta_2Z + \beta_3W + \beta_6ZW + e
   \end{align*}\\
   \vb 
@@ -1606,11 +1633,11 @@ plot(testOut1.2)
   \end{align*}\\
   \vb 
   Which has the same structure as a single moderator model.
-  \vc
-  \begin{itemize}
-  \item Three-way simple slopes represent the moderated effect of $Z$ on the 
-    $X \rightarrow Y$ relation at conditional values of $W$.
-  \end{itemize}
+  %\vc
+  %\begin{itemize}
+  %\item Three-way simple slopes represent the moderated effect of $Z$ on the 
+  %  $X \rightarrow Y$ relation at conditional values of $W$.
+  %\end{itemize}
   
 \end{frame}
 
@@ -1619,95 +1646,56 @@ plot(testOut1.2)
 \begin{frame}[fragile, allowframebreaks]{Example}
     
 <<>>=
+## Read in the BFI data:
+dat1 <- readRDS("../data/bfiData1.rds")
+
 ## Three-way interaction model:
-out1.3 <- lm(agree ~ open*conc*neuro, data = dat1)
-summary(out1.3)
+mod <- "
+agree ~ 1 + open + conc + neuro + open:conc + open:neuro + conc:neuro + ocn
+"
+
+## Create the 3-way interaction via a pipeline and estimate the model:
+out <- dat1 %>% 
+    mutate(ocn = open * conc * neuro) %>% 
+    sem(mod, data = .)
+@
+
+\pagebreak
+
+<<>>=
+partSummary(out, 5:7)
 @ 
 
 \pagebreak
 
 <<>>=
-## Test simple slopes via centering:
-dat1$neuroLo <-
-    with(dat1,
-         neuro - quantile(neuro, 0.05, na.rm = TRUE)
-         )
-dat1$neuroMid <- 
-    with(dat1, 
-         neuro - quantile(neuro, 0.5, na.rm = TRUE)
-         )
-dat1$neuroHi <-
-    with(dat1,
-         neuro - quantile(neuro, 0.95, na.rm = TRUE)
-         )
-@
-
-\pagebreak
-
-<<>>=
-out1.4.1 <- lm(agree ~ open*conc*neuroLo, data = dat1)
-summary(out1.4.1)
+## Compute simple slopes by conditioning on both moderators:
+ssOut <- probe3WayMC(out, 
+                     nameX = c("open", "conc", "neuro",
+                               "open:conc", "open:neuro", "conc:neuro",
+                               "ocn"),
+                     nameY = "agree",
+                     modVar = c("conc", "neuro"),
+                     valProbe1 = quantile(dat1$conc, c(0.25, 0.5, 0.75)),
+                     valProbe2 = quantile(dat1$neuro, c(0.25, 0.5, 0.75))
+                     )
 @ 
 
 \pagebreak
 
 <<>>=
-out1.4.2 <- lm(agree ~ open*conc*neuroMid, data = dat1)
-summary(out1.4.2)
-@
-
-\pagebreak
-
-<<>>=
-out1.4.3 <- lm(agree ~ open*conc*neuroHi, data = dat1)
-summary(out1.4.3)
-@
-
-\pagebreak
-
-<<>>=
-## Construct product terms to facilitate J-N technique:
-dat1$openXneuro <- with(dat1, neuro*open)
-dat1$concXneuro <- with(dat1, neuro*conc)
-dat1$openXconc <- with(dat1, open*conc)
-dat1$openXconcXneuro <- with(dat1, open*conc*neuro)
-@
-
-\pagebreak
-
-<<>>=
-out1.5 <- lm(agree ~ open + conc + neuro +
-                 openXconc + openXneuro + concXneuro + openXconc*neuro,
-             data = dat1)
-summary(out1.5)
-sum(coef(out1.3) - coef(out1.5))# Same as above
+## View simple slopes:
+ssOut$SimpleSlope
 @ 
 
 \end{frame}
 
 %%%--------------------------------------------------------------------------%%%
 
-\begin{frame}[fragile, allowframebreaks]{Example}
-  
-<<>>=
-par(family = "serif", cex = 0.75)
-plotOut1.5 <- plotSlopes(model = out1.5,
-                         plotx = "openXconc",
-                         modx = "neuro",
-                         plotPoints = FALSE,
-                         modxVals = 
-                         quantile(dat1$neuro,
-                                  c(0.25, 0.5, 0.75),
-                                  na.rm = TRUE)
-                         )
-@ 
+\begin{frame}[fragile]{Example}
 
-\pagebreak
-
-<<>>=
-par(family = "serif", cex = 0.75)
-testOut1.5 <- testSlopes(plotOut1.5)
-plot(testOut1.5)
+<<fig.height = 4>>=
+plotProbe(ssOut, xlim = range(dat1$open), xlab = "Open", ylab = "Agree")
 @ 
 
 \end{frame}
@@ -1727,11 +1715,11 @@ plot(testOut1.5)
     focal effects for males and females.
   \end{itemize}
   \va
-  Given a set of codes representing our moderator, we specify the
-  interactions as before:
+  Given a set of codes representing our moderator, we specify the interactions 
+  as before:
   \begin{align*}
     Y_{total} &= \beta_0 + \beta_1 X_{inten} + \beta_2 Z_{male} +
-    \beta_3 X_{inten}Z_{male} + \varepsilon\\\\
+    \beta_3 X_{inten}Z_{male} + \varepsilon\\[6pt]
     Y_{total} &= \beta_0 + \beta_1 X_{inten} + \beta_2 Z_{lo} + \beta_3 Z_{mid} +
     \beta_4 Z_{hi}\\
     &+ \beta_5 X_{inten}Z_{lo} + \beta_6 X_{inten}Z_{mid} + \beta_7 X_{inten}Z_{hi} +
@@ -1746,23 +1734,35 @@ plot(testOut1.5)
 
 <<>>=
 ## Load data:
-socSup <- readRDS(paste0(dataDir, "social_support.rds"))
+socSup <- readRDS("../data/social_support.rds")
 
-## Focal effect:
-out3 <- lm(bdi ~ tanSat, data = socSup)
-partSummary(out3, -c(1, 2))
-@
+## Focal effect model:
+mod <- "bdi ~ 1 + tanSat"
+
+## Fit the model and summarize the results:
+sem(mod, data = socSup) %>% partSummary(5:7)
+@ 
 
 \end{frame}
 
 %------------------------------------------------------------------------------%
 
-\begin{frame}[fragile]{Example}
+\begin{frame}[fragile, allowframebreaks]{Example}
 
 <<>>=
-## Estimate the interaction:
-out4 <- lm(bdi ~ tanSat * sex, data = socSup)
-partSummary(out4, -c(1, 2))
+## Moderated model:
+mod <- "bdi ~ 1 + tanSat + male + tanSat:male"
+
+## Dummy code sex in a pipeline and estimate the model:
+out <- socSup %>% 
+    mutate(male = as.numeric(sex == "male")) %>%
+    sem(mod, data = .)
+@ 
+
+\pagebreak
+
+<<>>=
+partSummary(out, 5:7)
 @
 
 \end{frame}
@@ -1770,6 +1770,10 @@ partSummary(out4, -c(1, 2))
 %------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Visualizing Categorical Moderation}
+  
+<<echo = FALSE>>=
+out4 <- lm(bdi ~ tanSat * sex, data = socSup)
+@ 
 
   \begin{columns}
     \begin{column}{0.5\textwidth}
@@ -1842,7 +1846,7 @@ p4 + geom_abline(slope     = coef(out66)["tangiblesat"],
 \end{frame}
 
 %%%--------------------------------------------------------------------------%%%
-
+\comment{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{Categorical Variable Moderation}
   
   When the moderator is a categorical variable, moderation implies
@@ -1967,54 +1971,42 @@ summary(out2.4)
 @ 
 
 \end{frame}
-
+}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%--------------------------------------------------------------------------%%%
 
 \begin{frame}{Moderation via Multiple Group SEM}
   
-  When our moderator is a categorical variable, we can use multiple
-  group CFA/SEM to test for moderation.
+  When our moderator is a categorical variable, we can use multiple group 
+  CFA/SEM to test for moderation.
   \va
   \begin{itemize}
-    \item Categorical moderators define groups
+    \item Categorical moderators define groups.
       \vb
     \item Significant moderation with categorical moderators implies
-      between-group differences in the focal effect
+      between-group differences in the focal effect.
       \vb
-    \item These hypotheses are easily tested with multiple group SEM
+    \item We can directly test these hypotheses with multiple group SEM.
   \end{itemize}
-  \va
-  \begin{center}\textsc{Whiteboard Time!}\end{center}
   
 \end{frame}
 
 %%%--------------------------------------------------------------------------%%%
 
-\begin{frame}[fragile, allowframebreaks]{Example}
+\begin{frame}[fragile]{Example}
 
 <<>>=
-library(lavaan)
-library(semTools)
-dat2 <- readRDS("../data/bfiData2.rds")
+## Read the data and subset to only high school and college graduates:
+dat2 <- readRDS("../data/bfiData2.rds") %>% 
+    filter(educ %in% c("highSchool", "college"))
 
-## Multiple group moderation:
-mod1 <- "
-conc =~ C1 + C2 + C3 + C4 + C5
-neuro =~ N1 + N2 + N3 + N4 + N5
+## Specify the (configurally invariance) measurement model:
+mod0 <- "
+agree =~ A1 + A2 + A3 + A4 + A5
+open  =~ O1 + O2 + O3 + O4 + O5
 "
-@ 
 
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}[fragile, shrink = 10]{Example}
-  
-<<>>=
-fit1 <- measurementInvariance(mod1,
-                              data = dat2,
-                              group = "educ",
-                              std.lv = TRUE)
+## Estimate the unrestricted model:
+out0 <- cfa(mod0, data = dat2, std.lv = TRUE, group = "educ")
 @ 
 
 \end{frame}
@@ -2022,133 +2014,111 @@ fit1 <- measurementInvariance(mod1,
 %%%--------------------------------------------------------------------------%%%
 
 \begin{frame}[fragile, allowframebreaks]{Example}
+  
+<<echo = FALSE>>=
+options(width = 80)
+@ 
 
 <<>>=
-mod2 <- "
-conc =~ C1 + C2 + C3 + C4 + C5
-neuro =~ N1 + N2 + N3 + N4 + N5
+## Define the weakly invariant model:
+mod1 <- measEq.syntax(configural.model = out0, 
+                      group = "educ", 
+                      group.equal = "loadings") %>% 
+    as.character()
 
-conc ~ neuro
+## Define the strongly invariant model:
+mod2 <- measEq.syntax(configural.model = out0, 
+                      group = "educ", 
+                      group.equal = c("loadings", "intercepts")
+                      ) %>% 
+    as.character()
 
-conc ~~ c(1.0, NA, NA)*conc
-neuro ~~ c(1.0, NA, NA)*neuro
+## Estimate the models:
+out1 <- cfa(mod1, data = dat2, group = "educ")
+out2 <- cfa(mod2, data = dat2, group = "educ")
+@ 
 
-conc ~ c(0.0, NA, NA)*1.0
-neuro ~ c(0.0, NA, NA)*1.0
-"
+\pagebreak
+
+<<>>=
+## Test measurement invariance:
+compareFit(out0, out1, out2) %>% partSummary(1:4, -(2:3))
 @
 
-\pagebreak
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile, allowframebreaks]{Example}
 
 <<>>=
-fit2 <- lavaan(mod2,
-               data = dat2,
-               std.lv = FALSE,
-               auto.fix.first = FALSE,
-               auto.var = TRUE,
-               int.ov.free = TRUE,
-               group = "educ",
-               group.equal = c("loadings", "intercepts")
-               )
-@ 
-
-\pagebreak
-
-<<>>=
-summary(fit2)
-@ 
-
-\pagebreak
-
-<<>>=
+## Specify a structural model:
 mod3 <- "
-conc =~ C1 + C2 + C3 + C4 + C5
-neuro =~ N1 + N2 + N3 + N4 + N5
+agree =~ A1 + A2 + A3 + A4 + A5
+open  =~ O1 + O2 + O3 + O4 + O5
 
-conc ~ c(b1, b1, b1)*neuro
-
-conc ~~ c(1.0, NA, NA)*conc
-neuro ~~ c(1.0, NA, NA)*neuro
-
-conc ~ c(0.0, NA, NA)*1.0
-neuro ~ c(0.0, NA, NA)*1.0
+agree ~ open  
 "
-@ 
 
-\pagebreak
-
-<<>>=
-fit3 <- lavaan(mod3,
-               data = dat2,
-               std.lv = FALSE,
-               auto.fix.first = FALSE,
-               auto.var = TRUE,
-               int.ov.free = TRUE,
-               group = "educ",
-               group.equal = c("loadings", "intercepts")
-               )
-@ 
-
-\pagebreak
-
-<<>>=
-summary(fit3)
-@ 
-
-\pagebreak
-
-<<>>=
-diffVec <- fitMeasures(fit3)[c("chisq", "df")] -
-    fitMeasures(fit2)[c("chisq", "df")]
-
-pchisq(diffVec[1], diffVec[2], lower = FALSE)
+## Estimate the model with strong invariance constraints:
+out3 <- sem(mod3, 
+            dat = dat2, 
+            std.lv = TRUE, 
+            group = "educ", 
+            group.equal = c("loadings", "intercepts")
+            )
 @
 
 \pagebreak
 
 <<>>=
+## Check the group-specific slopes:
+partSummary(out3, c(6, 8, 12, 14))
+@ 
+
+\pagebreak
+
+<<>>=
+## Specify the restricted model:
 mod4 <- "
-conc =~ C1 + C2 + C3 + C4 + C5
-neuro =~ N1 + N2 + N3 + N4 + N5
+agree =~ A1 + A2 + A3 + A4 + A5
+open  =~ O1 + O2 + O3 + O4 + O5
 
-conc ~ c(b1, b1, b2)*neuro
-
-conc ~~ c(1.0, NA, NA)*conc
-neuro ~~ c(1.0, NA, NA)*neuro
-
-conc ~ c(0.0, NA, NA)*1.0
-neuro ~ c(0.0, NA, NA)*1.0
+agree ~ c(beta, beta) * open  
 "
-@
 
-\pagebreak
-
-<<>>=
-fit4 <- lavaan(mod4,
-               data = dat2,
-               std.lv = FALSE,
-               auto.fix.first = FALSE,
-               auto.var = TRUE,
-               int.ov.free = TRUE,
-               group = "educ",
-               group.equal = c("loadings", "intercepts")
-               )
+## Estimate the model:
+out4 <- sem(mod4, 
+            dat = dat2, 
+            std.lv = TRUE, 
+            group = "educ", 
+            group.equal = c("loadings", "intercepts")
+            )
 @ 
 
 \pagebreak
 
 <<>>=
-summary(fit4)
+## Check the slopes:
+partSummary(out4, c(6, 8, 12, 14))
 @ 
 
 \pagebreak
 
 <<>>=
-diffVec <- fitMeasures(fit4)[c("chisq", "df")] -
-    fitMeasures(fit2)[c("chisq", "df")]
+## Do a chi-squared difference test for moderation:
+anova(out3, out4)
+@ 
 
-pchisq(diffVec[1], diffVec[2], lower = FALSE)
-@
+\pagebreak
+
+<<warning = FALSE>>=
+## Do a similar test via OLS regression:
+dat1 %>% 
+    filter(educ %in% c("highSchool", "college")) %$%
+    lm(agree ~ open * educ) %>%
+    partSummary(-(1:2))
+@ 
 
 \end{frame}
 
@@ -2156,68 +2126,57 @@ pchisq(diffVec[1], diffVec[2], lower = FALSE)
 
 \begin{frame}{Probing Multiple Group Moderation}
   
-  Several advantages to testing moderation with multiple group SEM
+  Testing moderation with multiple group SEM has several advantages.
   \va
   \begin{itemize}
     \item Remove measurement error from the estimates
       \vb
     \item Test for factorial invariance
       \vb
-    \item \textit{All information needed to plot/probe the simple
-      slopes is contained directly in the output from the unrestricted
-      model}
+    \item All simple effects are directly estimated in the unrestricted model
   \end{itemize}
   
 \end{frame}
 
 %%%--------------------------------------------------------------------------%%%
 
-\begin{frame}[fragile, allowframebreaks]{Example}
-  
+\begin{frame}[fragile]{Simple Slopes \& Intercepts}
+ 
+<<echo = FALSE>>=
+## Check the simple slopes and intercepts:
+partSummary(out3, c(6, 8, 9, 12, 14, 15), c(1:9, 20, 22:31, 42))
+@ 
+
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}[fragile, allowframebreaks]{Simple Slopes Visualized}
+ 
+We can visualize the simple slopes by plotting the factor scores.
+
 <<>>=
-summary(fit2)
+library(ggplot2)
+
+## Generate factor scores:
+tmp <- predict(out3)
+
+## Stack factor scores into a "tidy" dataset:
+pData <- data.frame(do.call(rbind, tmp),
+                    group = rep(names(tmp), sapply(tmp, nrow))
+                    )
+
+## Create a simple slopes plot:
+ssPlot <- ggplot(pData, aes(open, agree, color = group)) + 
+    geom_point(alpha = 0.1) + 
+    geom_smooth(method = "lm") + 
+    theme_classic()
 @ 
 
 \pagebreak
 
-<<>>=
-## Extract info needed to plot simple slopes:
-ints <- c(0,
-          coef(fit2)[c("conc~1.g2",
-                       "conc~1.g3")]
-          )
-slopes <- coef(fit2)[c("conc~neuro",
-                       "conc~neuro.g2",
-                       "conc~neuro.g3")]
-fScores <- do.call(rbind, predict(fit2))
-@ 
-
-\pagebreak
-
-<<>>=
-par(family = "serif", cex = 0.75)
-plot(y = fScores[ , "conc"],
-     x = fScores[ , "neuro"],
-     type = "n",
-     main = "Latent Simple Slopes",
-     xlab = "Neuroticism",
-     ylab = "Conscientiousness")
-
-abline(a = ints[1], b = slopes[1])
-abline(a = ints[2], b = slopes[2], col = "red")
-abline(a = ints[3], b = slopes[3], col = "blue")
-
-legend(x = "topright",
-       inset = 0.01,
-       legend =
-           c("High School",
-             "College",
-             "< High School"),
-       col =
-           c("black",
-             "red",
-             "blue"),
-       lty = 1)
+<<echo = FALSE, fig.height = 4.5>>=
+print(ssPlot)
 @ 
 
 \end{frame}
