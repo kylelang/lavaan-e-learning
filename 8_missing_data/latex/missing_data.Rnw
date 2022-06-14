@@ -140,8 +140,8 @@ library(naniar)
 library(ggmice)
 
 ## Read in some data:
-bfi <- readRDS("../data/bfi_datasets.rds")$incomplete %>%
-    select(-matches("N\\d|C\\d|E\\d|male"))
+bfi0 <- readRDS("../data/bfi_datasets.rds")
+bfi  <- bfi0$incomplete %>% select(-matches("N\\d|C\\d|E\\d|male"))
 
 ## Compute the variablewise proportions of missing data:
 bfi %>% is.na() %>% colMeans() %>% round(2)
@@ -2684,6 +2684,29 @@ print(xtable(sigmaHat2,
 \end{column}
 \end{columns}
 
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}[fragile]{Example}
+
+<<eval = FALSE>>=
+ccOut <- cfa(cfaMod, data = bfi, std.lv = TRUE)
+fimlOut <- cfa(cfaMod, data = bfi, std.lv = TRUE, missing = "fiml")
+
+fimlOut2 <- bfi %>% 
+    mutate(male = as.numeric(sex == "male")) %>%
+    cfa.auxiliary(cfaMod, data = ., aux = c("age", "male"), std.lv = TRUE)
+
+compOut <- cfa(cfaMod, data = bfi0$complete, std.lv = TRUE)
+
+summary(ccOut)
+summary(fimlOut)
+summary(fimlOut2)
+summary(miOut)
+summary(compOut)
+@   
+  
 \end{frame}
 
 \watermarkon %-----------------------------------------------------------------%
