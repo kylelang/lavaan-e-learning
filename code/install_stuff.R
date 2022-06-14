@@ -1,1 +1,1 @@
-install.packages("miceadds", repos = "http://cloud.r-project.org")
+install.packages("LaplacesDemon", repos = "http://cloud.r-project.org")
