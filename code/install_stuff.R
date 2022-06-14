@@ -1,2 +1,1 @@
-install.packages("blavaan",
-                 repos = "http://cloud.r-project.org")
+install.packages("miceadds", repos = "http://cloud.r-project.org")

@@ -377,3 +377,42 @@ cenPlot8 <- function(center, xLab, xInt = 0, linSlope = FALSE) {
     else
         p2
 }
+
+###--------------------------------------------------------------------------###
+
+## Generate uniform random attrition after T1 with a 'pComp' probability of
+## finishing the study
+attrit <- function(x, pComp = 0.5) {
+    finish <- sample(c(TRUE, FALSE), 1, prob = c(pComp, 1 - pComp))
+
+    if(!finish) {
+        cut <- sample(2:length(x), 1)
+        x[cut:length(x)] <- NA
+    }
+    x
+}
+
+###--------------------------------------------------------------------------###
+
+## Fill missing cases with their last observed value:
+locf <- function(x) {
+    m <- is.na(x)
+    if(any(m)) x[m] <- tail(x[!m], 1)
+    x
+}
+
+###--------------------------------------------------------------------------###
+
+## Estimate the pooled correlation matrix from a mids object
+pooledCorMat <- function(x, vars) {
+    ## Compute the correlation matrices for each imputed dataset:
+    tmp <- lapply(complete(x, "all"),
+                  function(data, vars) cor(data[ , vars]),
+                  vars = vars)
+    
+    ## Average the correlation matrices:
+    unlist(tmp) %>% 
+        matrix(ncol = length(vars)^2, byrow = TRUE) %>% 
+        colMeans() %>% 
+        matrix(ncol = length(vars), dimnames = list(vars, vars))
+}

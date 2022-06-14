@@ -1,0 +1,874 @@
+%%% Title:    Lavaan E-Learning: Missing Data
+%%% Author:   Kyle M. Lang
+%%% Created:  2015-11-06
+%%% Modified: 2022-06-14
+
+\documentclass{beamer}
+\usetheme{Utrecht}
+
+\usepackage{graphicx}
+\usepackage[natbibapa]{apacite}
+\usepackage[libertine]{newtxmath}
+\usepackage{fancybox}
+\usepackage{booktabs}
+\usepackage{eurosym}
+\usepackage{caption}
+
+\captionsetup{labelformat = empty}
+
+\newcommand{\eqit}[1]{\textrm{\textit{#1}}}
+\newcommand{\pkg}[1]{\textbf{#1}}
+\newcommand{\src}[1]{\texttt{#1}}
+\newcommand{\rmsc}[1]{\textrm{\textsc{#1}}}
+
+\title{Missing Data in SEM}
+\subtitle{Introduction to SEM with Lavaan}
+\author{Kyle M. Lang}
+\institute{Department of Methodology \& Statistics\\Utrecht University}
+\date{}
+
+%------------------------------------------------------------------------------%
+
+\begin{document}
+
+<<setup, include = FALSE, cache = FALSE>>=
+set.seed(235711)
+
+library(knitr)
+library(ggplot2)
+library(mice)
+library(mvtnorm)
+library(xtable)
+library(pROC)
+library(dplyr)
+library(magrittr)
+library(naniar)
+library(ggpubr)
+library(lme4)
+library(lavaan)
+
+source("../../code/supportFunctions.R")
+source("../../code/sim_missing/code/simMissingness.R")
+
+dataDir <- "../data/"
+
+options(width = 80)
+opts_chunk$set(size = "footnotesize",
+               fig.align = "center",
+               fig.path = "figure/intro-",
+               message = FALSE,
+               warning = FALSE,
+               comment = "")
+knit_theme$set('edit-kwrite')
+@
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}[t, plain]
+  \titlepage
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{Outline}
+  \tableofcontents
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{What are Missing Data?}
+
+  Missing data are empty cells in a dataset where there should be observed
+  values.
+  \vc
+  \begin{itemize}
+  \item The missing cells correspond to true population values, but we haven't
+    observed those values.
+  \end{itemize}
+  \vb
+  \pause
+  Not every empty cell is a missing datum.
+  \vc
+  \begin{itemize}
+  \item Quality-of-life ratings for dead patients in a mortality study
+    \vc
+  \item Firm profitability after the company goes out of business
+    \vc
+  \item Self-reported severity of menstrual cramping for men
+    \vc
+  \item Empty blocks of data following ``gateway'' items
+  \end{itemize}
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{A Little Notation}
+
+  \begin{align*}
+    Y &\coloneqq \text{An $N \times P$ Matrix of Arbitrary Data}\\[8pt]
+    Y_{mis} &\coloneqq \text{The \emph{missing} part of $Y$}\\[8pt]
+    Y_{obs} &\coloneqq \text{The \emph{observed} part of $Y$}\\[8pt]
+    R &\coloneqq \text{An $N \times P$ response matrix}\\[8pt]
+    M &\coloneqq \text{An $N \times P$ missingness matrix}
+  \end{align*}
+
+  The $R$ and $M$ matrices are complementary.
+  \begin{itemize}
+  \item $r_{np} = 1$ means $y_{np}$ is observed; $m_{np} = 1$ means $y_{np}$ is
+    missing.
+  \item $r_{np} = 0$ means $y_{np}$ is missing; $m_{np} = 0$ means $y_{np}$ is
+    observed.
+  \item $M_p$ is the \emph{missingness} of $Y_p$.
+  \end{itemize}
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}[fragile, allowframebreaks]{Example}
+
+<<>>=
+## Load some useful packages:
+library(dplyr)
+library(naniar)
+library(ggmice)
+
+## Read in some data:
+bfi <- readRDS("../data/bfi_datasets.rds")$incomplete %>%
+    select(-matches("N\\d|C\\d|E\\d|male"))
+
+## Compute the variablewise proportions of missing data:
+bfi %>% is.na() %>% colMeans() %>% round(2)
+@ 
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}[fragile]{Example}
+
+Visualize the percentages missing via \pkg{naniar}\src{::gg\_miss\_var()}.
+<<out.width = "50%">>=
+gg_miss_var(bfi, show_pct = TRUE)
+@
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}[fragile]{Example}
+
+Visualize the missing data patterns via \pkg{ggmice}\src{::plot\_pattern()}.
+<<out.width = "50%">>=
+plot_pattern(bfi)
+@ 
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}[fragile, allowframebreaks]{Example}
+
+In \pkg{lavaan}, we can directly fit a model with incomplete data.
+
+<<>>=
+library(lavaan)
+
+## Specify the measurement model:
+mod <- "
+agree =~ A1 + A2 + A3 + A4 + A5
+open  =~ O1 + O2 + O3 + O4 + O5
+"
+
+## Estimate the model:
+out <- cfa(mod, data = bfi, std.lv = TRUE)
+@ 
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}[fragile]{Example}
+
+The model will estimate, just fine...
+
+<<echo = FALSE>>= 
+partSummary(out, c(1, 5))
+@ 
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}[fragile]{Example}
+
+<<echo = FALSE>>= 
+partSummary(out, 6:7, 1:17)
+@ 
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}[fragile]{Example}
+
+But not everything is as it seems.
+
+<<echo = FALSE>>= 
+partSummary(out, 2)
+@ 
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{Default Approach}
+
+Like most software packages, \pkg{lavaan} will default to \emph{complete case
+    analysis} when asked to analyze incomplete data.
+
+\vc
+
+\begin{itemize}
+\item In the absence of user input, this is a sensible option.
+\vc
+\item That doesn't mean you should actually use deletion to treat the missing
+data in your analysis.
+\end{itemize}
+
+\vb
+\pause
+
+Complete case analysis has two major problems.
+\vc
+\begin{enumerate}
+\item Throws out useful information (potentially a lot of information)
+\vc
+\item Probably biases parameter estimates.
+\end{enumerate}
+
+\vb
+
+To understand the second point, we need to discuss \emph{missing data mechanisms}.
+
+\end{frame}
+
+\watermarkon %-----------------------------------------------------------------%
+
+\sectionslide{Missing Data Mechanisms}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{Missing Data Mechanisms}
+
+  Missing Completely at Random (MCAR)
+  \begin{itemize}
+  \item $P(R | Y_{mis}, Y_{obs}) = P(R)$
+    \vc
+  \item Missingness is unrelated to any study variables.
+  \end{itemize}
+  \vb
+  %\begin{align*}
+  %  P(R | Y_{mis}, Y_{obs}) = P(R)
+  %\end{align*}
+
+  Missing at Random (MAR)
+  \begin{itemize}
+  \item $P(R | Y_{mis}, Y_{obs}) = P(R | Y_{obs})$
+    \vc
+  \item Missingness is related to only the \emph{observed} parts of study
+      variables.
+  \end{itemize}
+  \vb
+  %\begin{align*}
+  %  P(R | Y_{mis}, Y_{obs}) = P(R | Y_{obs})
+  %\end{align*}
+
+  Missing not at Random (MNAR)
+  \begin{itemize}
+  \item $P(R | Y_{mis}, Y_{obs}) \neq P(R | Y_{obs})$
+    \vc
+  \item Missingness is related to the \emph{unobserved} parts of study
+    variables.
+  \end{itemize}
+  %\begin{align*}
+  %  P(R | Y_{mis}, Y_{obs}) \neq P(R | Y_{obs})
+  %\end{align*}
+
+\end{frame}
+
+\watermarkoff %----------------------------------------------------------------%
+
+\begin{frame}[fragile]{Simulate Some Toy Data}
+
+<<>>=
+nObs <- 5000 # Sample Size
+pm   <- 0.3  # Proportion Missing
+
+sigma <- matrix(c(1.0, 0.5, 0.3,
+                  0.5, 1.0, 0.0,
+                  0.3, 0.0, 1.0),
+                ncol = 3)
+tmp <- rmvnorm(nObs, c(0, 0, 0), sigma)
+
+x0 <- tmp[ , 1]
+y0 <- tmp[ , 2]
+z0 <- tmp[ , 3]
+
+cor(y0, x0) # Check correlation between X and Y
+@
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}[fragile, allowframebreaks]{MCAR Example}
+
+<<>>=
+## Simulate MCAR Missingness:
+mVec <- sample(1 : length(y0), size = pm * length(y0))
+
+yMcar       <- y0
+yMcar[mVec] <- NA
+
+cor(yMcar, x0, use = "pairwise") # Look at correlation
+@
+
+\pagebreak
+
+<<echo = FALSE, out.width = "65%">>=
+y0Den <- density(y0)
+yDen  <- density(yMcar, na.rm = TRUE)
+
+pDat <- data.frame(y = c(y0Den$y, yDen$y),
+                   x = c(y0Den$x, yDen$x),
+                   g = rep(c("Complete", "MCAR w/ Deletion"),
+                           each = length(yDen$y)
+                           )
+                   )
+
+ggplot(data = pDat, mapping = aes(x = x, y = y, color = g)) +
+    geom_line(size = 1) +
+    theme_classic() +
+    theme(text = element_text(family = "Courier", size = 16)) +
+    ylab("Density") +
+    xlab("Value of Y") +
+    scale_color_manual(values = c("blue", "red")) +
+    theme(legend.position = c(0.8, 0.95), legend.title = element_blank())
+@
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}[fragile, allowframebreaks]{MAR Example}
+
+<<>>=
+## Simulate MAR Missingness:
+mVec <- x0 < quantile(x0, probs = pm)
+mean(mVec)
+
+yMar       <- y0
+yMar[mVec] <- NA
+
+cor(yMar, x0, use = "pairwise") # Not looking so good :(
+@
+
+\pagebreak
+
+<<echo = FALSE, out.width = "65%">>=
+yDen <- density(yMar, na.rm = TRUE)
+
+pDat <- data.frame(y = c(y0Den$y, yDen$y),
+                   x = c(y0Den$x, yDen$x),
+                   g = rep(c("Complete", "MAR w/ Deletion"),
+                           each = length(yDen$y)
+                           )
+                   )
+
+marP <- ggplot(data = pDat, mapping = aes(x = x, y = y, color = g)) +
+    geom_line(size = 1) +
+    theme_classic() +
+    theme(text = element_text(family = "Courier", size = 16)) +
+    ylab("Density") +
+    xlab("Value of Y") +
+    scale_color_manual(values = c("blue", "red")) +
+    theme(legend.position = c(0.8, 0.95), legend.title = element_blank())
+marP
+@
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}[fragile, allowframebreaks]{MNAR Example}
+
+<<>>=
+## Simulate MNAR Missingness:
+mVec <- y0 < quantile(y0, probs = pm)
+mean(mVec)
+
+yMnar       <- y0
+yMnar[mVec] <- NA
+
+cor(yMnar, x0, use = "pairwise") # Hmm...looks pretty bad.
+@
+
+\pagebreak
+
+<<echo = FALSE, out.width = "65%">>=
+yDen <- density(yMnar, na.rm = TRUE)
+
+pDat <- data.frame(y = c(y0Den$y, yDen$y),
+                   x = c(y0Den$x, yDen$x),
+                   g = rep(c("Complete", "MNAR w/ Deletion"),
+                           each = length(yDen$y)
+                           )
+                   )
+
+ggplot(data = pDat, mapping = aes(x = x, y = y, color = g)) +
+    geom_line(size = 1) +
+    theme_classic() +
+    theme(text = element_text(family = "Courier", size = 16)) +
+    ylab("Density") +
+    xlab("Value of Y") +
+    scale_color_manual(values = c("blue", "red")) +
+    theme(legend.position = c(0.8, 0.95), legend.title = element_blank())
+@
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+\comment{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{Crucial Nuance}
+
+  In our previous MAR example, ignoring the predictor of missingness actually
+  produces \emph{Indirect MNAR}.\\
+
+  \pause
+  \va
+
+  \rmsc{Question:} What happens if we ignore the predictor of missingness, but
+  that predictor is independent of our study variables?
+
+  \pause
+
+<<>>=
+mVec <- z0 < quantile(z0, probs = pm)
+
+y       <- y0
+y[mVec] <- NA
+
+cor(y, x0, use = "pairwise")
+@
+
+\rmsc{Answer:} We get back to MCAR :)
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{Crucial Nuance}
+
+  The missing data mechanisms are not simply characteristics of an incomplete
+  dataset; we also need to account for the analysis.
+  \vb
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+
+<<echo = FALSE, out.width = "100%", message = FALSE>>=
+marP + scale_color_manual(values = c("blue", "red"),
+                          labels = c("Complete", "Indirect MNAR")
+                          )
+@
+
+\end{column}
+\begin{column}{0.5\textwidth}
+
+<<echo = FALSE, out.width = "100%">>=
+yDen <- density(y, na.rm = TRUE)
+
+pDat <- data.frame(y = c(y0Den$y, yDen$y),
+                   x = c(y0Den$x, yDen$x),
+                   g = rep(c("Complete", "MCAR2"),
+                           each = length(yDen$y)
+                           )
+                   )
+
+ggplot(data = pDat, mapping = aes(x = x, y = y, color = g)) +
+    geom_line(size = 1) +
+    theme_classic() +
+    theme(text = element_text(family = "Courier", size = 16)) +
+    ylab("Density") +
+    xlab("Value of Y") +
+    scale_color_manual(values = c("blue", "red")) +
+    theme(legend.position = c(0.8, 0.95), legend.title = element_blank())
+@
+
+\end{column}
+\end{columns}
+
+\end{frame}
+}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\watermarkoff %----------------------------------------------------------------%
+
+\begin{frame}[fragile]{Effects of Deletion}
+
+  As we saw in the preceding plots, excluding incomplete cases usually alters
+  the variables' distributions.
+  \vc
+  \begin{itemize}
+  \item The statistics upon which we base our analyses generally summarize these 
+    distributions.
+    \vc
+  \item Problems with the distributions show up as bias in the results of our 
+    anlayses.
+  \end{itemize}
+  
+<<>>=
+diabetes1 <- diabetes2 <- readRDS("../data/diabetes.rds")
+
+mVec <- simLogisticMissingness0(data    = diabetes1,
+                                pm      = 0.3,
+                                preds   = c("bmi", "bp"),
+                                stdData = TRUE)$r
+diabetes2[mVec, "glu"] <- NA
+@ 
+
+\end{frame}
+
+\watermarkoff %----------------------------------------------------------------%
+
+\begin{frame}[fragile]{Example}
+ 
+<<echo = FALSE, cache = TRUE, fig.asp = 0.55>>=
+diabetes1$Response <- factor(mVec, labels = c("Observed", "Missing"))
+
+p0 <- ggplot(data = diabetes1, mapping = aes(x = bmi, y = glu)) +
+    theme_classic() +
+    theme(text = element_text(family = "Courier", size = 16)) +
+    xlab("BMI") +
+    ylab("Blood Glucose")
+
+ggarrange(
+    p0 + 
+    geom_point(size = 0.75) + 
+    ggtitle("Fully Observed Data") +
+    theme(text = element_text(size = 8),
+          axis.title = element_blank(),
+          plot.title = element_text(face = "bold", hjust = 0.5)
+          ),
+    
+    p0 + 
+    geom_point(aes(color = Response), size = 0.75) + 
+    scale_color_manual(values = c("black", "gray")) +
+    ggtitle("Incomplete Data") +
+    theme(text = element_text(size = 8),
+          axis.title = element_blank(),
+          axis.text.y = element_blank(),
+          plot.title = element_text(face = "bold", hjust = 0.5),
+          legend.position = "none"),
+    
+    ncol = 2,
+    widths = c(1.05, 1)
+) %>%
+    annotate_figure(left = text_grob("Blood Glucose", 
+                                     family = "Courier", 
+                                     size = 10,
+                                     rot = 90),
+                    bottom = text_grob("BMI", family = "Courier", size = 10)
+                    )
+@
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}[fragile]{Example}
+
+<<>>=
+diabetes1 %>% select(bmi, glu, bp) %>% cor()
+diabetes2 %>% select(bmi, glu, bp) %>% cor(use = "complete")
+@ 
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}[fragile]{Example}
+
+<<>>=
+mean(diabetes1$glu)
+mean(diabetes2$glu, na.rm = TRUE)
+var(diabetes1$glu)
+var(diabetes2$glu, na.rm = TRUE)
+@ 
+
+\end{frame}
+
+\watermarkon %-----------------------------------------------------------------%
+
+\begin{frame}[allowframebreaks]{Good Methods}
+
+  Multiple Imputation (MI)
+  \vc
+  \begin{itemize}
+  \item Replace the missing values with $M$ plausible estimates
+    \vc
+    \begin{itemize}
+    \item Essentially, a repeated application of stochastic regression
+      imputation (with a particular type of regression model)
+      \vc
+    \item Produces unbiased parameter estimates and predictions
+      \vc
+    \item Produces ``correct'' standard errors, CIs, and prediction intervals
+      \vc
+    \item Very, very flexible
+      \vc
+    \item Computationally expensive
+    \end{itemize}
+  \end{itemize}
+  
+  \pagebreak
+  
+  Full Information Maximum Likelihood (FIML)
+  \vc
+  \begin{itemize}
+  \item Adjust the objective function to only consider the observed parts of the
+    data
+    \vc
+    \begin{itemize}
+    \item Models are directly estimated in the presence of missing data
+      \vc
+    \item The predictors of nonresponse must be included in the model, somehow
+      \vc
+    \item Unless you write your own optimization program, FIML is only available
+      for certain types of models
+      \vc
+    \item In linear regression models, FIML cannot treat missing data on
+      predictors (if the predictors are taken as fixed)
+    \end{itemize}
+  \end{itemize}
+
+\end{frame}
+
+\watermarkoff %----------------------------------------------------------------%
+
+\begin{frame}[allowframebreaks, fragile]{Good Methods}
+
+  What happens when we apply MI to our previous MAR example?
+<<>>=
+## Estimate imputation model:
+miceOut <- mice(data      = data.frame(y = yMar, x = x0),
+                m         = 25,
+                maxit     = 1,
+                method    = "norm",
+                printFlag = FALSE)
+
+## Estimate and pool M correlations:
+with(miceOut, cor(y, x))$analyses %>% unlist() %>% mean()
+@
+
+The MI-based parameter estimate looks good.
+\begin{itemize}
+\item MI produces unbiased estimates of the parameter when data are MAR.
+\end{itemize}
+
+\pagebreak
+
+<<echo = FALSE, out.width = "65%">>=
+impX <- impY <- list()
+for(m in 1 : miceOut$m) {
+    tmp       <- density(complete(miceOut, m)$y)
+    impX[[m]] <- tmp$x
+    impY[[m]] <- tmp$y
+}
+
+pDat <- data.frame(x = unlist(impX),
+                   y = unlist(impY),
+                   g = rep(1 : miceOut$m, each = length(impX[[1]])),
+                   c = "MAR w/ MI")
+
+pDat <- rbind.data.frame(pDat,
+                         data.frame(x = yDen$x, 
+                                    y = yDen$y, 
+                                    g = miceOut$m + 1, 
+                                    c = "Complete")
+                         )
+
+ggplot(data    = pDat, 
+       mapping = aes(x = x, y = y, color = c, group = g, size = c)
+       ) +
+    geom_line() +
+    theme_classic() +
+    theme(text = element_text(family = "Courier", size = 16)) +
+    ylab("Density") +
+    xlab("Value of Y") +
+    scale_color_manual(values = c("black", "red")) +
+    scale_size_manual(values = c(1, 0.5)) +
+    theme(legend.position = c(0.8, 0.95), legend.title = element_blank())
+@
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}[fragile, allowframebreaks]{Good Methods}
+
+  What about applying MI to our MNAR example?
+<<>>=
+## Estimate imputation model:
+miceOut <- mice(data      = data.frame(y = yMnar, x = x0),
+                m         = 25,
+                maxit     = 1,
+                method    = "norm",
+                printFlag = FALSE)
+
+## Estimate and pool M correlations:
+with(miceOut, cor(y, x))$analyses %>% unlist() %>% mean()
+@
+
+The MI-based parameter estimate is still biased.
+\begin{itemize}
+\item MI cannot correct bias in parameter estimates when data are MNAR.
+\end{itemize}
+
+\pagebreak
+
+<<echo = FALSE, out.width = "65%">>=
+mnarDen <- density(yMnar, na.rm = TRUE)
+
+impX <- impY <- list()
+for(m in 1 : miceOut$m) {
+    tmp       <- density(complete(miceOut, m)$y)
+    impX[[m]] <- tmp$x
+    impY[[m]] <- tmp$y
+}
+
+pDat <- data.frame(x = unlist(impX),
+                   y = unlist(impY),
+                   g = rep(1:miceOut$m, each = length(impX[[1]])),
+                   c = "MNAR w/ MI")
+
+pDat <- rbind.data.frame(pDat,
+                         data.frame(x = mnarDen$x, 
+                                    y = mnarDen$y, 
+                                    g = miceOut$m + 1, 
+                                    c = "MNAR w/ Deletion"),
+                         data.frame(x = yDen$x, 
+                                    y = yDen$y, 
+                                    g = miceOut$m + 2,
+                                    c = "Complete")
+                         )
+
+ggplot(data = pDat, mapping = aes(x = x, y = y, color = c, group = g, size = c)) +
+    geom_line() +
+    theme_classic() +
+    theme(text = element_text(family = "Courier", size = 16)) +
+    ylab("Density") +
+    xlab("Value of Y") +
+    scale_color_manual(values = c("black", "blue", "red")) +
+    scale_size_manual(values = c(1, 1, 0.5)) +
+    theme(legend.position = c(0.8, 0.95), legend.title = element_blank())
+@
+
+\end{frame}
+
+\watermarkon %-----------------------------------------------------------------%
+
+\begin{frame}[fragile]{MI Example}
+ 
+<<>>=
+## The mice package does MI:
+library(mice)
+
+## Multiply impute the missing data:
+miceOut <- mice(data      = diabetes2, 
+                m         = 25, 
+                maxit     = 1,
+                printFlag = FALSE,
+                method    = "norm")
+@ 
+
+\end{frame}
+
+\watermarkoff %----------------------------------------------------------------%
+
+\begin{frame}[fragile]{MI Example}
+
+<<>>=
+## Complete data:
+diabetes1 %>% select(bmi, glu, bp) %>% cor()
+
+## MI:
+pooledCorMat(miceOut, c("bmi", "glu", "bp"))
+@ 
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}[fragile]{MI Example}
+
+<<>>=
+mean(diabetes1$glu)
+with(miceOut, mean(glu))$analyses %>% unlist() %>% mean()
+var(diabetes1$glu)
+with(miceOut, var(glu))$analyses %>% unlist() %>% mean()
+@ 
+
+\end{frame}
+
+\watermarkoff %----------------------------------------------------------------%
+
+\begin{frame}[fragile]{FIML Example}
+  
+<<>>=
+fit <- diabetes2 %>% 
+    select(bmi, glu, bp) %>% 
+    lavCor(missing = "fiml", output = "sampstat")
+
+## Complete data:
+diabetes1 %>% summarize(mean = mean(glu), var = var(glu))
+
+## FIML:
+fit %$% c(mean = mean[["glu"]], var = cov["glu", "glu"])
+@   
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}[fragile]{FIML Example}
+
+<<>>=
+## Complete data:
+diabetes1 %>% select(bmi, glu, bp) %>% cor() %>% round(3)
+
+## FIML:
+fit$cov %>% cov2cor()
+@
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\sectionslide{Multiple Imputation}
+
+%------------------------------------------------------------------------------%
+
+\sectionslide{Full Information Maximum Likelihood}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}[allowframebreaks]{References}
+
+  \bibliographystyle{apacite}
+  \bibliography{../../bibtex/winter_school_refs.bib}
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\end{document}
