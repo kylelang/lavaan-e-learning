@@ -132,12 +132,13 @@ partSummary <- function(x,
                         which = Inf,
                         lines = NULL,
                         stars = FALSE,
-                        drops = NULL, ...)
+                        drops = NULL,
+                        ...)
 {
-    s <- summary(x, ...)
-    if(!is.null(drops)) s <- select(s, -all_of(drops))
+    s0 <- summary(x, ...) %>% quiet()
+    if(!is.null(drops)) s0 <- dplyr::select(s0, -all_of(drops))
 
-    out <- paragraphs(print(s, signif.stars = stars))
+    out <- paragraphs(print(s0, signif.stars = stars))
     
     check <- length(which) == 1 && is.infinite(which)
     if(!check) out <- out[which]
