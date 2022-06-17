@@ -1,7 +1,7 @@
 %%% Title:    Lavaan E-Learning: Missing Data
 %%% Author:   Kyle M. Lang
 %%% Created:  2015-11-06
-%%% Modified: 2022-06-16
+%%% Modified: 2022-06-17
 
 \documentclass{beamer}
 \usetheme{Utrecht}
@@ -2829,8 +2829,7 @@ print(xtable(sigmaHat2,
 
 \begin{frame}[fragile]{CFA Example}
 
-  It is very easy to apply FIML estimation to latent variable models in 
-  \pkg{lavaan}.
+  It is very easy to apply FIML to latent variable models in \pkg{lavaan}.
 
 <<>>=
 ## Estimate the CFA from the beginning of the lecture using FIML:
@@ -2848,7 +2847,7 @@ options(width = 80)
 @ 
 
 <<>>=
-partSummary(fimlOut, 1:6)
+partSummary(fimlOut, 1:5)
 @ 
 
 \end{frame}
@@ -2894,6 +2893,32 @@ partSummary(fimlOut, 10, fmi = TRUE)
 \end{frame}
 
 \watermarkon %-----------------------------------------------------------------%
+
+\begin{frame}{FMI with FIML}
+
+  As you saw above, we can also estimate the FMI when using FIML.
+  \vc
+  \begin{itemize}
+  \item The FMI is calculated using the method described by 
+    \citet{savaleiRhemtulla:2012}.
+  \end{itemize}
+  \vb
+  \citet{savaleiRhemtulla:2012} take an information-theoretic approach to 
+  defining the FMI.
+  \begin{itemize}
+  \item Based on the \emph{Missing Information Principle} of 
+    \citet{orchardWoodbury:1972}
+    \vc  
+  \item Their FMI estimates the ratio of missing to complete information for 
+    each parameter.
+  \end{itemize}
+  \vb
+  You can use this method to compute the FMI for sufficient statistics via the 
+  \pkg{semTools}::\src{fmi()} function.
+    
+\end{frame}
+
+%------------------------------------------------------------------------------%
 
 \sectionslide{Auxiliary Variables}
 
@@ -2985,6 +3010,34 @@ fimlOut2 <- bfi %>%
 
 \begin{frame}[fragile]{Saturated Correlates Example}
 
+  The \src{cfa.auxiliary()} function has automatically added the following paths
+  to our model.
+  
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      
+<<echo = FALSE>>=
+modString <- lavExport(fimlOut2, export = FALSE) %>% cat() %>% capture.output()
+
+grep("age ~~", modString, value = TRUE) %>% cat(sep = "\n")
+@ 
+
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      
+<<echo = FALSE>>=
+grep("male ~~", modString, value = TRUE) %>% cat(sep = "\n")
+@ 
+
+    \end{column}
+  \end{columns}
+  
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}[fragile]{Saturated Correlates Example}
+
 The auxiliaries have been correlated with all other variables.
 
 <<>>=
@@ -2998,10 +3051,37 @@ inspect(fimlOut2, "est")$theta[11:12, 7:12] %>% round(3)
 
 \begin{frame}[fragile]{Saturated Correlates Example}
 
-The auxiliaries have been correlated with all other variables.
+The degrees of freedom have not changed, though.
 
-<<echo = FALSE>>=
+<<>>=
+## Naive FIML:
+fitMeasures(fimlOut, "df")
+
+## FIML w/ saturated correlates:
+fitMeasures(fimlOut2, "df")
+@
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}[fragile]{Saturated Correlates Example}
+
+Let's compare the effects of the various missing data treatments on the latent
+covariance estimates.
+
+\va
+
+<<echo = FALSE, results = "asis">>=
 compOut <- cfa(cfaMod, data = bfi0$complete, std.lv = TRUE)
+
+                                        #saveRDS(list(bfi0 = bfi0, 
+                                        #             naiveOut = naiveOut,
+                                        #             miOut = miOut,
+                                        #             fimlOut = fimlOut,
+                                        #             fimlOut2 = fimlOut2,
+                                        #             compOut = compOut),
+                                        #        file = "../data/objects.rds")
 
 what <- "agree~~open"
 
@@ -3010,17 +3090,29 @@ est <- c(coef(compOut)[what],
          coef(miOut)[what],
          coef(fimlOut)[what],
          coef(fimlOut2)[what])
-names(est) <- c("Complete Data", "Deletion", "MI", "Naive FIML", "FIML w/ Auxiliaries")
 
-print(est)
+fmi <- c(getFmi(miOut, what), 
+         getFmi(fimlOut, what), 
+         getFmi(fimlOut2, what)
+         )
 
-#summary(compOut, 8)
-#partSummary(out, 8)
+name1 <- c("Complete", "Listwise", "Multiple", "Naive", "FIML w/")
+name2 <- c("Data", "Deletion", "Imputation", "FIML", "Auxiliaries")
+name3 <- c("", "", "Est", "FMI")
 
-#summary(fimlOut, fmi = TRUE)$pe[names(coef(fimlOut)) %in% what]
+tabData <- cbind(name3, 
+                 rbind(name1, 
+                       name2, 
+                       sprintf("%.3f", est), 
+                       c("---", "---", sprintf("%.3f", fmi))
+                       )
+                 )
 
-#partSummary(fimlOut2, 8, 1:4, fmi = TRUE)
-#partSummary(miOut, 8, fmi = TRUE)
+xtable(tabData, caption = "Latent Covariances", align = "rrrrrrr") %>%
+    print(hline.after = c(-1, 2, nrow(tabData)), 
+          include.colnames = FALSE,
+          include.rownames = FALSE,
+          booktab = TRUE)
 @
 
 \end{frame}
@@ -3030,7 +3122,7 @@ print(est)
 \begin{frame}[allowframebreaks]{References}
 
   \bibliographystyle{apacite}
-  \bibliography{../../bibtex/winter_school_refs.bib}
+  \bibliography{../../bibtex/winter_school_refs.bib,../../bibtex/missing_data_papers.bib}
 
 \end{frame}
 

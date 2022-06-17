@@ -1,7 +1,7 @@
 ### Title:    Support Functions for Examples
 ### Author:   Kyle M. Lang
 ### Created:  2017-08-24
-### Modified: 2022-06-14
+### Modified: 2022-06-16
 
 ###--------------------------------------------------------------------------###
 
@@ -567,6 +567,22 @@ imposeMissData <- function(data, targets, preds, pm, types = "random", ...) {
     for(v in targets) data[M[[v]], v] <- NA
 
     data
+}
+
+###--------------------------------------------------------------------------###
+
+## Extract the FMI for a parameter (what) from a lavaan object (x):
+getFmi <- function(x, what) {
+    ## Create the summary:
+    tmp <- summary(x, fmi = TRUE) %>% quiet()
+    
+    if(class(x) == "lavaan") tmp <- tmp$pe
+    
+    ## Create labels á la coef():
+    labs <- with(tmp, c(lhs, op, rhs)) %>% matrix(ncol = 3) %>% apply(1, paste0, collapse = "")
+    
+    ## Extract the appropriate FMI:
+    tmp$fmi[labs %in% what]
 }
 
 ###--------------------------------------------------------------------------###
