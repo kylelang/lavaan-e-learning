@@ -682,7 +682,7 @@ with(miceOut, cor(y, x))$analyses %>% unlist() %>% mean()
 
 The MI-based parameter estimate looks good.
 \begin{itemize}
-\item MI produces unbiased estimates of the parameter when data are MAR.
+\item MI produces unbiased estimates when data are MAR.
 \end{itemize}
 
 \pagebreak
@@ -741,7 +741,7 @@ with(miceOut, cor(y, x))$analyses %>% unlist() %>% mean()
 
 The MI-based parameter estimate is still biased.
 \begin{itemize}
-\item MI cannot correct bias in parameter estimates when data are MNAR.
+\item MI cannot correct bias when data are MNAR.
 \end{itemize}
 
 \pagebreak
@@ -1007,7 +1007,7 @@ simRes <- readRDS(paste0(dataDir, "simResMat.rds"))
 
 simResTab <- 
     xtable(simRes, 
-           caption = "Mean Correlation Coefficients and Type I Error Rates",
+                                        #caption = "Mean Correlation Coefficients and Type I Error Rates",
            digits  = 3,
            align   = c("r", rep("c", 4))
            )
@@ -1016,7 +1016,7 @@ print(simResTab, scale = 0.8, booktabs = TRUE)
 @ 
 
 \pause
-\vx{-12}
+
 \begin{itemize}
 \item Conditional mean substitution overestimates the correlation.
   \vc
@@ -1207,7 +1207,7 @@ p2 + geom_point(mapping = aes(x = yMis[, "x"], y = imps),  color = "red")
   
   MI simply repeats a single regression imputation $M$ times.
   \begin{itemize}
-  \item The specifics of the underlying regression imputation are important.
+  \item The specifics of this regression imputation are important.
   \end{itemize}
   \vb
   \pause
@@ -1222,7 +1222,7 @@ simRes2 <- readRDS(paste0(dataDir, "simResMat2.rds"))
 
 simResTab2 <- 
     xtable(simRes2, 
-           caption = "Mean Correlation Coefficients and Type I Error Rates",
+                                        #caption = "Mean Correlation Coefficients and Type I Error Rates",
            digits  = 3,
            align   = c("r", rep("c", 3))
            )
@@ -1230,10 +1230,9 @@ simResTab2 <-
 print(simResTab2, scale = 0.8, booktabs = TRUE) 
 @
 
-\vx{-16}
 \begin{itemize}
-\item Type I error rates for PN-Type MI are much better than they were for 
-  single stochastic regression imputation, but they're still too high.
+\item Type I error rates for PN-Type MI improve on single stochastic regression 
+  imputation, but they're still too high.
 \end{itemize}
 
 \end{frame}
@@ -1244,19 +1243,17 @@ print(simResTab2, scale = 0.8, booktabs = TRUE)
   
   The problems on the previous slide arise from using the same regression 
   coefficients to create each of the $M$ imputations.
+  \vc
   \begin{itemize}
   \item Implies that you're using the ``correct'' coefficients.
-    \vb
-  \item This assumption is plainly ridiculous.
+    \vc
     \begin{itemize}
-    \item If we don't know some values of our outcome variable, how can we know 
-      the ``correct'' coefficients to link the incomplete outcome to the 
-      observed predictors?
+    \item This assumption is plainly ridiculous.
     \end{itemize}
     \vb
-    \pause
   \item Proper MI also models uncertainty in the regression coefficients used to 
     create the imputations.
+    \vc
     \begin{itemize}
     \item A different set of of coefficients is randomly sampled (using Bayesian 
       simulation) to create each of the $M$ imputations.
@@ -1277,15 +1274,15 @@ print(simResTab2, scale = 0.8, booktabs = TRUE)
     Y = \mathbf{X} \beta + \varepsilon
   \end{align*}
   To fully account for model uncertainty, we need to randomly sample both 
-  $\beta$ and $\text{var}(\varepsilon) = \sigma^2$.
+  $\beta$ and $var(\varepsilon) = \sigma^2$.
   \begin{itemize}
-  \item \textsc{Question:} Why do we only sample $\sigma^2$ and not 
+  \item \rmsc{Question:} Why do we only sample $\sigma^2$ and not 
     $\varepsilon$?
   \end{itemize}
   \pause
   \va
-  For a simple imputation model with a normally distributed outcome and 
-  uninformative priors, we need to specify two distributions:
+  For an imputation model with a normally distributed outcome and uninformative 
+  priors, we need to specify two distributions:
   \begin{enumerate}
     \item The marginal posterior distribution of $\sigma^2$
     \item The conditional posterior distribution of $\beta$ 
@@ -1304,7 +1301,7 @@ print(simResTab2, scale = 0.8, booktabs = TRUE)
   \item This distribution does not depend on any other parameters.
   \end{itemize}
   \begin{align}
-    \sigma^2 &\sim \text{Inv-}\chi^2 \left(N - P, MSE \right) \label{sigma2PosteriorEq}\\
+    \sigma^2 &\sim Inv\text{-}\chi^2 \left(N - P, MSE \right) \label{sigma2PosteriorEq}\\
     &\text{with } MSE = \frac{1}{N - P} \left( Y - \mathbf{X}\hat{\beta}_{ls} \right)^T \left( Y - \mathbf{X}\hat{\beta}_{ls} \right) \notag
   \end{align}
   \vx{-12}
@@ -1324,7 +1321,7 @@ print(simResTab2, scale = 0.8, booktabs = TRUE)
   \item This distribution is conditioned on a specific value of $\sigma^2$.
   \end{itemize}
   \begin{align}
-    \beta \sim \text{MVN} \left( \hat{\beta}_{ls}, ~ \sigma^2 (\mathbf{X}^T \mathbf{X})^{-1} \right) \label{betaPosteriorEq}
+    \beta \sim MVN \left( \hat{\beta}_{ls}, ~ \sigma^2 (\mathbf{X}^T \mathbf{X})^{-1} \right) \label{betaPosteriorEq}
   \end{align}
   \vx{-12}
   \begin{itemize}
@@ -1341,14 +1338,15 @@ print(simResTab2, scale = 0.8, booktabs = TRUE)
   posterior predictive distribution of the missing data.
   \vc
   \begin{itemize}
-  \item This is the distribution from which we sample our imputed values.
+  \item This is the distribution from which we sample replacements for the 
+    missing values (i.e., imputations).
     \vc
   \item In practice, we directly compute the imputations based on the simulated 
     imputation model parameters.
   \end{itemize}
   \begin{align}
     Y_{imp} &= \mathbf{X}_{mis}\tilde{\beta} + \tilde{\varepsilon} \label{impPosteriorEq}\\
-    &\text{with } \varepsilon \sim \text{N} \left( 0, \widetilde{\sigma^2} \right) \notag
+    \varepsilon &\sim N \left( 0, \widetilde{\sigma^2} \right) \notag
   \end{align}
   
 \end{frame}
@@ -1471,7 +1469,7 @@ gg0(x = dB1$x, y = dB1$y, points = FALSE) +
     Regression Imputation:
     \begin{align*}
       Y_{imp} &= \hat{Y}_{mis} + \varepsilon\\
-      \varepsilon &\sim \text{N}(0, \Sexpr{round(sigmas[1], 3)})
+      \varepsilon &\sim N(0, \Sexpr{round(sigmas[1], 3)})
     \end{align*}
   }
   
@@ -1496,7 +1494,7 @@ gg0(x = dB1$x, y = dB1$y, points = FALSE) +
     Regression Imputation:
     \begin{align*}
       Y_{imp} &= \hat{Y}_{mis} + \varepsilon\\
-      \varepsilon &\sim \text{N}(0, \Sexpr{round(sigmas[2], 3)})
+      \varepsilon &\sim N(0, \Sexpr{round(sigmas[2], 3)})
     \end{align*}
   }
   
@@ -1521,7 +1519,7 @@ gg0(x = dB1$x, y = dB1$y, points = FALSE) +
     Regression Imputation:
     \begin{align*}
       Y_{imp} &= \hat{Y}_{mis} + \varepsilon\\
-      \varepsilon &\sim \text{N}(0, \Sexpr{round(sigmas[3], 3)})
+      \varepsilon &\sim N(0, \Sexpr{round(sigmas[3], 3)})
     \end{align*}
   }
   
@@ -1600,6 +1598,40 @@ p3 + geom_point(mapping = aes(x = yMis$x, y = imps), color = "red")
 \end{column}
 \end{columns}
 
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
+\begin{frame}{Extending the Basic MI Algorithm}
+
+  The basic MI algorithm described above can be extended in two important ways.
+  \vb
+  \begin{enumerate}
+  \item Relaxing the normality assumption
+    \vc
+    \begin{itemize}
+    \item Model the missing data with a non-normal distribution
+      \vc
+    \item Generate imputations from matched, observed cases
+      \vc
+    \item Generate imputations from non-parametric algorithms
+    \end{itemize}
+    \vb
+  \item Imputing multivariate data
+    \vc
+    \begin{itemize}
+    \item Joint modeling
+      \begin{itemize}
+        \item \citet{rubin:1978, rubin:1987, schafer:1997, honakerKing:2010}
+      \end{itemize}
+      \vc
+    \item Fully conditional specification 
+      \begin{itemize}
+        \item \citet{raghunathanEtAl:2001, vanBuurenEtAl:2006}
+      \end{itemize}
+    \end{itemize}
+  \end{enumerate}
+  
 \end{frame}
 
 %------------------------------------------------------------------------------%
@@ -1769,8 +1801,8 @@ mice::densityplot(miceOut)
 
 \begin{frame}{Fraction of Missing Information}
   
-  In Lecture 4, we briefly discussed a very desirable measure of nonresponse: 
-  \emph{fraction of missing information} (FMI).
+  The \emph{fraction of missing information} (FMI) is a crucial effect size
+  measure for missing data problems.
   
   \begin{align*}
     FMI = \frac{r + \frac{2}{(df + 3)}}{r + 1} \approx \frac{(1 + M^{-1})B}{(1 + M^{-1})B + W} \rightarrow \frac{B}{B + W}
@@ -1793,12 +1825,12 @@ mice::densityplot(miceOut)
 
 \begin{frame}[fragile]{Example: Analysis \& Pooling}
   
-  Analyze the multiply imputed datasets and pool results:
+  We can use the \src{runMI()} function from the \pkg{semTools} package (or one
+  of its wrappers) to analyze the multiply imputed datasets and pool results.
   
 <<cache = TRUE>>=
 library(semTools)
 
-## semTools::cfa.mi() will do both the analysis and pooling phases:
 miOut <- 
     cfa.mi(cfaMod, data = complete(miceOut, "all"), std.lv = TRUE)  
 @ 
@@ -1825,34 +1857,46 @@ partSummary(miOut, 2:3, 1:17, fmi = TRUE, drops = c("df", "riv"))
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+\watermarkon %-----------------------------------------------------------------%
 
-\begin{frame}{Model Fit}
+\begin{frame}{Model Fit, Model Comparisons, MV Testing}
   
   We cannot simply average the $\chi^2$ statistics as we do the parameter
   estimates.
   \vc
   \begin{itemize}
-  \item We need to do some fancy processing to get a correctly distributed
-    fit statistic.
+  \item We need some fancy processing to get an appropriate statistic.
     \end{itemize}
   \vb
-  Three different formulations have been proposed, and they are typically 
-  designated $D_1$, $D_2$, and $D_3$.
+  Three different formulations have been proposed:
   \vc
-  \begin{enumerate}
-    \item $D_1$
+  \begin{itemize}
+    \item $D_1$: \citet{d1_paper}
+      \begin{itemize}
+      \item Multivariate Wald-test
+      \end{itemize}
       \vc
-    \item $D_2$
+    \item $D_2$: \citet{d2_paper}
+      \begin{itemize}
+      \item Direct aggregate of the $M$ test statistics or p-values
+      \end{itemize}
       \vc
-    \item $D_3$
-  \end{enumerate}
+    \item $D_3$: \citet{d3_paper}
+      \begin{itemize}
+      \item Likelihood ratio statistic
+      \end{itemize}
+  \end{itemize}
+  \vb
+  See \citet[][\href{https://stefvanbuuren.name/fimd/sec-multiparameter.html}{\textcolor{blue}{Section 5.3}}]{vanBuuren:2018} for more details.
   
 \end{frame}
 
-%------------------------------------------------------------------------------%
+\watermarkoff %----------------------------------------------------------------%
 
 \begin{frame}[fragile]{Model Fit}
+  
+  When we submit the \src{lavaan.mi} object created by \src{runMI()} to the 
+  \src{fitMeasures()} function, we can specify the type of pooling rule.
   
 <<>>=
 what <- c("chisq", "df", "pvalue", "fmi", "rmsea", "cfi", "tli")
@@ -1864,11 +1908,11 @@ fitMeasures(miOut, test = "D2")[what] %>% round(3)
 
 %------------------------------------------------------------------------------%
 
-\begin{frame}[fragile]{Model Fit}
+\begin{frame}[fragile]{Model Comparison}
 
 <<>>=
 ## Define a restricted model:
-cfaMod2 <- paste(cfaMod, "agree ~~ 0 * open", sep = "\n")
+cfaMod2 <- paste(cfaMod, 'agree ~~ 0 * open', sep =  '\n')
 
 ## Estimate the restricted model and pool the results:
 miOut2 <- 
@@ -1883,37 +1927,38 @@ anova(miOut2, miOut, test = "D2")
 
 %------------------------------------------------------------------------------%
 
-\begin{frame}[fragile]{Model Fit}
+\begin{frame}[fragile]{Multivariate Testing}
 
 <<>>=
 ## Define a model with some parameter labels:
-cfaMod3 <- "
+cfaMod3 <- '
 agree =~ l11 * A1 + l21 * A2 + l31 * A3 + l41 * A4 + l51 * A5
 open  =~ l12 * O1 + l22 * O2 + l32 * O3 + l42 * O4 + l52 * O5
-"
+'
 
 ## Estimate the model and pool the results:
 miOut3 <- 
     cfa.mi(cfaMod3, data = complete(miceOut, "all"), std.lv = TRUE)
 
 ## Define some constraints:
-cons <- "
+cons <- '
 l11 == l12
 l21 == l22
 l31 == l32
 l41 == l42
 l51 == l52
-"
+'
 @ 
 
 \end{frame}
 
 %------------------------------------------------------------------------------%
 
-\begin{frame}[fragile]{Model Fit}
+\begin{frame}[fragile]{Multivariate Testing}
+
+  Now, we test the constraints via multivariate Wald tests.
 
 <<>>=
-## Test the constraints via multivariate Wald tests:
 lavTestWald.mi(miOut3, constraints = cons, test = "D1")
 lavTestWald.mi(miOut3, constraints = cons, test = "D2")
 @ 
@@ -1921,18 +1966,21 @@ lavTestWald.mi(miOut3, constraints = cons, test = "D2")
 \end{frame}
 
 %------------------------------------------------------------------------------%
+\comment{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{MV Testing via Model Comparison}
 
-\begin{frame}[fragile]{Model Fit}
-
+  We can also do an analagous test via a model comparison.
+  
 <<>>=
-## Define a model with some parameter labels:
-cfaMod4 <- paste(cfaMod3, cons, sep = "\n")
+## Define constraints directly in the model syntax:
+cfaMod4 <- paste(cfaMod3, cons, sep = '\n')
 
 ## Estimate the model and pool the results:
 miOut4 <- 
     cfa.mi(cfaMod4, data = complete(miceOut, "all"), std.lv = TRUE)
 
-anova(miOut3, miOut4, test = "D2")
+## Test the constraints via a nested model comparison:
+anova(miOut4, miOut3, test = "D3")
 @ 
 
 \end{frame}
@@ -1944,21 +1992,11 @@ anova(miOut3, miOut4, test = "D2")
 <<>>=
 ## Define some syntax to allow cross-loadings from the "agree" 
 ## factor to the "open" items:
-adds <- "agree =~ O1 + O2 + O3"
+adds <- 'agree =~ O1 + O2 + O3'
 
 ## Test the parameter relaxations via a score test:
-stD2 <- lavTestScore.mi(miOut, add = adds, test = "D2")
 stD1 <- lavTestScore.mi(miOut, add = adds, test = "D1")
-@ 
-
-\end{frame}
-
-%------------------------------------------------------------------------------%
-
-\begin{frame}[fragile]{Model Fit}
-
-<<>>=
-stD2
+stD2 <- lavTestScore.mi(miOut, add = adds, test = "D2")
 @ 
 
 \end{frame}
@@ -1975,7 +2013,16 @@ stD1
 
 %------------------------------------------------------------------------------%
 
-\comment{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{Model Fit}
+
+<<>>=
+stD2
+@ 
+
+\end{frame}
+
+%------------------------------------------------------------------------------%
+
 \begin{frame}{Special Pooling Considerations}
   
   The \citet{rubin:1987} pooling rules only hold when the parameter of 
@@ -2090,22 +2137,26 @@ options(width = 50)
 options(width = 80)
 @
 
-\pagebreak
+\end{frame}
 
-In ML estimation, we would define different normal distributions.
-\vc
-\begin{itemize}
-\item Every distribution would have $\sigma^2 = 1$.
+\watermarkon %-----------------------------------------------------------------%
+
+\begin{frame}{ML Intuition}
+  
+  In ML estimation, we would define different normal distributions.
   \vc
-\item Each distribution would have a different value of $\mu$.
-\end{itemize}
-\vb
-We then compare the observed data to those distributions and see which 
-distribution best fits the data.
+  \begin{itemize}
+  \item Every distribution would have $\sigma^2 = 1$.
+    \vc
+  \item Each distribution would have a different value of $\mu$.
+  \end{itemize}
+  \vb
+  We then compare the observed data to those distributions and see which 
+  distribution best fits the data.
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+\watermarkoff %----------------------------------------------------------------%
 
 \begin{frame}{ML Intuition}
   
@@ -2150,7 +2201,7 @@ ggplot(data = dat1, mapping = aes(y = y, x = x)) +
       
       Suppose we have the following model:
       \begin{align*}
-        Y \sim \text{N}\left( \mu, \sigma^2 \right).
+        Y \sim N\left( \mu, \sigma^2 \right).
       \end{align*}
       
     \end{column}
@@ -2236,11 +2287,11 @@ ggplot(data = dat1, aes(x = x, y = y)) +
       Suppose we have a linear regression model:
       \begin{align*}
         Y &= \beta_0 + \beta_1 X + \varepsilon,\\[6pt]
-        \varepsilon &\sim N \left( 0, \sigma^2 \right).
+        \varepsilon &\sim N\left( 0, \sigma^2 \right).
       \end{align*}
       This model can be equivalently written as:
       \begin{align*}
-        Y \sim \text{N} \left( \beta_0 + \beta_1 X, \sigma^2 \right)
+        Y \sim N\left( \beta_0 + \beta_1 X, \sigma^2 \right)
       \end{align*}
       
     \end{column}
@@ -2306,7 +2357,7 @@ diabetes <- readRDS(paste0(dataDir, "diabetes.rds"))
 ## Fit a model:
 out1 <- lm(ldl ~ bp + glu + bmi, data = diabetes)
 
-## Extract the predicted values and estimated residual 
+## Extract the predicted values and the estimated residual 
 ## standard error:
 yHat <- predict(out1)
 s    <- summary(out1)$sigma
@@ -2647,7 +2698,7 @@ nPats <- md.pattern(dat2, plot = FALSE) %>% nrow() - 1
       \begin{itemize}
       \item We'll define \Sexpr{nPats} different version of $\mu$ and $\Sigma$.
         \vc
-      \item We'll calculate each individual loglikelihood contributions using 
+      \item We'll calculate each individual loglikelihood contribution using 
         the appropriate flavor of $\mu$ and $\Sigma$. 
       \end{itemize}
       
@@ -2763,18 +2814,18 @@ sigmaHat1 <- mle[4:9] %>%
 
 \begin{frame}[fragile]{FIML Example}
 
-  To use FIML in \pkg{lavaan}, we only nee to set the \src{missing = ¨fiml¨} 
-  argument.
+  To use FIML in \pkg{lavaan}, we need only specify \src{missing = "fiml"}.
+  \vc
   \begin{itemize}
   \item Do the same analysis via \pkg{lavaan}::\src{cfa()}.
   \end{itemize}
   
 <<>>=
 ## Define the model in lavaan syntax:
-mod <- "
+mod <- '
 bmi ~~ ldl + glu
 ldl ~~ glu
-"
+'
 
 ## Fit the model with lavaan::cfa():
 fit <- cfa(mod, data = dat2, missing = "fiml")
@@ -2848,7 +2899,7 @@ options(width = 80)
 @ 
 
 <<>>=
-partSummary(fimlOut, 1:5)
+partSummary(fimlOut, 1:4)
 @ 
 
 \end{frame}
@@ -2928,18 +2979,21 @@ partSummary(fimlOut, 10, fmi = TRUE)
 \begin{frame}[allowframebreaks]{Satisfying the MAR Assumption}
  
   Like MI, FIML also requires MAR data.
+  \vc
   \begin{itemize}
-  \item Parameters will be biased with MAR is violated.
+  \item Parameters will be biased when data are MNAR.
   \end{itemize}
   \vb
   Unlike MI, FIML directly treats the missing data while estimating the analysis 
   model.
+  \vc
   \begin{itemize}
   \item The MAR predictors must be included in the analysis model.
+    \vc
   \item Otherwise, FIML reduces to pairwise deletion.
   \end{itemize}
   \vb  
-  If the MAR predictors are not substantively interesting variables, naively 
+  When the MAR predictors are not substantively interesting variables, naively 
   included them in the analysis model can change the model's meaning.
   
   %\vc
@@ -2974,16 +3028,16 @@ partSummary(fimlOut, 10, fmi = TRUE)
   \item Satisfy the MAR assumption by incorporating MAR predictors into the 
     analysis model.
     \vc
-  \item Do not affect the fit or substantive meaning of the analysis model.
+  \item Maintain the fit and substantive meaning of the analysis model.
   \end{enumerate}
   \vb
   The approach entails incorporating the MAR predictors via a fully-saturated 
   covariance structure:
   \vc
   \begin{enumerate}
-  \item Allow all MAR predictors to co-vary with all other MAR predictors.
+  \item Allow every MAR predictor to covary with all other MAR predictors.
     \vc
-  \item Allow all MAR predictors to co-vary with all observed variables in the
+  \item Allow every MAR predictor to covary with all observed variables in the
     analysis model (or their residuals).
   \end{enumerate}
   
@@ -3003,8 +3057,8 @@ partSummary(fimlOut, 10, fmi = TRUE)
 
 \begin{frame}[fragile]{Saturated Correlates Example}
 
-  We can use the \src{lavaan.auxiliary()} function (or one of its wrappers) from 
-  \pkg{semTools} to streamline the analysis.
+  We can use the \src{lavaan.auxiliary()} function from \pkg{semTools} (or one 
+  of its wrappers) to streamline the analysis.
 
 <<cache = TRUE>>=
 fimlOut2 <- bfi %>% 
