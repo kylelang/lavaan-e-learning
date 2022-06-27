@@ -1,7 +1,7 @@
 %%% Title:    Lavaan E-Learning: Missing Data
 %%% Author:   Kyle M. Lang
 %%% Created:  2015-11-06
-%%% Modified: 2022-06-17
+%%% Modified: 2022-06-27
 
 \documentclass{beamer}
 \usetheme{Utrecht}
@@ -114,6 +114,8 @@ knit_theme$set('edit-kwrite')
 
 \begin{frame}{A Little Notation}
 
+  \vx{-16}
+  
   \begin{align*}
     Y &\coloneqq \text{An $N \times P$ Matrix of Arbitrary Data}\\[8pt]
     Y_{mis} &\coloneqq \text{The \emph{missing} part of $Y$}\\[8pt]
@@ -133,7 +135,7 @@ knit_theme$set('edit-kwrite')
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+\watermarkoff %----------------------------------------------------------------%
 
 \begin{frame}[fragile, allowframebreaks]{Example}
 
@@ -157,7 +159,7 @@ bfi %>% is.na() %>% colMeans() %>% round(2)
 
 \begin{frame}[fragile]{Example}
 
-Visualize the percentages missing via \pkg{naniar}\src{::gg\_miss\_var()}.
+  Visualize the percentages missing via \pkg{naniar}\src{::gg\_miss\_var()}.
 <<out.width = "50%">>=
 gg_miss_var(bfi, show_pct = TRUE)
 @
@@ -168,7 +170,7 @@ gg_miss_var(bfi, show_pct = TRUE)
 
 \begin{frame}[fragile]{Example}
 
-Visualize the missing data patterns via \pkg{ggmice}\src{::plot\_pattern()}.
+  Visualize the missing data patterns via \pkg{ggmice}\src{::plot\_pattern()}.
 <<out.width = "50%">>=
 plot_pattern(bfi)
 @ 
@@ -179,16 +181,16 @@ plot_pattern(bfi)
 
 \begin{frame}[fragile, allowframebreaks]{Example}
 
-In \pkg{lavaan}, we can directly fit a model with incomplete data.
+  In \pkg{lavaan}, we can directly fit a model with incomplete data.
 
 <<>>=
 library(lavaan)
 
 ## Specify the measurement model:
-cfaMod <- "
+cfaMod <- '
 agree =~ A1 + A2 + A3 + A4 + A5
 open  =~ O1 + O2 + O3 + O4 + O5
-"
+'
 
 ## Estimate the model:
 naiveOut <- cfa(cfaMod, data = bfi, std.lv = TRUE)
@@ -200,7 +202,7 @@ naiveOut <- cfa(cfaMod, data = bfi, std.lv = TRUE)
 
 \begin{frame}[fragile]{Example}
 
-The model will estimate, just fine...
+  The model will estimate, just fine...
 
 <<echo = FALSE>>= 
 partSummary(naiveOut, c(1, 7))
@@ -218,7 +220,7 @@ partSummary(naiveOut, 8:9, 1:17)
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+\watermarkon %-----------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -233,34 +235,34 @@ partSummary(naiveOut, 3)
 %------------------------------------------------------------------------------%
 
 \begin{frame}{Default Approach}
+  
+  Like most software packages, \pkg{lavaan} will default to \emph{complete case
+  analysis} when asked to analyze incomplete data.
+  
+  \vc
+  
+  \begin{itemize}
+  \item In the absence of user input, this is a sensible option.
+    \vc
+  \item That doesn't mean you should actually use deletion to treat the missing
+    data in your analysis.
+  \end{itemize}
 
-Like most software packages, \pkg{lavaan} will default to \emph{complete case
-    analysis} when asked to analyze incomplete data.
-
-\vc
-
-\begin{itemize}
-\item In the absence of user input, this is a sensible option.
-\vc
-\item That doesn't mean you should actually use deletion to treat the missing
-data in your analysis.
-\end{itemize}
-
-\vb
-\pause
-
-Complete case analysis has two major problems.
-\vc
-\begin{enumerate}
-\item Throws out useful information (potentially a lot of information)
-\vc
-\item Probably biases parameter estimates.
-\end{enumerate}
-
-\vb
-
-To understand the second point, we need to discuss \emph{missing data mechanisms}.
-
+  \vb
+  \pause
+  
+  Complete case analysis has two major problems.
+  \vc
+  \begin{enumerate}
+  \item Throws out useful information (potentially a lot of information)
+    \vc
+  \item Probably biases parameter estimates.
+  \end{enumerate}
+  
+  \vb
+  
+  To understand the second point, we need to discuss \emph{missing data mechanisms}.
+  
 \end{frame}
 
 \watermarkon %-----------------------------------------------------------------%
@@ -618,7 +620,7 @@ var(diabetes2$glu, na.rm = TRUE)
 
 \watermarkon %-----------------------------------------------------------------%
 
-\begin{frame}[allowframebreaks]{Good Methods}
+\begin{frame}[allowframebreaks]{Good Missing Data Methods}
 
   Multiple Imputation (MI)
   \vc
@@ -626,8 +628,8 @@ var(diabetes2$glu, na.rm = TRUE)
   \item Replace the missing values with $M$ plausible estimates
     \vc
     \begin{itemize}
-    \item Essentially, a repeated application of stochastic regression
-      imputation (with a particular type of regression model)
+    \item Essentially, a repeated application of stochastic, regression-based 
+      prediction to synthesize replacements for the missing data.
       \vc
     \item Produces unbiased parameter estimates and predictions
       \vc
@@ -652,8 +654,7 @@ var(diabetes2$glu, na.rm = TRUE)
       \vc
     \item The predictors of nonresponse must be included in the model, somehow
       \vc
-    \item Unless you write your own optimization program, FIML is only available
-      for certain types of models
+    \item FIML is only available for certain types of models
       \vc
     \item In linear regression models, FIML cannot treat missing data on
       predictors (if the predictors are taken as fixed)
@@ -664,7 +665,7 @@ var(diabetes2$glu, na.rm = TRUE)
 
 \watermarkoff %----------------------------------------------------------------%
 
-\begin{frame}[allowframebreaks, fragile]{Good Methods}
+\begin{frame}[allowframebreaks, fragile]{Good Missing Data Methods}
 
   What happens when we apply MI to our previous MAR example?
 <<>>=
@@ -723,7 +724,7 @@ ggplot(data    = pDat,
 
 %------------------------------------------------------------------------------%
 
-\begin{frame}[fragile, allowframebreaks]{Good Methods}
+\begin{frame}[fragile, allowframebreaks]{Good Missing Data Methods}
 
   What about applying MI to our MNAR example?
 <<>>=
@@ -784,7 +785,7 @@ ggplot(data = pDat, mapping = aes(x = x, y = y, color = c, group = g, size = c))
 
 \end{frame}
 
-\watermarkon %-----------------------------------------------------------------%
+%------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{MI Example}
  
@@ -802,7 +803,7 @@ miceOut <- mice(data      = diabetes2,
 
 \end{frame}
 
-\watermarkoff %----------------------------------------------------------------%
+%------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{MI Example}
 
@@ -861,7 +862,7 @@ fit$cov %>% cov2cor()
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+\watermarkon %-----------------------------------------------------------------%
 
 \sectionslide{Imputation-Based Solutions}
 
@@ -925,31 +926,34 @@ $BMI = \Sexpr{x3}$. We can predict their $LDL$ score by:
 
 \begin{frame}{Imputation is Just Prediction*}
   
-  In Lecture 3, you heard a bit about missing data imputation.
-  \begin{itemize}
-  \item Multiple imputation is one of the best ways to treat missing data.
-  \end{itemize}
-  \vb
+  %In Lecture 3, you heard a bit about missing data imputation.
+  %\begin{itemize}
+  %\item Multiple imputation is one of the best ways to treat missing data.
+  %\end{itemize}
+  %\vb
   Imputation is nothing more than a type of prediction.
+  \vc
   \begin{enumerate}
   \item Train a model on the observed parts of the data, $Y_{obs}$.
     \begin{itemize}
     \item Train the imputation model.
     \end{itemize}
+    \vc
   \item Predict the missing values, $Y_{mis}$.
     \begin{itemize}
     \item Generate imputations.
     \end{itemize}
+    \vc
   \item Replace the missing values with these predictions.
     \begin{itemize}
     \item Impute the missing data.
     \end{itemize}
   \end{enumerate}
-  \vb
-  Imputation can be used to support either prediction or inference.
-  \begin{itemize}
-  \item Our goals will dictate what type of imputation we need to do.
-  \end{itemize}
+  %\vb
+  %Imputation can be used to support either prediction or inference.
+  %\begin{itemize}
+  %\item Our goals will dictate what type of imputation we need to do.
+  %\end{itemize}
   
 \end{frame}
 
@@ -957,8 +961,7 @@ $BMI = \Sexpr{x3}$. We can predict their $LDL$ score by:
 
 \begin{frame}{*Levels of Uncertainty Modeling}
 
-  \citet{vanBuuren:2018} provides a very useful classification of different 
-  imputation methods:
+  \citet{vanBuuren:2018} classifies different imputation methods:
   \vb
   \begin{enumerate}
   \item Simple Prediction
@@ -979,8 +982,7 @@ $BMI = \Sexpr{x3}$. We can predict their $LDL$ score by:
   \item Prediction + Noise + Model Error
     \begin{itemize}
     \item Uncertainty in the imputation model itself is also modeled.
-    \item Only way to get fully proper imputations in the sense of 
-      \citet{rubin:1987}.
+    \item Required for proper imputations in the sense of \citet{rubin:1987}.
     \end{itemize}
   \end{enumerate}
   
@@ -1016,11 +1018,11 @@ print(simResTab, scale = 0.8, booktabs = TRUE)
 \pause
 \vx{-12}
 \begin{itemize}
-\item Conditional mean substitution overestimates the correlation effect.
+\item Conditional mean substitution overestimates the correlation.
   \vc
 \item Both single imputation methods inflate Type I error rates.
   \vc
-\item MI provides unbiased point estimates and accurate Type I error rates.
+\item MI provides unbiased estimates and accurate Type I error rates.
 \end{itemize}
 
 \end{frame}
@@ -1106,7 +1108,7 @@ p1
 \begin{column}{0.5\textwidth}
 
 <<>>=
-lsFit <- lm(y ~ x + z, data = yObs)
+lsFit <- lm(y ~ x, data = yObs)
 
 beta  <- coef(lsFit)
 sigma <- summary(lsFit)$sigma
@@ -1143,8 +1145,7 @@ p2
 <<>>=
 ## Generate imputations:
 imps <- beta[1] + 
-    beta[2] * yMis[ , "x"] + 
-    beta[3] * yMis[ , "z"]
+    beta[2] * yMis[ , "x"]
 
 ## Fill missing cells in Y:
 dat1[mVec, "y"] <- imps
@@ -2988,6 +2989,16 @@ partSummary(fimlOut, 10, fmi = TRUE)
   
 \end{frame}
 
+\watermarkoff %----------------------------------------------------------------%
+
+\begin{frame}{Saturated Correlates Diagram}
+  
+  \begin{figure}
+    \includegraphics[width = 0.65\textwidth]{figures/saturated_correlates_diagram.pdf}
+  \end{figure}
+  
+\end{frame}
+
 %------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Saturated Correlates Example}
@@ -3117,7 +3128,7 @@ xtable(tabData, caption = "Latent Covariances", align = "rrrrrrr") %>%
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+\watermarkon %-----------------------------------------------------------------%
 
 \begin{frame}[allowframebreaks]{References}
 
