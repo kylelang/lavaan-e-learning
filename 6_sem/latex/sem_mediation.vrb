@@ -9,9 +9,9 @@
 \end{alltt}
 \begin{verbatim}
   label    est ci.lower ci.upper
-1     b -0.195   -0.615    0.190
-2     a -0.411   -0.634   -0.238
-3    ab  0.080   -0.072    0.273
+1     b -0.195   -0.593    0.214
+2     a -0.411   -0.642   -0.240
+3    ab  0.080   -0.091    0.274
 \end{verbatim}
 \end{kframe}
 \end{knitrout}

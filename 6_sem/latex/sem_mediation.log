@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/Debian) (preloaded format=pdflatex 2022.6.8)  9 JUN 2022 16:19
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/Debian) (preloaded format=pdflatex 2022.6.8)  27 JUN 2022 17:48
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1323,10 +1323,6 @@ File: figures/3_factor_cfa.pdf Graphic file (type pdf)
 <use figures/3_factor_cfa.pdf>
 Package pdftex.def Info: figures/3_factor_cfa.pdf  used on input line 114.
 (pdftex.def)             Requested size: 256.39594pt x 85.44278pt.
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 114.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
@@ -1338,12 +1334,12 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 pdfTeX warning: pdflatex (file ./figures/simple_sem_diagram.pdf): PDF inclusion
 : found PDF version <1.7>, but at most version <1.5> allowed
-<figures/simple_sem_diagram.pdf, id=87, 853.50871pt x 853.50871pt>
+<figures/simple_sem_diagram.pdf, id=88, 853.50871pt x 853.50871pt>
 File: figures/simple_sem_diagram.pdf Graphic file (type pdf)
 <use figures/simple_sem_diagram.pdf>
 Package pdftex.def Info: figures/simple_sem_diagram.pdf  used on input line 131
 .
-(pdftex.def)             Requested size: 160.24684pt x 160.24086pt.
+(pdftex.def)             Requested size: 192.29817pt x 192.29164pt.
 LaTeX Font Info:    Font shape `OT1/Merriwthr-OsF/m/n' will be
 (Font)              scaled to size 10.5pt on input line 131.
 LaTeX Font Info:    Font shape `OT1/Merriwthr-OsF/m/n' will be
@@ -1354,10 +1350,10 @@ LaTeX Font Info:    Font shape `OT1/Merriwthr-OsF/m/it' will be
 (Font)              scaled to size 10.5pt on input line 131.
 LaTeX Font Info:    Font shape `OT1/Merriwthr-OsF/m/it' will be
 (Font)              scaled to size 7.9pt on input line 131.
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 131.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
+
+Overfull \vbox (31.65837pt too high) detected at line 131
+ []
+
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
@@ -1370,13 +1366,8 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
  (./sem_mediation.vrb
 LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <8> not available
-(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 6.
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 8.
 )
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 166.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -1390,10 +1381,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 Overfull \vbox (6.1404pt too high) detected at line 202
  []
 
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 202.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
@@ -1405,11 +1392,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 225.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -1423,10 +1405,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 Overfull \vbox (6.1404pt too high) detected at line 261
  []
 
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 261.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
@@ -1441,10 +1419,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 Overfull \vbox (6.1404pt too high) detected at line 297
  []
 
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 297.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
@@ -1456,11 +1430,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 332.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -1471,13 +1440,9 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-Overfull \vbox (6.1404pt too high) detected at line 368
+Overfull \vbox (6.1404pt too high) detected at line 366
  []
 
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 368.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
@@ -1489,11 +1454,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 394.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -1504,13 +1464,9 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-Overfull \vbox (6.1404pt too high) detected at line 430
+Overfull \vbox (6.1404pt too high) detected at line 428
  []
 
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 430.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
@@ -1522,13 +1478,9 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-Overfull \vbox (6.1404pt too high) detected at line 466
+Overfull \vbox (6.1404pt too high) detected at line 464
  []
 
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 466.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
@@ -1539,7 +1491,7 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 ]
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 489.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 487.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1550,14 +1502,14 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 ]
 LaTeX Font Info:    Font shape `OT1/opensans-TLF/m/n' will be
-(Font)              scaled to size 19.70294pt on input line 493.
+(Font)              scaled to size 19.70294pt on input line 491.
 LaTeX Font Info:    Font shape `OT1/Merriwthr-OsF/m/n' will be
-(Font)              scaled to size 20.74pt on input line 493.
+(Font)              scaled to size 20.74pt on input line 491.
 LaTeX Font Info:    Font shape `OT1/Merriwthr-OsF/m/sc' will be
-(Font)              scaled to size 20.74pt on input line 493.
+(Font)              scaled to size 20.74pt on input line 491.
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 493.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 491.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1568,10 +1520,10 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 ]
 LaTeX Font Info:    Font shape `OT1/opensans-TLF/m/it' will be
-(Font)              scaled to size 9.49997pt on input line 509.
+(Font)              scaled to size 9.49997pt on input line 507.
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 509.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 507.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1583,7 +1535,7 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 ]
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 527.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 525.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1596,15 +1548,15 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 pdfTeX warning: pdflatex (file ./figures/focalEffectDiagram.pdf): PDF inclusion
 : found PDF version <1.7>, but at most version <1.5> allowed
-<figures/focalEffectDiagram.pdf, id=175, 1024.30678pt x 341.35529pt>
+<figures/focalEffectDiagram.pdf, id=177, 1024.30678pt x 341.35529pt>
 File: figures/focalEffectDiagram.pdf Graphic file (type pdf)
 <use figures/focalEffectDiagram.pdf>
-Package pdftex.def Info: figures/focalEffectDiagram.pdf  used on input line 547
+Package pdftex.def Info: figures/focalEffectDiagram.pdf  used on input line 545
 .
 (pdftex.def)             Requested size: 320.4937pt x 106.80347pt.
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 547.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 545.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1614,15 +1566,11 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [19
 
  <./figures/focalEffectDiagram.pdf>]
-<figures/mediationDiagram.pdf, id=189, 963.6pt x 542.025pt>
+<figures/mediationDiagram.pdf, id=191, 963.6pt x 542.025pt>
 File: figures/mediationDiagram.pdf Graphic file (type pdf)
 <use figures/mediationDiagram.pdf>
-Package pdftex.def Info: figures/mediationDiagram.pdf  used on input line 568.
+Package pdftex.def Info: figures/mediationDiagram.pdf  used on input line 566.
 (pdftex.def)             Requested size: 256.39594pt x 144.22314pt.
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 568.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
@@ -1631,20 +1579,16 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [20
 
  <./figures/mediationDiagram.pdf>]
-<figures/moderationDiagram.pdf, id=200, 963.6pt x 542.025pt>
+<figures/moderationDiagram.pdf, id=202, 963.6pt x 542.025pt>
 File: figures/moderationDiagram.pdf Graphic file (type pdf)
 <use figures/moderationDiagram.pdf>
-Package pdftex.def Info: figures/moderationDiagram.pdf  used on input line 591.
+Package pdftex.def Info: figures/moderationDiagram.pdf  used on input line 589.
 
 (pdftex.def)             Requested size: 256.39594pt x 144.22314pt.
 
-Overfull \vbox (19.58987pt too high) detected at line 591
+Overfull \vbox (19.58987pt too high) detected at line 589
  []
 
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 591.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
@@ -1655,7 +1599,7 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
  <./figures/moderationDiagram.pdf>]
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 605.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 603.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1668,16 +1612,12 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 pdfTeX warning: pdflatex (file ./figures/simpleMediationPathDiagram.pdf): PDF i
 nclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<figures/simpleMediationPathDiagram.pdf, id=216, 963.6pt x 542.025pt>
+<figures/simpleMediationPathDiagram.pdf, id=218, 963.6pt x 542.025pt>
 File: figures/simpleMediationPathDiagram.pdf Graphic file (type pdf)
 <use figures/simpleMediationPathDiagram.pdf>
 Package pdftex.def Info: figures/simpleMediationPathDiagram.pdf  used on input 
-line 741.
+line 737.
 (pdftex.def)             Requested size: 320.4937pt x 180.2748pt.
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 741.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
@@ -1688,7 +1628,7 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
  <./figures/simpleMediationPathDiagram.pdf>]
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 765.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 761.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1700,7 +1640,7 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 ]
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 798.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 794.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1712,7 +1652,7 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 ]
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 830.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 826.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1725,16 +1665,12 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 pdfTeX warning: pdflatex (file ./figures/adamsKlpsExample1_two_models.pdf): PDF
  inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<figures/adamsKlpsExample1_two_models.pdf, id=263, 963.6pt x 542.025pt>
+<figures/adamsKlpsExample1_two_models.pdf, id=266, 963.6pt x 542.025pt>
 File: figures/adamsKlpsExample1_two_models.pdf Graphic file (type pdf)
 <use figures/adamsKlpsExample1_two_models.pdf>
 Package pdftex.def Info: figures/adamsKlpsExample1_two_models.pdf  used on inpu
-t line 842.
+t line 838.
 (pdftex.def)             Requested size: 256.39594pt x 144.22314pt.
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 842.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
@@ -1746,11 +1682,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 865.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -1761,11 +1692,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 900.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -1776,11 +1702,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 935.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -1791,11 +1712,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 970.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -1806,14 +1722,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-Overfull \vbox (7.91817pt too high) detected at line 1006
- []
-
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1006.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -1824,11 +1732,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1039.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -1838,7 +1741,7 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 ]
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1060.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1052.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1851,11 +1754,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1098.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -1866,12 +1764,8 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 File: figures/simpleMediationPathDiagram.pdf Graphic file (type pdf)
 <use figures/simpleMediationPathDiagram.pdf>
 Package pdftex.def Info: figures/simpleMediationPathDiagram.pdf  used on input 
-line 1108.
+line 1100.
 (pdftex.def)             Requested size: 320.4937pt x 180.2748pt.
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1108.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
@@ -1882,7 +1776,7 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 ]
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1167.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1159.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1894,7 +1788,7 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 ]
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1167.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1159.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -1905,16 +1799,12 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 ]
 LaTeX Font Info:    Font shape `OT1/Merriwthr-OsF/m/sc' will be
-(Font)              scaled to size 10.0pt on input line 1180.
+(Font)              scaled to size 10.0pt on input line 1172.
 File: figures/simpleMediationPathDiagram.pdf Graphic file (type pdf)
 <use figures/simpleMediationPathDiagram.pdf>
 Package pdftex.def Info: figures/simpleMediationPathDiagram.pdf  used on input 
-line 1180.
+line 1172.
 (pdftex.def)             Requested size: 256.39594pt x 144.22314pt.
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1180.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
@@ -1926,16 +1816,12 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 pdfTeX warning: pdflatex (file ./figures/mediationTriadPathDiagram.pdf): PDF in
 clusion: found PDF version <1.7>, but at most version <1.5> allowed
-<figures/mediationTriadPathDiagram.pdf, id=353, 1024.30678pt x 341.35529pt>
+<figures/mediationTriadPathDiagram.pdf, id=357, 1024.30678pt x 341.35529pt>
 File: figures/mediationTriadPathDiagram.pdf Graphic file (type pdf)
 <use figures/mediationTriadPathDiagram.pdf>
 Package pdftex.def Info: figures/mediationTriadPathDiagram.pdf  used on input l
-ine 1192.
+ine 1184.
 (pdftex.def)             Requested size: 256.39594pt x 85.44278pt.
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1192.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
@@ -1944,16 +1830,12 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [40
 
  <./figures/mediationTriadPathDiagram.pdf>]
-<figures/multipleMediationPathDiagrams.pdf, id=376, 963.6pt x 542.025pt>
+<figures/multipleMediationPathDiagrams.pdf, id=381, 963.6pt x 542.025pt>
 File: figures/multipleMediationPathDiagrams.pdf Graphic file (type pdf)
 <use figures/multipleMediationPathDiagrams.pdf>
 Package pdftex.def Info: figures/multipleMediationPathDiagrams.pdf  used on inp
-ut line 1202.
+ut line 1194.
 (pdftex.def)             Requested size: 320.4937pt x 180.2748pt.
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1202.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
@@ -1963,21 +1845,17 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
  <./figures/multipleMediationPathDiagrams.pdf>]
 LaTeX Font Info:    Font shape `OT1/opensans-TLF/b/n' will be
-(Font)              scaled to size 9.49997pt on input line 1214.
+(Font)              scaled to size 9.49997pt on input line 1206.
 
 
 pdfTeX warning: pdflatex (file ./figures/adamsKlpsExample1PathDiagram.pdf): PDF
  inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<figures/adamsKlpsExample1PathDiagram.pdf, id=401, 1024.30678pt x 341.35529pt>
+<figures/adamsKlpsExample1PathDiagram.pdf, id=406, 1024.30678pt x 341.35529pt>
 File: figures/adamsKlpsExample1PathDiagram.pdf Graphic file (type pdf)
 <use figures/adamsKlpsExample1PathDiagram.pdf>
 Package pdftex.def Info: figures/adamsKlpsExample1PathDiagram.pdf  used on inpu
-t line 1214.
+t line 1206.
 (pdftex.def)             Requested size: 320.4937pt x 106.80347pt.
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1214.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
@@ -1989,11 +1867,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1238.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -2004,11 +1877,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1267.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -2019,11 +1887,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1290.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -2034,11 +1897,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1323.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -2049,11 +1907,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1348.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -2061,34 +1914,28 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [47
 
 ]
+\openout4 = `sem_mediation.vrb'.
 
-pdfTeX warning: pdflatex (file ./figures/adamsKlpsExample1PathDiagramWithValues
-.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowe
-d
-<figures/adamsKlpsExample1PathDiagramWithValues.pdf, id=452, 1024.30678pt x 341
-.35529pt>
-File: figures/adamsKlpsExample1PathDiagramWithValues.pdf Graphic file (type pdf
-)
-<use figures/adamsKlpsExample1PathDiagramWithValues.pdf>
-Package pdftex.def Info: figures/adamsKlpsExample1PathDiagramWithValues.pdf  us
-ed on input line 1360.
-(pdftex.def)             Requested size: 320.4937pt x 106.80347pt.
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1360.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
+ (./sem_mediation.vrb)
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
 
 [48
 
- <./figures/adamsKlpsExample1PathDiagramWithValues.pdf>]
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1382.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
+]
+
+pdfTeX warning: pdflatex (file ./figures/adamsKlpsExample1PathDiagramWithValues
+.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowe
+d
+<figures/adamsKlpsExample1PathDiagramWithValues.pdf, id=463, 1024.30678pt x 341
+.35529pt>
+File: figures/adamsKlpsExample1PathDiagramWithValues.pdf Graphic file (type pdf
+)
+<use figures/adamsKlpsExample1PathDiagramWithValues.pdf>
+Package pdftex.def Info: figures/adamsKlpsExample1PathDiagramWithValues.pdf  us
+ed on input line 1380.
+(pdftex.def)             Requested size: 320.4937pt x 106.80347pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
@@ -2096,10 +1943,10 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [49
 
-]
+ <./figures/adamsKlpsExample1PathDiagramWithValues.pdf>]
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1405.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1402.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2111,7 +1958,7 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 ]
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1423.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1425.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2121,15 +1968,9 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [51
 
 ]
-<figures/bootstrappingDiagram.pdf, id=494, 963.6pt x 542.025pt>
-File: figures/bootstrappingDiagram.pdf Graphic file (type pdf)
-<use figures/bootstrappingDiagram.pdf>
-Package pdftex.def Info: figures/bootstrappingDiagram.pdf  used on input line 1
-435.
-(pdftex.def)             Requested size: 320.4937pt x 180.2748pt.
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1435.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1443.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2138,15 +1979,13 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [52
 
- <./figures/bootstrappingDiagram.pdf>]
-LaTeX Font Info:    Font shape `OT1/opensans-TLF/m/n' will be
-(Font)              scaled to size 6.93497pt on input line 1483.
-LaTeX Font Info:    Font shape `OT1/opensans-TLF/m/n' will be
-(Font)              scaled to size 5.22498pt on input line 1483.
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1483.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
+]
+<figures/bootstrappingDiagram.pdf, id=506, 963.6pt x 542.025pt>
+File: figures/bootstrappingDiagram.pdf Graphic file (type pdf)
+<use figures/bootstrappingDiagram.pdf>
+Package pdftex.def Info: figures/bootstrappingDiagram.pdf  used on input line 1
+455.
+(pdftex.def)             Requested size: 320.4937pt x 180.2748pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
@@ -2154,10 +1993,14 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [53
 
-]
+ <./figures/bootstrappingDiagram.pdf>]
+LaTeX Font Info:    Font shape `OT1/opensans-TLF/m/n' will be
+(Font)              scaled to size 6.93497pt on input line 1503.
+LaTeX Font Info:    Font shape `OT1/opensans-TLF/m/n' will be
+(Font)              scaled to size 5.22498pt on input line 1503.
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1483.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1503.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2165,6 +2008,18 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
  []
 
 [54
+
+]
+File: images/watermarkUU.png Graphic file (type png)
+<use images/watermarkUU.png>
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1503.
+(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
+
+Overfull \hbox (0.82268pt too wide) has occurred while \output is active
+[][] []
+ []
+
+[55
 
 
 ]
@@ -2179,60 +2034,33 @@ File: omscmtt.fd
 LaTeX Font Info:    Font shape `OMS/cmtt/m/n' in size <8> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 21.
 )
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1515.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
-Overfull \hbox (0.82268pt too wide) has occurred while \output is active
-[][] []
- []
-
-[55
-
-]
-\openout4 = `sem_mediation.vrb'.
-
- (./sem_mediation.vrb
-<figure/sem-unnamed-chunk-26-1.pdf, id=536, 505.89pt x 505.89pt>
-File: figure/sem-unnamed-chunk-26-1.pdf Graphic file (type pdf)
-<use figure/sem-unnamed-chunk-26-1.pdf>
-Package pdftex.def Info: figure/sem-unnamed-chunk-26-1.pdf  used on input line 
-6.
-(pdftex.def)             Requested size: 208.31894pt x 208.31938pt.
-)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1531.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
 
 [56
 
- <./figure/sem-unnamed-chunk-26-1.pdf>]
+]
 \openout4 = `sem_mediation.vrb'.
 
- (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1558.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
+ (./sem_mediation.vrb
+<figure/sem-unnamed-chunk-26-1.pdf, id=548, 505.89pt x 505.89pt>
+File: figure/sem-unnamed-chunk-26-1.pdf Graphic file (type pdf)
+<use figure/sem-unnamed-chunk-26-1.pdf>
+Package pdftex.def Info: figure/sem-unnamed-chunk-26-1.pdf  used on input line 
+6.
+(pdftex.def)             Requested size: 208.31894pt x 208.31938pt.
+)
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
 
 [57
 
-]
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1579.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
+ <./figure/sem-unnamed-chunk-26-1.pdf>]
+\openout4 = `sem_mediation.vrb'.
 
+ (./sem_mediation.vrb)
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -2242,7 +2070,7 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 ]
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1597.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1599.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2252,12 +2080,9 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [59
 
 ]
-\openout4 = `sem_mediation.vrb'.
-
- (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1622.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1617.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2269,49 +2094,34 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 ]
 \openout4 = `sem_mediation.vrb'.
 
- (./sem_mediation.vrb
-<figure/sem-unnamed-chunk-29-1.pdf, id=569, 505.89pt x 505.89pt>
-File: figure/sem-unnamed-chunk-29-1.pdf Graphic file (type pdf)
-<use figure/sem-unnamed-chunk-29-1.pdf>
-Package pdftex.def Info: figure/sem-unnamed-chunk-29-1.pdf  used on input line 
-6.
-(pdftex.def)             Requested size: 208.31894pt x 208.31938pt.
-)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1638.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
+ (./sem_mediation.vrb)
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
 
 [61
 
- <./figure/sem-unnamed-chunk-29-1.pdf>]
+]
 \openout4 = `sem_mediation.vrb'.
 
- (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1658.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
+ (./sem_mediation.vrb
+<figure/sem-unnamed-chunk-28-1.pdf, id=582, 505.89pt x 505.89pt>
+File: figure/sem-unnamed-chunk-28-1.pdf Graphic file (type pdf)
+<use figure/sem-unnamed-chunk-28-1.pdf>
+Package pdftex.def Info: figure/sem-unnamed-chunk-28-1.pdf  used on input line 
+6.
+(pdftex.def)             Requested size: 208.31894pt x 208.31938pt.
+)
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
 
 [62
 
-]
+ <./figure/sem-unnamed-chunk-28-1.pdf>]
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1685.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -2319,11 +2129,9 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [63
 
 ]
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1888.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
+\openout4 = `sem_mediation.vrb'.
 
+ (./sem_mediation.vrb)
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -2331,14 +2139,9 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [64
 
 ]
-<figures/parallelDiagram.pdf, id=596, 963.6pt x 542.025pt>
-File: figures/parallelDiagram.pdf Graphic file (type pdf)
-<use figures/parallelDiagram.pdf>
-Package pdftex.def Info: figures/parallelDiagram.pdf  used on input line 1897.
-(pdftex.def)             Requested size: 256.39594pt x 144.22314pt.
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1897.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1910.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2347,11 +2150,12 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [65
 
- <./figures/parallelDiagram.pdf>]
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1927.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
+]
+<figures/parallelDiagram.pdf, id=608, 963.6pt x 542.025pt>
+File: figures/parallelDiagram.pdf Graphic file (type pdf)
+<use figures/parallelDiagram.pdf>
+Package pdftex.def Info: figures/parallelDiagram.pdf  used on input line 1924.
+(pdftex.def)             Requested size: 256.39594pt x 144.22314pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
@@ -2359,15 +2163,10 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [66
 
-]
-File: figures/adamsKlpsExample1PathDiagram.pdf Graphic file (type pdf)
-<use figures/adamsKlpsExample1PathDiagram.pdf>
-Package pdftex.def Info: figures/adamsKlpsExample1PathDiagram.pdf  used on inpu
-t line 1945.
-(pdftex.def)             Requested size: 256.39594pt x 85.44278pt.
+ <./figures/parallelDiagram.pdf>]
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1945.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 1950.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2377,16 +2176,11 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [67
 
 ]
-<figures/adamsKlpsParallel.pdf, id=632, 963.6pt x 542.025pt>
-File: figures/adamsKlpsParallel.pdf Graphic file (type pdf)
-<use figures/adamsKlpsParallel.pdf>
-Package pdftex.def Info: figures/adamsKlpsParallel.pdf  used on input line 1957
-.
-(pdftex.def)             Requested size: 256.39594pt x 144.22314pt.
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1957.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
+File: figures/adamsKlpsExample1PathDiagram.pdf Graphic file (type pdf)
+<use figures/adamsKlpsExample1PathDiagram.pdf>
+Package pdftex.def Info: figures/adamsKlpsExample1PathDiagram.pdf  used on inpu
+t line 1968.
+(pdftex.def)             Requested size: 256.39594pt x 85.44278pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
@@ -2394,11 +2188,13 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [68
 
- <./figures/adamsKlpsParallel.pdf>]
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 1993.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
+]
+<figures/adamsKlpsParallel.pdf, id=644, 963.6pt x 542.025pt>
+File: figures/adamsKlpsParallel.pdf Graphic file (type pdf)
+<use figures/adamsKlpsParallel.pdf>
+Package pdftex.def Info: figures/adamsKlpsParallel.pdf  used on input line 1980
+.
+(pdftex.def)             Requested size: 256.39594pt x 144.22314pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
@@ -2406,13 +2202,10 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [69
 
-]
-\openout4 = `sem_mediation.vrb'.
-
- (./sem_mediation.vrb)
+ <./figures/adamsKlpsParallel.pdf>]
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2027.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2016.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2425,11 +2218,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2057.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -2440,11 +2228,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2087.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -2455,11 +2238,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2109.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -2470,11 +2248,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2132.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -2482,11 +2255,9 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [74
 
 ]
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2153.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
+\openout4 = `sem_mediation.vrb'.
 
+ (./sem_mediation.vrb)
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -2494,11 +2265,9 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [75
 
 ]
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2153.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
+\openout4 = `sem_mediation.vrb'.
 
+ (./sem_mediation.vrb)
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -2506,12 +2275,9 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [76
 
 ]
-\openout4 = `sem_mediation.vrb'.
-
- (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2185.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2198.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2521,12 +2287,9 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [77
 
 ]
-\openout4 = `sem_mediation.vrb'.
-
- (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2215.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2198.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2539,11 +2302,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2245.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -2554,11 +2312,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2267.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -2569,11 +2322,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2289.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -2584,11 +2332,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2321.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -2599,11 +2342,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2351.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -2614,11 +2352,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2381.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -2629,11 +2362,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2404.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -2644,11 +2372,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2428.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -2656,31 +2379,19 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [86
 
 ]
+\openout4 = `sem_mediation.vrb'.
 
-pdfTeX warning: pdflatex (file ./figures/serialDiagram.pdf): PDF inclusion: fou
-nd PDF version <1.7>, but at most version <1.5> allowed
-<figures/serialDiagram.pdf, id=752, 1024.30678pt x 341.35529pt>
-File: figures/serialDiagram.pdf Graphic file (type pdf)
-<use figures/serialDiagram.pdf>
-Package pdftex.def Info: figures/serialDiagram.pdf  used on input line 2442.
-(pdftex.def)             Requested size: 320.4937pt x 106.80347pt.
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2442.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
+ (./sem_mediation.vrb)
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
 
 [87
 
- <./figures/serialDiagram.pdf>]
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2464.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
+]
+\openout4 = `sem_mediation.vrb'.
 
+ (./sem_mediation.vrb)
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -2688,16 +2399,9 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [88
 
 ]
-File: figures/adamsKlpsExample1PathDiagram.pdf Graphic file (type pdf)
-<use figures/adamsKlpsExample1PathDiagram.pdf>
-Package pdftex.def Info: figures/adamsKlpsExample1PathDiagram.pdf  used on inpu
-t line 2478.
-(pdftex.def)             Requested size: 320.4937pt x 106.80347pt.
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2478.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
+\openout4 = `sem_mediation.vrb'.
 
+ (./sem_mediation.vrb)
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -2705,31 +2409,24 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [89
 
 ]
+\openout4 = `sem_mediation.vrb'.
 
-pdfTeX warning: pdflatex (file ./figures/adamsKlpsSerial1.pdf): PDF inclusion: 
-found PDF version <1.7>, but at most version <1.5> allowed
-<figures/adamsKlpsSerial1.pdf, id=785, 1024.30678pt x 341.35529pt>
-File: figures/adamsKlpsSerial1.pdf Graphic file (type pdf)
-<use figures/adamsKlpsSerial1.pdf>
-Package pdftex.def Info: figures/adamsKlpsSerial1.pdf  used on input line 2490.
-
-(pdftex.def)             Requested size: 320.4937pt x 106.80347pt.
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2490.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
+ (./sem_mediation.vrb)
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
 
 [90
 
- <./figures/adamsKlpsSerial1.pdf>]
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2522.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
+]
+
+pdfTeX warning: pdflatex (file ./figures/serialDiagram.pdf): PDF inclusion: fou
+nd PDF version <1.7>, but at most version <1.5> allowed
+<figures/serialDiagram.pdf, id=779, 1024.30678pt x 341.35529pt>
+File: figures/serialDiagram.pdf Graphic file (type pdf)
+<use figures/serialDiagram.pdf>
+Package pdftex.def Info: figures/serialDiagram.pdf  used on input line 2531.
+(pdftex.def)             Requested size: 320.4937pt x 106.80347pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
@@ -2737,10 +2434,10 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [91
 
-]
+ <./figures/serialDiagram.pdf>]
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2542.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2553.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2750,13 +2447,11 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [92
 
 ]
-\openout4 = `sem_mediation.vrb'.
-
- (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2568.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
+File: figures/adamsKlpsExample1PathDiagram.pdf Graphic file (type pdf)
+<use figures/adamsKlpsExample1PathDiagram.pdf>
+Package pdftex.def Info: figures/adamsKlpsExample1PathDiagram.pdf  used on inpu
+t line 2567.
+(pdftex.def)             Requested size: 320.4937pt x 106.80347pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
@@ -2765,13 +2460,15 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [93
 
 ]
-\openout4 = `sem_mediation.vrb'.
 
- (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2596.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
+pdfTeX warning: pdflatex (file ./figures/adamsKlpsSerial1.pdf): PDF inclusion: 
+found PDF version <1.7>, but at most version <1.5> allowed
+<figures/adamsKlpsSerial1.pdf, id=815, 1024.30678pt x 341.35529pt>
+File: figures/adamsKlpsSerial1.pdf Graphic file (type pdf)
+<use figures/adamsKlpsSerial1.pdf>
+Package pdftex.def Info: figures/adamsKlpsSerial1.pdf  used on input line 2579.
+
+(pdftex.def)             Requested size: 320.4937pt x 106.80347pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
@@ -2779,13 +2476,10 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [94
 
-]
-\openout4 = `sem_mediation.vrb'.
-
- (./sem_mediation.vrb)
+ <./figures/adamsKlpsSerial1.pdf>]
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2624.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2611.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2795,12 +2489,9 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [95
 
 ]
-\openout4 = `sem_mediation.vrb'.
-
- (./sem_mediation.vrb)
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2647.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 2631.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -2810,35 +2501,19 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [96
 
 ]
+\openout4 = `sem_mediation.vrb'.
 
-pdfTeX warning: pdflatex (file ./figures/adamsKlpsSerial1_restricted.pdf): PDF 
-inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<figures/adamsKlpsSerial1_restricted.pdf, id=841, 1024.30678pt x 341.35529pt>
-File: figures/adamsKlpsSerial1_restricted.pdf Graphic file (type pdf)
-<use figures/adamsKlpsSerial1_restricted.pdf>
-Package pdftex.def Info: figures/adamsKlpsSerial1_restricted.pdf  used on input
- line 2675.
-(pdftex.def)             Requested size: 224.3446pt x 74.75983pt.
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2675.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
+ (./sem_mediation.vrb)
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
 
 [97
 
- <./figures/adamsKlpsSerial1_restricted.pdf>]
+]
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2697.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -2849,11 +2524,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2732.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -2864,11 +2534,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2756.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -2879,11 +2544,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2787.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -2891,13 +2551,15 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [101
 
 ]
-\openout4 = `sem_mediation.vrb'.
 
- (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2814.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
+pdfTeX warning: pdflatex (file ./figures/adamsKlpsSerial1_restricted.pdf): PDF 
+inclusion: found PDF version <1.7>, but at most version <1.5> allowed
+<figures/adamsKlpsSerial1_restricted.pdf, id=876, 1024.30678pt x 341.35529pt>
+File: figures/adamsKlpsSerial1_restricted.pdf Graphic file (type pdf)
+<use figures/adamsKlpsSerial1_restricted.pdf>
+Package pdftex.def Info: figures/adamsKlpsSerial1_restricted.pdf  used on input
+ line 2785.
+(pdftex.def)             Requested size: 224.3446pt x 74.75983pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
@@ -2905,15 +2567,10 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [102
 
-]
+ <./figures/adamsKlpsSerial1_restricted.pdf>]
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2842.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -2924,11 +2581,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2864.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -2936,16 +2588,9 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [104
 
 ]
-File: figures/adamsKlpsSerial1.pdf Graphic file (type pdf)
-<use figures/adamsKlpsSerial1.pdf>
-Package pdftex.def Info: figures/adamsKlpsSerial1.pdf  used on input line 2879.
+\openout4 = `sem_mediation.vrb'.
 
-(pdftex.def)             Requested size: 320.4937pt x 106.80347pt.
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2879.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
+ (./sem_mediation.vrb)
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -2953,29 +2598,19 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [105
 
 ]
-<figures/adamsKlpsSerial2.pdf, id=906, 963.6pt x 542.025pt>
-File: figures/adamsKlpsSerial2.pdf Graphic file (type pdf)
-<use figures/adamsKlpsSerial2.pdf>
-Package pdftex.def Info: figures/adamsKlpsSerial2.pdf  used on input line 2891.
+\openout4 = `sem_mediation.vrb'.
 
-(pdftex.def)             Requested size: 320.4937pt x 180.2748pt.
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2891.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
+ (./sem_mediation.vrb)
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
 
 [106
 
- <./figures/adamsKlpsSerial2.pdf>]
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2934.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
+]
+\openout4 = `sem_mediation.vrb'.
 
+ (./sem_mediation.vrb)
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -2983,11 +2618,9 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [107
 
 ]
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2934.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
+\openout4 = `sem_mediation.vrb'.
 
+ (./sem_mediation.vrb)
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -2998,11 +2631,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 2968.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -3013,11 +2641,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 3000.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -3025,13 +2648,11 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [110
 
 ]
-\openout4 = `sem_mediation.vrb'.
+File: figures/adamsKlpsSerial1.pdf Graphic file (type pdf)
+<use figures/adamsKlpsSerial1.pdf>
+Package pdftex.def Info: figures/adamsKlpsSerial1.pdf  used on input line 3016.
 
- (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 3033.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
+(pdftex.def)             Requested size: 320.4937pt x 106.80347pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
@@ -3040,16 +2661,12 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [111
 
 ]
-\openout4 = `sem_mediation.vrb'.
+<figures/adamsKlpsSerial2.pdf, id=948, 963.6pt x 542.025pt>
+File: figures/adamsKlpsSerial2.pdf Graphic file (type pdf)
+<use figures/adamsKlpsSerial2.pdf>
+Package pdftex.def Info: figures/adamsKlpsSerial2.pdf  used on input line 3028.
 
- (./sem_mediation.vrb)
-Overfull \vbox (15.6404pt too high) detected at line 3070
- []
-
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 3070.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
+(pdftex.def)             Requested size: 320.4937pt x 180.2748pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
@@ -3057,15 +2674,10 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [112
 
-]
-<figures/adamsKlpsHybrid.pdf, id=963, 963.6pt x 542.025pt>
-File: figures/adamsKlpsHybrid.pdf Graphic file (type pdf)
-<use figures/adamsKlpsHybrid.pdf>
-Package pdftex.def Info: figures/adamsKlpsHybrid.pdf  used on input line 3082.
-(pdftex.def)             Requested size: 320.4937pt x 180.2748pt.
+ <./figures/adamsKlpsSerial2.pdf>]
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 3082.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 3071.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -3074,13 +2686,10 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [113
 
- <./figures/adamsKlpsHybrid.pdf>]
-\openout4 = `sem_mediation.vrb'.
-
- (./sem_mediation.vrb)
+]
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 3115.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 3071.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
@@ -3093,11 +2702,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 3146.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -3108,11 +2712,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 3173.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -3123,11 +2722,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 3197.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -3138,11 +2732,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 3231.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -3150,36 +2739,21 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [118
 
 ]
-<figures/practiceDiagram.pdf, id=1014, 963.6pt x 542.025pt>
-File: figures/practiceDiagram.pdf Graphic file (type pdf)
-<use figures/practiceDiagram.pdf>
-Package pdftex.def Info: figures/practiceDiagram.pdf  used on input line 3243.
-(pdftex.def)             Requested size: 320.4937pt x 180.2748pt.
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 3243.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
+\openout4 = `sem_mediation.vrb'.
 
+ (./sem_mediation.vrb)
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
 
 [119
 
- <./figures/practiceDiagram.pdf>]
-File: figures/simpleMediationPathDiagram.pdf Graphic file (type pdf)
-<use figures/simpleMediationPathDiagram.pdf>
-Package pdftex.def Info: figures/simpleMediationPathDiagram.pdf  used on input 
-line 3262.
+]
+<figures/adamsKlpsHybrid.pdf, id=1009, 963.6pt x 542.025pt>
+File: figures/adamsKlpsHybrid.pdf Graphic file (type pdf)
+<use figures/adamsKlpsHybrid.pdf>
+Package pdftex.def Info: figures/adamsKlpsHybrid.pdf  used on input line 3231.
 (pdftex.def)             Requested size: 320.4937pt x 180.2748pt.
-
-Overfull \vbox (12.77641pt too high) detected at line 3262
- []
-
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 3262.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
@@ -3187,32 +2761,20 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [120
 
-]
-<figures/semMedDiagram.pdf, id=1043, 963.6pt x 542.025pt>
-File: figures/semMedDiagram.pdf Graphic file (type pdf)
-<use figures/semMedDiagram.pdf>
-Package pdftex.def Info: figures/semMedDiagram.pdf  used on input line 3277.
-(pdftex.def)             Requested size: 256.39594pt x 144.22314pt.
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 3277.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
+ <./figures/adamsKlpsHybrid.pdf>]
+\openout4 = `sem_mediation.vrb'.
 
+ (./sem_mediation.vrb)
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
 
 [121
 
- <./figures/semMedDiagram.pdf>]
+]
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 3309.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -3223,11 +2785,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 3335.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -3238,11 +2795,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 3366.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -3253,11 +2805,6 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 \openout4 = `sem_mediation.vrb'.
 
  (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 3393.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
-
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
@@ -3265,13 +2812,11 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [125
 
 ]
-\openout4 = `sem_mediation.vrb'.
-
- (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 3427.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
+<figures/practiceDiagram.pdf, id=1060, 963.6pt x 542.025pt>
+File: figures/practiceDiagram.pdf Graphic file (type pdf)
+<use figures/practiceDiagram.pdf>
+Package pdftex.def Info: figures/practiceDiagram.pdf  used on input line 3390.
+(pdftex.def)             Requested size: 320.4937pt x 180.2748pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
@@ -3279,14 +2824,12 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [126
 
-]
-\openout4 = `sem_mediation.vrb'.
-
- (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 3457.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
+ <./figures/practiceDiagram.pdf>]
+File: figures/simpleMediationPathDiagram.pdf Graphic file (type pdf)
+<use figures/simpleMediationPathDiagram.pdf>
+Package pdftex.def Info: figures/simpleMediationPathDiagram.pdf  used on input 
+line 3409.
+(pdftex.def)             Requested size: 224.3446pt x 126.19319pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
@@ -3295,13 +2838,11 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [127
 
 ]
-\openout4 = `sem_mediation.vrb'.
-
- (./sem_mediation.vrb)
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 3479.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
+<figures/semMedDiagram.pdf, id=1091, 963.6pt x 542.025pt>
+File: figures/semMedDiagram.pdf Graphic file (type pdf)
+<use figures/semMedDiagram.pdf>
+Package pdftex.def Info: figures/semMedDiagram.pdf  used on input line 3424.
+(pdftex.def)             Requested size: 256.39594pt x 144.22314pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
@@ -3309,29 +2850,99 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
 [128
 
-]
-File: images/watermarkUU.png Graphic file (type png)
-<use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 3513.
-(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
+ <./figures/semMedDiagram.pdf>]
+\openout4 = `sem_mediation.vrb'.
 
+ (./sem_mediation.vrb)
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
 
 [129
 
-] (./sem_mediation.bbl)
+]
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
+Overfull \hbox (0.82268pt too wide) has occurred while \output is active
+[][] []
+ []
+
+[130
+
+]
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
+Overfull \hbox (0.82268pt too wide) has occurred while \output is active
+[][] []
+ []
+
+[131
+
+]
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
+Overfull \hbox (0.82268pt too wide) has occurred while \output is active
+[][] []
+ []
+
+[132
+
+]
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
+Overfull \hbox (0.82268pt too wide) has occurred while \output is active
+[][] []
+ []
+
+[133
+
+]
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
+Overfull \hbox (0.82268pt too wide) has occurred while \output is active
+[][] []
+ []
+
+[134
+
+]
+\openout4 = `sem_mediation.vrb'.
+
+ (./sem_mediation.vrb)
+Overfull \hbox (0.82268pt too wide) has occurred while \output is active
+[][] []
+ []
+
+[135
+
+]
 File: images/watermarkUU.png Graphic file (type png)
 <use images/watermarkUU.png>
-Package pdftex.def Info: images/watermarkUU.png  used on input line 4034.
+Package pdftex.def Info: images/watermarkUU.png  used on input line 3660.
 (pdftex.def)             Requested size: 98.56534pt x 100.0pt.
 
 Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 [][] []
  []
 
-[130
+[136
+
+] (./sem_mediation.bbl)
+File: images/watermarkUU.png Graphic file (type png)
+<use images/watermarkUU.png>
+Package pdftex.def Info: images/watermarkUU.png  used on input line 4181.
+(pdftex.def)             Requested size: 98.56534pt x 100.0pt.
+
+Overfull \hbox (0.82268pt too wide) has occurred while \output is active
+[][] []
+ []
+
+[137
 
 ]
 \tf@nav=\write7
@@ -3345,13 +2956,13 @@ Overfull \hbox (0.82268pt too wide) has occurred while \output is active
 
  (./sem_mediation.aux)
 Package rerunfilecheck Info: File `sem_mediation.out' has not changed.
-(rerunfilecheck)             Checksum: C8951ECB850A809641AD5A67A7A12ABD;415.
+(rerunfilecheck)             Checksum: 5752A70A46C4AA8726AF2CA0B8F1A720;415.
  ) 
 Here is how much of TeX's memory you used:
- 22996 strings out of 479304
- 417120 string characters out of 5869780
- 725011 words of memory out of 5000000
- 39128 multiletter control sequences out of 15000+600000
+ 23038 strings out of 479304
+ 417645 string characters out of 5869780
+ 719329 words of memory out of 5000000
+ 39142 multiletter control sequences out of 15000+600000
  504726 words of font info for 161 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  131i,15n,132p,489b,657s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -3373,10 +2984,10 @@ e/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.pfb></usr/share/texlive/texmf
 -dist/fonts/type1/public/newtx/txexs.pfb></usr/share/texlive/texmf-dist/fonts/t
 ype1/public/newtx/txmiaX.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/
 newtx/txsys.pfb>
-Output written on sem_mediation.pdf (130 pages, 1282419 bytes).
+Output written on sem_mediation.pdf (137 pages, 1284410 bytes).
 PDF statistics:
- 1234 PDF objects out of 1440 (max. 8388607)
- 978 compressed objects within 10 object streams
- 277 named destinations out of 1000 (max. 500000)
+ 1284 PDF objects out of 1440 (max. 8388607)
+ 1010 compressed objects within 11 object streams
+ 291 named destinations out of 1000 (max. 500000)
  224 words of extra memory for PDF output out of 10000 (max. 10000000)
 
