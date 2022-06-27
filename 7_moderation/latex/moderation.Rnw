@@ -1,7 +1,7 @@
 %%% Title:    Lavaan E-Learning: Moderation
 %%% Author:   Kyle M. Lang
 %%% Created:  2016-XX-XX
-%%% Modified: 2022-06-13
+%%% Modified: 2022-06-27
 
 \documentclass[10pt]{beamer}
 \usetheme{Utrecht}
@@ -39,7 +39,7 @@ library(xtable)
 library(MLmetrics)
 library(dplyr)
 library(mvtnorm)
-library(lavaan)
+library(lavaan, lib.loc = "~/R/manual_installs/")
 
 source("../../code/supportFunctions.R")
 
@@ -88,7 +88,7 @@ knit_theme$set('edit-kwrite')
   
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+\watermarkoff %%%------------------------------------------------------------%%%
 
 \begin{frame}{Refresher: Mediation Hypothesis}
   
@@ -132,7 +132,7 @@ knit_theme$set('edit-kwrite')
   
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+\watermarkon %%%-------------------------------------------------------------%%%
 
 \begin{frame}{Equations}
 
@@ -152,8 +152,8 @@ knit_theme$set('edit-kwrite')
     coefficients.
     \vb
   \item \red{The effect of $X$ on $Y$ is the same at \textbf{all levels} of
-    $Z$, and the effect of $Z$ on $Y$ is the same at \textbf{all
-      levels} of $X$.}
+    $Z$, and the effect of $Z$ on $Y$ is the same at \textbf{all levels} of 
+    $X$.}
   \end{itemize}
 
 \end{frame}
@@ -484,10 +484,10 @@ p2 + scale_colour_manual(name = "", values = c("Mean LDL" = "black",
 library(lavaan)
 
 ## Specify the model:
-mod <- "bp ~ 1 + bmi + ldl + bmi:ldl"
+mod <- 'bp ~ 1 + bmi + ldl + bmi:ldl'
 
 ## Use a dplyr pipeline to create the product term and estimate the model:
-lavOut <- sem(mod1, data = dDat)
+lavOut <- sem(mod, data = dDat)
 @
 
 \end{frame}
@@ -497,12 +497,12 @@ lavOut <- sem(mod1, data = dDat)
 \begin{frame}[fragile]{Example}
  
 <<>>=
-partSummary(lavOut, 5:7)
+partSummary(lavOut, 7:9)
 @
 
 \end{frame}
    
-%%%--------------------------------------------------------------------------%%%
+\watermarkon %%%-------------------------------------------------------------%%%
 
 \sectionslide{Post Hoc Analysis}
 
@@ -606,7 +606,7 @@ partSummary(lavOut, 5:7)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+\watermarkoff %%%------------------------------------------------------------%%%
 
 \begin{frame}[fragile]{Example}
 
@@ -680,7 +680,7 @@ plotProbe(ssOut, xlim = range(dDat$bmi), xlab = "BMI", ylab = "BP")
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+\watermarkon %%%-------------------------------------------------------------%%%
 
 \sectionslide{Latent Variable Interactions}
 
@@ -785,7 +785,7 @@ plotProbe(ssOut, xlim = range(dDat$bmi), xlab = "BMI", ylab = "BP")
   
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+\watermarkoff %%%------------------------------------------------------------%%%
 
 \begin{frame}{Orthogonalization}
   
@@ -802,11 +802,11 @@ plotProbe(ssOut, xlim = range(dDat$bmi), xlab = "BMI", ylab = "BP")
 <<>>=
 dat1 <- readRDS("../data/lecture12Data.rds")
 
-mod1 <- "
+mod1 <- '
 fX =~ x1 + x2 + x3
 fZ =~ z1 + z2 + z3
 fY =~ y1 + y2 + y3
-"
+'
 
 out1 <- cfa(mod1, data = dat1, std.lv = TRUE)
 @ 
@@ -814,7 +814,7 @@ out1 <- cfa(mod1, data = dat1, std.lv = TRUE)
 \pagebreak
 
 <<>>=
-partSummary(out1, 1:4)
+partSummary(out1, 1:6)
 @ 
 
 \end{frame}
@@ -824,19 +824,19 @@ partSummary(out1, 1:4)
 \begin{frame}[fragile, allowframebreaks]{Example}
 
 <<>>=
-partSummary(out1, 5)
-@ 
-
-\pagebreak
-
-<<>>=
-partSummary(out1, 6)
-@ 
-
-\pagebreak
-
-<<>>=
 partSummary(out1, 7)
+@ 
+
+\pagebreak
+
+<<>>=
+partSummary(out1, 8)
+@ 
+
+\pagebreak
+
+<<>>=
+partSummary(out1, 9)
 @ 
 
 \pagebreak
@@ -854,13 +854,13 @@ fitMeasures(out1, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "srmr"))
   Now, we'll fit the additive model as an SEM.
   
 <<>>=
-mod2 <- "
+mod2 <- '
 fX =~ x1 + x2 + x3
 fZ =~ z1 + z2 + z3
 fY =~ y1 + y2 + y3
 
 fY ~ fX + fZ
-"
+'
 
 out2 <- sem(mod2, data = dat1, std.lv = TRUE)
 @ 
@@ -868,7 +868,7 @@ out2 <- sem(mod2, data = dat1, std.lv = TRUE)
 \pagebreak
 
 <<>>=
-partSummary(out2, 1:4)
+partSummary(out2, 1:6)
 @ 
 
 \end{frame}
@@ -878,19 +878,19 @@ partSummary(out2, 1:4)
 \begin{frame}[fragile, allowframebreaks]{Example}
 
 <<>>=
-partSummary(out2, 5)
+partSummary(out2, 7)
 @ 
 
 \pagebreak
 
 <<>>=
-partSummary(out2, 6:7)
+partSummary(out2, 8:9)
 @ 
 
 \pagebreak
 
 <<>>=
-partSummary(out2, 8)
+partSummary(out2, 10)
 @ 
 
 \pagebreak
@@ -942,7 +942,7 @@ dat2 <- data.frame(dat1, products)
 \pagebreak
 
 <<>>=
-mod3 <- "
+mod3 <- '
 fX  =~ x1 + x2 + x3
 fZ  =~ z1 + z2 + z3
 fY  =~ y1 + y2 + y3
@@ -963,7 +963,7 @@ x2z3 ~~ x3z3
 
 x3z1 ~~ x3z2 + x3z3
 x3z2 ~~ x3z3
-"
+'
 @
 
 \end{frame}
@@ -975,19 +975,19 @@ x3z2 ~~ x3z3
 <<>>=
 out3 <- sem(mod3, data = dat2, std.lv = TRUE, meanstructure = TRUE)
 
-partSummary(out3, 5, 1:14)
+partSummary(out3, 7, 1:14)
 @ 
 
 \pagebreak
 
 <<>>=
-partSummary(out3, 5, c(1, 2, 15:24))
+partSummary(out3, 7, c(1, 2, 15:24))
 @ 
 
 \pagebreak
 
 <<>>=
-partSummary(out3, 6:7, -(14:39))
+partSummary(out3, 8:9, -(14:39))
 @ 
 
 \pagebreak
@@ -1084,7 +1084,7 @@ probeOut4$SimpleSlope
 
 \end{frame}
 }%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%--------------------------------------------------------------------------%%%
+\watermarkon %%%-------------------------------------------------------------%%%
 
 \begin{frame}[allowframebreaks]{Double Mean Centering}
   
@@ -1119,7 +1119,7 @@ probeOut4$SimpleSlope
   
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+\watermarkoff %%%------------------------------------------------------------%%%
 
 \begin{frame}{Double Mean Centering}
   
@@ -1164,7 +1164,7 @@ dat3 <- select(dat1, matches("y\\d")) %>% data.frame(preds, products)
 \begin{frame}[fragile]{Example}
 
 <<>>=
-mod4 <- "
+mod4 <- '
 fX =~ x1 + x2 + x3
 fZ =~ z1 + z2 + z3
 fY =~ y1 + y2 + y3
@@ -1182,7 +1182,7 @@ x2z3 ~~ x3z3
 
 x3z1 ~~ x3z2 + x3z3
 x3z2 ~~ x3z3
-"
+'
 @ 
 
 \end{frame}
@@ -1195,19 +1195,19 @@ x3z2 ~~ x3z3
 ## Estimate the model:
 out4 <- sem(mod4, data = dat3, std.lv = TRUE)
 
-partSummary(out4, 5, 1:14)
+partSummary(out4, 7, 1:14)
 @ 
 
 \pagebreak
 
 <<>>=
-partSummary(out4, 5, c(1, 2, 15:24))
+partSummary(out4, 7, c(1, 2, 15:24))
 @ 
 
 \pagebreak
 
 <<>>=
-partSummary(out4, 6:7, -(10:35))
+partSummary(out4, 8:9, -(10:35))
 @ 
 
 \pagebreak
@@ -1237,7 +1237,7 @@ plotProbe(probeOut4, xlim = c(-3, 3), xlab = "fX", ylab = "fY")
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+\watermarkon %%%-------------------------------------------------------------%%%
 
 \begin{frame}{Orthogonalization vs. Double Mean Centering}
   
@@ -1263,7 +1263,7 @@ plotProbe(probeOut4, xlim = c(-3, 3), xlab = "fX", ylab = "fY")
   
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+\watermarkoff %%%------------------------------------------------------------%%%
 
 \begin{frame}[fragile, allowframebreaks]{Example}
   
@@ -1309,7 +1309,7 @@ all.equal(dat3[colnames(products)],
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+\watermarkon %%%-------------------------------------------------------------%%%
 
 \subsection{Products of Latent Variables}
 
@@ -1324,7 +1324,7 @@ all.equal(dat3[colnames(products)],
   \item We cannot use ordinary ML estimation methods.
   \end{itemize}
   \va
-  Three approaches have been proposed. 
+  Three approaches seem sensible. 
   \vc
   \begin{enumerate}
   \item Latent moderated structural equations \citep[LMS;][]{kleinEtAl:1997, 
@@ -1413,7 +1413,7 @@ summary(out)
 
 \sectionslide{Multiple Moderation}
 
-%%%--------------------------------------------------------------------------%%%
+\watermarkoff %%%------------------------------------------------------------%%%
 
 \begin{frame}{Starting Point}
 
@@ -1450,7 +1450,7 @@ summary(out)
   
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+\watermarkon %%%-------------------------------------------------------------%%%
 
 \begin{frame}{Multiple Moderation}
   
@@ -1478,7 +1478,7 @@ summary(out)
   
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+\watermarkoff %%%------------------------------------------------------------%%%
 
 \begin{frame}{Multiple Moderation}
   
@@ -1569,7 +1569,7 @@ plot(testOut1.2)
 
 \end{frame}
 }%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%--------------------------------------------------------------------------%%%
+\watermarkon %%%-------------------------------------------------------------%%%
 
 \begin{frame}{Moderated Moderation}
   
@@ -1588,7 +1588,7 @@ plot(testOut1.2)
   
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+\watermarkoff %%%------------------------------------------------------------%%%
 
 \begin{frame}{Moderated Moderation}
   
@@ -1612,7 +1612,7 @@ plot(testOut1.2)
   
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+\watermarkon %%%-------------------------------------------------------------%%%
 
 \begin{frame}{Moderated Moderation}
   
@@ -1641,7 +1641,7 @@ plot(testOut1.2)
   
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+\watermarkoff %%%------------------------------------------------------------%%%
 
 \begin{frame}[fragile, allowframebreaks]{Example}
     
@@ -1650,9 +1650,9 @@ plot(testOut1.2)
 dat1 <- readRDS("../data/bfiData1.rds")
 
 ## Three-way interaction model:
-mod <- "
+mod <- '
 agree ~ 1 + open + conc + neuro + open:conc + open:neuro + conc:neuro + ocn
-"
+'
 
 ## Create the 3-way interaction via a pipeline and estimate the model:
 out <- dat1 %>% 
@@ -1663,7 +1663,7 @@ out <- dat1 %>%
 \pagebreak
 
 <<>>=
-partSummary(out, 5:7)
+partSummary(out, 7:9)
 @ 
 
 \pagebreak
@@ -1737,10 +1737,10 @@ plotProbe(ssOut, xlim = range(dat1$open), xlab = "Open", ylab = "Agree")
 socSup <- readRDS("../data/social_support.rds")
 
 ## Focal effect model:
-mod <- "bdi ~ 1 + tanSat"
+mod <- 'bdi ~ 1 + tanSat'
 
 ## Fit the model and summarize the results:
-sem(mod, data = socSup) %>% partSummary(5:7)
+sem(mod, data = socSup) %>% partSummary(7:9)
 @ 
 
 \end{frame}
@@ -1751,7 +1751,7 @@ sem(mod, data = socSup) %>% partSummary(5:7)
 
 <<>>=
 ## Moderated model:
-mod <- "bdi ~ 1 + tanSat + male + tanSat:male"
+mod <- 'bdi ~ 1 + tanSat + male + tanSat:male'
 
 ## Dummy code sex in a pipeline and estimate the model:
 out <- socSup %>% 
@@ -1762,7 +1762,7 @@ out <- socSup %>%
 \pagebreak
 
 <<>>=
-partSummary(out, 5:7)
+partSummary(out, 7:9)
 @
 
 \end{frame}
@@ -1972,7 +1972,7 @@ summary(out2.4)
 
 \end{frame}
 }%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%--------------------------------------------------------------------------%%%
+\watermarkon %%%-------------------------------------------------------------%%%
 
 \begin{frame}{Moderation via Multiple Group SEM}
   
@@ -1990,7 +1990,7 @@ summary(out2.4)
   
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+\watermarkoff %%%------------------------------------------------------------%%%
 
 \begin{frame}[fragile]{Example}
 
@@ -2000,10 +2000,10 @@ dat2 <- readRDS("../data/bfiData2.rds") %>%
     filter(educ %in% c("highSchool", "college"))
 
 ## Specify the (configurally invariance) measurement model:
-mod0 <- "
+mod0 <- '
 agree =~ A1 + A2 + A3 + A4 + A5
 open  =~ O1 + O2 + O3 + O4 + O5
-"
+'
 
 ## Estimate the unrestricted model:
 out0 <- cfa(mod0, data = dat2, std.lv = TRUE, group = "educ")
@@ -2015,11 +2015,7 @@ out0 <- cfa(mod0, data = dat2, std.lv = TRUE, group = "educ")
 
 \begin{frame}[fragile, allowframebreaks]{Example}
   
-<<echo = FALSE>>=
-options(width = 80)
-@ 
-
-<<>>=
+<<eval = FALSE>>=
 ## Define the weakly invariant model:
 mod1 <- measEq.syntax(configural.model = out0, 
                       group = "educ", 
@@ -2036,13 +2032,35 @@ mod2 <- measEq.syntax(configural.model = out0,
 ## Estimate the models:
 out1 <- cfa(mod1, data = dat2, group = "educ")
 out2 <- cfa(mod2, data = dat2, group = "educ")
-@ 
+
+## Test measurement invariance:
+compareFit(out0, out1, out2) %>% summary()
+@
 
 \pagebreak
 
-<<>>=
+<<echo = FALSE>>=
+options(width = 80)
+
+## Define the weakly invariant model:
+mod1 <- measEq.syntax(configural.model = out0, 
+                      group = "educ", 
+                      group.equal = "loadings") %>% 
+    as.character()
+
+## Define the strongly invariant model:
+mod2 <- measEq.syntax(configural.model = out0, 
+                      group = "educ", 
+                      group.equal = c("loadings", "intercepts")
+                      ) %>% 
+    as.character()
+
+## Estimate the models:
+out1 <- cfa(mod1, data = dat2, group = "educ")
+out2 <- cfa(mod2, data = dat2, group = "educ")
+
 ## Test measurement invariance:
-compareFit(out0, out1, out2) %>% partSummary(1:4, -(2:3))
+compareFit(out0, out1, out2) %>% summary()
 @
 
 \end{frame}
@@ -2053,12 +2071,12 @@ compareFit(out0, out1, out2) %>% partSummary(1:4, -(2:3))
 
 <<>>=
 ## Specify a structural model:
-mod3 <- "
+mod3 <- '
 agree =~ A1 + A2 + A3 + A4 + A5
 open  =~ O1 + O2 + O3 + O4 + O5
 
 agree ~ open  
-"
+'
 
 ## Estimate the model with strong invariance constraints:
 out3 <- sem(mod3, 
@@ -2073,19 +2091,19 @@ out3 <- sem(mod3,
 
 <<>>=
 ## Check the group-specific slopes:
-partSummary(out3, c(6, 8, 12, 14))
+partSummary(out3, c(8, 10, 14, 16))
 @ 
 
 \pagebreak
 
 <<>>=
 ## Specify the restricted model:
-mod4 <- "
+mod4 <- '
 agree =~ A1 + A2 + A3 + A4 + A5
 open  =~ O1 + O2 + O3 + O4 + O5
 
 agree ~ c(beta, beta) * open  
-"
+'
 
 ## Estimate the model:
 out4 <- sem(mod4, 
@@ -2100,7 +2118,7 @@ out4 <- sem(mod4,
 
 <<>>=
 ## Check the slopes:
-partSummary(out4, c(6, 8, 12, 14))
+partSummary(out4, c(8, 10, 14, 16))
 @ 
 
 \pagebreak
@@ -2122,7 +2140,7 @@ dat1 %>%
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+\watermarkon %%%-------------------------------------------------------------%%%
 
 \begin{frame}{Probing Multiple Group Moderation}
   
@@ -2138,13 +2156,13 @@ dat1 %>%
   
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+\watermarkoff %%%------------------------------------------------------------%%%
 
 \begin{frame}[fragile]{Simple Slopes \& Intercepts}
  
 <<echo = FALSE>>=
 ## Check the simple slopes and intercepts:
-partSummary(out3, c(6, 8, 9, 12, 14, 15), c(1:9, 20, 22:31, 42))
+partSummary(out3, c(8, 10, 11, 14, 16, 17), c(1:9, 20, 22:31, 42))
 @ 
 
 \end{frame}
@@ -2181,7 +2199,7 @@ print(ssPlot)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+\watermarkon %%%-------------------------------------------------------------%%%
 
 \begin{frame}[allowframebreaks]{References}
 
