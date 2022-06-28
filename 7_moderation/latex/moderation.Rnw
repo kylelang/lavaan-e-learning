@@ -1,7 +1,7 @@
 %%% Title:    Lavaan E-Learning: Moderation
 %%% Author:   Kyle M. Lang
 %%% Created:  2016-XX-XX
-%%% Modified: 2022-06-27
+%%% Modified: 2022-06-28
 
 \documentclass[10pt]{beamer}
 \usetheme{Utrecht}
@@ -206,7 +206,7 @@ knit_theme$set('edit-kwrite')
 
 \begin{frame}{Equations}
 
-  The following derivation is adapted from \citet{hayes:2017}.
+  The following derivation is adapted from \citet{hayes:2022}.
   \vb
   \begin{itemize}
   \item When testing moderation, we hypothesize that the effect of $X$ on $Y$
@@ -486,7 +486,7 @@ library(lavaan)
 ## Specify the model:
 mod <- 'bp ~ 1 + bmi + ldl + bmi:ldl'
 
-## Use a dplyr pipeline to create the product term and estimate the model:
+## Estimate the model:
 lavOut <- sem(mod, data = dDat)
 @
 
@@ -2204,7 +2204,7 @@ print(ssPlot)
 \begin{frame}[allowframebreaks]{References}
 
   \bibliographystyle{apacite}
-  \bibliography{../../bibtex/dissRefsList.bib,../../bibtex/lecture12Refs.bib}
+  \bibliography{../../bibtex/dissRefsList.bib,../../bibtex/lecture12Refs.bib,../../bibtex/stat_meth_refs.bib}
 
 \end{frame}
 
