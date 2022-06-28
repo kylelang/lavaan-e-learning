@@ -72,7 +72,7 @@ knit_theme$set('edit-kwrite')
 
 \begin{frame}{Full SEM}
 
-Structural equation modeling (SEM) simply combines path analysis and CFA.
+A full structural equation model (SEM) simply combines path analysis and CFA.
 \vb
 \begin{itemize}
 \item SEM allows us to model complicated structural relations among latent
@@ -99,7 +99,7 @@ regression paths.
 \end{itemize}
 
  \begin{figure}
-    \includegraphics[width=0.6\textwidth]{figures/simple_sem_diagram.pdf}
+    \includegraphics[width=0.5\textwidth]{figures/simple_sem_diagram.pdf}
   \end{figure}
 
 \end{frame}
@@ -244,7 +244,7 @@ The beauty of SEM is that we get to model the types of complex relations we can
 specify via path models while leveraging all the strengths of latent variables.
 \vb
 \begin{itemize}
-\item When we fit a multiple-group SEM, we are modeling moderation by group.
+\item Multiple-group SEM models moderation by group.
 \vc
 \begin{itemize}
 \item The latent variables give us the ability to evaluate measurement
@@ -254,7 +254,7 @@ invariance across groups.
 \end{itemize}
 \vc
 \item Path analysis and SEM lend themselves especially well to mediation
-analysis and conditional process anlaysis.
+analysis and conditional process analysis.
 \end{itemize}
 
 \end{frame}
