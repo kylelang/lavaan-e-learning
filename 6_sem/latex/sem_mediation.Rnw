@@ -722,9 +722,9 @@ M &= i_3 + aX + e_3 \label{eq3}
     mediation.
     \vb
   \item $IE_{diff}$ is only an indirect indication of $IE_{prod}$.
-    \vb
-  \item A significant indirect effect can exist without a significant
-    total effect.
+  %  \vb
+  %\item A significant indirect effect can exist without a significant
+  %  total effect.
     \vb
   \item If we only care about the indirect effect, then we don't need to worry
     about the total effect.
