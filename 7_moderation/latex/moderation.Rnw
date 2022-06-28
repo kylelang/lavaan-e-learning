@@ -511,7 +511,7 @@ partSummary(lavOut, 7:9)
 \begin{frame}{Probing the Interaction}
 
   A significant estimate of $\beta_3$ tells us that the effect of $X$ on $Y$ 
-  depends on the level of $Z$, but nothing more.
+  depends on the level of $Z$, but not much more.
   \vb
   \begin{itemize}
   \item The plot above gives a descriptive illustration of the pattern, but does 
@@ -594,11 +594,11 @@ partSummary(lavOut, 7:9)
   \vb
   The standard error of a simple slope is given by:
   \begin{align*}
-    SE_{f(Z)} = \sqrt{SE_{\beta_1}^2 + 2Z \cdot \text{COV}(\beta_1, \beta_3) + 
+    SE_{f(Z)} = \sqrt{SE_{\beta_1}^2 + 2Z \cdot cov(\beta_1, \beta_3) + 
       Z^2 SE_{\beta_3}^2}
   \end{align*}
-  So, you can test the significance of a simple slope by constructing a Wald 
-  statistic or confidence interval using $\hat{f}(Z)$ and $SE_{f(Z)}$:
+  So, you can test the significance of a simple slope by constructing a 
+  t-statistic or confidence interval using $\hat{f}(Z)$ and $SE_{f(Z)}$:
   \begin{align*}
     t = \frac{\hat{f}(Z)}{SE_{f(Z)}},~~
     CI = \hat{f}(Z) \pm t_{crit} \times SE_{f(Z)}
@@ -607,7 +607,7 @@ partSummary(lavOut, 7:9)
 \end{frame}
 
 \watermarkoff %%%------------------------------------------------------------%%%
-
+\comment{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[fragile]{Example}
 
 <<out.width = "50%">>=
@@ -633,7 +633,7 @@ tsOut$hypotests
 \end{frame}
 
 %%%--------------------------------------------------------------------------%%%
-
+}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[fragile]{Example}
 
 We can use \pkg{semTools} routines to probe interaction in \pkg{lavaan} models.
