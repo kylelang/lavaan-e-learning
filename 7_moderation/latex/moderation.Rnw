@@ -1491,21 +1491,21 @@ summary(out)
   
   The preceding diagram implies the following formula:
   \begin{align*}
-    Y = \alpha + f(Z, W) X + \beta_2Z + \beta_3W + e,
+    Y = \beta_0 + f(Z, W) X + \beta_2Z + \beta_3W + e,
   \end{align*}\\
-  \va 
+  \vc
   Taking $f(Z, W)$ to be the following simple slope:
   \begin{align*}
     f(Z, W) = \beta_1 + \beta_4Z + \beta_5W
   \end{align*}\\
-  \va 
+  \vc 
   Produces the following analytic equation:
   \begin{align*}
-    Y = \alpha + \beta_1X + \beta_2Z + \beta_3W + \beta_4XZ + \beta_5XW + e
+    Y = \beta_0 + \beta_1X + \beta_2Z + \beta_3W + \beta_4XZ + \beta_5XW + e
   \end{align*}\\
-  \va
-  We can easily fit this model in any regression (or path modeling) software.
-  \vb
+  \vc
+  We can fit this model in any regression (or path modeling) software.
+  \vc
   \begin{itemize}
   \item We can test for significant moderating effects of $Z$ and $W$ by testing 
     for non-zero $\beta_4$ and $\beta_5$, respectively.
@@ -1653,13 +1653,13 @@ plot(testOut1.2)
   
   The preceding diagram represents the following equation:
   \begin{align*}
-    Y =& ~ \alpha + \beta_1X + \beta_2Z + \beta_3W + \beta_4XZ + \beta_5XW + \beta_6ZW + \beta_7XZW + e
+    Y =& ~ \beta_0 + \beta_1X + \beta_2Z + \beta_3W + \beta_4XZ + \beta_5XW + \beta_6ZW + \beta_7XZW + e
   \end{align*}\\
   \vb
   Which can be restructured into:
   \begin{align*}
-    Y =& ~ \alpha + (\beta_1 + \beta_4Z + \beta_5W + \beta_7ZW)X + \beta_2Z + \beta_3W + \beta_6ZW + e\\[6pt]
-    =& ~ \alpha + g(Z, W)X + \beta_2Z + \beta_3W + \beta_6ZW + e
+    Y =& ~ \beta_0 + (\beta_1 + \beta_4Z + \beta_5W + \beta_7ZW)X + \beta_2Z + \beta_3W + \beta_6ZW + e\\[6pt]
+    =& ~ \beta_0 + g(Z, W)X + \beta_2Z + \beta_3W + \beta_6ZW + e
   \end{align*}\\
   \vb 
   With moderated moderation, the simple slope is given by:
