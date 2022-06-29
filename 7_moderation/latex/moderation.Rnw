@@ -690,24 +690,27 @@ plotProbe(ssOut, xlim = range(dDat$bmi), xlab = "BMI", ylab = "BP")
   
   When we have two observed variables interacting to predict a latent variable,
   our job is easy:
+  \vc
   \begin{enumerate}
-    \item Construct the product term of the observed focal and moderator
-      variables
+    \item Construct a product term from the focal and moderator variables.
+      \vc
     \item Use the observed focal, moderator, and interaction variables to
-      predict the latent DV
+      predict the latent DV.
   \end{enumerate}
-  \va If we want to model moderation when at least on of the predictors is
+  \vb 
+  If we want to model moderation when at least one of the predictors is
   latent, things get more difficult.
+  \vc
   \begin{itemize}
-  \item If the moderator is observed and discrete, we can use multiple group
-    modeling
-  \item If the moderator is continuous and/or latent, then we need fancier
-    methods
+  \item For observed and discrete moderators, use multiple group modeling.
+    \vc
+  \item For continuous and/or latent moderators, we need fancier methods.
   \end{itemize}
-  \va
+  \vb
   Two basic approaches:
   \begin{enumerate}
   \item Methods based on products of manifest variables
+    \vc
   \item Methods based on directly estimating the products of latent variables
   \end{enumerate}
 
@@ -722,24 +725,23 @@ plotProbe(ssOut, xlim = range(dDat$bmi), xlab = "BMI", ylab = "BP")
 \begin{frame}{Computing Interaction Indicators}
   
   The simplest approach is to create observed product terms and directly use 
-  those terms as indicators of the interaction construct.  
-  \vb
+  those products as indicators of an interaction construct.  
+  \vc
   \begin{itemize}
   \item Naively indicating an interaction construct with the raw product terms
-    is probably sub-optimal 
-    \vb
+    is probably sub-optimal. 
+    \vc
   \item Collinearity among the interaction indicators and the raw items can
-    cause estimation problems 
-    \vb
-  \item From a modeling perspective, we'd like to interpret out final model
-    holistically
+    cause estimation problems. 
+    \vc
+  \item We'd also like to interpret our final model holistically.
   \end{itemize}
-  \va
-  Two recommended approaches:
   \vb
+  Two recommended approaches:
+  \vc
   \begin{enumerate}
   \item Orthogonalization through residual centering \citep{littleEtAl:2006}.
-    \vb
+    \vc
   \item Double mean centering \citep{linEtAl:2010}.
   \end{enumerate}
   
@@ -747,18 +749,23 @@ plotProbe(ssOut, xlim = range(dDat$bmi), xlab = "BMI", ylab = "BP")
 
 %%%--------------------------------------------------------------------------%%%
 
-\begin{frame}[allowframebreaks]{Orthogonalization}
+\begin{frame}{Orthogonalization Procedure}
   
-  Say we want to estimate the moderated effect of $Z$ on the $X \rightarrow Y$
-  effect, where $X$, $Y$, and $Z$ are latent variables indicated by $\{x_1, x_2,
-  x_3\}$, $\{y_1, y_2, y_3\}$, and $\{z_1, z_2, z_3\}$, respectively.\\ 
+  Say we think that $Z$ moderates the $X \rightarrow Y$ effect.
+  \vc
+  \begin{itemize}
+  \item $X$, $Y$, and $Z$ are latent variables indicated by $\{x_1, x_2,
+    x_3\}$, $\{y_1, y_2, y_3\}$, and $\{z_1, z_2, z_3\}$, respectively.
+  \end{itemize}
   \va
-  Orthogonalization is performed by: 
+  \pause
+  We perform the orthogonalization procedure as follows: 
   \vb
   \begin{enumerate}
   \item Construct all possible product terms: 
     $\{x_1z_1, x_1z_2, x_1z_3, x_2z_1, x_2z_2, x_2z_3, x_3z_1, x_3z_2, x_3z_3\}$.
     \vb
+    \pause
   \item Regress each product term onto all observed indicators of $X$ and $Z$:
     \begin{align*}
       \widehat{x_1z_1} &= \alpha + \beta_1x_1 + \beta_2x_2 + \beta_2x_3 + 
@@ -769,9 +776,16 @@ plotProbe(ssOut, xlim = range(dDat$bmi), xlab = "BMI", ylab = "BP")
       \widehat{x_3z_3} &= \alpha + \beta_1x_1 + \beta_2x_2 + \beta_2x_3 + 
       \beta_4z_1 + \beta_5z_2 + \beta_6z_3
     \end{align*}
-    
-    \pagebreak
-    
+  \end{enumerate}
+  
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Orthogonalization Procedure}
+  
+  \begin{enumerate}
+    \setcounter{enumi}{2}
   \item Calculate each product term's residual:
     \begin{align*}
       \delta_{x1z1} &= x_1z_1 - \widehat{x_1z_1}\\
@@ -780,6 +794,7 @@ plotProbe(ssOut, xlim = range(dDat$bmi), xlab = "BMI", ylab = "BP")
       \delta_{x3z3} &= x_3z_3 - \widehat{x_3z_3}
     \end{align*}
     \vb
+    \pause
   \item Use these residuals to indicate a latent interaction construct.
   \end{enumerate}
   
@@ -787,7 +802,7 @@ plotProbe(ssOut, xlim = range(dDat$bmi), xlab = "BMI", ylab = "BP")
 
 \watermarkoff %%%------------------------------------------------------------%%%
 
-\begin{frame}{Orthogonalization}
+\begin{frame}{Orthogonalization Diagram}
   
   \begin{figure}
     \includegraphics[width=\textwidth]{figures/orthoDiagram.pdf} 
@@ -799,15 +814,20 @@ plotProbe(ssOut, xlim = range(dDat$bmi), xlab = "BMI", ylab = "BP")
 
 \begin{frame}[fragile, allowframebreaks]{Example}
   
+  First, we check the measurement model.
+  
 <<>>=
+## Read in some data:
 dat1 <- readRDS("../data/lecture12Data.rds")
 
+## Define the CFA model:
 mod1 <- '
 fX =~ x1 + x2 + x3
 fZ =~ z1 + z2 + z3
 fY =~ y1 + y2 + y3
 '
 
+## Estimate the model:
 out1 <- cfa(mod1, data = dat1, std.lv = TRUE)
 @ 
 
@@ -854,6 +874,7 @@ fitMeasures(out1, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "srmr"))
   Now, we'll fit the additive model as an SEM.
   
 <<>>=
+## Define the additive structural model:
 mod2 <- '
 fX =~ x1 + x2 + x3
 fZ =~ z1 + z2 + z3
@@ -862,6 +883,7 @@ fY =~ y1 + y2 + y3
 fY ~ fX + fZ
 '
 
+## Fit the model:
 out2 <- sem(mod2, data = dat1, std.lv = TRUE)
 @ 
 
@@ -906,7 +928,7 @@ fitMeasures(out2, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "srmr"))
 \begin{frame}[fragile, allowframebreaks]{Example}
   
 <<>>=
-library(dplyr)
+library(dplyr) # For data processing routines
 
 ## Set aside a copy of the predictor data for later use:
 preds <- select(dat1, matches("x\\d|z\\d")) %>% as.matrix()
@@ -973,6 +995,7 @@ x3z2 ~~ x3z3
 \begin{frame}[fragile, allowframebreaks]{Example}
  
 <<>>=
+## Estimate the model:
 out3 <- sem(mod3, data = dat2, std.lv = TRUE, meanstructure = TRUE)
 
 partSummary(out3, 7, 1:14)
@@ -995,6 +1018,7 @@ partSummary(out3, 8:9, -(14:39))
 <<>>=
 fitMeasures(out3, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "srmr"))
 
+## Test simple slopes:
 probeOut3 <- probe2WayRC(fit      = out3,
                          nameX    = c("fX", "fZ", "fXZ"),
                          nameY    = "fY",
