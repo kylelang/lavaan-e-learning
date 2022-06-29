@@ -1,7 +1,7 @@
 %%% Title:    Lavaan E-Learning: Missing Data
 %%% Author:   Kyle M. Lang
 %%% Created:  2015-11-06
-%%% Modified: 2022-06-27
+%%% Modified: 2022-06-29
 
 \documentclass{beamer}
 \usetheme{Utrecht}
@@ -870,7 +870,7 @@ fit$cov %>% cov2cor()
 
 \begin{frame}{Prediction Example}
   
-  To fix ideas, let's consider the \emph{diabetes} data and the following model:
+  To fix ideas, let's consider the following model:
   \begin{align*}
     Y_{LDL} = \beta_0 + \beta_1 X_{BP} + \beta_2 X_{gluc} + \beta_3 X_{BMI} + 
     \varepsilon
@@ -901,8 +901,8 @@ predInt <- round(
 )
 @ 
 
-Training this model on the first $N = 400$ patients' data produces the following
-fitted model:
+Training this model on the first $N = 400$ observations from the \emph{diabetes}
+data produces the following fitted model:
 \begin{align*}
   Y_{LDL} = \Sexpr{b0} + \Sexpr{b1} X_{BP} + \Sexpr{b2} X_{gluc} + 
   \Sexpr{b3} X_{BMI}
@@ -1465,8 +1465,7 @@ gg0(x = dB1$x, y = dB1$y, points = FALSE) +
     \item $\sigma^2 = \Sexpr{round(sigmas[1], 3)}$
     \end{itemize}
     \vb
-    Generate imputations using the same procedure described in Single Stochastic 
-    Regression Imputation:
+    Generate imputations as in Stochastic Regression Imputation:
     \begin{align*}
       Y_{imp} &= \hat{Y}_{mis} + \varepsilon\\
       \varepsilon &\sim N(0, \Sexpr{round(sigmas[1], 3)})
@@ -1490,8 +1489,7 @@ gg0(x = dB1$x, y = dB1$y, points = FALSE) +
     \item $\sigma^2 = \Sexpr{round(sigmas[2], 3)}$
     \end{itemize}
     \vb
-    Generate imputations using the same procedure described in Single Stochastic 
-    Regression Imputation:
+    Generate imputations as in Stochastic Regression Imputation:
     \begin{align*}
       Y_{imp} &= \hat{Y}_{mis} + \varepsilon\\
       \varepsilon &\sim N(0, \Sexpr{round(sigmas[2], 3)})
@@ -1515,8 +1513,7 @@ gg0(x = dB1$x, y = dB1$y, points = FALSE) +
     \item $\sigma^2 = \Sexpr{round(sigmas[3], 3)}$
     \end{itemize}
     \vb
-    Generate imputations using the same procedure described in Single Stochastic 
-    Regression Imputation:
+    Generate imputations as in Stochastic Regression Imputation:
     \begin{align*}
       Y_{imp} &= \hat{Y}_{mis} + \varepsilon\\
       \varepsilon &\sim N(0, \Sexpr{round(sigmas[3], 3)})
