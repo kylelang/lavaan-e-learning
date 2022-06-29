@@ -1,7 +1,7 @@
 %%% Title:    Lavaan E-Learning: Moderation
 %%% Author:   Kyle M. Lang
 %%% Created:  2016-XX-XX
-%%% Modified: 2022-06-28
+%%% Modified: 2022-06-29
 
 \documentclass[10pt]{beamer}
 \usetheme{Utrecht}
@@ -40,6 +40,7 @@ library(MLmetrics)
 library(dplyr)
 library(mvtnorm)
 library(lavaan, lib.loc = "~/R/manual_installs/")
+library(semTools)
 
 source("../../code/supportFunctions.R")
 
@@ -1800,8 +1801,61 @@ out <- socSup %>%
 partSummary(out, 7:9)
 @
 
+\pagebreak
+
+
+<<>>=
+## Test simple slopes and intercepts:
+ssOut <- probe2WayMC(out, 
+                     nameX   = c("tanSat", "male", "tanSat:male"), 
+                     nameY   = "bdi", 
+                     modVar  = "male", 
+                     valProb = 0:1)    
+
+ssOut
+@ 
+
 \end{frame}
 
+%------------------------------------------------------------------------------%
+
+\begin{frame}[fragile]{Example}
+      
+<<out.width = "60%">>=
+plotProbe(ssOut, xlim = range(socSup$tanSat), xlab = "TS", ylab = "BDI")    
+@
+  
+\end{frame}
+
+%------------------------------------------------------------------------------%
+\comment{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{Example}
+
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      
+<<eval = FALSE>>=
+plotProbe(ssOut, 
+          xlim = range(socSup$tanSat), 
+          xlab = "Tangible Satisfaction", 
+          ylab = "BDI")    
+@
+
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      
+<<echo = FALSE, out.width = "50%">>=
+plotProbe(ssOut, 
+          xlim = range(socSup$tanSat), 
+          xlab = "Tangible Satisfaction", 
+          ylab = "BDI")    
+@
+      
+    \end{column}
+  \end{columns}
+  
+\end{frame}
+}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Visualizing Categorical Moderation}
