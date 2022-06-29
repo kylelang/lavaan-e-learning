@@ -686,7 +686,7 @@ plotProbe(ssOut, xlim = range(dDat$bmi), xlab = "BMI", ylab = "BP")
 
 %%%--------------------------------------------------------------------------%%%
 
-\begin{frame}[shrink = 5]{Latent Variable Interactions}
+\begin{frame}{Latent Variable Interactions}
   
   When we have two observed variables interacting to predict a latent variable,
   our job is easy:
@@ -708,6 +708,7 @@ plotProbe(ssOut, xlim = range(dDat$bmi), xlab = "BMI", ylab = "BP")
   \end{itemize}
   \vb
   Two basic approaches:
+  \vc
   \begin{enumerate}
   \item Methods based on products of manifest variables
     \vc
