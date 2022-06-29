@@ -1110,9 +1110,9 @@ probeOut4$SimpleSlope
 }%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \watermarkon %%%-------------------------------------------------------------%%%
 
-\begin{frame}[allowframebreaks]{Double Mean Centering}
+\begin{frame}{Double Mean Centering Procedure}
   
-  We could also specify the interaction factor using double mean centering. 
+  We can also define the interaction factor with double mean centering. 
   \vb
   \begin{enumerate}
   \item Mean center every indicator of $X$ and $Z$:
@@ -1122,12 +1122,20 @@ probeOut4$SimpleSlope
       z_1^c &= z_1 - \bar{z}_1\\
       &~~~\vdots
     \end{align*}
+    \pause
   \item Use the centered indicators to construct all possible product terms: 
     $\{x_1^cz_1^c,$ $x_1^cz_2^c,$ $x_1^cz_3^c,$ $x_2^cz_1^c,$
     $x_2^cz_2^c,$ $x_2^cz_3^c,$ $x_3^cz_1^c,$ $x_3^cz_2^c,$ $x_3^cz_3^c\}$.
-    
-    \pagebreak
-    
+  \end{enumerate}
+  
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Double Mean Centering Procedure}
+
+  \begin{enumerate}
+    \setcounter{enumi}{2}
   \item Mean center each product term:
     \begin{align*}
       (x_1z_1)^c &= x_1^cz_1^c - \overline{x_1^cz_1^c}\\
@@ -1136,16 +1144,16 @@ probeOut4$SimpleSlope
       (x_3z_3)^c &= x_3^cz_3^c - \overline{x_3^cz_3^c}
     \end{align*}
     \vb
-  \item Use the mean centered indicators of $X$ and $Z$, and the
-    ``double mean centered'' product terms to specify the latent
-    interaction model.
+    \pause
+  \item Use the mean centered indicators of $X$ and $Z$, and the ``double mean 
+    centered'' product terms to specify the latent interaction model.
   \end{enumerate}
   
 \end{frame}
 
 \watermarkoff %%%------------------------------------------------------------%%%
 
-\begin{frame}{Double Mean Centering}
+\begin{frame}{Double Mean Centering Diagram}
   
   \begin{figure}
     \includegraphics[width=\textwidth]{figures/dmcDiagram.pdf}
@@ -1237,8 +1245,10 @@ partSummary(out4, 8:9, -(10:35))
 \pagebreak
 
 <<>>=
+## Check model fit:
 fitMeasures(out4, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "srmr"))
 
+## Test simple slopes:
 probeOut4 <- probe2WayMC(fit      = out4,
                          nameX    = c("fX", "fZ", "fXZ"),
                          nameY    = "fY",
