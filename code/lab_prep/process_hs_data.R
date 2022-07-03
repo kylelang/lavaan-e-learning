@@ -1,16 +1,16 @@
 ### Title:    Lavaan Summer School: Process Holzinger & Swineford Data
 ### Author:   Kyle M. Lang
 ### Created:  2022-07-01
-### Modified: 2022-07-02
+### Modified: 2022-07-03
 
 rm(list = ls(all = TRUE))
 
 library(dplyr)
 library(magrittr)
 
-dataDir <- "../data/"
+dataDir <- "../../data/"
 
-## Load the full dataset from the MBESS package: 
+## Load the full dataset from the MBESS package:
 data(HS, package = "MBESS")
 
 ## Do a bit of minor processing:
@@ -60,5 +60,14 @@ for(i in 1:length(items))
     for(j in 1:length(items[[i]]))
         colnames(dat1) <- gsub(items0[[i]][j], items[[i]][j], colnames(dat1))
 
+## Covert subscale items back to numeric vectors:
+targets          <- unlist(items)
+dat1[ , targets] <- sapply(dat1[targets], as.numeric)
+
 ## Save the processed data:
 saveRDS(dat1, paste0(dataDir, "holzinger_swineford.rds"))
+
+## Save the subscale item names:
+saveRDS(list(new = items, old = items0),
+        paste0(dataDir, "hs_subscale_item_names.rds")
+        )

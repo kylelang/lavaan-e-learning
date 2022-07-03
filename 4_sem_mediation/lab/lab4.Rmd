@@ -1,0 +1,887 @@
+---
+title: "Lab 4: Mediation"
+subtitle: "Introduction to SEM with lavaan"
+author: "Kyle M. Lang"
+date: "Updated: `r format(Sys.time(), format = '%Y-%m-%d')`"
+params:
+  answers: true
+output: 
+  bookdown::html_document2:
+    toc: true
+    toc_depth: 1
+    toc_float: true
+    number_sections: true
+    df_print: paged
+    css: "../../resources/style.css"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, echo = FALSE, message = FALSE, warning = FALSE}
+library(knitr)
+library(dplyr)
+library(magrittr)
+
+figDir <- "../figures/"
+
+set.seed(235711)
+
+## Define an asis engine that will evaluate inline code within an asis block:
+knit_engines$set(asis = function(options) {
+  if(options$echo && options$eval) knit_child(text = options$code)
+}
+)
+
+opts_chunk$set(include = params$answers, 
+               echo = params$answer, 
+               message = FALSE,
+               warning = FALSE,
+               fig.align = "center",
+               comment = NA)
+```
+
+---
+
+In this lab, you will practice mediation analysis using **lavaan** and latent
+variables.
+
+---
+
+# Data
+
+---
+
+```{r, include = FALSE}
+dataDir <- "../data/"
+hs <- readRDS(paste0(dataDir, "holzinger_swineford.rds"))
+```
+
+We will first analyze the classic Holzinger & Swineford (1939) educational 
+testing data. A full version of this dataset is distributed as the `HS` dataset 
+in the **MBESS** package. We don't need any functionality from **MBESS**, 
+however, so I have provided a standalone (and mildly processed) version of the 
+data as *holzinger_swineford.rds*. 
+
+These data contain a number of educational test scores from 7th and 8th grade 
+students in two schools. These data contain `r nrow(hs)` observations of the 
+following `r ncol(hs)` variables.
+
+- `id`: Numeric ID
+- `age`: Student age in years
+- `sex`: Biological sex of the student
+- `grade`: Grade of the student
+- `school`: School at which the student was tested
+- `spatial1:spatial4`: Scores on four spatial reasoning tests
+- `verbal1:verbal5`: Scores on five tests of verbal ability
+- `speed1:speed4`: Scores on four tests of cognitive processing speed
+- `memory1:memory6`: Scores on six memory tests
+- `math1:math5`: Scores on five tests of mathematical ability
+
+In the following, we will use the test scores to define latent factors of the 
+underlying ability levels.
+
+You can access the original version of the data via the [**MBESS**][mbess] 
+package, and you can access the code used to process the data [here][hs_code].
+
+---
+
+##
+
+**Read in the *holzinger_swineford.rds* dataset.**
+
+```{r, eval = FALSE}
+dataDir <- "../data/"
+hs <- readRDS(paste0(dataDir, "holzinger_swineford.rds"))
+```
+
+NOTE: In the following, I will refer to these data as the *HS data*.
+
+---
+
+##
+
+**Summarize the HS data to get a sense of their characteristics.**
+
+```{r}
+head(hs)
+summary(hs)
+str(hs)
+```
+
+---
+
+# Simple Mediation 1
+
+---
+
+The first model we will consider is a simple mediation model wherein the effect 
+of *student age* on *spatial reasoning ability* is mediated by *mathematical 
+ability*.
+
+- We will include *student age* via the single item `age`
+- We will model *spatial reasoning ability* via a latent variable measured by 
+the five `spatial` items.
+- We will model *mathematical ability* via a latent variable measured by the 
+five `math` items.
+
+---
+
+##
+
+**Draw a path diagram for the model described above.**
+
+- Label the relevant structural paths.
+
+```{r, echo = FALSE, out.width = "85%"}
+knitr::include_graphics(paste0(figDir, "lab4_simple_mediation1.png"))
+```
+
+---
+
+##
+
+**Write out the structural equations necessary to evaluate the mediation 
+hypothesis described above.**
+
+```{asis}
+\[
+\begin{align}
+\eta_{spatial} &= b \eta_{math} + c' X_{age} + \varepsilon_2\\
+\eta_{math} &= a X_{age} + \varepsilon_1
+\end{align}
+\]
+```
+
+---
+
+##
+
+**Define the model syntax for the CFA.**
+
+- Indicated the *spatial reasoning ability* factor from the four observed spatial 
+reasoning test scores.
+   - `spatial1:spatial4`
+- Indicated the *mathematical ability* factor from the five observed math test 
+scores.
+   - `math1:math5`
+   
+```{r}
+cfaMod1 <- '
+spatial =~ spatial1 + spatial2 + spatial3 + spatial4
+math    =~ math1    + math2    + math3    + math4    + math5
+'
+```
+
+---
+
+##
+
+**Estimate the CFA model on the HS data.**
+
+- Correlate the latent factors.
+- Set the scale by standardizing the latent factors.
+- Do not include any mean structure.
+
+```{r}
+library(lavaan)
+cfaFit1 <- cfa(cfaMod1, data = hs, std.lv = TRUE)
+```
+
+---
+
+## 
+
+**Summarize the fitted CFA and check the model fit.**
+
+- Do the parameter estimates look sensible?
+- Does the model fit the data well enough?
+
+```{r}
+summary(cfaFit1)
+fitMeasures(cfaFit1)
+```
+
+```{asis}
+The model looks good. All measurement model parameters seem reasonable, and the 
+model fits the data well.
+```
+
+---
+
+##
+
+**Define the model syntax for the structural model.**
+
+- Specify all paths needed to test the mediation hypothesis described above.
+- Include a defined parameter to quantify the indirect effect.
+
+```{r}
+## Define only the new structural parts:
+semMod1 <- '
+spatial ~ b * math + c * age
+math    ~ a * age
+
+ab := a * b
+'
+
+## Add on the measurement part:
+semMod1 <- paste(cfaMod1, semMod1, sep = '\n')
+```
+
+---
+
+## {#sobel}
+
+**Estimate the structural model.**
+
+- Do not use bootstrapping.
+- Test the significance of the indirect effect using Sobel's Z.
+
+```{r}
+semFit1 <- sem(semMod1, data = hs, std.lv = TRUE)
+summary(semFit1)
+```
+
+---
+
+##
+
+**Interpret the results.**
+
+a. Is the indirect effect significant according to the above test?
+a. Briefly interpret the indirect effect.
+a. What caveats might you place on this finding?
+
+```{r, include = FALSE}
+out <- parTable(semFit1) %>% filter(label == "ab")
+
+z <- out %$% (est / se)
+p <- pnorm(z) * 2
+```
+
+```{asis}
+**Answers:**
+
+a. Yes, the indirect effect is statistically significant (
+$\hat{ab} = `r round(out$est, 3)`$, 
+$SE_{ab} = `r round(out$se, 3)`$, 
+$Z = `r round(z, 3)`$, 
+$p = `r round(p, 3)`$
+). 
+a. There is a significant, negative effect of age on spatial reasoning ability 
+transmitted through mathematical ability.
+a. The normality assumption underlying Sobel test may not be appropriate. We 
+should test the significance of our indirect effect using bootstrapping.
+```
+
+---
+
+##
+
+**Test the indirect effect using bootstrapping.**
+
+- Rerun the structural model from \@ref(sobel) using $B = 2000$ bootstrap 
+resamples.
+- Test the significance of the indirect effect via the 95% BCa CI.
+- Is the indirect effect also significant according to the bootstrapped CI?
+
+```{r simple_mediation1_boot, cache = TRUE}
+## Estimate the model with bootstrapped standard errors:
+semFit1.2 <- sem(semMod1, 
+                 data      = hs, 
+                 std.lv    = TRUE, 
+                 se        = "boot", 
+                 bootstrap = 2000)
+
+## Get the CI for the indirect effect:
+parameterEstimates(semFit1.2, boot.ci.type = "bca.simple") %>% 
+  select(-(1:3)) %>% 
+  tail(1)
+```
+
+```{r, include = FALSE}
+out <- parameterEstimates(semFit1.2, boot.ci.type = "bca.simple") %>% tail(1)
+```
+
+```{asis}
+Yes, the 95% bootstrapped CI, (`r round(out$ci.lower, 3)`; 
+`r round(out$ci.upper, 3)`), does not include zero, so we can infer a 
+statistically significant indirect effect at the $\alpha = 0.05$ level.
+```
+
+---
+
+# Simple Mediation 2
+
+---
+
+Next, we will consider another simple mediation model wherein the effect 
+of *student age* on *spatial reasoning ability* is mediated by *verbal ability*.
+
+---
+
+##
+
+**Define the model syntax for the CFA.**
+
+- Indicated the *spatial reasoning ability* factor from the four observed spatial 
+reasoning test scores.
+   - `spatial1:spatial4`
+- Indicated the *verbal ability* factor from the five observed verbal test 
+scores.
+   - `verbal1:verbal5`
+   
+```{r}
+cfaMod2 <- '
+spatial =~ spatial1 + spatial2 + spatial3 + spatial4
+verbal  =~ verbal1  + verbal2  + verbal3  + verbal4  + verbal5
+'
+```
+
+---
+
+##
+
+**Estimate the CFA model on the HS data.**
+
+- Correlate the latent factors.
+- Set the scale by standardizing the latent factors.
+- Do not include any mean structure.
+
+```{r}
+cfaFit2 <- cfa(cfaMod2, data = hs, std.lv = TRUE)
+```
+
+---
+
+## 
+
+**Summarize the fitted CFA and check the model fit.**
+
+- Do the parameter estimates look sensible?
+- Does the model fit the data well enough?
+
+```{r}
+summary(cfaFit2)
+fitMeasures(cfaFit2)
+```
+
+```{asis}
+This model also looks good. All measurement model parameters seem reasonable, 
+and the model fits the data well.
+```
+
+---
+
+##
+
+**Define the model syntax for the structural model.**
+
+- Specify all paths needed to test the mediation hypothesis described above.
+- Include a defined parameter to quantify the indirect effect.
+
+```{r}
+## Define only the new structural parts:
+semMod2 <- '
+spatial ~ b * verbal + c * age
+verbal  ~ a * age
+
+ab := a * b
+'
+
+## Add on the measurement part:
+semMod2 <- paste(cfaMod2, semMod2, sep = '\n')
+```
+
+---
+
+##
+**Estimate the structural model.**
+
+- Use B = 2000 bootstrap resamples to quantify the sampling variability.
+
+```{r simple_mediation2_boot, cache = TRUE}
+semFit2 <- sem(semMod2, data = hs, std.lv = TRUE, se = "boot", bootstrap = 2000)
+summary(semFit2)
+```
+
+---
+
+##
+
+**Interpret the results.**
+
+a. Is the indirect effect significant according to the 95% *percentile CI*?
+a. Is the indirect effect significant according to the 95% *BCa CI*?
+a. Briefly interpret the indirect effect using the most appropriate version of 
+the CI to support your conclusions.
+
+```{r}
+## Percentile CI:
+parameterEstimates(semFit1.2, boot.ci.type = "perc") %>% 
+  select(-(1:3)) %>%
+  tail(1)
+
+## BCa CI:
+parameterEstimates(semFit1.2, boot.ci.type = "bca.simple") %>% 
+  select(-(1:3)) %>%
+  tail(1)
+```
+
+```{r, include = FALSE}
+out1 <- parameterEstimates(semFit1.2, boot.ci.type = "perc") %>% tail(1)
+out2 <- parameterEstimates(semFit1.2, boot.ci.type = "bca.simple") %>% tail(1)
+```
+
+```{asis}
+a. Yes, the indirect effect is statistically significant according to the 
+percentile CI (
+$\hat{ab} = `r round(out1$est, 3)`$, 
+$95\%~CI_{perc} = [`r round(out1$ci.lower, 3)`; `r round(out1$ci.upper, 3)`]$
+). 
+a. Yes, the indirect effect is statistically significant according to the 
+BCa CI (
+$\hat{ab} = `r round(out2$est, 3)`$, 
+$95\%~CI_{BCa} = [`r round(out2$ci.lower, 3)`; `r round(out2$ci.upper, 3)`]$
+). 
+a. The 95% BCa CI for the indirect effect does not contain zero, so we can infer 
+a significant, negative effect of age on spatial reasoning ability transmitted 
+through verbal ability.
+```
+
+---
+
+# Parallel Multiple Mediation
+
+---
+
+Now, we will fit a multiple mediator model that combines the two simple mediation
+models evaluated above. This model will encode a process by which the effect of 
+*student age* on *spatial reasoning ability* is indirectly transmitted by 
+*mathematical ability* and *verbal ability* as parallel mediators.
+
+---
+
+##
+
+**Define the model syntax for the CFA.**
+
+- Indicated the *spatial reasoning ability* factor from the four observed spatial 
+reasoning test scores.
+   - `spatial1:spatial4`
+- Indicated the *mathematical ability* factor from the five observed math test 
+scores.
+   - `math1:math5`
+- Indicated the *verbal ability* factor from the five observed verbal test 
+scores.
+   - `verbal1:verbal5`
+   
+```{r}
+cfaMod3 <- '
+spatial =~ spatial1 + spatial2 + spatial3 + spatial4
+math    =~ math1    + math2    + math3    + math4    + math5
+verbal  =~ verbal1  + verbal2  + verbal3  + verbal4  + verbal5
+'
+```
+
+---
+
+##
+
+**Estimate the CFA model on the HS data.**
+
+- Correlate the latent factors.
+- Set the scale by standardizing the latent factors.
+- Do not include any mean structure.
+
+```{r}
+cfaFit3 <- cfa(cfaMod3, data = hs, std.lv = TRUE)
+```
+
+---
+
+## 
+
+**Summarize the fitted CFA and check the model fit.**
+
+- Do the parameter estimates look sensible?
+- Does the model fit the data well enough?
+
+```{r}
+summary(cfaFit3)
+fitMeasures(cfaFit3)
+```
+
+```{asis}
+This model looks good, too. All measurement model parameters seem reasonable, 
+and the model fits the data well.
+```
+
+---
+
+##
+
+**Define the model syntax for the structural model.**
+
+- Specify all paths needed to test the multiple mediation hypothesis described 
+above.
+- Include defined parameters to quantify all specific indirect effects and the 
+total indirect effect.
+
+```{r}
+## Define only the new structural parts:
+semMod3 <- '
+spatial ~ b1 * math + b2 * verbal + c * age
+math    ~ a1 * age
+verbal  ~ a2 * age
+
+ab1 := a1 * b1
+ab2 := a2 * b2
+ie  := ab1 + ab2
+'
+
+## Add on the measurement part:
+semMod3 <- paste(cfaMod3, semMod3, sep = '\n')
+```
+
+---
+
+##
+**Estimate the structural model.**
+
+- Use B = 2000 bootstrap resamples to quantify the sampling variability.
+
+```{r parallel_mediation_boot, cache = TRUE}
+semFit3 <- sem(semMod3, data = hs, std.lv = TRUE, se = "boot", bootstrap = 2000)
+summary(semFit3)
+```
+
+---
+
+##
+
+**Interpret the results.**
+
+a. Is the specific indirect effect through *mathematical ability* significant 
+according to the 95% BCa CI?
+a. Is the specific indirect effect through *verbal ability* significant 
+according to the 95% BCa CI?
+a. Is the total indirect effect significant according to the 95% BCa CI?
+a. Briefly interpret the indirect effects.
+a. Do these results match the results from the separate simple mediation models?
+   a. If you notice any differences, why do you think these differences occur?
+
+```{r}
+parameterEstimates(semFit3, boot.ci.type = "bca.simple") %>% 
+  select(-(1:3)) %>%
+  tail(3)
+```
+
+```{r, include = FALSE}
+tmp <- parameterEstimates(semFit3, boot.ci.type = "bca.simple") %>% tail(3)
+out1 <- tmp[1, ]
+out2 <- tmp[2, ]
+out3 <- tmp[3, ]
+```
+
+```{asis}
+a. Yes, the specific indirect effect through *mathematical ability* is 
+statistically significant (
+$\hat{ab} = `r round(out1$est, 3)`$, 
+$95\%~CI_{BCa} = [`r round(out1$ci.lower, 3)`; `r round(out1$ci.upper, 3)`]$
+). 
+a. No, the specific indirect effect through *verbal ability* is not statistically 
+significant (
+$\hat{ab} = `r round(out2$est, 3)`$, 
+$95\%~CI_{BCa} = [`r round(out2$ci.lower, 3)`; `r round(out2$ci.upper, 3)`]$
+). 
+a. Yes, the total indirect effect is statistically significant (
+$\hat{IE} = `r round(out3$est, 3)`$, 
+$95\%~CI_{BCa} = [`r round(out3$ci.lower, 3)`; `r round(out3$ci.upper, 3)`]$
+). 
+a. There is a significant, negative indirect effect of age on spatial reasoning 
+ability transmitted through mathematical ability, but verbal reasoning ability 
+does not mediate a significant proportion of the effect of age on spatial 
+reasoning ability, after controlling for mathematical ability. 
+The total indirect effect of age on spatial reasoning ability transmitted through 
+both mathematical ability and verbal ability is also statistically significant. 
+a. Yes, verbal ability is a significant mediator in the simple mediation model, 
+but it is not in the parallel mediation model. 
+   a. This difference probably arises from partialling out the effect of 
+   mathematical ability, which seems to be the more "important" mediator in this 
+   system.
+```
+
+---
+
+# Different Data
+
+---
+
+```{r, include = FALSE}
+dataDir <- "../data/"
+ea <- readRDS(paste0(dataDir, "eating_attitudes_completed.rds"))
+```
+
+We will move on to a different dataset to explore serial mediator models. 
+Specifically, we will work with a slightly modified version of the *Eating 
+Attitudes* data used for some example analyses in [Enders (2010)][amda]. These 
+data are available as *eating_attitudes_completed.rds*.
+
+This dataset includes `r nrow(ea)` observations of the following `r ncol(ea)` 
+variables. Note that the variables are listed in the order that they appear on 
+the dataset.
+
+- `id`: A numeric ID
+- `eat1:eat24`: Seven indicators of a *Drive for Thinness* construct
+- `eat3:eat21`: Three indicators of a *Preoccupation with Food* construct
+- `bmi`: Body mass index
+- `wsb`: A single item assessing *Western Standards of Beauty*
+- `anx`: A single item assessing *Anxiety Level*
+
+You can download the original data [here][ea_data], and you can access the code 
+used to process the data [here][ea_code].
+
+---
+
+##
+
+**Read in the *eating_attitudes_completed.rds* dataset.**
+
+```{r, eval = FALSE}
+dataDir <- "../data/"
+ea <- readRDS(paste0(dataDir, "eating_attitudes_completed.rds"))
+```
+
+NOTE: In the following, I will refer to these data as the *EA data*.
+
+---
+
+##
+
+**Summarize the EA data to get a sense of their characteristics.**
+
+```{r}
+head(ea)
+summary(ea)
+str(ea)
+```
+
+---
+
+# Serial Multiple Mediation
+
+---
+
+We will evaluate a serial multiple mediation model wherein the effect of 
+*Western Standards of Beauty* on *Preoccupation with Food* is mediated by the 
+sequential intermediaries *Drive for Thinness* and *Anxiety*. The causal process 
+represented by our model would suggest that Western beauty standards induce a 
+drive for thinness which, in turn, causes anxiety which, finally, leads to a 
+preoccupation with food.
+
+---
+
+##
+
+**Draw a path diagram for the model described above.**
+
+- Label the relevant structural paths.
+
+```{r, echo = FALSE, out.width = "85%"}
+knitr::include_graphics(paste0(figDir, "lab4_serial_mediation.png"))
+```
+
+---
+
+##
+
+**Write out the structural equations necessary to evaluate the mediation 
+hypothesis described above.**
+
+```{asis}
+\[
+\begin{align}
+\eta_{pre} &= b_1 \eta_{drive} + b_2 X_{anx} + c' X_{wsb} + \varepsilon_3\\
+X_{anx} &= a_2 X_{wsb} + d \eta_{drive} + \varepsilon_2\\
+\eta_{drive} &= a_1 X_{wsb} + \varepsilon_1
+\end{align}
+\]
+```
+
+
+---
+
+##
+
+**Define the model syntax for the CFA.**
+
+The data only contain multi-item scales for *Drive for Thinness* and 
+*Preoccupation with Food*, so we only need a two-dimensional CFA evaluating the 
+measurement structure of these two factors.
+
+- Indicated the *Drive for Thinness* factor from the seven relevant scale items.
+   - `eat1`, `eat2`, `eat10`, `eat11`, `eat12`, `eat14`, `eat24`
+- Indicated the *Preoccupation with Food* factor from the remaining three scale 
+items.
+   - `eat3`, `eat18`, `eat21`
+   
+```{r}
+cfaMod4 <- '
+drive =~ eat1 + eat2  + eat10 + eat11 + eat12 + eat14 + eat24
+pre   =~ eat3 + eat18 + eat21
+'
+```
+
+---
+
+##
+
+**Estimate the CFA model on the EA data.**
+
+- Correlate the latent factors.
+- Set the scale by standardizing the latent factors.
+- Do not include any mean structure.
+
+```{r}
+cfaFit4 <- cfa(cfaMod4, data = ea, std.lv = TRUE)
+```
+
+---
+
+## 
+
+**Summarize the fitted CFA and check the model fit.**
+
+- Do the parameter estimates look sensible?
+- Does the model fit the data well enough?
+
+```{r}
+summary(cfaFit4)
+fitMeasures(cfaFit4)
+```
+
+```{asis}
+This model looks good. All measurement model parameters seem reasonable, and the 
+model fits the data well.
+```
+
+---
+
+##
+
+**Define the model syntax for the structural model.**
+
+- Specify all paths needed to test the multiple mediation hypothesis described 
+above.
+- Include defined parameters to quantify all specific indirect effects and the 
+total indirect effect.
+
+```{r}
+## Define only the new structural parts:
+semMod4 <- '
+pre   ~ b1 * drive + b2 * anx + cp * wsb
+anx   ~ d * drive  + a2 * wsb
+drive ~ a1 * wsb
+
+ab1 := a1 * b1
+ab2 := a2 * a2
+adb := a1 * d * b2
+ie  := ab1 + ab2 + adb
+'
+
+## Add on the measurement part:
+semMod4 <- paste(cfaMod4, semMod4, sep = '\n')
+```
+
+---
+
+##
+**Estimate the structural model.**
+
+- Use B = 2000 bootstrap resamples to quantify the sampling variability.
+
+```{r serial_mediation_boot, cache = TRUE}
+semFit4 <- sem(semMod4, data = ea, std.lv = TRUE, se = "boot", bootstrap = 2000)
+summary(semFit4)
+```
+
+---
+
+##
+
+**Interpret the results.**
+
+a. Is the two-step specific indirect effect through *Drive for Thinness* 
+significant according to the 95% BCa CI?
+a. Is the two-step specific indirect effect through *Anxiety* significant 
+according to the 95% BCa CI?
+a. Is the full, three-step specific indirect effect through *Drive for Thinness* 
+and *Anxiety* significant according to the 95% BCa CI?
+a. Is the total indirect effect significant according to the 95% BCa CI?
+a. Briefly interpret the indirect effects.
+
+```{r}
+parameterEstimates(semFit4, boot.ci.type = "bca.simple") %>% 
+  select(-(1:3)) %>%
+  tail(4)
+```
+
+```{r, include = FALSE}
+tmp <- parameterEstimates(semFit4, boot.ci.type = "bca.simple") %>% tail(4)
+out1 <- tmp[1, ]
+out2 <- tmp[2, ]
+out3 <- tmp[3, ]
+out4 <- tmp[4, ]
+```
+
+```{asis}
+a. Yes, the two-step specific indirect effect through *Drive for Thinness* is 
+statistically significant (
+$\hat{ab} = `r round(out1$est, 3)`$, 
+$95\%~CI_{BCa} = [`r round(out1$ci.lower, 3)`; `r round(out1$ci.upper, 3)`]$
+). 
+a. No, the two-step specific indirect effect through *anxiety* is not 
+statistically significant (
+$\hat{ab} = `r round(out2$est, 3)`$, 
+$95\%~CI_{BCa} = [`r round(out2$ci.lower, 3)`; `r round(out2$ci.upper, 3)`]$
+). 
+   - The lower bound of the CI rounds down to zero. Although one could conclude 
+   a just barely significant effect from the CI alone, the small point estimate 
+   and the large p-value for the bootstrapped z-test both suggest against 
+   inferring a significant effect.
+a. Yes, the full, three-step specific indirect effect is statistically 
+significant (
+$\hat{adb} = `r round(out3$est, 3)`$, 
+$95\%~CI_{BCa} = [`r round(out3$ci.lower, 3)`; `r round(out3$ci.upper, 3)`]$
+). 
+a. Yes, the total indirect effect is statistically significant (
+$\hat{IE} = `r round(out4$est, 3)`$, 
+$95\%~CI_{BCa} = [`r round(out4$ci.lower, 3)`; `r round(out4$ci.upper, 3)`]$
+). 
+a. The hypothesized causal chain linking Western beauty standards to 
+preoccupation with food through drive for thinness and anxiety was supported by 
+a statistically significant specific indirect effect. Western beauty 
+standards had a significant, positive effect on preoccupation with food, and 
+this effect was transmitted indirectly by first increasing the drive for thinness 
+which subsequently increased anxiety to, finally, increase preoccupation with 
+food.
+
+   A subprocess by which the effect of Western beauty standards on preoccupation 
+   with food is transmitted indirectly through drive for thinness was also 
+   supported by a statistically significant, positive indirect effect. The 
+   analogous subprocess transmitted through anxiety levels was associated with a 
+   nonsignificant indirect effect and, hence, not supported by these results.
+```
+
+---
+
+End of Lab 4
+
+---
+
+[mbess]: https://cran.r-project.org/web/packages/MBESS/index.html
+[hs_code]: https://github.com/kylelang/lavaan-e-learning/tree/main/code
+[amda]: https://www.cms.guilford.com/books/Applied-Missing-Data-Analysis/Craig-Enders/9781606236390
+[ea_data]: https://www.appliedmissingdata.com/analyses
+[ea_code]: https://github.com/kylelang/lavaan-e-learning/tree/main/code

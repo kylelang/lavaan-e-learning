@@ -1,0 +1,775 @@
+---
+title: "Practical 6"
+subtitle: "Missing Data Theory & Causal Effects"
+author: "Kyle M. Lang"
+date: "Updated: `r format(Sys.time(), format = '%Y-%m-%d')`"
+params:
+  answers: true
+output: 
+   bookdown::html_document2:
+    toc: true
+    toc_depth: 1
+    toc_float: true
+    number_sections: true
+    css: "../resources/style.css"
+---
+
+```{r setup, echo = FALSE, message = FALSE, warning = FALSE}
+library(knitr)
+
+set.seed(235711)
+
+## Define an asis engine that will evaluate inline code within an asis block:
+knit_engines$set(asis = function(options) {
+  if(options$echo && options$eval) knit_child(text = options$code)
+}
+)
+
+opts_chunk$set(include = params$answers, 
+               echo = params$answer, 
+               message = FALSE,
+               warning = FALSE,
+               fig.align = "center")
+```
+
+---
+
+This week, we will continue working with multiple imputation (MI). Specifically, 
+we will look at the effects of imputation and go over various ways to tweak the 
+imputation algorithm when using `mice()`.
+
+---
+
+# Setup
+
+---
+
+##
+
+**Load the mice and ggplot2 packages.**
+
+```{r}
+library(mice)
+library(ggplot2)
+```
+
+---
+
+The *boys* dataset is distributed with **mice**, so you will be able to access 
+these data once you've loaded the **mice** package. The *boys* data are a subset 
+of a large Dutch dataset containing growth measures from the Fourth Dutch Growth 
+Study. 
+
+Unless otherwise specified, all questions in this section refer to the *boys* 
+dataset. 
+
+---
+
+##
+
+**Check the documentation for the *boys* data.**
+
+```{r, eval = FALSE}
+?boys
+```
+
+---
+
+##
+
+**Summarize the *boys* data to get a sense of their characteristics.**
+
+```{r}
+head(boys)
+summary(boys)
+str(boys)
+```
+
+---
+
+##
+
+**Use the mice::md.pattern() function to summarize the response patterns.**
+
+- How many different missing data patterns are present in the *boys* data?
+- Which pattern occurs most frequently in these data?
+
+```{r}
+(pats <- md.pattern(boys))
+```
+
+```{asis}
+There are 13 total patterns. The pattern where `gen`, `phb`, and `tv` are 
+missing occurs the most frequently.
+```
+
+---
+
+##
+
+**In how many patterns is the variable `gen` missing?**
+
+```{r}
+sum(pats[, "gen"] == 0)
+```
+
+---
+
+# Effects of MI
+
+---
+
+Let's consider potential response models. Does the missing data of `gen` depend 
+on `age`? One way to check this would be to make a conditional histograms of 
+`age` for cases with observed `gen` and cases with missing `gen`.
+
+---
+
+##
+
+**Use `ggplot()` to create the conditional histograms described above.**
+
+What conclusions do you draw from these figures?
+
+*TIP*: You can use the `facet_wrap()` function to implement the conditioning.
+
+```{r}
+ggplot(boys, aes(age)) + 
+  geom_histogram() + 
+  facet_wrap(vars(is.na(gen)))
+```
+
+```{asis}
+The histograms clearly show that the distribution of `age` differs in the cases 
+with `gen` missing and those with `gen` observed. Younger boys are missing `gen`
+much more frequently than older boys. Hence, we can infer an association between 
+`age` and missingness on `gen`. 
+```
+
+---
+
+##
+
+**Impute the `boys` dataset with `mice()`.**
+
+Use all default settings except for the following:
+
+- Create 10 imputations.
+- Set the random number seed to 235711.
+
+Name the resulting *mids* object "imp1"
+
+```{r, cache = TRUE}
+imp1 <- mice(boys, m = 10, seed = 235711, print = FALSE)
+```
+
+---
+
+The following code will compute the MI estimated means and the observed data 
+means for all numeric variables in the *boys* dataset.
+
+```{r, include = TRUE, echo = TRUE}
+library(dplyr)
+
+## Compute the MI estimated means from 'imp1':
+complete(imp1, "all") %>% 
+  lapply(function(x) select(x, where(is.numeric)) %>% colMeans()) %>%
+  do.call(rbind, .) %>%
+  colMeans()
+
+## Compute the means from the observed data:
+boys %>% select(where(is.numeric)) %>% colMeans(na.rm = TRUE)
+```
+
+---
+
+##
+
+**Do you notice any differences in the two different sets of estimated means?**
+
+- What do you think explains these differences? 
+- Which set of means do you think is more accurate?
+
+```{asis}
+The means for `age` are identical because `age` was completely observed in the 
+*boys* data. Most of the other means are roughly equal, except the mean of `tv`, 
+which is quite a bit lower in the imputed data than in the observed data. This 
+difference makes sense because most of the missing genital measurements occur 
+for the younger boys (as we saw with the missingness in `gen` above). When 
+imputing these missing genital measurement, the means should decrease.
+
+Due to the MAR missingness (i.e., age associated with missingness in genital 
+measurements), the estimates from the MI data should be more accurate. The 
+observed data will overestimate genital size/development due to the systematic 
+missingness on these variables for younger, less developed boys.
+```
+
+---
+
+# Imputation Model Predictors
+
+---
+
+By default, `mice()` will impute each incomplete variable using some flavor of 
+univariate supervised model wherein all other variables on the dataset act as 
+predictors. These individual, univariate models are called the *elementary 
+imputation models* (EIMs), and we are completely free to adjust their 
+specification. One such adjustment that we often want to make is restricting 
+which variables a given EIM uses as predictors.
+
+In `mice()` we adjust the right hand side (RHS) of the EIMs via the 
+`predictorMatrix` argument.
+
+---
+
+Let's do a basic imputation of the *nhanes* data to get a *mids* object to explore.
+
+```{r, include = TRUE, echo = TRUE, cache = TRUE}
+imp <- mice(nhanes, seed = 235711, print = FALSE)
+```
+
+The predictor matrix is stored in the `predictorMatrix` slot of the *mids* 
+object. Let's look at a default predictor matrix.
+
+```{r, include = TRUE, echo = TRUE}
+imp$predictorMatrix
+```
+
+Each row in the predictor matrix is a pattern vector that defines the predictors 
+used in the EIM for each variable in the dataset. Variables that are not imputed 
+still get a row in the predictor matrix, their rows are just ignored by `mice()`. 
+Consequently, the predictor matrix is square. A value of 1 in a matrix entry 
+indicates that the column variable is used as a predictor in the EIM for the row 
+variable. For example, the 1 at position [2, 1] indicates that variable `age` 
+was used in the imputation model for `bmi`. Note that the diagonal is zero 
+because a variable is cannot impute its own missing data. 
+
+We are not forced to use this version of the predictor matrix; `mice` gives us 
+complete control over the predictor matrix. So, we can choose our own predictors 
+for each EIM in our particular problem. This flexibility can be very useful, for 
+example, when you have many variables, or when you have clear ideas or prior 
+knowledge about relations in the data. 
+
+We can use a dry-run of `mice()` to initialize a default predictor matrix, 
+without doing any imputation. We can then modify this matrix to fit our needs. 
+The following code implements this initialization.
+
+```{r, include = TRUE, echo = TRUE, cache = TRUE}
+ini <- mice(nhanes, maxit = 0)
+(pred <- ini$predictorMatrix)
+```
+
+The object `pred` now contains the default predictor matrix for the *nhanes* 
+data. Altering the predictor matrix and using the updated version for imputation 
+is very simple. For example, the following code removes the variable `hyp` from 
+the set of predictors in each EIM.
+
+```{r, include = TRUE, echo = TRUE}
+pred[ , "hyp"] <- 0
+pred
+```
+
+---
+
+We use the modified predictor matrix by supplying it to the `predictorMatrix` 
+argument in `mice()`.
+
+```{r, include = TRUE, echo = TRUE, cache = TRUE}
+imp <- mice(nhanes, predictorMatrix = pred, print = FALSE, seed = 235711)
+```
+
+---
+
+## {#predMat}
+
+**Create a custom predictor matrix for the *nhanes* data.**
+
+Specify the EIMs as follows:
+
+- $Y_{bmi} = \beta_0 + \beta_1 X_{hyp} + \beta_2 X_{chl}$
+- $Y_{hyp} = \beta_0 + \beta_1 X_{age} + \beta_2 X_{chl}$
+- $Y_{chl} = \beta_0 + \beta_1 X_{bmi}$
+
+```{r}
+pred1 <- mice(nhanes, maxit = 0)$predictorMatrix
+
+pred1["age", ] <- 0
+pred1["bmi", "age"] <- 0
+pred1["hyp", "bmi"] <- 0
+pred1["chl", c("age", "hyp")] <- 0
+
+pred1
+```
+
+---
+
+The `mice::quickpred()` function provides a simple way to construct predictor 
+matrices via various selection rules. The following code will select as 
+predictors all variables that correlated at least $\rho = 0.30$ with each 
+incomplete variable.
+
+```{r, include = TRUE, echo = TRUE, cache = TRUE}
+(pred <- quickpred(nhanes, mincor = 0.3))
+```
+
+Now, only `age` and `chl` will be used to impute `bmi` and `hyp`, but all other 
+variables will still be used to impute `chl`. Note that the `age` row is all 
+zeros because `age` is fully observed, so it needs no EIM.
+
+---
+
+##
+
+**Check the documentation for `quickpred()`.**
+
+Take note of the different selection criteria you can apply.
+
+```{r, eval = FALSE}
+?quickpred
+```
+
+---
+
+## {#qp}
+
+**Use `quickpred()` to create a predictor matrix for the *nhanes* data.**
+
+This predictor matrix should satisfy the following conditions.
+
+- Use `age` as a predictor in every EIM.
+- Select the remaining predictors such that they have a minimum correlation of 
+$\rho = 0.45$ with the imputation targets.
+
+Which variables are selected as predictors for each EIM?
+
+```{r, cache = TRUE}
+(pred <- quickpred(nhanes, include = "age", mincor = 0.45))
+```
+
+```{asis}
+Age is the only predictor in each of the imputation models.
+```
+
+---
+
+## {#qpImp}
+
+**Use the predictor matrix you created in Question \@ref(qp) to impute the *nhanes* data.**
+
+Use default settings except for the following options.
+
+- Create 8 imputations.
+- Set the imputation method to `norm`.
+- Set a random number seed.
+
+```{r, cache = TRUE}
+imp <- mice(nhanes, 
+            m = 8, 
+            method = "norm", 
+            predictorMatrix = pred, 
+            seed = 235711,
+            print = FALSE)
+```
+
+---
+
+##
+
+**Create trace plots and density plots for the *mids* object you created in Question \@ref(qpImp).**
+
+```{r}
+plot(imp)
+densityplot(imp)
+```
+
+---
+
+# Imputation Methods
+
+---
+
+For each column in the dataset, we must specify an imputation method. The 
+`method` slot in a *mids* object shows which methods were applied to each column. 
+The following code shows the default methods that would be applied if we impute 
+the *nhanes* data.
+
+```{r, include = TRUE, echo = TRUE}
+mice(nhanes, maxit = 0)$method
+```
+
+The `age` variable is completely observed, so it is not imputed. The the empty 
+string, `""`, tells `mice()` not to impute the corresponding variable. The other 
+variables will all be imputed via `pmm` (*predictive mean matching*), which is 
+the default method for numeric data. 
+
+In reality, these data are actually a mix of numeric and categorical data. The 
+*nhanes2* dataset contains appropriately typed categorical variables.
+
+```{r, include = TRUE, echo = TRUE}
+summary(nhanes2)
+str(nhanes2)
+```
+
+In *nhanes2*, the `age` variable is a factor comprising three categories, and 
+`hyp` is a binary factor. If we run `mice()` without specifying a `method` 
+argument, the algorithm will attempt to match the imputation method for each 
+column to the column's  type. 
+
+Let's see what happens when we initialize a `mice()` run on the *nhanes2* 
+dataset with the default arguments. 
+
+```{r, include = TRUE, echo = TRUE}
+init <- mice(nhanes2, maxit = 0)
+init$meth
+```
+
+The imputation method for `hyp` is now set to `logreg`, which imputes by 
+*logistic regression* (the default for binary factors). The `mice()` algorithm 
+has recognized the type of the new `hyp` variable and updated the imputation 
+method appropriately.
+
+---
+
+We can get an up-to-date overview of the available methods via the `methods()` 
+function. 
+
+```{r, include = TRUE, echo = TRUE}
+methods(mice)
+```
+
+More detail on the methods is available in the *Details* section of the 
+documentation for `mice()`, and we can see detailed documentation for each 
+method through the help page for the appropriate `mice.impute.METHOD()` function.
+
+```{r, include = TRUE, echo = TRUE, eval = FALSE}
+?mice
+?mice.impute.lasso.select.logreg
+```
+
+---
+
+In last week's practical, you saw how to change the imputation method applied to 
+all variables, but we can also change the methods on a variable-by-variable basis. 
+The following code will change the imputation method for `bmi` to Bayesian 
+linear regression while leaving the remaining methods unaffected.
+
+```{r, include = TRUE, echo = TRUE}
+(meth <- ini$method)
+meth["bmi"] <- "norm"
+meth
+```
+
+---
+
+To use this custom method vector, we simply supply `meth` to the `method` 
+argument when we call `mice()`. 
+
+```{r, include = TRUE, echo = TRUE, cache = TRUE}
+imp <- mice(nhanes2, method = meth, print = FALSE)
+```
+
+---
+
+## {#meth}
+
+**Create a custom method vector for the *nhanes2* data.**
+
+Define the following methods.
+
+- `age`: None
+- `bmi`: Classification and regression trees
+- `hyp`: Logistic regression
+- `chl`: Predictive mean matching
+
+```{r}
+(meth <- c(age = "", bmi = "cart", hyp = "logreg", chl = "pmm"))
+
+## OR
+
+meth <- mice(nhanes2, maxit = 0)$method
+meth["bmi"] <- "cart"
+meth["hyp"] <- "logreg"
+
+meth
+```
+
+```{asis}
+Note that both of the above approaches produce the same result. The first 
+approach is more direct and probably preferable for smaller datasets. The second 
+approach can be more efficient when working with many variables, especially when 
+you only need to use a few non-default methods.
+```
+
+---
+
+## {#methImp}
+
+**Impute the missing values in the *nhanes2* dataset.**
+
+Set up the imputation run as follows.
+
+- Use the predictor matrix you created in Question \@ref(predMat).
+- Use the method vector you created in Question \@ref(meth).
+- Create 15 imputations.
+- Set a random number seed.
+
+```{r, cache = TRUE}
+imp1 <- mice(nhanes2, 
+             m = 15, 
+             method = meth, 
+             predictorMatrix = pred1,
+             seed = 235711,
+             print = FALSE)
+```
+
+---
+
+##
+
+**Create trace plots and density plots for the *mids* object you created in 
+Question \@ref(methImp).**
+
+```{r}
+plot(imp1)
+densityplot(imp1)
+```
+
+---
+
+# Adjusting the Iterations
+
+---
+
+By default, `mice()` will use five iterations. Sometimes, these five will be 
+enough, but often we will want to run the algorithm longer. We can set the 
+number of iterations via the `maxit` argument.
+
+The following code will run the default imputation model for ten iterations.
+
+```{r, include = TRUE, echo = TRUE, cache = TRUE}
+imp <- mice(nhanes2, maxit = 10)
+plot(imp)
+```
+
+Notice that now the x-axis in the trace plots extends to 10 to reflect the higher
+number of iterations.
+
+---
+
+One common reason to increase the number of iterations is non-convergence. We'll 
+sometimes observe trends when we inspect the trace plots of the imputed items. 
+These trends tell us that the algorithm has not yet reached an equilibrium point. 
+In such situations, the first thing to try (so long as you don't notice any 
+obvious errors in your imputation model specification) is increasing the number 
+of iterations. While we could accomplish this goal simply by rerunning `mice()` 
+with a higher value for `maxit`, doing so would be very wasteful. We would have 
+to recreate all of the existing iterations before generating any new iterations. 
+Thankfully, we don't need to be so inefficient.
+
+We can easily extend the chains in any *mids* object with the `mice.mids()` 
+function. This function takes as *mids* object as its primary argument and picks 
+up the sampling where `mice()` left off (using exactly the same imputation model
+specification). The following code will extend the chains in our most recent 
+*mids* object to 25 total iterations by adding on another 15 iterations.
+
+```{r, include = TRUE, echo = TRUE, cache = TRUE}
+imp <- mice.mids(imp, maxit = 15, print = FALSE)
+plot(imp)
+```
+
+Now, `imp` contains 25 iterations, which we can see by the range of the x-axis 
+in the trace plots.
+
+---
+
+## {#iterImp}
+
+**Increase the number of iterations for the imputation you ran in Question 
+\@ref(methImp) to 25.**
+
+```{r, cache = TRUE}
+imp1 <- mice.mids(imp1, maxit = 10, print = FALSE)
+```
+
+---
+
+# More Diagnostics
+
+---
+
+In the last practical, you saw how to use density plots to evaluate the 
+plausibility of the imputed values. Recall that even if the imputation model 
+converges (e.g., as demonstrated by trace plots), the imputed values still might 
+not be reasonable estimates of the missing data. If the data are MCAR, then the 
+imputations should have the same distribution as the observed data. In general, 
+though, the distributions of the observed and imputed data may differ when the 
+data are MAR. However, we don't want to see very large discrepancies.
+
+Strip plots are another excellent visualization tool with which we can assess
+the comparability of the imputed and observed data. The `mice::stripplot()` 
+function will generate strip plots from a *mids* object. 
+
+The following code will create a strip plot of the observed and imputed `chl` 
+values.
+
+```{r, include = TRUE, echo = TRUE}
+stripplot(imp, chl)
+```
+
+The observed data are plotted in blue, and the imputed data are plotted in red. 
+Since `chl` was imputed with PMM (which draws imputations from the observed data), 
+the imputed values have the same gaps as the observed data, and the imputed 
+values are always within the range of the observed data. This figure indicates 
+that the observed and imputed values of `chl` follow similar distributions. So, 
+we should conclude that these imputations are plausible.
+
+We can also call `stripplot()` without specifying any variables. Doing so will 
+plot all of the imputed variables in an array. 
+
+```{r, include = TRUE, echo = TRUE}
+stripplot(imp)
+```
+
+---
+
+##
+
+**Create trace plots, density plots, and strip plots for the *mids* object you 
+created in Question \@ref(iterImp).**
+
+Based on these visualizations, would you say the imputation model has converged 
+to a valid solution?
+
+```{r}
+plot(imp1)
+densityplot(imp1)
+stripplot(imp1)
+```
+
+```{asis}
+Yes, these results look pretty good. The trace plots show the chains mixing well 
+without any trends, and the density and strip plots show no extreme or 
+implausible values.
+```
+
+---
+
+## {#imp2}
+
+**Rerun the imputation from Question \@ref(iterImp).**
+
+Keep all the same settings, but use Bayesian linear regression to impute `bmi` 
+and `chl`.
+
+```{r, cache = TRUE}
+meth <- imp1$method
+meth[c("bmi", "chl")] <- "norm"
+meth
+
+imp2 <- mice(nhanes2, 
+             m = 15, 
+             method = meth, 
+             predictorMatrix = pred1, 
+             maxit = 25, 
+             seed = 235711, 
+             print = FALSE)
+```
+
+---
+
+##
+
+**Create trace plots, density plots, and strip plots for the *mids* object you
+created in Question \@ref(imp2).**
+
+Based on the visualizations, are the imputations from Question \@ref(iterImp) or 
+Question \@ref(imp2) more reasonable? Why?
+
+```{r}
+plot(imp2)
+densityplot(imp2)
+stripplot(imp2)
+```
+
+```{asis}
+Both sets of imputations seem acceptable and reasonable, but each set also has 
+its own potential issues. The donor-based imputations of `bmi` and `chl` from 
+Question \@ref(iterImp) show a tendency to cluster around the center of the 
+distribution (hence the "sharp" spikes in some of the imputed densities). The 
+normal-theory imputations from Question \@ref(imp2), on the other hand, contain 
+some very high and very low values for both `bmi` and `chl`.
+
+The choice between these two results probably comes down to which aspects of the 
+distribution are more important for your application. If maintaining the same 
+range as the observed data is important, then the PMM- and CART-based imputations 
+are probably better. If a more accurate representation of variability is 
+important (and the out-of-bound values don't matter), then the normal-theory 
+imputations may be preferable.
+```
+
+---
+
+## {#model}
+
+**Use the multiply imputed data you created in Question \@ref(iterImp) to 
+estimate the following regression model.**
+
+$Y_{bmi} = \beta_0 + \beta_1 X_{age} = \beta_2 X_{chl} + \varepsilon$
+
+```{r}
+fit <- with(imp1, lm(bmi ~ age + chl))
+```
+
+---
+
+##
+
+**Pool the estimates from the model you estimated in Question \@ref(model).**
+
+Is the effect of `chl` on `bmi` significant after controlling for `age`?
+
+```{r}
+est <- pool(fit)
+summary(est)
+```
+
+```{r, include = FALSE}
+b <- est$pooled$estimate[4]
+se <- sqrt(est$pooled$t)[4]
+t <- b / se
+df <- est$pooled$df[4]
+p <- 2 * pt(t, df = df, lower.tail = FALSE)
+``` 
+
+
+```{asis}
+No, cholesterol level does not significantly predict BMI after controlling for 
+age ($\beta = `r round(b, 2)`$, $t[`r round(df, 2)`] = `r round(t, 2)`$, 
+$p = `r round(p, 3)`$).
+```
+
+---
+
+##
+
+**Rerun the regression analysis from above using the imputed data from Question 
+\@ref(imp2).**
+
+Do the results differ between the two versions of the analysis? Why or why not?
+
+```{r}
+est2 <- with(imp2, lm(bmi ~ age + chl)) %>% pool()
+summary(est2)
+```
+
+```{asis}
+The estimates differ slightly due to the different imputation methods for `bmi` 
+and `chl`. Also, these differences were just enough to tip the effect of `chl` 
+over into statistical significance at the $\alpha = 0.05$ level.
+```
+
+---
+
+End of Practical 6
+
+---

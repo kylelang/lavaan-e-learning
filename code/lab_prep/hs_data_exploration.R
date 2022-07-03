@@ -5,18 +5,15 @@
 
 rm(list = ls(all = TRUE))
 
-library(lavaan, lib = "~/R/manual_installs/")
+library(lavaan)
 library(semTools)
 library(dplyr)
 library(magrittr)
 
-dataDir <- "../data/"
+dataDir <- "../../data/"
 
 ## Read in data:
-hs    <- readRDS(paste0(dataDir, "holzinger_swineford.rds"))
-adams <- readRDS(paste0(dataDir, "sandbox/adams_klps_data-synthetic.rds"))
-
-colnames(adams)
+hs <- readRDS(paste0(dataDir, "holzinger_swineford.rds"))
 
 ###-Measurement Models-------------------------------------------------------###
 
