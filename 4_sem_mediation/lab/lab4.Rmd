@@ -40,6 +40,15 @@ opts_chunk$set(include = params$answers,
                comment = NA)
 ```
 
+<!-- 
+Define some hacky LaTeX commands to force nice spacing between lines    
+NOTE: These must be called within a math environment (e.g., $\va$)
+-->
+\newcommand{\va}{\\[12pt]}
+\newcommand{\vb}{\\[6pt]}
+\newcommand{\vc}{\\[3pt]}
+\newcommand{\vx}[1]{\\[#1pt]}
+
 ---
 
 In this lab, you will practice mediation analysis using **lavaan** and latent
@@ -60,10 +69,10 @@ We will first analyze the classic Holzinger & Swineford (1939) educational
 testing data. A full version of this dataset is distributed as the `HS` dataset 
 in the **MBESS** package. We don't need any functionality from **MBESS**, 
 however, so I have provided a standalone (and mildly processed) version of the 
-data as *holzinger_swineford.rds*. 
+data as [*holzinger_swineford.rds*][hs_data]. 
 
 These data contain a number of educational test scores from 7th and 8th grade 
-students in two schools. These data contain `r nrow(hs)` observations of the 
+students in two schools. This dataset comprises `r nrow(hs)` observations of the 
 following `r ncol(hs)` variables.
 
 - `id`: Numeric ID
@@ -114,9 +123,8 @@ str(hs)
 
 ---
 
-The first model we will consider is a simple mediation model wherein the effect 
-of *student age* on *spatial reasoning ability* is mediated by *mathematical 
-ability*.
+First, we will consider a simple mediation model wherein the effect of *student 
+age* on *spatial reasoning ability* is mediated by *mathematical ability*.
 
 - We will include *student age* via the single item `age`
 - We will model *spatial reasoning ability* via a latent variable measured by 
@@ -263,14 +271,14 @@ p <- pnorm(z) * 2
 **Answers:**
 
 a. Yes, the indirect effect is statistically significant (
-$\hat{ab} = `r round(out$est, 3)`$, 
-$SE_{ab} = `r round(out$se, 3)`$, 
-$Z = `r round(z, 3)`$, 
+$ab = `r round(out$est, 3)`$, 
+$SE = `r round(out$se, 3)`$, 
+$z = `r round(z, 3)`$, 
 $p = `r round(p, 3)`$
 ). 
 a. There is a significant, negative effect of age on spatial reasoning ability 
 transmitted through mathematical ability.
-a. The normality assumption underlying Sobel test may not be appropriate. We 
+a. The normality assumption underlying the Sobel test may not be appropriate. We 
 should test the significance of our indirect effect using bootstrapping.
 ```
 
@@ -282,7 +290,7 @@ should test the significance of our indirect effect using bootstrapping.
 
 - Rerun the structural model from \@ref(sobel) using $B = 2000$ bootstrap 
 resamples.
-- Test the significance of the indirect effect via the 95% BCa CI.
+- Test the significance of the indirect effect via the 95% bias-corrected (BC) CI.
 - Is the indirect effect also significant according to the bootstrapped CI?
 
 ```{r simple_mediation1_boot, cache = TRUE}
@@ -294,6 +302,8 @@ semFit1.2 <- sem(semMod1,
                  bootstrap = 2000)
 
 ## Get the CI for the indirect effect:
+## NOTE: boot.ci.type = "bca.simple" only corrects for bias, not skewness. So, 
+##       these are bias-corrected CIs, not bias-corrected and accelerated.
 parameterEstimates(semFit1.2, boot.ci.type = "bca.simple") %>% 
   select(-(1:3)) %>% 
   tail(1)
@@ -396,6 +406,7 @@ semMod2 <- paste(cfaMod2, semMod2, sep = '\n')
 ---
 
 ##
+
 **Estimate the structural model.**
 
 - Use B = 2000 bootstrap resamples to quantify the sampling variability.
@@ -412,7 +423,7 @@ summary(semFit2)
 **Interpret the results.**
 
 a. Is the indirect effect significant according to the 95% *percentile CI*?
-a. Is the indirect effect significant according to the 95% *BCa CI*?
+a. Is the indirect effect significant according to the 95% *BC CI*?
 a. Briefly interpret the indirect effect using the most appropriate version of 
 the CI to support your conclusions.
 
@@ -422,7 +433,7 @@ parameterEstimates(semFit1.2, boot.ci.type = "perc") %>%
   select(-(1:3)) %>%
   tail(1)
 
-## BCa CI:
+## BC CI:
 parameterEstimates(semFit1.2, boot.ci.type = "bca.simple") %>% 
   select(-(1:3)) %>%
   tail(1)
@@ -436,15 +447,15 @@ out2 <- parameterEstimates(semFit1.2, boot.ci.type = "bca.simple") %>% tail(1)
 ```{asis}
 a. Yes, the indirect effect is statistically significant according to the 
 percentile CI (
-$\hat{ab} = `r round(out1$est, 3)`$, 
+$ab = `r round(out1$est, 3)`$, 
 $95\%~CI_{perc} = [`r round(out1$ci.lower, 3)`; `r round(out1$ci.upper, 3)`]$
 ). 
 a. Yes, the indirect effect is statistically significant according to the 
-BCa CI (
-$\hat{ab} = `r round(out2$est, 3)`$, 
-$95\%~CI_{BCa} = [`r round(out2$ci.lower, 3)`; `r round(out2$ci.upper, 3)`]$
+BC CI (
+$ab = `r round(out2$est, 3)`$, 
+$95\%~CI_{BC} = [`r round(out2$ci.lower, 3)`; `r round(out2$ci.upper, 3)`]$
 ). 
-a. The 95% BCa CI for the indirect effect does not contain zero, so we can infer 
+a. The 95% BC CI for the indirect effect does not contain zero, so we can infer 
 a significant, negative effect of age on spatial reasoning ability transmitted 
 through verbal ability.
 ```
@@ -547,6 +558,7 @@ semMod3 <- paste(cfaMod3, semMod3, sep = '\n')
 ---
 
 ##
+
 **Estimate the structural model.**
 
 - Use B = 2000 bootstrap resamples to quantify the sampling variability.
@@ -563,10 +575,10 @@ summary(semFit3)
 **Interpret the results.**
 
 a. Is the specific indirect effect through *mathematical ability* significant 
-according to the 95% BCa CI?
+according to the 95% BC CI?
 a. Is the specific indirect effect through *verbal ability* significant 
-according to the 95% BCa CI?
-a. Is the total indirect effect significant according to the 95% BCa CI?
+according to the 95% BC CI?
+a. Is the total indirect effect significant according to the 95% BC CI?
 a. Briefly interpret the indirect effects.
 a. Do these results match the results from the separate simple mediation models?
    a. If you notice any differences, why do you think these differences occur?
@@ -587,17 +599,17 @@ out3 <- tmp[3, ]
 ```{asis}
 a. Yes, the specific indirect effect through *mathematical ability* is 
 statistically significant (
-$\hat{ab} = `r round(out1$est, 3)`$, 
-$95\%~CI_{BCa} = [`r round(out1$ci.lower, 3)`; `r round(out1$ci.upper, 3)`]$
+$ab = `r round(out1$est, 3)`$, 
+$95\%~CI_{BC} = [`r round(out1$ci.lower, 3)`; `r round(out1$ci.upper, 3)`]$
 ). 
 a. No, the specific indirect effect through *verbal ability* is not statistically 
 significant (
-$\hat{ab} = `r round(out2$est, 3)`$, 
-$95\%~CI_{BCa} = [`r round(out2$ci.lower, 3)`; `r round(out2$ci.upper, 3)`]$
+$ab = `r round(out2$est, 3)`$, 
+$95\%~CI_{BC} = [`r round(out2$ci.lower, 3)`; `r round(out2$ci.upper, 3)`]$
 ). 
 a. Yes, the total indirect effect is statistically significant (
-$\hat{IE} = `r round(out3$est, 3)`$, 
-$95\%~CI_{BCa} = [`r round(out3$ci.lower, 3)`; `r round(out3$ci.upper, 3)`]$
+$IE = `r round(out3$est, 3)`$, 
+$95\%~CI_{BC} = [`r round(out3$ci.lower, 3)`; `r round(out3$ci.upper, 3)`]$
 ). 
 a. There is a significant, negative indirect effect of age on spatial reasoning 
 ability transmitted through mathematical ability, but verbal reasoning ability 
@@ -626,7 +638,7 @@ ea <- readRDS(paste0(dataDir, "eating_attitudes_completed.rds"))
 We will move on to a different dataset to explore serial mediator models. 
 Specifically, we will work with a slightly modified version of the *Eating 
 Attitudes* data used for some example analyses in [Enders (2010)][amda]. These 
-data are available as *eating_attitudes_completed.rds*.
+data are available as [*eating_attitudes_completed.rds*][ea_data1].
 
 This dataset includes `r nrow(ea)` observations of the following `r ncol(ea)` 
 variables. Note that the variables are listed in the order that they appear on 
@@ -639,7 +651,7 @@ the dataset.
 - `wsb`: A single item assessing *Western Standards of Beauty*
 - `anx`: A single item assessing *Anxiety Level*
 
-You can download the original data [here][ea_data], and you can access the code 
+You can download the original data [here][ea_data0], and you can access the code 
 used to process the data [here][ea_code].
 
 ---
@@ -797,6 +809,7 @@ semMod4 <- paste(cfaMod4, semMod4, sep = '\n')
 ---
 
 ##
+
 **Estimate the structural model.**
 
 - Use B = 2000 bootstrap resamples to quantify the sampling variability.
@@ -813,12 +826,12 @@ summary(semFit4)
 **Interpret the results.**
 
 a. Is the two-step specific indirect effect through *Drive for Thinness* 
-significant according to the 95% BCa CI?
+significant according to the 95% BC CI?
 a. Is the two-step specific indirect effect through *Anxiety* significant 
-according to the 95% BCa CI?
+according to the 95% BC CI?
 a. Is the full, three-step specific indirect effect through *Drive for Thinness* 
-and *Anxiety* significant according to the 95% BCa CI?
-a. Is the total indirect effect significant according to the 95% BCa CI?
+and *Anxiety* significant according to the 95% BC CI?
+a. Is the total indirect effect significant according to the 95% BC CI?
 a. Briefly interpret the indirect effects.
 
 ```{r}
@@ -838,27 +851,32 @@ out4 <- tmp[4, ]
 ```{asis}
 a. Yes, the two-step specific indirect effect through *Drive for Thinness* is 
 statistically significant (
-$\hat{ab} = `r round(out1$est, 3)`$, 
-$95\%~CI_{BCa} = [`r round(out1$ci.lower, 3)`; `r round(out1$ci.upper, 3)`]$
-). 
+$ab = `r round(out1$est, 3)`$, 
+$95\%~CI_{BC} = [`r round(out1$ci.lower, 3)`; `r round(out1$ci.upper, 3)`]$
+).
+
 a. No, the two-step specific indirect effect through *anxiety* is not 
 statistically significant (
-$\hat{ab} = `r round(out2$est, 3)`$, 
-$95\%~CI_{BCa} = [`r round(out2$ci.lower, 3)`; `r round(out2$ci.upper, 3)`]$
-). 
+$ab = `r round(out2$est, 3)`$, 
+$95\%~CI_{BC} = [`r round(out2$ci.lower, 3)`; `r round(out2$ci.upper, 3)`]$
+).
+
    - The lower bound of the CI rounds down to zero. Although one could conclude 
    a just barely significant effect from the CI alone, the small point estimate 
    and the large p-value for the bootstrapped z-test both suggest against 
-   inferring a significant effect.
+   inferring a significant effect. 
+$\va$
 a. Yes, the full, three-step specific indirect effect is statistically 
 significant (
-$\hat{adb} = `r round(out3$est, 3)`$, 
-$95\%~CI_{BCa} = [`r round(out3$ci.lower, 3)`; `r round(out3$ci.upper, 3)`]$
-). 
+$adb = `r round(out3$est, 3)`$, 
+$95\%~CI_{BC} = [`r round(out3$ci.lower, 3)`; `r round(out3$ci.upper, 3)`]$
+).
+
 a. Yes, the total indirect effect is statistically significant (
-$\hat{IE} = `r round(out4$est, 3)`$, 
-$95\%~CI_{BCa} = [`r round(out4$ci.lower, 3)`; `r round(out4$ci.upper, 3)`]$
-). 
+$IE = `r round(out4$est, 3)`$, 
+$95\%~CI_{BC} = [`r round(out4$ci.lower, 3)`; `r round(out4$ci.upper, 3)`]$
+).
+
 a. The hypothesized causal chain linking Western beauty standards to 
 preoccupation with food through drive for thinness and anxiety was supported by 
 a statistically significant specific indirect effect. Western beauty 
@@ -871,7 +889,7 @@ food.
    with food is transmitted indirectly through drive for thinness was also 
    supported by a statistically significant, positive indirect effect. The 
    analogous subprocess transmitted through anxiety levels was associated with a 
-   nonsignificant indirect effect and, hence, not supported by these results.
+   nonsignificant indirect effect and, hence, was not supported by these results.
 ```
 
 ---
@@ -880,8 +898,10 @@ End of Lab 4
 
 ---
 
+[hs_data]: https://github.com/kylelang/lavaan-e-learning/raw/main/4_sem_mediation/data/holzinger_swineford.rds
 [mbess]: https://cran.r-project.org/web/packages/MBESS/index.html
-[hs_code]: https://github.com/kylelang/lavaan-e-learning/tree/main/code
+[hs_code]: https://github.com/kylelang/lavaan-e-learning/blob/main/code/lab_prep/process_hs_data.R
 [amda]: https://www.cms.guilford.com/books/Applied-Missing-Data-Analysis/Craig-Enders/9781606236390
-[ea_data]: https://www.appliedmissingdata.com/analyses
-[ea_code]: https://github.com/kylelang/lavaan-e-learning/tree/main/code
+[ea_data0]: https://www.appliedmissingdata.com/analyses
+[ea_data1]: https://github.com/kylelang/lavaan-e-learning/raw/main/4_sem_mediation/data/eating_attitudes_completed.rds
+[ea_code]: https://github.com/kylelang/lavaan-e-learning/blob/main/code/lab_prep/process_eating_data.R
