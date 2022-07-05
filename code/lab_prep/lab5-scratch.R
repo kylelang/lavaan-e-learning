@@ -47,7 +47,7 @@ ssOut <- probe2WayMC(fit,
 
 ssOut
 
-plotProbe(ssOut, xlim = range(dat1$disillusion))
+plotProbe(ssOut, xlim = range(dat1$success))
 
 ###-Latent Variables---------------------------------------------------------###
 

@@ -1,0 +1,694 @@
+---
+title: "Lab 5: Moderation"
+subtitle: "Introduction to SEM with lavaan"
+author: "Kyle M. Lang"
+date: "Updated: `r format(Sys.time(), format = '%Y-%m-%d')`"
+params:
+  answers: true
+output: 
+  bookdown::html_document2:
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    number_sections: true
+    df_print: paged
+    css: "../../resources/style.css"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, echo = FALSE, message = FALSE, warning = FALSE}
+library(knitr)
+library(dplyr)
+library(magrittr)
+
+figDir <- "../figures/"
+
+set.seed(235711)
+
+## Define an asis engine that will evaluate inline code within an asis block:
+knit_engines$set(asis = function(options) {
+  if(options$echo && options$eval) knit_child(text = options$code)
+}
+)
+
+opts_chunk$set(include = params$answers, 
+               echo = params$answer, 
+               message = FALSE,
+               warning = FALSE,
+               fig.align = "center",
+               comment = NA)
+```
+
+<!-- 
+Define some hacky LaTeX commands to force nice spacing between lines    
+NOTE: These must be called within a math environment (e.g., $\va$)
+-->
+\newcommand{\va}{\\[12pt]}
+\newcommand{\vb}{\\[6pt]}
+\newcommand{\vc}{\\[3pt]}
+\newcommand{\vx}[1]{\\[#1pt]}
+
+---
+
+In this lab, you will practice moderation analysis using **lavaan** to implement
+to test moderation with path analysis and SEM.
+
+---
+
+# Continuous Moderators
+
+---
+
+## Data
+
+---
+
+```{r, include = FALSE}
+dataDir <- "../data/"
+outlook <- readRDS(paste0(dataDir, "outlook.rds"))
+hs <- outlook
+```
+
+We will first analyze the classic Holzinger & Swineford (1939) educational 
+testing data. A full version of this dataset is distributed as the `HS` dataset 
+in the **MBESS** package. We don't need any functionality from **MBESS**, 
+however, so I have provided a standalone (and mildly processed) version of the 
+data as [*holzinger_swineford.rds*][hs_data]. 
+
+These data contain a number of educational test scores from 7th and 8th grade 
+students in two schools. This dataset comprises `r nrow(hs)` observations of the 
+following `r ncol(hs)` variables.
+
+- `id`: Numeric ID
+- `age`: Student age in years
+- `sex`: Biological sex of the student
+- `grade`: Grade of the student
+- `school`: School at which the student was tested
+- `spatial1:spatial4`: Scores on four spatial reasoning tests
+- `verbal1:verbal5`: Scores on five tests of verbal ability
+- `speed1:speed4`: Scores on four tests of cognitive processing speed
+- `memory1:memory6`: Scores on six memory tests
+- `math1:math5`: Scores on five tests of mathematical ability
+
+In the following, we will use the test scores to define latent factors of the 
+underlying ability levels.
+
+You can access the original version of the data via the [**MBESS**][mbess] 
+package, and you can access the code used to process the data [here][hs_code].
+
+---
+
+###
+
+**Read in the *outlook.rds* dataset.**
+
+```{r, eval = FALSE}
+dataDir <- "../data/"
+outlook <- readRDS(paste0(dataDir, "outlook.rds"))
+```
+
+NOTE: In the following, I will refer to these data as the *outlook data*.
+
+---
+
+###
+
+**Summarize the outlook data to get a sense of their characteristics.**
+
+```{r}
+head(outlook)
+summary(outlook)
+str(outlook)
+```
+
+---
+
+## OLS Regression
+
+---
+
+Blah, blah, blah...
+
+---
+
+###
+
+**Draw the conceptual path diagram for the model described above.**
+
+```{r, eval = FALSE, echo = FALSE, out.width = "85%"}
+knitr::include_graphics(paste0(figDir, "lab5_conceptual_diagram.png"))
+```
+
+---
+
+###
+
+**Draw the analytic path diagram for the model described above.**
+
+```{r, eval = FALSE, echo = FALSE, out.width = "85%"}
+knitr::include_graphics(paste0(figDir, "lab5_analytic_diagram.png"))
+```
+
+---
+
+###
+
+**Write out the regression equation necessary to evaluate the moderation 
+hypothesis described above.**
+
+```{asis}
+\[
+\Y_{progress} = \beta_0 + \beta_1 W_{conserve} + \beta_2 X_{success} + \beta_2 Z_{disillusion} + \beta_3 XZ + \varepsilon
+\]
+```
+
+---
+
+### {#olsFit}
+
+**Estimate the moderated regression model via OLS regression.**
+
+- Use the `lm()` function to estimate the model.
+
+```{r}
+fit <- lm(progress ~ lib2Con + success * disillusion, data = outlook)
+```
+
+---
+
+### 
+
+**Summarize the fitted model and interpret the results.**
+
+- Is the moderation hypothesis supported?
+- How does disillusionment level affect the focal effect?
+
+```{r}
+summary(fit)
+```
+
+```{asis}
+INTERPRET
+```
+
+---
+
+The [**rockchalk**][rockchalk] package contains some useful routines for probing
+interactions estimated via `lm()`. Specifically, the `plotslopes()` function will
+estimate and plot simple slopes, and the `testSlopes()` function test the simple
+slopes estimated by `plotSlopes()` for significance.
+
+---
+
+###
+
+**Probe the interaction.**
+
+- Use the `plotSlopes()` and `testSlopes()` functions from the **rockchalk** 
+package to conduct a simple slopes analysis for the model from \@ref(olsFit).
+- Include a defined parameter to quantify the indirect effect.
+
+```{r}
+library(rockchalk)
+
+## Estimate and plot simple slopes:
+psOut <- plotSlopes(fit, plotx = "success", modx = "disillusion")
+
+## Test the simple slopes:
+tsOut <- testSlopes(psOut)
+
+## View the results:
+tsOut$hypotests
+```
+
+---
+
+## Path Analysis
+
+---
+
+Blah, blah, blah...
+
+---
+
+###
+
+**Define the model syntax for the path analytic version of the model described above.**
+
+- Paramterized the model as in the OLS regression.
+   
+```{r}
+pathMod <- '
+progress ~ 1 + lib2Con + success + disillusion + success:disillusion
+'
+```
+
+---
+
+###
+
+**Estimate the path model on the outlook data.**
+
+```{r}
+library(lavaan)
+
+pathFit <- sem(pathMod, data = outlook)
+```
+
+---
+
+### 
+
+**Summarize the fitted path model and interpret the results.**
+
+- Do the results match the OLS regression results?
+
+```{r}
+summary(pathFit)
+```
+
+```{asis}
+Yes, the estimates and test results are all the same as in the OLS regression model.
+```
+
+---
+
+The **semTools** package contains some helpful routines for probing interactions
+estimated via the `lavaan()` function (or one of it's wrappers). Specifically, 
+the `probe2WayMC()` and `plotProbe()` functions will conduct simple slopes 
+analysis and plot the estimated simple slopes, respectively.
+
+---
+
+###
+
+**Probe the interaction from \@ref(pathFit) using *semTools* utilities.**
+
+- Use `probe2WayMC()` to estimate and test the simple slops and intercepts.
+- Use `plotProbe()` to visualize the simple slopes.
+- Which simple slopes are significant?
+
+```{r}
+library(semTools)
+
+## Compute simple slopes and intercepts:
+ssOut <- probe2WayMC(pathFit, 
+                     nameX    = c("success", "disillusion", "success:disillusion"), 
+                     nameY    = "progress", 
+                     modVar   = "disillusion",
+                     valProbe = quantile(outlook$disillusion, c(0.25, 0.5, 0.75))
+                     )
+
+## Check the results:
+ssOut
+
+## Visualize the simple slopes:
+plotProbe(ssOut,
+          xlim = range(outlook$success), 
+          xlab = "Ease of Personal Success", 
+          ylab = "Progress toward American Dream")
+```
+
+```{asis}
+Each of the simple slopes is significant. As level of disillusionment increases, 
+the effect of *success* on *progress* also increases, but this effect is 
+significant for all levels of *disillusion* considered here.
+```
+
+---
+
+## SEM with Double Mean Centering
+
+---
+
+Blah, blah, blah...
+
+---
+
+###
+
+**Define the model syntax for the CFA.**
+
+- Indicated the *success* factor from the four relevant scale items: 
+   - `s1:s4`
+- Indicated the *disillusionment* factor from the three relvant scale items:
+   - `d1:d3`
+
+```{r}
+cfaMod <- '
+success      =~ s1 + s2 + s3 + s4
+disillusion  =~ d1 + d2 + d3
+'
+```
+
+---
+
+###
+
+**Estimate the CFA model on the outlook data.**
+
+- Correlate the latent factors.
+- Estimate the mean structure.
+- Set the scale by standardizing the latent factors.
+
+```{r}
+library(dplyr)
+
+## Use a dplyr pipeline to remove scale scores before estimating the CFA:
+cfaFit <- outlook %>% 
+  select(-success, -disillusion) %>%
+  cfa(cfaMod, data = ., std.lv = TRUE, meanstructure = TRUE)
+```
+
+---
+
+### 
+
+**Summarize the fitted CFA and check the model fit.**
+
+- Do the parameter estimates look sensible?
+- Does the model fit the data well enough?
+
+```{r}
+summary(cfaFit)
+fitMeasures(cfaFit)
+```
+
+```{asis}
+This model looks good. All measurement model parameters seem reasonable, and the 
+model fits the data very well.
+```
+
+---
+
+###
+
+**Compute product indicators for the interaction construct.**
+
+- Use the Double Mean Centering method to create the product indicators.
+- Create all possible product terms (i.e., don't use the matched-pairs approach).
+
+*HINT*: The **semTools**::`indProd()` function can be a huge help here.
+
+```{r}
+outlook2 <- indProd(data      = outlook,
+                    var1      = paste0("s", 1:4),
+                    var2      = paste0("d", 1:3),
+                    match     = FALSE,
+                    meanC     = TRUE,
+                    doubleMC  = TRUE,
+                    residualC = FALSE)
+
+```
+
+---
+
+###
+
+**Define the model syntax for the structural model.**
+
+- Include the *progress* and *liberal-to-conservative* variables as single 
+observed items.
+- Estimate the intercept of the latent regression model.
+- Don't forget to include the residual correlations for the product indicators.
+
+```{r}
+## Define only the new syntax pieces:
+semMod <- '
+## Define the interaction factor:
+interact =~ s1.d1 + s1.d2 + s1.d3
+interact =~ s2.d1 + s2.d2 + s2.d3
+interact =~ s3.d1 + s3.d2 + s3.d3
+interact =~ s4.d1 + s4.d2 + s4.d3
+
+## Correlated residuals for product terms involving the same item:
+s1.d1 ~~ s1.d2 + s1.d3 + s2.d1 + s3.d1 + s4.d1
+s2.d1 ~~ s2.d2 + s2.d3 + s3.d1 + s4.d1
+s3.d1 ~~ s3.d2 + s3.d3 + s4.d1
+s4.d1 ~~ s4.d2 + s4.d3
+
+s1.d2 ~~ s1.d3 + s2.d2 + s3.d2 + s4.d2
+s2.d2 ~~ s2.d3 + s3.d2 + s4.d2
+s3.d2 ~~ s3.d3 + s4.d2
+s4.d2 ~~ s4.d3
+
+s1.d3 ~~ s2.d3 + s3.d3 + s4.d3
+s2.d3 ~~ s3.d3 + s4.d3
+s3.d3 ~~ s4.d3
+
+## Define the structural relations:
+progress ~ 1 + lib2Con + success + disillusion + interact
+'
+
+## Paste the new syntax onto the CFA syntax:
+semMod <- paste(cfaMod, semMod, sep = '\n')
+```
+
+---
+
+###
+
+**Estimate the structural model.**
+
+```{r}
+semFit <- outlook2 %>%
+  select(-success, -disillusion) %>%
+  sem(semMod, data = ., std.lv = TRUE)
+```
+
+---
+
+###
+
+**Summarize and interpret the results.**
+
+- Is the moderation hypothesis supported?
+- Do the results differ form the path analysis version?
+
+```{r}
+summary(semFit)
+```
+
+```{r, include = FALSE}
+#tmp <- parameterEstimates(semFit3, boot.ci.type = "bca.simple") %>% tail(3)
+#out1 <- tmp[1, ]
+#out2 <- tmp[2, ]
+#out3 <- tmp[3, ]
+```
+
+```{asis}
+Yes, the moderation hypothesis is supported. GIVE SUPPORT
+```
+
+---
+
+###
+
+**Probe the interaction.**
+
+- Use `probe2WayMC()` to conduct a simple slopes analysis.
+- Use `plotProbe()` to visualize the simple slopes.
+
+```{r}
+ssOut <- probe2WayMC(semFit,
+                     nameX    = c("success", "disillusion", "interact"),
+                     nameY    = "progress",
+                     modVar   = "disillusion",
+                     valProbe = c(-1, 0, 1)
+                     )
+
+ssOut
+
+plotProbe(ssOut, xlim = c(-3, 3),   
+          xlab = "Ease of Personal Success", 
+          ylab = "Progress toward American Dream")
+```
+
+---
+
+## SEM with Residual Centering
+
+---
+
+Blah, blah, blah...
+
+---
+
+###
+
+**Compute product indicators for the interaction construct.**
+
+- Use the Residual Centering method (a.k.a., Orthogonalization) to create the 
+product indicators.
+- Create all possible product terms (i.e., don't use the matched-pairs approach).
+
+```{r}
+outlook2 <- indProd(data      = outlook,
+                    var1      = paste0("s", 1:4),
+                    var2      = paste0("d", 1:3),
+                    match     = FALSE,
+                    meanC     = FALSE,
+                    doubleMC  = FALSE,
+                    residualC = TRUE)
+```
+
+---
+
+###
+
+**Define the model syntax for the structural model.**
+
+- Include the *progress* and *liberal-to-conservative* variables as single 
+observed items.
+- Estimate the intercept of the latent regression model.
+
+```{r}
+## We only need to add some syntax to fix the covariance between the interaction
+## factor and its constituent factors.
+semMod <- paste(semMod,
+                'success     ~~ 0 * interact',
+                'disillusion ~~ 0 * interact',
+                sep = '\n')
+```
+
+---
+
+###
+
+**Estimate the structural model.**
+
+```{r}
+semFit <- outlook2 %>%
+  select(-success, -disillusion) %>%
+  sem(semMod, data = ., std.lv = TRUE)
+```
+
+---
+
+###
+
+**Summarize and interpret the results.**
+
+- Is the moderation hypothesis supported?
+- Do the results differ from the double mean centered version?
+
+```{r}
+summary(semFit)
+```
+
+```{r, include = FALSE}
+#tmp <- parameterEstimates(semFit3, boot.ci.type = "bca.simple") %>% tail(3)
+#out1 <- tmp[1, ]
+#out2 <- tmp[2, ]
+#out3 <- tmp[3, ]
+```
+
+```{asis}
+Yes, the moderation hypothesis is supported. GIVE SUPPORT
+```
+
+---
+
+When we define the interaction construct using residual centering, we can use
+the `probe2WayRC()` function from **semTools** to conduct the simple slopes
+analysis.
+
+---
+
+###
+
+**Probe the interaction.**
+
+- Use `probe2WayRC()` to conduct a simple slopes analysis.
+- Use `plotProbe()` to visualize the simple slopes.
+
+```{r}
+ssOut <- probe2WayRC(semFit,
+                     nameX    = c("success", "disillusion", "interact"),
+                     nameY    = "progress",
+                     modVar   = "disillusion",
+                     valProbe = c(-1, 0, 1)
+                     )
+
+ssOut
+
+plotProbe(ssOut, xlim = c(-3, 3),   
+          xlab = "Ease of Personal Success", 
+          ylab = "Progress toward American Dream")
+```
+
+---
+
+# Categorical Moderators
+
+---
+
+Blah, blah, blah...
+
+---
+
+## Data
+
+---
+
+## OLS Regression
+
+---
+
+### 
+
+**Question**
+
+---
+
+###
+
+**Question***
+
+---
+
+## Path Analysis
+
+---
+
+### 
+
+**Question**
+
+---
+
+###
+
+**Question***
+
+---
+
+## Multiple Group SEM
+
+---
+
+### 
+
+**Question**
+
+---
+
+###
+
+**Question***
+
+---
+
+End of Lab 5
+
+---
+
+[rockchalk]: https://cran.r-project.org/web/packages/rockchalk/index.html
+[hs_data]: https://github.com/kylelang/lavaan-e-learning/raw/main/4_sem_mediation/data/holzinger_swineford.rds
+[mbess]: https://cran.r-project.org/web/packages/MBESS/index.html
+[hs_code]: https://github.com/kylelang/lavaan-e-learning/blob/main/code/lab_prep/process_hs_data.R
+[amda]: https://www.cms.guilford.com/books/Applied-Missing-Data-Analysis/Craig-Enders/9781606236390
+[ea_data0]: https://www.appliedmissingdata.com/analyses
+[ea_data1]: https://github.com/kylelang/lavaan-e-learning/raw/main/4_sem_mediation/data/eating_attitudes_completed.rds
+[ea_code]: https://github.com/kylelang/lavaan-e-learning/blob/main/code/lab_prep/process_eating_data.R
