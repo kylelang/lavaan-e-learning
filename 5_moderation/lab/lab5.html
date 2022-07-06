@@ -2771,7 +2771,7 @@ div.tocify {
 <h1 class="title toc-ignore">Lab 5: Moderation</h1>
 <h3 class="subtitle">Introduction to SEM with lavaan</h3>
 <h4 class="author">Kyle M. Lang</h4>
-<h4 class="date">Updated: 2022-07-05</h4>
+<h4 class="date">Updated: 2022-07-06</h4>
 
 </div>
 
@@ -2781,8 +2781,9 @@ Define some hacky LaTeX commands to force nice spacing between lines
 NOTE: These must be called within a math environment (e.g., $\va$)
 -->
 <hr />
-<p>In this lab, you will practice moderation analysis using <strong>lavaan</strong> to implement
-to test moderation with path analysis and SEM.</p>
+<p>In this lab, you will practice moderation analysis using path analysis and SEM
+in <a href="https://cran.r-project.org/web/packages/lavaan/"><strong>lavaan</strong></a>. You will work with both continuous and categorical
+moderators.</p>
 <hr />
 <div id="continuous-moderators" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> Continuous Moderators</h1>
@@ -2790,30 +2791,62 @@ to test moderation with path analysis and SEM.</p>
 <div id="data" class="section level2" number="1.1">
 <h2><span class="header-section-number">1.1</span> Data</h2>
 <hr />
-<p>We will first analyze the classic Holzinger &amp; Swineford (1939) educational
-testing data. A full version of this dataset is distributed as the <code>HS</code> dataset
-in the <strong>MBESS</strong> package. We don’t need any functionality from <strong>MBESS</strong>,
-however, so I have provided a standalone (and mildly processed) version of the
-data as <a href="https://github.com/kylelang/lavaan-e-learning/raw/main/4_sem_mediation/data/holzinger_swineford.rds"><em>holzinger_swineford.rds</em></a>.</p>
-<p>These data contain a number of educational test scores from 7th and 8th grade
-students in two schools. This dataset comprises 2288 observations of the
-following 13 variables.</p>
+<p>We will first analyze a synthetic version of the <a href="https://doi.org/10.3886/ICPSR35348.v1"><em>Outlook on Life Survey</em></a>
+data. The original data were collected in the United States in 2012 to measure,
+among other things, attitudes about racial issues, opinions of the Federal
+government, and beliefs about the future.</p>
+<p>We will work with a synthesized subset of the original data. You can access
+these synthetic data as <a href="https://github.com/kylelang/lavaan-e-learning/raw/main/5_moderation/data/outlook.rds"><em>outlook.rds</em></a>. This dataset comprises
+2288 observations of the following 13 variables.</p>
 <ul>
-<li><code>id</code>: Numeric ID</li>
-<li><code>age</code>: Student age in years</li>
-<li><code>sex</code>: Biological sex of the student</li>
-<li><code>grade</code>: Grade of the student</li>
-<li><code>school</code>: School at which the student was tested</li>
-<li><code>spatial1:spatial4</code>: Scores on four spatial reasoning tests</li>
-<li><code>verbal1:verbal5</code>: Scores on five tests of verbal ability</li>
-<li><code>speed1:speed4</code>: Scores on four tests of cognitive processing speed</li>
-<li><code>memory1:memory6</code>: Scores on six memory tests</li>
-<li><code>math1:math5</code>: Scores on five tests of mathematical ability</li>
+<li><code>d1:d3</code>: Three observed indicators of a construct measuring disillusionment
+with the US Federal government.
+<ul>
+<li>Higher scores indicate more disillusionment
+<span class="math inline">\(\\[6pt]\)</span></li>
+</ul></li>
+<li><code>s1:s4</code>: Four observed indicators of a construct measuring the perceived
+achievability of material success.
+<ul>
+<li>Higher scores indicate greater perceived achievability
+<span class="math inline">\(\\[6pt]\)</span></li>
+</ul></li>
+<li><code>progress</code>: A single item assessing perceived progress toward acheiving the
+“American Dream”
+<ul>
+<li>Higher scores indicate greater perceived progress
+<span class="math inline">\(\\[6pt]\)</span></li>
+</ul></li>
+<li><code>merit</code>: A single item assessing endorsement of the meritocratic ideal that
+hard work leads to success.
+<ul>
+<li>Higher scores indicate stronger endoresement of the meritocratic ideal
+<span class="math inline">\(\\[6pt]\)</span></li>
+</ul></li>
+<li><code>lib2Con</code>: A single item assessing liberal-to-conservative orientation
+<ul>
+<li>Lower scores are more liberal, higher scores are more conservative
+<span class="math inline">\(\\[6pt]\)</span></li>
+</ul></li>
+<li><code>party</code>: A four-level factor indicating self-reported political party affiliation
+<span class="math inline">\(\\[6pt]\)</span></li>
+<li><code>disillusion</code>: A scale score representing disillusionment with the US Federal
+government
+<ul>
+<li>Created as the mean of <code>d1:d3</code>
+<span class="math inline">\(\\[6pt]\)</span></li>
+</ul></li>
+<li><code>success</code>: A scale score representing the perceived achievability of material
+success
+<ul>
+<li>Created as the mean of <code>s1:s4</code></li>
+</ul></li>
 </ul>
-<p>In the following, we will use the test scores to define latent factors of the
-underlying ability levels.</p>
-<p>You can access the original version of the data via the <a href="https://cran.r-project.org/web/packages/MBESS/index.html"><strong>MBESS</strong></a>
-package, and you can access the code used to process the data <a href="https://github.com/kylelang/lavaan-e-learning/blob/main/code/lab_prep/process_hs_data.R">here</a>.</p>
+<p>To satisfy the <a href="https://www.icpsr.umich.edu/web/pages/datamanagement/lifecycle/access.html">access and licensing</a> conditions under which the original
+data are distributed, the data contained in <em>outlook.rds</em> were synthesized from
+the original variables using the methods described by <a href="https://doi.org/10.3390/psych3040045">Volker and Vink (2021)</a>.
+You can access the original data <a href="https://doi.org/10.3886/ICPSR35348.v1">here</a>, and you can access the code
+used to process the data <a href="https://github.com/kylelang/lavaan-e-learning/blob/main/code/lab_prep/process_outlook_data.R">here</a>.</p>
 <hr />
 <div id="section" class="section level3" number="1.1.1">
 <h3><span class="header-section-number">1.1.1</span> </h3>
@@ -2882,7 +2915,17 @@ outlook &lt;- readRDS(paste0(dataDir, &quot;outlook.rds&quot;))</code></pre>
 <div id="ols-regression" class="section level2" number="1.2">
 <h2><span class="header-section-number">1.2</span> OLS Regression</h2>
 <hr />
-<p>Blah, blah, blah…</p>
+<p>We will first consider moderation by a continuous variable. Specifically, we
+will work with a model encoding the following relations:</p>
+<ul>
+<li>Belief in the acheivability of success, <em>success</em>, predicts perceived progress
+toward the American Dream, <em>progress</em>, as the focal effect.</li>
+<li>Disillusionment with the US Federal government, <em>disillusion</em> moderates the
+<em>success</em> <span class="math inline">\(\rightarrow\)</span> <em>progress</em> effect.</li>
+<li>Placement on the liberal-to-conservative continuum, <em>lib2Con</em> is partialed out
+as a covariate.</li>
+</ul>
+<p>We will first estimate this model as an OLS regression model.</p>
 <hr />
 <div id="section-2" class="section level3" number="1.2.1">
 <h3><span class="header-section-number">1.2.1</span> </h3>
@@ -2899,7 +2942,7 @@ outlook &lt;- readRDS(paste0(dataDir, &quot;outlook.rds&quot;))</code></pre>
 <p><strong>Write out the regression equation necessary to evaluate the moderation
 hypothesis described above.</strong></p>
 <p><span class="math display">\[
-\Y_{progress} = \beta_0 + \beta_1 W_{conserve} + \beta_2 X_{success} + \beta_2 Z_{disillusion} + \beta_3 XZ + \varepsilon
+Y_{progress} = \beta_0 + \beta_1 W_{lib2Con} + \beta_2 X_{success} + \beta_3 Z_{disillusion} + \beta_4 XZ + \varepsilon
 \]</span></p>
 <hr />
 </div>
@@ -2945,8 +2988,8 @@ F-statistic: 91.74 on 4 and 2283 DF,  p-value: &lt; 2.2e-16</code></pre>
 <hr />
 <p>The <a href="https://cran.r-project.org/web/packages/rockchalk/index.html"><strong>rockchalk</strong></a> package contains some useful routines for probing
 interactions estimated via <code>lm()</code>. Specifically, the <code>plotslopes()</code> function will
-estimate and plot simple slopes, and the <code>testSlopes()</code> function test the simple
-slopes estimated by <code>plotSlopes()</code> for significance.</p>
+estimate and plot simple slopes, and the <code>testSlopes()</code> function tests the simple
+slopes estimated by <code>plotSlopes()</code>.</p>
 <hr />
 </div>
 <div id="section-6" class="section level3" number="1.2.6">
@@ -2955,7 +2998,6 @@ slopes estimated by <code>plotSlopes()</code> for significance.</p>
 <ul>
 <li>Use the <code>plotSlopes()</code> and <code>testSlopes()</code> functions from the <strong>rockchalk</strong>
 package to conduct a simple slopes analysis for the model from <a href="#olsFit">1.2.4</a>.</li>
-<li>Include a defined parameter to quantify the indirect effect.</li>
 </ul>
 <pre class="r"><code>library(rockchalk)
 
@@ -2981,20 +3023,22 @@ tsOut$hypotests</code></pre>
 <div id="path-analysis" class="section level2" number="1.3">
 <h2><span class="header-section-number">1.3</span> Path Analysis</h2>
 <hr />
-<p>Blah, blah, blah…</p>
+<p>We will now use <strong>lavaan</strong> to estimate the moderated regression model from above
+as a path analysis model.</p>
 <hr />
 <div id="section-7" class="section level3" number="1.3.1">
 <h3><span class="header-section-number">1.3.1</span> </h3>
 <p><strong>Define the model syntax for the path analytic version of the model described above.</strong></p>
 <ul>
-<li>Paramterized the model as in the OLS regression.</li>
+<li>Parameterize the model as in the OLS regression.</li>
+<li>Use only observed items and scale scores. Do not define any latent variables.</li>
 </ul>
 <pre class="r"><code>pathMod &lt;- &#39;
 progress ~ 1 + lib2Con + success + disillusion + success:disillusion
 &#39;</code></pre>
 <hr />
 </div>
-<div id="section-8" class="section level3" number="1.3.2">
+<div id="pathFit" class="section level3" number="1.3.2">
 <h3><span class="header-section-number">1.3.2</span> </h3>
 <p><strong>Estimate the path model on the outlook data.</strong></p>
 <pre class="r"><code>library(lavaan)
@@ -3002,7 +3046,7 @@ progress ~ 1 + lib2Con + success + disillusion + success:disillusion
 pathFit &lt;- sem(pathMod, data = outlook)</code></pre>
 <hr />
 </div>
-<div id="section-9" class="section level3" number="1.3.3">
+<div id="section-8" class="section level3" number="1.3.3">
 <h3><span class="header-section-number">1.3.3</span> </h3>
 <p><strong>Summarize the fitted path model and interpret the results.</strong></p>
 <ul>
@@ -3043,17 +3087,18 @@ Intercepts:
 Variances:
                    Estimate  Std.Err  z-value  P(&gt;|z|)
    .progress          4.157    0.123   33.823    0.000</code></pre>
-<p>Yes, the estimates and test results are all the same as in the OLS regression model.</p>
+<p>Yes, the estimates and inferential conclusions are all the same as in the OLS
+regression model.</p>
 <hr />
-<p>The <strong>semTools</strong> package contains some helpful routines for probing interactions
-estimated via the <code>lavaan()</code> function (or one of it’s wrappers). Specifically,
-the <code>probe2WayMC()</code> and <code>plotProbe()</code> functions will conduct simple slopes
-analysis and plot the estimated simple slopes, respectively.</p>
+<p>The <a href="https://cran.r-project.org/web/packages/semTools/index.html"><strong>semTools</strong></a> package contains some helpful routines for probing
+interactions estimated via the <code>lavaan()</code> function (or one of it’s wrappers).
+Specifically, the <code>probe2WayMC()</code> and <code>plotProbe()</code> functions will estimate/test
+simple slopes and plot the estimated simple slopes, respectively.</p>
 <hr />
 </div>
-<div id="section-10" class="section level3" number="1.3.4">
+<div id="section-9" class="section level3" number="1.3.4">
 <h3><span class="header-section-number">1.3.4</span> </h3>
-<p><strong>Probe the interaction from <a href="#pathFit"><strong>??</strong></a> using <em>semTools</em> utilities.</strong></p>
+<p><strong>Probe the interaction from <a href="#pathFit">1.3.2</a> using <em>semTools</em> utilities.</strong></p>
 <ul>
 <li>Use <code>probe2WayMC()</code> to estimate and test the simple slops and intercepts.</li>
 <li>Use <code>plotProbe()</code> to visualize the simple slopes.</li>
@@ -3094,12 +3139,16 @@ significant for all levels of <em>disillusion</em> considered here.</p>
 <hr />
 </div>
 </div>
-<div id="sem-with-double-mean-centering" class="section level2" number="1.4">
-<h2><span class="header-section-number">1.4</span> SEM with Double Mean Centering</h2>
+<div id="double-mean-centering" class="section level2" number="1.4">
+<h2><span class="header-section-number">1.4</span> Double Mean Centering</h2>
 <hr />
-<p>Blah, blah, blah…</p>
+<p>In this section and the next, we will test the above moderation hypothesis using
+latent variables and interactions therebetween. We will define these interaction
+factors using products of the observed indicators.</p>
+<p>In this section, we will create the interaction factor using the <em>Double Mean
+Centering</em> method.</p>
 <hr />
-<div id="section-11" class="section level3" number="1.4.1">
+<div id="section-10" class="section level3" number="1.4.1">
 <h3><span class="header-section-number">1.4.1</span> </h3>
 <p><strong>Define the model syntax for the CFA.</strong></p>
 <ul>
@@ -3111,6 +3160,7 @@ significant for all levels of <em>disillusion</em> considered here.</p>
 <ul>
 <li><code>d1:d3</code></li>
 </ul></li>
+<li>Do not include the interaction factor.</li>
 </ul>
 <pre class="r"><code>cfaMod &lt;- &#39;
 success      =~ s1 + s2 + s3 + s4
@@ -3118,7 +3168,7 @@ disillusion  =~ d1 + d2 + d3
 &#39;</code></pre>
 <hr />
 </div>
-<div id="section-12" class="section level3" number="1.4.2">
+<div id="section-11" class="section level3" number="1.4.2">
 <h3><span class="header-section-number">1.4.2</span> </h3>
 <p><strong>Estimate the CFA model on the outlook data.</strong></p>
 <ul>
@@ -3134,7 +3184,7 @@ cfaFit &lt;- outlook %&gt;%
   cfa(cfaMod, data = ., std.lv = TRUE, meanstructure = TRUE)</code></pre>
 <hr />
 </div>
-<div id="section-13" class="section level3" number="1.4.3">
+<div id="section-12" class="section level3" number="1.4.3">
 <h3><span class="header-section-number">1.4.3</span> </h3>
 <p><strong>Summarize the fitted CFA and check the model fit.</strong></p>
 <ul>
@@ -3229,7 +3279,7 @@ Variances:
 model fits the data very well.</p>
 <hr />
 </div>
-<div id="section-14" class="section level3" number="1.4.4">
+<div id="section-13" class="section level3" number="1.4.4">
 <h3><span class="header-section-number">1.4.4</span> </h3>
 <p><strong>Compute product indicators for the interaction construct.</strong></p>
 <ul>
@@ -3246,12 +3296,11 @@ model fits the data very well.</p>
                     residualC = FALSE)</code></pre>
 <hr />
 </div>
-<div id="section-15" class="section level3" number="1.4.5">
+<div id="section-14" class="section level3" number="1.4.5">
 <h3><span class="header-section-number">1.4.5</span> </h3>
 <p><strong>Define the model syntax for the structural model.</strong></p>
 <ul>
-<li>Include the <em>progress</em> and <em>liberal-to-conservative</em> variables as single
-observed items.</li>
+<li>Include the <em>progress</em> and <em>lib2Con</em> variables as single observed items.</li>
 <li>Estimate the intercept of the latent regression model.</li>
 <li>Don’t forget to include the residual correlations for the product indicators.</li>
 </ul>
@@ -3286,7 +3335,7 @@ progress ~ 1 + lib2Con + success + disillusion + interact
 semMod &lt;- paste(cfaMod, semMod, sep = &#39;\n&#39;)</code></pre>
 <hr />
 </div>
-<div id="section-16" class="section level3" number="1.4.6">
+<div id="section-15" class="section level3" number="1.4.6">
 <h3><span class="header-section-number">1.4.6</span> </h3>
 <p><strong>Estimate the structural model.</strong></p>
 <pre class="r"><code>semFit &lt;- outlook2 %&gt;%
@@ -3294,7 +3343,7 @@ semMod &lt;- paste(cfaMod, semMod, sep = &#39;\n&#39;)</code></pre>
   sem(semMod, data = ., std.lv = TRUE)</code></pre>
 <hr />
 </div>
-<div id="section-17" class="section level3" number="1.4.7">
+<div id="section-16" class="section level3" number="1.4.7">
 <h3><span class="header-section-number">1.4.7</span> </h3>
 <p><strong>Summarize and interpret the results.</strong></p>
 <ul>
@@ -3458,11 +3507,11 @@ Variances:
 <p>Yes, the moderation hypothesis is supported. GIVE SUPPORT</p>
 <hr />
 </div>
-<div id="section-18" class="section level3" number="1.4.8">
+<div id="section-17" class="section level3" number="1.4.8">
 <h3><span class="header-section-number">1.4.8</span> </h3>
 <p><strong>Probe the interaction.</strong></p>
 <ul>
-<li>Use <code>probe2WayMC()</code> to conduct a simple slopes analysis.</li>
+<li>Use <code>probe2WayMC()</code> to estimate and test the simple slopes.</li>
 <li>Use <code>plotProbe()</code> to visualize the simple slopes.</li>
 </ul>
 <pre class="r"><code>ssOut &lt;- probe2WayMC(semFit,
@@ -3491,12 +3540,13 @@ $SimpleSlope
 <hr />
 </div>
 </div>
-<div id="sem-with-residual-centering" class="section level2" number="1.5">
-<h2><span class="header-section-number">1.5</span> SEM with Residual Centering</h2>
+<div id="residual-centering" class="section level2" number="1.5">
+<h2><span class="header-section-number">1.5</span> Residual Centering</h2>
 <hr />
-<p>Blah, blah, blah…</p>
+<p>Now, we will conduct the same analysis as above using the <em>Residual Centering</em>
+approach to define the interaction factor.</p>
 <hr />
-<div id="section-19" class="section level3" number="1.5.1">
+<div id="section-18" class="section level3" number="1.5.1">
 <h3><span class="header-section-number">1.5.1</span> </h3>
 <p><strong>Compute product indicators for the interaction construct.</strong></p>
 <ul>
@@ -3513,15 +3563,14 @@ product indicators.</li>
                     residualC = TRUE)</code></pre>
 <hr />
 </div>
-<div id="section-20" class="section level3" number="1.5.2">
+<div id="section-19" class="section level3" number="1.5.2">
 <h3><span class="header-section-number">1.5.2</span> </h3>
 <p><strong>Define the model syntax for the structural model.</strong></p>
 <ul>
-<li>Include the <em>progress</em> and <em>liberal-to-conservative</em> variables as single
-observed items.</li>
+<li>Include the <em>progress</em> and <em>lib2Con</em> variables as single observed items.</li>
 <li>Estimate the intercept of the latent regression model.</li>
 </ul>
-<pre class="r"><code>## We only need to add some syntax to fix the covariance between the interaction
+<pre class="r"><code>## We only need to add commands to fix the covariance between the interaction
 ## factor and its constituent factors.
 semMod &lt;- paste(semMod,
                 &#39;success     ~~ 0 * interact&#39;,
@@ -3529,7 +3578,7 @@ semMod &lt;- paste(semMod,
                 sep = &#39;\n&#39;)</code></pre>
 <hr />
 </div>
-<div id="section-21" class="section level3" number="1.5.3">
+<div id="section-20" class="section level3" number="1.5.3">
 <h3><span class="header-section-number">1.5.3</span> </h3>
 <p><strong>Estimate the structural model.</strong></p>
 <pre class="r"><code>semFit &lt;- outlook2 %&gt;%
@@ -3537,7 +3586,7 @@ semMod &lt;- paste(semMod,
   sem(semMod, data = ., std.lv = TRUE)</code></pre>
 <hr />
 </div>
-<div id="section-22" class="section level3" number="1.5.4">
+<div id="section-21" class="section level3" number="1.5.4">
 <h3><span class="header-section-number">1.5.4</span> </h3>
 <p><strong>Summarize and interpret the results.</strong></p>
 <ul>
@@ -3706,11 +3755,11 @@ the <code>probe2WayRC()</code> function from <strong>semTools</strong> to conduc
 analysis.</p>
 <hr />
 </div>
-<div id="section-23" class="section level3" number="1.5.5">
+<div id="section-22" class="section level3" number="1.5.5">
 <h3><span class="header-section-number">1.5.5</span> </h3>
 <p><strong>Probe the interaction.</strong></p>
 <ul>
-<li>Use <code>probe2WayRC()</code> to conduct a simple slopes analysis.</li>
+<li>Use <code>probe2WayRC()</code> to estimate and test simple slopes and intercepts.</li>
 <li>Use <code>plotProbe()</code> to visualize the simple slopes.</li>
 </ul>
 <pre class="r"><code>ssOut &lt;- probe2WayRC(semFit,
@@ -3743,51 +3792,2059 @@ $SimpleSlope
 <div id="categorical-moderators" class="section level1" number="2">
 <h1><span class="header-section-number">2</span> Categorical Moderators</h1>
 <hr />
-<p>Blah, blah, blah…</p>
+<p>Now, we will move on to consider categorical moderators. That is, situations
+wherein we hypothesize different focal effects in the different groups define by
+some discrete moderator variable.</p>
+<p>We will first evaluate such a hypothesis using OLS regression and path analysis
+while treating the moderator as a dummy-coded predictor. Then, we will consider
+ways of evaluating this hypothesis when the focal effect is defined by a latent
+regression model and the moderation is modeled via multiple-group SEM. In the
+context of multiple-group SEM, we will consider several different ways of
+<em>testing</em> the moderation hypothesis, given the same SEM.</p>
 <hr />
 <div id="data-1" class="section level2" number="2.1">
 <h2><span class="header-section-number">2.1</span> Data</h2>
 <hr />
+<p>To explore moderation analysis with categorical moderators, we will go back to
+the classic Holzinger &amp; Swineford (1939) educational testing data. You can access
+the dataset as <a href="https://github.com/kylelang/lavaan-e-learning/raw/main/data/holzinger_swineford.rds"><em>holzinger_swineford.rds</em></a>.</p>
+<p>These data contain a number of educational test scores from 7th and 8th grade
+students in two schools. This dataset comprises 301 observations of the
+following 29 variables.</p>
+<ul>
+<li><code>id</code>: Numeric ID</li>
+<li><code>age</code>: Student age in years</li>
+<li><code>sex</code>: Biological sex of the student</li>
+<li><code>grade</code>: Grade of the student</li>
+<li><code>school</code>: School at which the student was tested</li>
+<li><code>spatial1:spatial4</code>: Scores on four spatial reasoning tests</li>
+<li><code>verbal1:verbal5</code>: Scores on five tests of verbal ability</li>
+<li><code>speed1:speed4</code>: Scores on four tests of cognitive processing speed</li>
+<li><code>memory1:memory6</code>: Scores on six memory tests</li>
+<li><code>math1:math5</code>: Scores on five tests of mathematical ability</li>
+</ul>
+<p>You can access the original version of the data via the <a href="https://cran.r-project.org/web/packages/MBESS/index.html"><strong>MBESS</strong></a>
+package, and you can access the code used to process the data <a href="https://github.com/kylelang/lavaan-e-learning/blob/main/code/lab_prep/process_hs_data.R">here</a>.</p>
+<hr />
+<div id="section-23" class="section level3" number="2.1.1">
+<h3><span class="header-section-number">2.1.1</span> </h3>
+<p><strong>Read in the <em>holzinger_swineford.rds</em> dataset.</strong></p>
+<pre class="r"><code>dataDir &lt;- &quot;../data/&quot;
+hs      &lt;- readRDS(paste0(dataDir, &quot;holzinger_swineford.rds&quot;))</code></pre>
+<p>NOTES:</p>
+<ol style="list-style-type: decimal">
+<li>In the following, I will refer to these data as the <em>HS data</em>.</li>
+<li>You should have already summarized the HS data at the beginning of the last
+lab, so we won’t do so again here. That being said, if you don’t remember what’s
+going on in there, it may be a good idea to rerun the summaries you conducted
+for <a href="https://github.com/kylelang/lavaan-e-learning/blob/main/4_sem_mediation/lab/lab4_solutions.html">Lab 4</a>.</li>
+</ol>
+<hr />
+</div>
+<div id="section-24" class="section level3" number="2.1.2">
+<h3><span class="header-section-number">2.1.2</span> </h3>
+<p><strong>Run the following code to create scale scores.</strong></p>
+<p>The following code will use the <code>scoreVeryFast()</code> function from the
+<a href="https://cran.r-project.org/web/packages/psych/index.html"><strong>psych</strong></a> package to create scale scores for the <em>math</em>, <em>verbal</em>, and
+<em>memory</em> constructs.</p>
+<pre class="r"><code>## Load the &#39;psych&#39; package for scoring utilities:
+library(psych)
+
+## Define the subscale mappings:
+keys &lt;- list(math   = paste0(&quot;math&quot;, 1:5),
+             verbal = paste0(&quot;verbal&quot;, 1:5),
+             memory = paste0(&quot;memory&quot;, 1:6)
+             )
+
+## Create scale scores (i.e., mean scores):
+scores &lt;- scoreVeryFast(keys = keys, items = hs)
+
+## Create a new dataset:
+hs2 &lt;- data.frame(scores, sex = hs$sex)</code></pre>
+<hr />
+</div>
 </div>
 <div id="ols-regression-1" class="section level2" number="2.2">
 <h2><span class="header-section-number">2.2</span> OLS Regression</h2>
 <hr />
-<div id="section-24" class="section level3" number="2.2.1">
+<div id="catOls" class="section level3" number="2.2.1">
 <h3><span class="header-section-number">2.2.1</span> </h3>
-<p><strong>Question</strong></p>
+<p><strong>Use <code>lm()</code> to estimate the moderated regression model described above.</strong></p>
+<pre class="r"><code>olsFit &lt;- lm(math ~ verbal * sex + memory * sex, data = hs2)</code></pre>
 <hr />
 </div>
 <div id="section-25" class="section level3" number="2.2.2">
 <h3><span class="header-section-number">2.2.2</span> </h3>
-<p><strong>Question</strong>*</p>
+<p><strong>Summarize the model from <a href="#catOls">2.2.1</a> and interpret the results.</strong></p>
+<ul>
+<li>Does the student’s sex moderate the effect of verbal ability on mathematical
+ability?</li>
+<li>Does the student’s sex moderate the effect of memory ability on mathematical
+ability?</li>
+</ul>
+<pre class="r"><code>summary(olsFit)</code></pre>
+<pre><code>
+Call:
+lm(formula = math ~ verbal * sex + memory * sex, data = hs2)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-1.48321 -0.31164  0.00321  0.32777  2.00834 
+
+Coefficients:
+               Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)    -0.07847    0.04195  -1.870  0.06241 .  
+verbal          0.55589    0.05086  10.929  &lt; 2e-16 ***
+sexMale         0.17460    0.06021   2.900  0.00402 ** 
+memory          0.29481    0.07325   4.025 7.25e-05 ***
+verbal:sexMale -0.22219    0.07279  -3.052  0.00248 ** 
+sexMale:memory  0.19259    0.09874   1.951  0.05205 .  
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 0.516 on 295 degrees of freedom
+Multiple R-squared:  0.5166,    Adjusted R-squared:  0.5084 
+F-statistic: 63.05 on 5 and 295 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>INTERPRET</p>
 <hr />
 </div>
 </div>
 <div id="path-analysis-1" class="section level2" number="2.3">
 <h2><span class="header-section-number">2.3</span> Path Analysis</h2>
 <hr />
-<div id="section-26" class="section level3" number="2.3.1">
+<div id="catPath" class="section level3" number="2.3.1">
 <h3><span class="header-section-number">2.3.1</span> </h3>
-<p><strong>Question</strong></p>
+<p><strong>Rerun the analysis from <a href="#catOls">2.2.1</a> using path analysis in <em>lavaan</em>.</strong></p>
+<pre class="r"><code>## Define the syntax for the path model:
+pathMod &lt;- &#39;
+math ~ 1 + verbal + memory + male + verbal:male + memory:male
+&#39;
+
+## Use a dplyr pipeline to dummy code &#39;sex&#39; and estimate the model:
+pathFit &lt;- hs2 %&gt;%
+    mutate(male = as.numeric(sex == &quot;Male&quot;)) %&gt;%
+    sem(pathMod, data = .)</code></pre>
 <hr />
 </div>
-<div id="section-27" class="section level3" number="2.3.2">
+<div id="section-26" class="section level3" number="2.3.2">
 <h3><span class="header-section-number">2.3.2</span> </h3>
-<p><strong>Question</strong>*</p>
+<p><strong>Summarize the model from <a href="#catPath">2.3.1</a> and interpret the results.</strong></p>
+<ul>
+<li>Do the results match the findings from the OLS regression analysis?</li>
+</ul>
+<pre class="r"><code>summary(pathFit)</code></pre>
+<pre><code>lavaan 0.6-12 ended normally after 16 iterations
+
+  Estimator                                         ML
+  Optimization method                           NLMINB
+  Number of model parameters                         7
+
+  Number of observations                           301
+
+Model Test User Model:
+                                                      
+  Test statistic                                 0.000
+  Degrees of freedom                                 0
+
+Parameter Estimates:
+
+  Standard errors                             Standard
+  Information                                 Expected
+  Information saturated (h1) model          Structured
+
+Regressions:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  math ~                                              
+    verbal            0.556    0.050   11.040    0.000
+    memory            0.295    0.073    4.066    0.000
+    male              0.175    0.060    2.929    0.003
+    verbal:male      -0.222    0.072   -3.083    0.002
+    memory:male       0.193    0.098    1.970    0.049
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .math             -0.078    0.042   -1.889    0.059
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .math              0.261    0.021   12.268    0.000</code></pre>
 <hr />
 </div>
 </div>
 <div id="multiple-group-sem" class="section level2" number="2.4">
 <h2><span class="header-section-number">2.4</span> Multiple Group SEM</h2>
 <hr />
-<div id="section-28" class="section level3" number="2.4.1">
+<p>Blah, blah, blah…</p>
+<hr />
+<div id="section-27" class="section level3" number="2.4.1">
 <h3><span class="header-section-number">2.4.1</span> </h3>
-<p><strong>Question</strong></p>
+<p><strong>Define the model syntax for the CFA.</strong></p>
+<ul>
+<li>Indicated the <em>mathematical ability</em> factor from the five observed math test
+scores.
+<ul>
+<li><code>math1:math5</code></li>
+</ul></li>
+<li>Indicated the <em>verbal ability</em> factor from the five observed verbal test scores.
+<ul>
+<li><code>verbal1:verbal5</code></li>
+</ul></li>
+<li>Indicated the <em>memory ability</em> factor from the six observed memory test scores.
+<ul>
+<li><code>memory1:memory6</code></li>
+</ul></li>
+</ul>
+<pre class="r"><code>cfaMod &lt;- &#39;
+math   =~ math1   + math2   + math3   + math4   + math5
+verbal =~ verbal1 + verbal2 + verbal3 + verbal4 + verbal5
+memory =~ memory1 + memory2 + memory3 + memory4 + memory5 + memory6
+&#39;</code></pre>
 <hr />
 </div>
-<div id="section-29" class="section level3" number="2.4.2">
+<div id="section-28" class="section level3" number="2.4.2">
 <h3><span class="header-section-number">2.4.2</span> </h3>
-<p><strong>Question</strong>*</p>
+<p><strong>Estimate the configurally invariant CFA model using the HS data.</strong></p>
+<ul>
+<li>Define the groups via the <em>sex</em> factor.</li>
+<li>Correlate all latent factors.</li>
+<li>Estimate the mean structure.</li>
+<li>Set the scale by standardizing the latent variables.</li>
+</ul>
+<pre class="r"><code>configFit &lt;- cfa(cfaMod, data = hs, std.lv = TRUE, group = &quot;sex&quot;)</code></pre>
+<hr />
+</div>
+<div id="section-29" class="section level3" number="2.4.3">
+<h3><span class="header-section-number">2.4.3</span> </h3>
+<p><strong>Summarize the model from <a href="#config"><strong>??</strong></a> and interpret the results.</strong></p>
+<ul>
+<li>Does the model seem sensible?</li>
+<li>Does the model fit the data well enough?</li>
+<li>Is configural invariance supported?</li>
+</ul>
+<pre class="r"><code>summary(configFit)</code></pre>
+<pre><code>lavaan 0.6-12 ended normally after 27 iterations
+
+  Estimator                                         ML
+  Optimization method                           NLMINB
+  Number of model parameters                       102
+
+  Number of observations per group:                   
+    Male                                           146
+    Female                                         155
+
+Model Test User Model:
+                                                      
+  Test statistic                               282.889
+  Degrees of freedom                               202
+  P-value (Chi-square)                           0.000
+  Test statistic for each group:
+    Male                                       144.140
+    Female                                     138.750
+
+Parameter Estimates:
+
+  Standard errors                             Standard
+  Information                                 Expected
+  Information saturated (h1) model          Structured
+
+
+Group 1 [Male]:
+
+Latent Variables:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  math =~                                             
+    math1             0.718    0.085    8.467    0.000
+    math2             0.575    0.077    7.488    0.000
+    math3             0.647    0.087    7.469    0.000
+    math4             0.659    0.078    8.480    0.000
+    math5             0.573    0.076    7.508    0.000
+  verbal =~                                           
+    verbal1           0.859    0.070   12.288    0.000
+    verbal2           0.781    0.066   11.764    0.000
+    verbal3           0.850    0.065   13.052    0.000
+    verbal4           0.714    0.075    9.585    0.000
+    verbal5           0.778    0.068   11.514    0.000
+  memory =~                                           
+    memory1           0.696    0.092    7.539    0.000
+    memory2           0.593    0.091    6.535    0.000
+    memory3           0.598    0.080    7.479    0.000
+    memory4           0.500    0.080    6.253    0.000
+    memory5           0.503    0.090    5.607    0.000
+    memory6           0.495    0.084    5.873    0.000
+
+Covariances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  math ~~                                             
+    verbal            0.536    0.075    7.155    0.000
+    memory            0.690    0.072    9.566    0.000
+  verbal ~~                                           
+    memory            0.213    0.097    2.204    0.028
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .math1             0.149    0.088    1.696    0.090
+   .math2             0.055    0.078    0.709    0.479
+   .math3             0.026    0.087    0.299    0.765
+   .math4             0.062    0.080    0.765    0.444
+   .math5            -0.101    0.077   -1.310    0.190
+   .verbal1           0.095    0.084    1.126    0.260
+   .verbal2          -0.123    0.079   -1.557    0.120
+   .verbal3          -0.060    0.080   -0.740    0.459
+   .verbal4          -0.044    0.083   -0.528    0.597
+   .verbal5          -0.011    0.080   -0.142    0.887
+   .memory1          -0.161    0.091   -1.776    0.076
+   .memory2          -0.006    0.087   -0.066    0.948
+   .memory3          -0.019    0.078   -0.248    0.804
+   .memory4          -0.258    0.076   -3.376    0.001
+   .memory5          -0.091    0.084   -1.075    0.283
+   .memory6          -0.063    0.080   -0.787    0.431
+    math              0.000                           
+    verbal            0.000                           
+    memory            0.000                           
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .math1             0.608    0.088    6.944    0.000
+   .math2             0.548    0.074    7.409    0.000
+   .math3             0.697    0.094    7.417    0.000
+   .math4             0.511    0.074    6.937    0.000
+   .math5             0.539    0.073    7.401    0.000
+   .verbal1           0.301    0.046    6.565    0.000
+   .verbal2           0.300    0.043    6.905    0.000
+   .verbal3           0.221    0.037    5.897    0.000
+   .verbal4           0.502    0.065    7.738    0.000
+   .verbal5           0.323    0.046    7.040    0.000
+   .memory1           0.714    0.104    6.864    0.000
+   .memory2           0.755    0.102    7.397    0.000
+   .memory3           0.539    0.078    6.901    0.000
+   .memory4           0.600    0.080    7.517    0.000
+   .memory5           0.788    0.102    7.755    0.000
+   .memory6           0.683    0.089    7.662    0.000
+    math              1.000                           
+    verbal            1.000                           
+    memory            1.000                           
+
+
+Group 2 [Female]:
+
+Latent Variables:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  math =~                                             
+    math1             0.514    0.071    7.200    0.000
+    math2             0.634    0.081    7.869    0.000
+    math3             0.677    0.069    9.882    0.000
+    math4             0.803    0.072   11.196    0.000
+    math5             0.734    0.077    9.499    0.000
+  verbal =~                                           
+    verbal1           0.826    0.064   13.011    0.000
+    verbal2           0.852    0.068   12.512    0.000
+    verbal3           0.873    0.067   13.125    0.000
+    verbal4           0.762    0.068   11.159    0.000
+    verbal5           0.911    0.066   13.817    0.000
+  memory =~                                           
+    memory1           0.457    0.076    5.989    0.000
+    memory2           0.427    0.084    5.082    0.000
+    memory3           0.672    0.089    7.548    0.000
+    memory4           0.488    0.089    5.486    0.000
+    memory5           0.500    0.085    5.880    0.000
+    memory6           0.475    0.091    5.206    0.000
+
+Covariances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  math ~~                                             
+    verbal            0.854    0.035   24.190    0.000
+    memory            0.649    0.075    8.674    0.000
+  verbal ~~                                           
+    memory            0.467    0.083    5.605    0.000
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .math1            -0.140    0.073   -1.908    0.056
+   .math2            -0.052    0.084   -0.614    0.539
+   .math3            -0.025    0.075   -0.326    0.744
+   .math4            -0.058    0.082   -0.708    0.479
+   .math5             0.095    0.084    1.129    0.259
+   .verbal1          -0.089    0.078   -1.148    0.251
+   .verbal2           0.116    0.082    1.407    0.160
+   .verbal3           0.056    0.082    0.685    0.493
+   .verbal4           0.041    0.079    0.521    0.602
+   .verbal5           0.011    0.083    0.129    0.898
+   .memory1           0.152    0.070    2.165    0.030
+   .memory2           0.005    0.076    0.071    0.943
+   .memory3           0.018    0.084    0.218    0.827
+   .memory4           0.243    0.081    3.003    0.003
+   .memory5           0.085    0.078    1.098    0.272
+   .memory6           0.059    0.082    0.716    0.474
+    math              0.000                           
+    verbal            0.000                           
+    memory            0.000                           
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .math1             0.572    0.069    8.259    0.000
+   .math2             0.700    0.086    8.122    0.000
+   .math3             0.425    0.057    7.501    0.000
+   .math4             0.393    0.058    6.789    0.000
+   .math5             0.561    0.073    7.652    0.000
+   .verbal1           0.258    0.036    7.122    0.000
+   .verbal2           0.325    0.044    7.389    0.000
+   .verbal3           0.277    0.039    7.052    0.000
+   .verbal4           0.398    0.051    7.888    0.000
+   .verbal5           0.232    0.036    6.527    0.000
+   .memory1           0.551    0.072    7.600    0.000
+   .memory2           0.710    0.089    7.992    0.000
+   .memory3           0.638    0.097    6.548    0.000
+   .memory4           0.775    0.099    7.832    0.000
+   .memory5           0.690    0.090    7.654    0.000
+   .memory6           0.829    0.104    7.945    0.000
+    math              1.000                           
+    verbal            1.000                           
+    memory            1.000                           </code></pre>
+<pre class="r"><code>fitMeasures(configFit)</code></pre>
+<pre><code>               npar                fmin               chisq                  df 
+            102.000               0.470             282.889             202.000 
+             pvalue      baseline.chisq         baseline.df     baseline.pvalue 
+              0.000            2191.826             240.000               0.000 
+                cfi                 tli                nnfi                 rfi 
+              0.959               0.951               0.951               0.847 
+                nfi                pnfi                 ifi                 rni 
+              0.871               0.733               0.959               0.959 
+               logl   unrestricted.logl                 aic                 bic 
+          -5833.379           -5691.935           11870.759           12248.884 
+             ntotal                bic2               rmsea      rmsea.ci.lower 
+            301.000           11925.398               0.052               0.036 
+     rmsea.ci.upper        rmsea.pvalue                 rmr          rmr_nomean 
+              0.065               0.416               0.064               0.068 
+               srmr        srmr_bentler srmr_bentler_nomean                crmr 
+              0.064               0.064               0.068               0.068 
+        crmr_nomean          srmr_mplus   srmr_mplus_nomean               cn_05 
+              0.072               0.064               0.068             252.277 
+              cn_01                 gfi                agfi                pgfi 
+            268.790               0.904               0.855               0.600 
+                mfi 
+              0.874 </code></pre>
+<p>INTERPRET</p>
+<hr />
+</div>
+<div id="invariance" class="section level3" number="2.4.4">
+<h3><span class="header-section-number">2.4.4</span> </h3>
+<p><strong>Test weak and strong invariance for the CFA define in @(mgCFA).</strong></p>
+<ul>
+<li>Is weak invariance supported?</li>
+<li>Is strong invariance supported?</li>
+<li>Based on these findings, can we proceed to testing moderation by group?</li>
+</ul>
+<p><em>HINT</em>: The <strong>semTools</strong> functions <code>measEq.syntax()</code> and <code>compareFit()</code> can be
+very helpful here.</p>
+<pre class="r"><code>## Define the syntax for the weakly invariant model:
+weakMod &lt;- measEq.syntax(configFit, group.equal = &quot;loadings&quot;) %&gt;% as.character()
+
+## Estimate the weakly invariant model:
+weakFit &lt;- cfa(weakMod, data = hs, std.lv = TRUE, group = &quot;sex&quot;)
+
+## Summarize the fitted weakly invariant model:
+summary(weakFit)</code></pre>
+<pre><code>lavaan 0.6-12 ended normally after 49 iterations
+
+  Estimator                                         ML
+  Optimization method                           NLMINB
+  Number of model parameters                       105
+  Number of equality constraints                    16
+
+  Number of observations per group:                   
+    Male                                           146
+    Female                                         155
+
+Model Test User Model:
+                                                      
+  Test statistic                               300.099
+  Degrees of freedom                               215
+  P-value (Chi-square)                           0.000
+  Test statistic for each group:
+    Male                                       154.169
+    Female                                     145.930
+
+Parameter Estimates:
+
+  Standard errors                             Standard
+  Information                                 Expected
+  Information saturated (h1) model          Structured
+
+
+Group 1 [Male]:
+
+Latent Variables:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  math =~                                             
+    math1   (l.1_)    0.564    0.062    9.164    0.000
+    math2   (l.2_)    0.583    0.062    9.468    0.000
+    math3   (l.3_)    0.634    0.063   10.007    0.000
+    math4   (l.4_)    0.708    0.065   10.955    0.000
+    math5   (l.5_)    0.631    0.062   10.122    0.000
+  verbal =~                                           
+    verbal1 (l.6_)    0.810    0.059   13.669    0.000
+    verbal2 (l.7_)    0.793    0.059   13.503    0.000
+    verbal3 (l.8_)    0.838    0.059   14.163    0.000
+    verbal4 (l.9_)    0.717    0.059   12.121    0.000
+    verbal5 (l.10)    0.828    0.060   13.777    0.000
+  memory =~                                           
+    memory1 (l.11)    0.588    0.073    8.102    0.000
+    memory2 (l.12)    0.525    0.072    7.293    0.000
+    memory3 (l.13)    0.653    0.071    9.204    0.000
+    memory4 (l.14)    0.523    0.068    7.714    0.000
+    memory5 (l.15)    0.521    0.072    7.262    0.000
+    memory6 (l.16)    0.509    0.070    7.281    0.000
+
+Covariances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  math ~~                                             
+    verbal  (p.2_)    0.541    0.075    7.225    0.000
+    memory (p.3_1)    0.706    0.071    9.883    0.000
+  verbal ~~                                           
+    memory (p.3_2)    0.222    0.097    2.289    0.022
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .math1             0.149    0.082    1.804    0.071
+   .math2             0.055    0.078    0.708    0.479
+   .math3             0.026    0.087    0.301    0.763
+   .math4             0.062    0.083    0.743    0.458
+   .math5            -0.101    0.079   -1.271    0.204
+   .verbal1           0.095    0.082    1.165    0.244
+   .verbal2          -0.123    0.080   -1.544    0.123
+   .verbal3          -0.060    0.080   -0.748    0.455
+   .verbal4          -0.044    0.084   -0.526    0.599
+   .verbal5          -0.011    0.083   -0.137    0.891
+   .memory1          -0.161    0.087   -1.839    0.066
+   .memory2          -0.006    0.086   -0.067    0.947
+   .memory3          -0.019    0.081   -0.241    0.810
+   .memory4          -0.258    0.077   -3.344    0.001
+   .memory5          -0.091    0.085   -1.066    0.286
+   .memory6          -0.063    0.080   -0.786    0.432
+    math              0.000                           
+    verbal            0.000                           
+    memory            0.000                           
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .math1   (t.1_)    0.676    0.087    7.753    0.000
+   .math2   (t.2_)    0.540    0.072    7.463    0.000
+   .math3   (t.3_)    0.696    0.092    7.579    0.000
+   .math4   (t.4_)    0.502    0.073    6.831    0.000
+   .math5   (t.5_)    0.523    0.072    7.238    0.000
+   .verbal1 (t.6_)    0.314    0.045    6.933    0.000
+   .verbal2 (t.7_)    0.296    0.043    6.900    0.000
+   .verbal3 (t.8_)    0.225    0.037    6.117    0.000
+   .verbal4 (t.9_)    0.505    0.065    7.772    0.000
+   .verbal5 (t.10)    0.315    0.046    6.871    0.000
+   .memory1 (t.11)    0.772    0.102    7.544    0.000
+   .memory2 (t.12)    0.794    0.102    7.764    0.000
+   .memory3 (t.13)    0.521    0.078    6.644    0.000
+   .memory4 (t.14)    0.594    0.079    7.487    0.000
+   .memory5 (t.15)    0.787    0.101    7.768    0.000
+   .memory6 (t.16)    0.671    0.088    7.660    0.000
+    math    (p.1_)    1.000                           
+    verbal  (p.2_)    1.000                           
+    memory  (p.3_)    1.000                           
+
+
+Group 2 [Female]:
+
+Latent Variables:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  math =~                                             
+    math1   (l.1_)    0.564    0.062    9.164    0.000
+    math2   (l.2_)    0.583    0.062    9.468    0.000
+    math3   (l.3_)    0.634    0.063   10.007    0.000
+    math4   (l.4_)    0.708    0.065   10.955    0.000
+    math5   (l.5_)    0.631    0.062   10.122    0.000
+  verbal =~                                           
+    verbal1 (l.6_)    0.810    0.059   13.669    0.000
+    verbal2 (l.7_)    0.793    0.059   13.503    0.000
+    verbal3 (l.8_)    0.838    0.059   14.163    0.000
+    verbal4 (l.9_)    0.717    0.059   12.121    0.000
+    verbal5 (l.10)    0.828    0.060   13.777    0.000
+  memory =~                                           
+    memory1 (l.11)    0.588    0.073    8.102    0.000
+    memory2 (l.12)    0.525    0.072    7.293    0.000
+    memory3 (l.13)    0.653    0.071    9.204    0.000
+    memory4 (l.14)    0.523    0.068    7.714    0.000
+    memory5 (l.15)    0.521    0.072    7.262    0.000
+    memory6 (l.16)    0.509    0.070    7.281    0.000
+
+Covariances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  math ~~                                             
+    verbal  (p.2_)    0.983    0.170    5.773    0.000
+    memory (p.3_1)    0.627    0.140    4.465    0.000
+  verbal ~~                                           
+    memory (p.3_2)    0.436    0.112    3.883    0.000
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .math1            -0.140    0.078   -1.801    0.072
+   .math2            -0.052    0.084   -0.614    0.539
+   .math3            -0.025    0.076   -0.324    0.746
+   .math4            -0.058    0.080   -0.724    0.469
+   .math5             0.095    0.082    1.159    0.247
+   .verbal1          -0.089    0.080   -1.117    0.264
+   .verbal2           0.116    0.082    1.418    0.156
+   .verbal3           0.056    0.083    0.678    0.498
+   .verbal4           0.041    0.079    0.523    0.601
+   .verbal5           0.011    0.081    0.132    0.895
+   .memory1           0.152    0.072    2.095    0.036
+   .memory2           0.005    0.077    0.070    0.944
+   .memory3           0.018    0.081    0.225    0.822
+   .memory4           0.243    0.080    3.033    0.002
+   .memory5           0.085    0.077    1.106    0.269
+   .memory6           0.059    0.082    0.718    0.473
+    math              0.000                           
+    verbal            0.000                           
+    memory            0.000                           
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .math1   (t.1_)    0.566    0.070    8.042    0.000
+   .math2   (t.2_)    0.702    0.086    8.156    0.000
+   .math3   (t.3_)    0.421    0.056    7.478    0.000
+   .math4   (t.4_)    0.406    0.057    7.072    0.000
+   .math5   (t.5_)    0.577    0.073    7.868    0.000
+   .verbal1 (t.6_)    0.256    0.037    7.014    0.000
+   .verbal2 (t.7_)    0.327    0.044    7.472    0.000
+   .verbal3 (t.8_)    0.273    0.039    7.016    0.000
+   .verbal4 (t.9_)    0.397    0.050    7.908    0.000
+   .verbal5 (t.10)    0.240    0.035    6.806    0.000
+   .memory1 (t.11)    0.527    0.073    7.254    0.000
+   .memory2 (t.12)    0.696    0.088    7.886    0.000
+   .memory3 (t.13)    0.676    0.092    7.354    0.000
+   .memory4 (t.14)    0.767    0.096    8.000    0.000
+   .memory5 (t.15)    0.701    0.089    7.909    0.000
+   .memory6 (t.16)    0.837    0.103    8.104    0.000
+    math    (p.1_)    1.175    0.243    4.839    0.000
+    verbal  (p.2_)    1.123    0.199    5.628    0.000
+    memory  (p.3_)    0.825    0.191    4.323    0.000</code></pre>
+<pre class="r"><code>fitMeasures(weakFit)</code></pre>
+<pre><code>               npar                fmin               chisq                  df 
+             89.000               0.499             300.099             215.000 
+             pvalue      baseline.chisq         baseline.df     baseline.pvalue 
+              0.000            2191.826             240.000               0.000 
+                cfi                 tli                nnfi                 rfi 
+              0.956               0.951               0.951               0.847 
+                nfi                pnfi                 ifi                 rni 
+              0.863               0.773               0.957               0.956 
+               logl   unrestricted.logl                 aic                 bic 
+          -5841.984           -5691.935           11861.968           12191.901 
+             ntotal                bic2               rmsea      rmsea.ci.lower 
+            301.000           11909.643               0.051               0.037 
+     rmsea.ci.upper        rmsea.pvalue                 rmr          rmr_nomean 
+              0.065               0.428               0.073               0.077 
+               srmr        srmr_bentler srmr_bentler_nomean                crmr 
+              0.072               0.072               0.076               0.071 
+        crmr_nomean          srmr_mplus   srmr_mplus_nomean               cn_05 
+              0.076               0.069               0.073             251.959 
+              cn_01                 gfi                agfi                pgfi 
+            267.959               0.900               0.859               0.637 
+                mfi 
+              0.868 </code></pre>
+<pre class="r"><code>## Define the syntax for the strongly invariant model:
+strongMod &lt;- 
+  measEq.syntax(configFit, group.equal = c(&quot;loadings&quot;, &quot;intercepts&quot;)) %&gt;% 
+  as.character()
+
+## Estimate the strongly invariant model:
+strongFit &lt;- cfa(strongMod, data = hs, std.lv = TRUE, group = &quot;sex&quot;)
+
+## Summarize the fitted strongly invariant model:
+summary(strongFit)</code></pre>
+<pre><code>lavaan 0.6-12 ended normally after 54 iterations
+
+  Estimator                                         ML
+  Optimization method                           NLMINB
+  Number of model parameters                       108
+  Number of equality constraints                    32
+
+  Number of observations per group:                   
+    Male                                           146
+    Female                                         155
+
+Model Test User Model:
+                                                      
+  Test statistic                               359.618
+  Degrees of freedom                               228
+  P-value (Chi-square)                           0.000
+  Test statistic for each group:
+    Male                                       184.245
+    Female                                     175.374
+
+Parameter Estimates:
+
+  Standard errors                             Standard
+  Information                                 Expected
+  Information saturated (h1) model          Structured
+
+
+Group 1 [Male]:
+
+Latent Variables:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  math =~                                             
+    math1   (l.1_)    0.569    0.062    9.153    0.000
+    math2   (l.2_)    0.584    0.062    9.462    0.000
+    math3   (l.3_)    0.636    0.063   10.014    0.000
+    math4   (l.4_)    0.711    0.065   10.962    0.000
+    math5   (l.5_)    0.619    0.063    9.900    0.000
+  verbal =~                                           
+    verbal1 (l.6_)    0.801    0.059   13.465    0.000
+    verbal2 (l.7_)    0.795    0.059   13.429    0.000
+    verbal3 (l.8_)    0.838    0.059   14.157    0.000
+    verbal4 (l.9_)    0.717    0.059   12.117    0.000
+    verbal5 (l.10)    0.826    0.060   13.752    0.000
+  memory =~                                           
+    memory1 (l.11)    0.602    0.073    8.288    0.000
+    memory2 (l.12)    0.504    0.071    7.128    0.000
+    memory3 (l.13)    0.624    0.070    8.949    0.000
+    memory4 (l.14)    0.560    0.069    8.100    0.000
+    memory5 (l.15)    0.525    0.071    7.388    0.000
+    memory6 (l.16)    0.506    0.069    7.331    0.000
+
+Covariances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  math ~~                                             
+    verbal  (p.2_)    0.544    0.075    7.262    0.000
+    memory (p.3_1)    0.704    0.072    9.761    0.000
+  verbal ~~                                           
+    memory (p.3_2)    0.223    0.097    2.296    0.022
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .math1   (nu.1)    0.022    0.068    0.324    0.746
+   .math2   (nu.2)    0.036    0.068    0.528    0.598
+   .math3   (nu.3)    0.038    0.072    0.538    0.590
+   .math4   (nu.4)    0.038    0.075    0.513    0.608
+   .math5   (nu.5)    0.029    0.070    0.412    0.681
+   .verbal1 (nu.6)   -0.041    0.075   -0.549    0.583
+   .verbal2 (nu.7)   -0.032    0.075   -0.425    0.671
+   .verbal3 (nu.8)   -0.032    0.076   -0.418    0.676
+   .verbal4 (nu.9)   -0.023    0.072   -0.312    0.755
+   .verbal5 (n.10)   -0.031    0.077   -0.402    0.688
+   .memory1 (n.11)   -0.100    0.073   -1.363    0.173
+   .memory2 (n.12)   -0.097    0.069   -1.409    0.159
+   .memory3 (n.13)   -0.101    0.072   -1.405    0.160
+   .memory4 (n.14)   -0.121    0.069   -1.742    0.081
+   .memory5 (n.15)   -0.095    0.070   -1.369    0.171
+   .memory6 (n.16)   -0.089    0.068   -1.308    0.191
+    math    (a.1.)    0.000                           
+    verbal  (a.2.)    0.000                           
+    memory  (a.3.)    0.000                           
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .math1   (t.1_)    0.691    0.089    7.747    0.000
+   .math2   (t.2_)    0.541    0.073    7.450    0.000
+   .math3   (t.3_)    0.693    0.092    7.559    0.000
+   .math4   (t.4_)    0.499    0.074    6.788    0.000
+   .math5   (t.5_)    0.547    0.075    7.333    0.000
+   .verbal1 (t.6_)    0.343    0.048    7.071    0.000
+   .verbal2 (t.7_)    0.307    0.044    6.913    0.000
+   .verbal3 (t.8_)    0.224    0.037    6.041    0.000
+   .verbal4 (t.9_)    0.506    0.065    7.754    0.000
+   .verbal5 (t.10)    0.315    0.046    6.832    0.000
+   .memory1 (t.11)    0.773    0.103    7.483    0.000
+   .memory2 (t.12)    0.809    0.103    7.831    0.000
+   .memory3 (t.13)    0.540    0.079    6.859    0.000
+   .memory4 (t.14)    0.608    0.083    7.343    0.000
+   .memory5 (t.15)    0.783    0.101    7.746    0.000
+   .memory6 (t.16)    0.670    0.087    7.661    0.000
+    math    (p.1_)    1.000                           
+    verbal  (p.2_)    1.000                           
+    memory  (p.3_)    1.000                           
+
+
+Group 2 [Female]:
+
+Latent Variables:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  math =~                                             
+    math1   (l.1_)    0.569    0.062    9.153    0.000
+    math2   (l.2_)    0.584    0.062    9.462    0.000
+    math3   (l.3_)    0.636    0.063   10.014    0.000
+    math4   (l.4_)    0.711    0.065   10.962    0.000
+    math5   (l.5_)    0.619    0.063    9.900    0.000
+  verbal =~                                           
+    verbal1 (l.6_)    0.801    0.059   13.465    0.000
+    verbal2 (l.7_)    0.795    0.059   13.429    0.000
+    verbal3 (l.8_)    0.838    0.059   14.157    0.000
+    verbal4 (l.9_)    0.717    0.059   12.117    0.000
+    verbal5 (l.10)    0.826    0.060   13.752    0.000
+  memory =~                                           
+    memory1 (l.11)    0.602    0.073    8.288    0.000
+    memory2 (l.12)    0.504    0.071    7.128    0.000
+    memory3 (l.13)    0.624    0.070    8.949    0.000
+    memory4 (l.14)    0.560    0.069    8.100    0.000
+    memory5 (l.15)    0.525    0.071    7.388    0.000
+    memory6 (l.16)    0.506    0.069    7.331    0.000
+
+Covariances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  math ~~                                             
+    verbal  (p.2_)    0.985    0.171    5.764    0.000
+    memory (p.3_1)    0.621    0.140    4.440    0.000
+  verbal ~~                                           
+    memory (p.3_2)    0.437    0.113    3.876    0.000
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .math1   (nu.1)    0.022    0.068    0.324    0.746
+   .math2   (nu.2)    0.036    0.068    0.528    0.598
+   .math3   (nu.3)    0.038    0.072    0.538    0.590
+   .math4   (nu.4)    0.038    0.075    0.513    0.608
+   .math5   (nu.5)    0.029    0.070    0.412    0.681
+   .verbal1 (nu.6)   -0.041    0.075   -0.549    0.583
+   .verbal2 (nu.7)   -0.032    0.075   -0.425    0.671
+   .verbal3 (nu.8)   -0.032    0.076   -0.418    0.676
+   .verbal4 (nu.9)   -0.023    0.072   -0.312    0.755
+   .verbal5 (n.10)   -0.031    0.077   -0.402    0.688
+   .memory1 (n.11)   -0.100    0.073   -1.363    0.173
+   .memory2 (n.12)   -0.097    0.069   -1.409    0.159
+   .memory3 (n.13)   -0.101    0.072   -1.405    0.160
+   .memory4 (n.14)   -0.121    0.069   -1.742    0.081
+   .memory5 (n.15)   -0.095    0.070   -1.369    0.171
+   .memory6 (n.16)   -0.089    0.068   -1.308    0.191
+    math    (a.1.)   -0.110    0.135   -0.818    0.414
+    verbal  (a.2.)    0.067    0.124    0.541    0.588
+    memory  (a.3.)    0.352    0.134    2.633    0.008
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .math1   (t.1_)    0.577    0.072    8.036    0.000
+   .math2   (t.2_)    0.704    0.086    8.152    0.000
+   .math3   (t.3_)    0.419    0.056    7.455    0.000
+   .math4   (t.4_)    0.405    0.058    7.041    0.000
+   .math5   (t.5_)    0.603    0.076    7.938    0.000
+   .verbal1 (t.6_)    0.272    0.038    7.123    0.000
+   .verbal2 (t.7_)    0.337    0.045    7.477    0.000
+   .verbal3 (t.8_)    0.272    0.039    6.969    0.000
+   .verbal4 (t.9_)    0.395    0.050    7.885    0.000
+   .verbal5 (t.10)    0.241    0.036    6.783    0.000
+   .memory1 (t.11)    0.525    0.073    7.166    0.000
+   .memory2 (t.12)    0.706    0.089    7.969    0.000
+   .memory3 (t.13)    0.707    0.094    7.542    0.000
+   .memory4 (t.14)    0.786    0.100    7.896    0.000
+   .memory5 (t.15)    0.699    0.089    7.891    0.000
+   .memory6 (t.16)    0.838    0.103    8.113    0.000
+    math    (p.1_)    1.171    0.243    4.826    0.000
+    verbal  (p.2_)    1.128    0.201    5.617    0.000
+    memory  (p.3_)    0.818    0.190    4.297    0.000</code></pre>
+<pre class="r"><code>fitMeasures(strongFit)</code></pre>
+<pre><code>               npar                fmin               chisq                  df 
+             76.000               0.597             359.618             228.000 
+             pvalue      baseline.chisq         baseline.df     baseline.pvalue 
+              0.000            2191.826             240.000               0.000 
+                cfi                 tli                nnfi                 rfi 
+              0.933               0.929               0.929               0.827 
+                nfi                pnfi                 ifi                 rni 
+              0.836               0.794               0.933               0.933 
+               logl   unrestricted.logl                 aic                 bic 
+          -5871.744           -5691.935           11895.487           12177.228 
+             ntotal                bic2               rmsea      rmsea.ci.lower 
+            301.000           11936.199               0.062               0.049 
+     rmsea.ci.upper        rmsea.pvalue                 rmr          rmr_nomean 
+              0.074               0.057               0.078               0.078 
+               srmr        srmr_bentler srmr_bentler_nomean                crmr 
+              0.078               0.078               0.077               0.077 
+        crmr_nomean          srmr_mplus   srmr_mplus_nomean               cn_05 
+              0.077               0.075               0.074             222.155 
+              cn_01                 gfi                agfi                pgfi 
+            235.859               0.877               0.836               0.658 
+                mfi 
+              0.804 </code></pre>
+<pre class="r"><code>## Compare model fits to test weak and strong invariance:
+compareFit(configFit, weakFit, strongFit) %&gt;% summary()</code></pre>
+<pre><code>################### Nested Model Comparison #########################
+Chi-Squared Difference Test
+
+           Df   AIC   BIC  Chisq Chisq diff Df diff Pr(&gt;Chisq)    
+configFit 202 11871 12249 282.89                                  
+weakFit   215 11862 12192 300.10     17.209      13     0.1899    
+strongFit 228 11896 12177 359.62     59.520      13  6.402e-08 ***
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+####################### Model Fit Indices ###########################
+             chisq  df pvalue rmsea   cfi   tli  srmr        aic        bic
+configFit 282.889† 202   .000 .052  .959† .951  .064† 11870.759  12248.884 
+weakFit   300.099  215   .000 .051† .956  .951† .072  11861.968† 12191.901 
+strongFit 359.618  228   .000 .062  .933  .929  .078  11895.487  12177.228†
+
+################## Differences in Fit Indices #######################
+                    df rmsea    cfi    tli  srmr    aic     bic
+weakFit - configFit 13 0.000 -0.002  0.001 0.008 -8.791 -56.983
+strongFit - weakFit 13 0.011 -0.024 -0.022 0.005 33.520 -14.673</code></pre>
+<p>INTERPRET</p>
+<hr />
+</div>
+<div id="mgSemSyntax" class="section level3" number="2.4.5">
+<h3><span class="header-section-number">2.4.5</span> </h3>
+<p><strong>Define the syntax for the structural model.</strong></p>
+<ul>
+<li>Regress <em>math</em> onto <em>verbal</em> and <em>memory</em>.</li>
+<li>Give the <span class="math inline">\(\eta_{verbal} \rightarrow \eta_{math}\)</span> effect a unique label in each
+group.</li>
+<li>Give the <span class="math inline">\(\eta_{memory} \rightarrow \eta_{math}\)</span> effect a unique label in each
+group.</li>
+<li>Only include the intercept if you were able to establish a sufficient level of
+measurement invariance in <a href="#invariance">2.4.4</a>.</li>
+</ul>
+<pre class="r"><code>## Paste the new line of model syntax onto the syntax for the CFA model:
+## NOTE: We only established weak invariance, so we will not estimate an 
+##       intercept for this latent regression.
+semMod &lt;- paste(cfaMod,
+                &#39;math ~ c(b1m, b1f) * verbal + c(b2m, b2f) * memory&#39;,
+                  sep = &#39;\n&#39;)</code></pre>
+</div>
+<div id="mgSemFit" class="section level3" number="2.4.6">
+<h3><span class="header-section-number">2.4.6</span> </h3>
+<p><strong>Estimate the unrestricted, multiple group SEM.</strong></p>
+<ul>
+<li>Covary the <em>verbal</em> and <em>memory</em> factors.</li>
+<li>Enforce whatever level of invariance contraints were supported by the analysis
+in <a href="#invariance">2.4.4</a>.</li>
+<li>Only estimate the mean structure if you were able to establish a sufficient
+level of measurement invariance in <a href="#invariance">2.4.4</a>.</li>
+<li>Set the scale by standardizing the latent variables.</li>
+</ul>
+<pre class="r"><code>## NOTE: We only established weak invariance, so we will not equate the item 
+##       intercepts across groups nor estimate a mean structure.
+semFit &lt;- sem(semMod, 
+              data        = hs, 
+              std.lv      = TRUE, 
+              group       = &quot;sex&quot;, 
+              group.equal = &quot;loadings&quot;) </code></pre>
+<hr />
+<p>Blah, blah, blah…</p>
+<hr />
+</div>
+<div id="defParTest" class="section level3" number="2.4.7">
+<h3><span class="header-section-number">2.4.7</span> </h3>
+<p><strong>Test for moderation using defined parameters.</strong></p>
+<ul>
+<li>Modify the model syntax from <a href="#mgSemSyntax">2.4.5</a> by including two defined
+parameters.
+<ol style="list-style-type: decimal">
+<li>The first define parameter should quantify the moderating effect of
+<span class="math inline">\(X_{sex}\)</span> on the <span class="math inline">\(\eta_{verbal} \rightarrow \eta_{math}\)</span> effect.</li>
+<li>The second define parameter should quantify the moderating effect of
+<span class="math inline">\(X_{sex}\)</span> on the <span class="math inline">\(\eta_{memory} \rightarrow \eta_{math}\)</span> effect.</li>
+</ol></li>
+<li>Evaluate these two moderation hypotheses via the normal-theory z-tests of the
+defined parameters.</li>
+<li>Are the hypotheses supported?</li>
+</ul>
+<pre class="r"><code>## Add defined paramters to the SEM syntax:
+semMod2 &lt;- paste(semMod,
+                 &#39;verbalDiff := b1f - b1m&#39;,
+                 &#39;memoryDiff := b2f - b2m&#39;,
+                 sep = &#39;\n&#39;)
+
+## Estimate the model with the defined parameters:
+semFit2 &lt;- sem(semMod2,
+               data        = hs,
+               std.lv      = TRUE,
+               group       = &quot;sex&quot;,
+               group.equal = &quot;loadings&quot;)
+
+## Summarize the fitted model:
+summary(semFit2)</code></pre>
+<pre><code>lavaan 0.6-12 ended normally after 53 iterations
+
+  Estimator                                         ML
+  Optimization method                           NLMINB
+  Number of model parameters                       105
+  Number of equality constraints                    16
+
+  Number of observations per group:                   
+    Male                                           146
+    Female                                         155
+
+Model Test User Model:
+                                                      
+  Test statistic                               300.099
+  Degrees of freedom                               215
+  P-value (Chi-square)                           0.000
+  Test statistic for each group:
+    Male                                       154.169
+    Female                                     145.930
+
+Parameter Estimates:
+
+  Standard errors                             Standard
+  Information                                 Expected
+  Information saturated (h1) model          Structured
+
+
+Group 1 [Male]:
+
+Latent Variables:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  math =~                                             
+    math1   (.p1.)    0.331    0.052    6.370    0.000
+    math2   (.p2.)    0.343    0.053    6.465    0.000
+    math3   (.p3.)    0.373    0.056    6.628    0.000
+    math4   (.p4.)    0.416    0.061    6.860    0.000
+    math5   (.p5.)    0.371    0.056    6.654    0.000
+  verbal =~                                           
+    verbal1 (.p6.)    0.810    0.059   13.669    0.000
+    verbal2 (.p7.)    0.793    0.059   13.503    0.000
+    verbal3 (.p8.)    0.838    0.059   14.163    0.000
+    verbal4 (.p9.)    0.717    0.059   12.121    0.000
+    verbal5 (.10.)    0.828    0.060   13.777    0.000
+  memory =~                                           
+    memory1 (.11.)    0.588    0.073    8.102    0.000
+    memory2 (.12.)    0.525    0.072    7.293    0.000
+    memory3 (.13.)    0.653    0.071    9.204    0.000
+    memory4 (.14.)    0.523    0.068    7.714    0.000
+    memory5 (.15.)    0.521    0.072    7.262    0.000
+    memory6 (.16.)    0.509    0.070    7.281    0.000
+
+Regressions:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  math ~                                              
+    verbal   (b1m)    0.688    0.167    4.111    0.000
+    memory   (b2m)    1.049    0.235    4.456    0.000
+
+Covariances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  verbal ~~                                           
+    memory            0.222    0.097    2.289    0.022
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .math1             0.149    0.082    1.804    0.071
+   .math2             0.055    0.078    0.708    0.479
+   .math3             0.026    0.087    0.301    0.763
+   .math4             0.062    0.083    0.743    0.458
+   .math5            -0.101    0.079   -1.271    0.204
+   .verbal1           0.095    0.082    1.165    0.244
+   .verbal2          -0.123    0.080   -1.544    0.123
+   .verbal3          -0.060    0.080   -0.748    0.455
+   .verbal4          -0.044    0.084   -0.526    0.599
+   .verbal5          -0.011    0.083   -0.137    0.891
+   .memory1          -0.161    0.087   -1.839    0.066
+   .memory2          -0.006    0.086   -0.067    0.947
+   .memory3          -0.019    0.081   -0.241    0.810
+   .memory4          -0.258    0.077   -3.344    0.001
+   .memory5          -0.091    0.085   -1.066    0.286
+   .memory6          -0.063    0.080   -0.786    0.432
+   .math              0.000                           
+    verbal            0.000                           
+    memory            0.000                           
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .math1             0.676    0.087    7.753    0.000
+   .math2             0.540    0.072    7.463    0.000
+   .math3             0.696    0.092    7.579    0.000
+   .math4             0.502    0.073    6.831    0.000
+   .math5             0.523    0.072    7.238    0.000
+   .verbal1           0.314    0.045    6.933    0.000
+   .verbal2           0.296    0.043    6.900    0.000
+   .verbal3           0.225    0.037    6.117    0.000
+   .verbal4           0.505    0.065    7.772    0.000
+   .verbal5           0.315    0.046    6.871    0.000
+   .memory1           0.772    0.102    7.544    0.000
+   .memory2           0.794    0.102    7.764    0.000
+   .memory3           0.521    0.078    6.644    0.000
+   .memory4           0.594    0.079    7.487    0.000
+   .memory5           0.787    0.101    7.768    0.000
+   .memory6           0.671    0.088    7.660    0.000
+   .math              1.000                           
+    verbal            1.000                           
+    memory            1.000                           
+
+
+Group 2 [Female]:
+
+Latent Variables:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  math =~                                             
+    math1   (.p1.)    0.331    0.052    6.370    0.000
+    math2   (.p2.)    0.343    0.053    6.465    0.000
+    math3   (.p3.)    0.373    0.056    6.628    0.000
+    math4   (.p4.)    0.416    0.061    6.860    0.000
+    math5   (.p5.)    0.371    0.056    6.654    0.000
+  verbal =~                                           
+    verbal1 (.p6.)    0.810    0.059   13.669    0.000
+    verbal2 (.p7.)    0.793    0.059   13.503    0.000
+    verbal3 (.p8.)    0.838    0.059   14.163    0.000
+    verbal4 (.p9.)    0.717    0.059   12.121    0.000
+    verbal5 (.10.)    0.828    0.060   13.777    0.000
+  memory =~                                           
+    memory1 (.11.)    0.588    0.073    8.102    0.000
+    memory2 (.12.)    0.525    0.072    7.293    0.000
+    memory3 (.13.)    0.653    0.071    9.204    0.000
+    memory4 (.14.)    0.523    0.068    7.714    0.000
+    memory5 (.15.)    0.521    0.072    7.262    0.000
+    memory6 (.16.)    0.509    0.070    7.281    0.000
+
+Regressions:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  math ~                                              
+    verbal   (b1f)    1.242    0.223    5.561    0.000
+    memory   (b2f)    0.636    0.191    3.329    0.001
+
+Covariances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  verbal ~~                                           
+    memory            0.436    0.112    3.883    0.000
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .math1            -0.140    0.078   -1.801    0.072
+   .math2            -0.052    0.084   -0.614    0.539
+   .math3            -0.025    0.076   -0.324    0.746
+   .math4            -0.058    0.080   -0.724    0.469
+   .math5             0.095    0.082    1.159    0.247
+   .verbal1          -0.089    0.080   -1.117    0.264
+   .verbal2           0.116    0.082    1.418    0.156
+   .verbal3           0.056    0.083    0.678    0.498
+   .verbal4           0.041    0.079    0.523    0.601
+   .verbal5           0.011    0.081    0.132    0.895
+   .memory1           0.152    0.072    2.095    0.036
+   .memory2           0.005    0.077    0.070    0.944
+   .memory3           0.018    0.081    0.225    0.822
+   .memory4           0.243    0.080    3.033    0.002
+   .memory5           0.085    0.077    1.106    0.269
+   .memory6           0.059    0.082    0.718    0.473
+   .math              0.000                           
+    verbal            0.000                           
+    memory            0.000                           
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .math1             0.566    0.070    8.042    0.000
+   .math2             0.702    0.086    8.156    0.000
+   .math3             0.421    0.056    7.478    0.000
+   .math4             0.406    0.057    7.072    0.000
+   .math5             0.577    0.073    7.868    0.000
+   .verbal1           0.256    0.037    7.014    0.000
+   .verbal2           0.327    0.044    7.472    0.000
+   .verbal3           0.273    0.039    7.016    0.000
+   .verbal4           0.397    0.050    7.908    0.000
+   .verbal5           0.240    0.035    6.806    0.000
+   .memory1           0.527    0.073    7.254    0.000
+   .memory2           0.696    0.088    7.886    0.000
+   .memory3           0.676    0.092    7.354    0.000
+   .memory4           0.767    0.096    8.000    0.000
+   .memory5           0.701    0.089    7.909    0.000
+   .memory6           0.837    0.103    8.104    0.000
+   .math              0.643    0.262    2.449    0.014
+    verbal            1.123    0.199    5.628    0.000
+    memory            0.825    0.191    4.323    0.000
+
+Defined Parameters:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+    verbalDiff        0.554    0.203    2.731    0.006
+    memoryDiff       -0.413    0.239   -1.727    0.084</code></pre>
+<p>INTERPRET</p>
+<hr />
+</div>
+<div id="section-30" class="section level3" number="2.4.8">
+<h3><span class="header-section-number">2.4.8</span> </h3>
+<p><strong>Redo the analysis from <a href="#defParTest">2.4.7</a> using the <code>lavTestWald()</code> function.</strong></p>
+<ul>
+<li>Run the tests using the fitted model from <a href="#mgSemFit">2.4.6</a>.</li>
+<li>Test each moderation hypothesis independently.</li>
+<li>Are the moderation hypotheses supported from these tests?</li>
+</ul>
+<pre class="r"><code>(verbalWald &lt;- lavTestWald(semFit, &#39;b1m == b1f&#39;))</code></pre>
+<pre><code>$stat
+[1] 7.460556
+
+$df
+[1] 1
+
+$p.value
+[1] 0.006306554
+
+$se
+[1] &quot;standard&quot;</code></pre>
+<pre class="r"><code>(memoryWald &lt;- lavTestWald(semFit, &#39;b2m == b2f&#39;))</code></pre>
+<pre><code>$stat
+[1] 2.983319
+
+$df
+[1] 1
+
+$p.value
+[1] 0.08412659
+
+$se
+[1] &quot;standard&quot;</code></pre>
+<p>INTERPRET</p>
+<hr />
+</div>
+<div id="section-31" class="section level3" number="2.4.9">
+<h3><span class="header-section-number">2.4.9</span> </h3>
+<p><strong>Compare the results from <a href="#defParTest">2.4.7</a> and <a href="#waldTest"><strong>??</strong></a>.</strong></p>
+<ul>
+<li>Do the tests agree?</li>
+<li>What do you notice about the estimates associated with each test (e.g., test
+statistics, p-values)?</li>
+</ul>
+<pre class="r"><code>## Both tests give the same p-values:
+parameterEstimates(semFit2) %&gt;% 
+  filter(label %in% c(&quot;verbalDiff&quot;, &quot;memoryDiff&quot;)) %&gt;%
+  select(label, pvalue)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["label"],"name":[1],"type":["chr"],"align":["left"]},{"label":["pvalue"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"verbalDiff","2":"0.006306554"},{"1":"memoryDiff","2":"0.084126589"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>verbalWald$p.value</code></pre>
+<pre><code>[1] 0.006306554</code></pre>
+<pre class="r"><code>memoryWald$p.value</code></pre>
+<pre><code>[1] 0.08412659</code></pre>
+<pre class="r"><code>## The Wald test statistics are equal to the square of the z-statistics for the 
+## defined parameters:
+parameterEstimates(semFit2) %&gt;% 
+  filter(label %in% c(&quot;verbalDiff&quot;, &quot;memoryDiff&quot;)) %&gt;%
+  select(label, z)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["label"],"name":[1],"type":["chr"],"align":["left"]},{"label":["z"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"verbalDiff","2":"2.731402"},{"1":"memoryDiff","2":"-1.727229"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>verbalWald$stat %&gt;% sqrt()</code></pre>
+<pre><code>[1] 2.731402</code></pre>
+<pre class="r"><code>memoryWald$stat %&gt;% sqrt()</code></pre>
+<pre><code>[1] 1.727229</code></pre>
+<hr />
+</div>
+<div id="section-32" class="section level3" number="2.4.10">
+<h3><span class="header-section-number">2.4.10</span> </h3>
+<p><strong>Test the moderation hypotheses using nested-model likelihood ratio tests (i.e.,
+<span class="math inline">\(\Delta \chi^2\)</span> tests)</strong></p>
+<ul>
+<li>Prepare the tests by modifying the unrestricted SEM syntax from
+<a href="#mgSemSyntax">2.4.5</a> to introduce the appropriate equality constraints.</li>
+<li>Test each moderation hypothesis independently.</li>
+<li>Are the moderation hypotheses supported from these tests?</li>
+</ul>
+<p><strong>Option 1</strong></p>
+<pre class="r"><code>## Add equality constraints to the unrestricted SEM syntax:
+semMod3.1 &lt;- paste(semMod, &#39;b1m == b1f&#39;, sep = &#39;\n&#39;)
+semMod3.2 &lt;- paste(semMod, &#39;b2m == b2f&#39;, sep = &#39;\n&#39;)
+
+## Estimate the restricted models:
+semFit3.1 &lt;- sem(semMod3.1,
+                 data        = hs,
+                 std.lv      = TRUE,
+                 group       = &quot;sex&quot;,
+                 group.equal = &quot;loadings&quot;)
+semFit3.2 &lt;- sem(semMod3.2,
+                 data        = hs,
+                 std.lv      = TRUE,
+                 group       = &quot;sex&quot;,
+                 group.equal = &quot;loadings&quot;)
+
+## Check the results:
+summary(semFit3.1)</code></pre>
+<pre><code>lavaan 0.6-12 ended normally after 51 iterations
+
+  Estimator                                         ML
+  Optimization method                           NLMINB
+  Number of model parameters                       105
+  Number of equality constraints                    17
+
+  Number of observations per group:                   
+    Male                                           146
+    Female                                         155
+
+Model Test User Model:
+                                                      
+  Test statistic                               308.882
+  Degrees of freedom                               216
+  P-value (Chi-square)                           0.000
+  Test statistic for each group:
+    Male                                       158.621
+    Female                                     150.261
+
+Parameter Estimates:
+
+  Standard errors                             Standard
+  Information                                 Expected
+  Information saturated (h1) model          Structured
+
+
+Group 1 [Male]:
+
+Latent Variables:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  math =~                                             
+    math1   (.p1.)    0.344    0.052    6.593    0.000
+    math2   (.p2.)    0.353    0.053    6.704    0.000
+    math3   (.p3.)    0.391    0.057    6.892    0.000
+    math4   (.p4.)    0.429    0.060    7.120    0.000
+    math5   (.p5.)    0.378    0.055    6.872    0.000
+  verbal =~                                           
+    verbal1 (.p6.)    0.799    0.059   13.651    0.000
+    verbal2 (.p7.)    0.785    0.058   13.493    0.000
+    verbal3 (.p8.)    0.828    0.059   14.132    0.000
+    verbal4 (.p9.)    0.707    0.058   12.101    0.000
+    verbal5 (.10.)    0.819    0.059   13.802    0.000
+  memory =~                                           
+    memory1 (.11.)    0.590    0.073    8.114    0.000
+    memory2 (.12.)    0.524    0.072    7.265    0.000
+    memory3 (.13.)    0.658    0.071    9.226    0.000
+    memory4 (.14.)    0.520    0.068    7.652    0.000
+    memory5 (.15.)    0.518    0.072    7.196    0.000
+    memory6 (.16.)    0.517    0.070    7.340    0.000
+
+Regressions:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  math ~                                              
+    verbal   (b1m)    0.944    0.163    5.782    0.000
+    memory   (b2m)    0.935    0.212    4.413    0.000
+
+Covariances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  verbal ~~                                           
+    memory            0.185    0.097    1.902    0.057
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .math1             0.149    0.084    1.763    0.078
+   .math2             0.055    0.080    0.689    0.491
+   .math3             0.026    0.089    0.294    0.768
+   .math4             0.062    0.086    0.717    0.474
+   .math5            -0.101    0.082   -1.237    0.216
+   .verbal1           0.095    0.081    1.173    0.241
+   .verbal2          -0.123    0.079   -1.555    0.120
+   .verbal3          -0.060    0.079   -0.752    0.452
+   .verbal4          -0.044    0.083   -0.530    0.596
+   .verbal5          -0.011    0.082   -0.138    0.890
+   .memory1          -0.161    0.087   -1.842    0.066
+   .memory2          -0.006    0.085   -0.067    0.947
+   .memory3          -0.019    0.081   -0.240    0.810
+   .memory4          -0.258    0.077   -3.356    0.001
+   .memory5          -0.091    0.085   -1.067    0.286
+   .memory6          -0.063    0.080   -0.781    0.435
+   .math              0.000                           
+    verbal            0.000                           
+    memory            0.000                           
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .math1             0.674    0.087    7.726    0.000
+   .math2             0.543    0.073    7.453    0.000
+   .math3             0.676    0.090    7.493    0.000
+   .math4             0.506    0.074    6.816    0.000
+   .math5             0.532    0.073    7.272    0.000
+   .verbal1           0.319    0.046    6.991    0.000
+   .verbal2           0.297    0.043    6.928    0.000
+   .verbal3           0.229    0.037    6.203    0.000
+   .verbal4           0.507    0.065    7.790    0.000
+   .verbal5           0.312    0.045    6.877    0.000
+   .memory1           0.766    0.102    7.499    0.000
+   .memory2           0.787    0.102    7.735    0.000
+   .memory3           0.521    0.079    6.561    0.000
+   .memory4           0.591    0.079    7.464    0.000
+   .memory5           0.788    0.102    7.757    0.000
+   .memory6           0.674    0.088    7.611    0.000
+   .math              1.000                           
+    verbal            1.000                           
+    memory            1.000                           
+
+
+Group 2 [Female]:
+
+Latent Variables:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  math =~                                             
+    math1   (.p1.)    0.344    0.052    6.593    0.000
+    math2   (.p2.)    0.353    0.053    6.704    0.000
+    math3   (.p3.)    0.391    0.057    6.892    0.000
+    math4   (.p4.)    0.429    0.060    7.120    0.000
+    math5   (.p5.)    0.378    0.055    6.872    0.000
+  verbal =~                                           
+    verbal1 (.p6.)    0.799    0.059   13.651    0.000
+    verbal2 (.p7.)    0.785    0.058   13.493    0.000
+    verbal3 (.p8.)    0.828    0.059   14.132    0.000
+    verbal4 (.p9.)    0.707    0.058   12.101    0.000
+    verbal5 (.10.)    0.819    0.059   13.802    0.000
+  memory =~                                           
+    memory1 (.11.)    0.590    0.073    8.114    0.000
+    memory2 (.12.)    0.524    0.072    7.265    0.000
+    memory3 (.13.)    0.658    0.071    9.226    0.000
+    memory4 (.14.)    0.520    0.068    7.652    0.000
+    memory5 (.15.)    0.518    0.072    7.196    0.000
+    memory6 (.16.)    0.517    0.070    7.340    0.000
+
+Regressions:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  math ~                                              
+    verbal   (b1f)    0.944    0.163    5.782    0.000
+    memory   (b2f)    0.810    0.199    4.069    0.000
+
+Covariances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  verbal ~~                                           
+    memory            0.476    0.115    4.130    0.000
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .math1            -0.140    0.077   -1.831    0.067
+   .math2            -0.052    0.083   -0.627    0.531
+   .math3            -0.025    0.075   -0.330    0.742
+   .math4            -0.058    0.078   -0.742    0.458
+   .math5             0.095    0.080    1.182    0.237
+   .verbal1          -0.089    0.080   -1.113    0.266
+   .verbal2           0.116    0.082    1.408    0.159
+   .verbal3           0.056    0.083    0.674    0.500
+   .verbal4           0.041    0.080    0.520    0.603
+   .verbal5           0.011    0.081    0.131    0.896
+   .memory1           0.152    0.072    2.090    0.037
+   .memory2           0.005    0.078    0.070    0.945
+   .memory3           0.018    0.081    0.225    0.822
+   .memory4           0.243    0.080    3.022    0.003
+   .memory5           0.085    0.077    1.106    0.269
+   .memory6           0.059    0.082    0.721    0.471
+   .math              0.000                           
+    verbal            0.000                           
+    memory            0.000                           
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .math1             0.564    0.070    8.019    0.000
+   .math2             0.694    0.085    8.141    0.000
+   .math3             0.419    0.057    7.404    0.000
+   .math4             0.409    0.058    7.066    0.000
+   .math5             0.588    0.074    7.899    0.000
+   .verbal1           0.253    0.036    6.953    0.000
+   .verbal2           0.327    0.044    7.438    0.000
+   .verbal3           0.271    0.039    6.957    0.000
+   .verbal4           0.398    0.050    7.894    0.000
+   .verbal5           0.236    0.035    6.717    0.000
+   .memory1           0.536    0.073    7.379    0.000
+   .memory2           0.711    0.089    7.975    0.000
+   .memory3           0.673    0.091    7.423    0.000
+   .memory4           0.784    0.097    8.083    0.000
+   .memory5           0.712    0.089    7.997    0.000
+   .memory6           0.825    0.102    8.124    0.000
+   .math              0.612    0.248    2.465    0.014
+    verbal            1.171    0.208    5.643    0.000
+    memory            0.801    0.186    4.309    0.000
+
+Constraints:
+                                               |Slack|
+    b1m - (b1f)                                  0.000</code></pre>
+<pre class="r"><code>summary(semFit3.2)</code></pre>
+<pre><code>lavaan 0.6-12 ended normally after 49 iterations
+
+  Estimator                                         ML
+  Optimization method                           NLMINB
+  Number of model parameters                       105
+  Number of equality constraints                    17
+
+  Number of observations per group:                   
+    Male                                           146
+    Female                                         155
+
+Model Test User Model:
+                                                      
+  Test statistic                               303.236
+  Degrees of freedom                               216
+  P-value (Chi-square)                           0.000
+  Test statistic for each group:
+    Male                                       155.221
+    Female                                     148.015
+
+Parameter Estimates:
+
+  Standard errors                             Standard
+  Information                                 Expected
+  Information saturated (h1) model          Structured
+
+
+Group 1 [Male]:
+
+Latent Variables:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  math =~                                             
+    math1   (.p1.)    0.346    0.050    6.925    0.000
+    math2   (.p2.)    0.363    0.051    7.097    0.000
+    math3   (.p3.)    0.393    0.054    7.296    0.000
+    math4   (.p4.)    0.438    0.058    7.613    0.000
+    math5   (.p5.)    0.390    0.053    7.326    0.000
+  verbal =~                                           
+    verbal1 (.p6.)    0.810    0.059   13.673    0.000
+    verbal2 (.p7.)    0.793    0.059   13.500    0.000
+    verbal3 (.p8.)    0.837    0.059   14.155    0.000
+    verbal4 (.p9.)    0.716    0.059   12.114    0.000
+    verbal5 (.10.)    0.828    0.060   13.783    0.000
+  memory =~                                           
+    memory1 (.11.)    0.613    0.074    8.322    0.000
+    memory2 (.12.)    0.542    0.073    7.402    0.000
+    memory3 (.13.)    0.667    0.072    9.292    0.000
+    memory4 (.14.)    0.529    0.069    7.703    0.000
+    memory5 (.15.)    0.528    0.073    7.241    0.000
+    memory6 (.16.)    0.522    0.071    7.340    0.000
+
+Regressions:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  math ~                                              
+    verbal   (b1m)    0.693    0.158    4.393    0.000
+    memory   (b2m)    0.844    0.168    5.017    0.000
+
+Covariances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  verbal ~~                                           
+    memory            0.221    0.096    2.301    0.021
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .math1             0.149    0.082    1.818    0.069
+   .math2             0.055    0.077    0.715    0.474
+   .math3             0.026    0.086    0.305    0.760
+   .math4             0.062    0.081    0.755    0.450
+   .math5            -0.101    0.078   -1.287    0.198
+   .verbal1           0.095    0.082    1.165    0.244
+   .verbal2          -0.123    0.080   -1.544    0.123
+   .verbal3          -0.060    0.080   -0.747    0.455
+   .verbal4          -0.044    0.083   -0.527    0.598
+   .verbal5          -0.011    0.083   -0.137    0.891
+   .memory1          -0.161    0.088   -1.832    0.067
+   .memory2          -0.006    0.086   -0.067    0.947
+   .memory3          -0.019    0.081   -0.239    0.811
+   .memory4          -0.258    0.077   -3.337    0.001
+   .memory5          -0.091    0.085   -1.063    0.288
+   .memory6          -0.063    0.081   -0.779    0.436
+   .math              0.000                           
+    verbal            0.000                           
+    memory            0.000                           
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .math1             0.684    0.088    7.769    0.000
+   .math2             0.539    0.072    7.436    0.000
+   .math3             0.690    0.091    7.562    0.000
+   .math4             0.499    0.073    6.808    0.000
+   .math5             0.526    0.073    7.239    0.000
+   .verbal1           0.314    0.045    6.936    0.000
+   .verbal2           0.296    0.043    6.901    0.000
+   .verbal3           0.226    0.037    6.136    0.000
+   .verbal4           0.505    0.065    7.773    0.000
+   .verbal5           0.314    0.046    6.866    0.000
+   .memory1           0.750    0.101    7.406    0.000
+   .memory2           0.782    0.102    7.687    0.000
+   .memory3           0.521    0.080    6.546    0.000
+   .memory4           0.591    0.079    7.444    0.000
+   .memory5           0.786    0.102    7.736    0.000
+   .memory6           0.673    0.089    7.605    0.000
+   .math              1.000                           
+    verbal            1.000                           
+    memory            1.000                           
+
+
+Group 2 [Female]:
+
+Latent Variables:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  math =~                                             
+    math1   (.p1.)    0.346    0.050    6.925    0.000
+    math2   (.p2.)    0.363    0.051    7.097    0.000
+    math3   (.p3.)    0.393    0.054    7.296    0.000
+    math4   (.p4.)    0.438    0.058    7.613    0.000
+    math5   (.p5.)    0.390    0.053    7.326    0.000
+  verbal =~                                           
+    verbal1 (.p6.)    0.810    0.059   13.673    0.000
+    verbal2 (.p7.)    0.793    0.059   13.500    0.000
+    verbal3 (.p8.)    0.837    0.059   14.155    0.000
+    verbal4 (.p9.)    0.716    0.059   12.114    0.000
+    verbal5 (.10.)    0.828    0.060   13.783    0.000
+  memory =~                                           
+    memory1 (.11.)    0.613    0.074    8.322    0.000
+    memory2 (.12.)    0.542    0.073    7.402    0.000
+    memory3 (.13.)    0.667    0.072    9.292    0.000
+    memory4 (.14.)    0.529    0.069    7.703    0.000
+    memory5 (.15.)    0.528    0.073    7.241    0.000
+    memory6 (.16.)    0.522    0.071    7.340    0.000
+
+Regressions:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  math ~                                              
+    verbal   (b1f)    1.092    0.179    6.112    0.000
+    memory   (b2f)    0.844    0.168    5.017    0.000
+
+Covariances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  verbal ~~                                           
+    memory            0.419    0.107    3.922    0.000
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .math1            -0.140    0.078   -1.793    0.073
+   .math2            -0.052    0.085   -0.611    0.541
+   .math3            -0.025    0.077   -0.321    0.748
+   .math4            -0.058    0.081   -0.716    0.474
+   .math5             0.095    0.083    1.150    0.250
+   .verbal1          -0.089    0.080   -1.118    0.264
+   .verbal2           0.116    0.082    1.417    0.156
+   .verbal3           0.056    0.083    0.678    0.497
+   .verbal4           0.041    0.079    0.522    0.601
+   .verbal5           0.011    0.081    0.132    0.895
+   .memory1           0.152    0.072    2.099    0.036
+   .memory2           0.005    0.077    0.070    0.944
+   .memory3           0.018    0.081    0.227    0.820
+   .memory4           0.243    0.080    3.041    0.002
+   .memory5           0.085    0.077    1.110    0.267
+   .memory6           0.059    0.082    0.724    0.469
+   .math              0.000                           
+    verbal            0.000                           
+    memory            0.000                           
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .math1             0.567    0.070    8.047    0.000
+   .math2             0.696    0.086    8.133    0.000
+   .math3             0.421    0.056    7.464    0.000
+   .math4             0.407    0.058    7.061    0.000
+   .math5             0.579    0.074    7.864    0.000
+   .verbal1           0.254    0.036    6.986    0.000
+   .verbal2           0.328    0.044    7.467    0.000
+   .verbal3           0.271    0.039    6.993    0.000
+   .verbal4           0.398    0.050    7.906    0.000
+   .verbal5           0.239    0.035    6.786    0.000
+   .memory1           0.534    0.072    7.361    0.000
+   .memory2           0.705    0.088    7.968    0.000
+   .memory3           0.680    0.091    7.502    0.000
+   .memory4           0.784    0.097    8.107    0.000
+   .memory5           0.716    0.089    8.025    0.000
+   .memory6           0.834    0.102    8.163    0.000
+   .math              0.537    0.216    2.480    0.013
+    verbal            1.124    0.200    5.629    0.000
+    memory            0.730    0.163    4.475    0.000
+
+Constraints:
+                                               |Slack|
+    b2m - (b2f)                                  0.000</code></pre>
+<pre class="r"><code>## Test the constraint via a LRT:
+anova(semFit, semFit3.1)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Df"],"name":[1],"type":["int"],"align":["right"]},{"label":["AIC"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["BIC"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Chisq"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Chisq diff"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["Df diff"],"name":[6],"type":["int"],"align":["right"]},{"label":["Pr(>Chisq)"],"name":[7],"type":["dbl"],"align":["right"]}],"data":[{"1":"215","2":"11861.97","3":"12191.90","4":"300.0985","5":"NA","6":"NA","7":"NA","_rn_":"semFit"},{"1":"216","2":"11868.75","3":"12194.98","4":"308.8822","5":"8.78373","6":"1","7":"0.00303929","_rn_":"semFit3.1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>anova(semFit, semFit3.2)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Df"],"name":[1],"type":["int"],"align":["right"]},{"label":["AIC"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["BIC"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Chisq"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Chisq diff"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["Df diff"],"name":[6],"type":["int"],"align":["right"]},{"label":["Pr(>Chisq)"],"name":[7],"type":["dbl"],"align":["right"]}],"data":[{"1":"215","2":"11861.97","3":"12191.90","4":"300.0985","5":"NA","6":"NA","7":"NA","_rn_":"semFit"},{"1":"216","2":"11863.11","3":"12189.33","4":"303.2359","5":"3.137376","6":"1","7":"0.07651683","_rn_":"semFit3.2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p><strong>Option 2</strong></p>
+<pre class="r"><code>## Constrain the parameters by assigning the same labels:
+semMod4.1 &lt;- gsub(&quot;b1m|b1f&quot;, &quot;b1&quot;, semMod)
+semMod4.2 &lt;- gsub(&quot;b2m|b2f&quot;, &quot;b2&quot;, semMod)
+  
+## Estimate the restricted models:
+semFit4.1 &lt;- sem(semMod4.1,
+                 data        = hs,
+                 std.lv      = TRUE,
+                 group       = &quot;sex&quot;,
+                 group.equal = &quot;loadings&quot;)
+semFit4.2 &lt;- sem(semMod4.2,
+                 data        = hs,
+                 std.lv      = TRUE,
+                 group       = &quot;sex&quot;,
+                 group.equal = &quot;loadings&quot;)
+
+## Check the results:
+summary(semFit4.1)</code></pre>
+<pre><code>lavaan 0.6-12 ended normally after 51 iterations
+
+  Estimator                                         ML
+  Optimization method                           NLMINB
+  Number of model parameters                       105
+  Number of equality constraints                    17
+
+  Number of observations per group:                   
+    Male                                           146
+    Female                                         155
+
+Model Test User Model:
+                                                      
+  Test statistic                               308.882
+  Degrees of freedom                               216
+  P-value (Chi-square)                           0.000
+  Test statistic for each group:
+    Male                                       158.621
+    Female                                     150.261
+
+Parameter Estimates:
+
+  Standard errors                             Standard
+  Information                                 Expected
+  Information saturated (h1) model          Structured
+
+
+Group 1 [Male]:
+
+Latent Variables:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  math =~                                             
+    math1   (.p1.)    0.344    0.052    6.593    0.000
+    math2   (.p2.)    0.353    0.053    6.704    0.000
+    math3   (.p3.)    0.391    0.057    6.892    0.000
+    math4   (.p4.)    0.429    0.060    7.120    0.000
+    math5   (.p5.)    0.378    0.055    6.873    0.000
+  verbal =~                                           
+    verbal1 (.p6.)    0.799    0.059   13.651    0.000
+    verbal2 (.p7.)    0.785    0.058   13.493    0.000
+    verbal3 (.p8.)    0.828    0.059   14.132    0.000
+    verbal4 (.p9.)    0.707    0.058   12.101    0.000
+    verbal5 (.10.)    0.819    0.059   13.802    0.000
+  memory =~                                           
+    memory1 (.11.)    0.590    0.073    8.114    0.000
+    memory2 (.12.)    0.524    0.072    7.265    0.000
+    memory3 (.13.)    0.658    0.071    9.226    0.000
+    memory4 (.14.)    0.519    0.068    7.652    0.000
+    memory5 (.15.)    0.518    0.072    7.196    0.000
+    memory6 (.16.)    0.517    0.070    7.340    0.000
+
+Regressions:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  math ~                                              
+    verbal    (b1)    0.944    0.163    5.782    0.000
+    memory   (b2m)    0.935    0.212    4.413    0.000
+
+Covariances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  verbal ~~                                           
+    memory            0.185    0.097    1.902    0.057
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .math1             0.149    0.084    1.763    0.078
+   .math2             0.055    0.080    0.689    0.491
+   .math3             0.026    0.089    0.294    0.768
+   .math4             0.062    0.086    0.717    0.474
+   .math5            -0.101    0.082   -1.237    0.216
+   .verbal1           0.095    0.081    1.173    0.241
+   .verbal2          -0.123    0.079   -1.555    0.120
+   .verbal3          -0.060    0.079   -0.752    0.452
+   .verbal4          -0.044    0.083   -0.530    0.596
+   .verbal5          -0.011    0.082   -0.138    0.890
+   .memory1          -0.161    0.087   -1.842    0.066
+   .memory2          -0.006    0.085   -0.067    0.947
+   .memory3          -0.019    0.081   -0.240    0.810
+   .memory4          -0.258    0.077   -3.356    0.001
+   .memory5          -0.091    0.085   -1.067    0.286
+   .memory6          -0.063    0.080   -0.781    0.435
+   .math              0.000                           
+    verbal            0.000                           
+    memory            0.000                           
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .math1             0.674    0.087    7.726    0.000
+   .math2             0.543    0.073    7.453    0.000
+   .math3             0.676    0.090    7.493    0.000
+   .math4             0.506    0.074    6.816    0.000
+   .math5             0.532    0.073    7.272    0.000
+   .verbal1           0.319    0.046    6.991    0.000
+   .verbal2           0.297    0.043    6.928    0.000
+   .verbal3           0.229    0.037    6.203    0.000
+   .verbal4           0.507    0.065    7.790    0.000
+   .verbal5           0.312    0.045    6.877    0.000
+   .memory1           0.766    0.102    7.499    0.000
+   .memory2           0.787    0.102    7.735    0.000
+   .memory3           0.521    0.079    6.561    0.000
+   .memory4           0.591    0.079    7.464    0.000
+   .memory5           0.788    0.102    7.757    0.000
+   .memory6           0.674    0.088    7.611    0.000
+   .math              1.000                           
+    verbal            1.000                           
+    memory            1.000                           
+
+
+Group 2 [Female]:
+
+Latent Variables:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  math =~                                             
+    math1   (.p1.)    0.344    0.052    6.593    0.000
+    math2   (.p2.)    0.353    0.053    6.704    0.000
+    math3   (.p3.)    0.391    0.057    6.892    0.000
+    math4   (.p4.)    0.429    0.060    7.120    0.000
+    math5   (.p5.)    0.378    0.055    6.873    0.000
+  verbal =~                                           
+    verbal1 (.p6.)    0.799    0.059   13.651    0.000
+    verbal2 (.p7.)    0.785    0.058   13.493    0.000
+    verbal3 (.p8.)    0.828    0.059   14.132    0.000
+    verbal4 (.p9.)    0.707    0.058   12.101    0.000
+    verbal5 (.10.)    0.819    0.059   13.802    0.000
+  memory =~                                           
+    memory1 (.11.)    0.590    0.073    8.114    0.000
+    memory2 (.12.)    0.524    0.072    7.265    0.000
+    memory3 (.13.)    0.658    0.071    9.226    0.000
+    memory4 (.14.)    0.519    0.068    7.652    0.000
+    memory5 (.15.)    0.518    0.072    7.196    0.000
+    memory6 (.16.)    0.517    0.070    7.340    0.000
+
+Regressions:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  math ~                                              
+    verbal    (b1)    0.944    0.163    5.782    0.000
+    memory   (b2f)    0.810    0.199    4.069    0.000
+
+Covariances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  verbal ~~                                           
+    memory            0.476    0.115    4.130    0.000
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .math1            -0.140    0.077   -1.831    0.067
+   .math2            -0.052    0.083   -0.627    0.531
+   .math3            -0.025    0.075   -0.330    0.742
+   .math4            -0.058    0.078   -0.742    0.458
+   .math5             0.095    0.080    1.182    0.237
+   .verbal1          -0.089    0.080   -1.113    0.266
+   .verbal2           0.116    0.082    1.408    0.159
+   .verbal3           0.056    0.083    0.674    0.500
+   .verbal4           0.041    0.080    0.520    0.603
+   .verbal5           0.011    0.081    0.131    0.896
+   .memory1           0.152    0.072    2.090    0.037
+   .memory2           0.005    0.078    0.070    0.945
+   .memory3           0.018    0.081    0.225    0.822
+   .memory4           0.243    0.080    3.022    0.003
+   .memory5           0.085    0.077    1.106    0.269
+   .memory6           0.059    0.082    0.721    0.471
+   .math              0.000                           
+    verbal            0.000                           
+    memory            0.000                           
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .math1             0.564    0.070    8.019    0.000
+   .math2             0.694    0.085    8.141    0.000
+   .math3             0.419    0.057    7.404    0.000
+   .math4             0.409    0.058    7.066    0.000
+   .math5             0.588    0.074    7.899    0.000
+   .verbal1           0.253    0.036    6.953    0.000
+   .verbal2           0.327    0.044    7.438    0.000
+   .verbal3           0.271    0.039    6.957    0.000
+   .verbal4           0.398    0.050    7.894    0.000
+   .verbal5           0.236    0.035    6.717    0.000
+   .memory1           0.536    0.073    7.379    0.000
+   .memory2           0.711    0.089    7.975    0.000
+   .memory3           0.673    0.091    7.423    0.000
+   .memory4           0.784    0.097    8.083    0.000
+   .memory5           0.712    0.089    7.997    0.000
+   .memory6           0.825    0.102    8.124    0.000
+   .math              0.612    0.248    2.465    0.014
+    verbal            1.171    0.208    5.643    0.000
+    memory            0.801    0.186    4.309    0.000</code></pre>
+<pre class="r"><code>summary(semFit4.2)</code></pre>
+<pre><code>lavaan 0.6-12 ended normally after 50 iterations
+
+  Estimator                                         ML
+  Optimization method                           NLMINB
+  Number of model parameters                       105
+  Number of equality constraints                    17
+
+  Number of observations per group:                   
+    Male                                           146
+    Female                                         155
+
+Model Test User Model:
+                                                      
+  Test statistic                               303.236
+  Degrees of freedom                               216
+  P-value (Chi-square)                           0.000
+  Test statistic for each group:
+    Male                                       155.221
+    Female                                     148.015
+
+Parameter Estimates:
+
+  Standard errors                             Standard
+  Information                                 Expected
+  Information saturated (h1) model          Structured
+
+
+Group 1 [Male]:
+
+Latent Variables:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  math =~                                             
+    math1   (.p1.)    0.346    0.050    6.925    0.000
+    math2   (.p2.)    0.363    0.051    7.097    0.000
+    math3   (.p3.)    0.393    0.054    7.296    0.000
+    math4   (.p4.)    0.438    0.058    7.613    0.000
+    math5   (.p5.)    0.390    0.053    7.326    0.000
+  verbal =~                                           
+    verbal1 (.p6.)    0.810    0.059   13.673    0.000
+    verbal2 (.p7.)    0.793    0.059   13.500    0.000
+    verbal3 (.p8.)    0.837    0.059   14.155    0.000
+    verbal4 (.p9.)    0.716    0.059   12.114    0.000
+    verbal5 (.10.)    0.828    0.060   13.783    0.000
+  memory =~                                           
+    memory1 (.11.)    0.613    0.074    8.322    0.000
+    memory2 (.12.)    0.542    0.073    7.402    0.000
+    memory3 (.13.)    0.667    0.072    9.292    0.000
+    memory4 (.14.)    0.529    0.069    7.703    0.000
+    memory5 (.15.)    0.528    0.073    7.241    0.000
+    memory6 (.16.)    0.522    0.071    7.340    0.000
+
+Regressions:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  math ~                                              
+    verbal   (b1m)    0.693    0.158    4.393    0.000
+    memory    (b2)    0.844    0.168    5.017    0.000
+
+Covariances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  verbal ~~                                           
+    memory            0.221    0.096    2.301    0.021
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .math1             0.149    0.082    1.818    0.069
+   .math2             0.055    0.077    0.715    0.474
+   .math3             0.026    0.086    0.305    0.760
+   .math4             0.062    0.081    0.755    0.450
+   .math5            -0.101    0.078   -1.287    0.198
+   .verbal1           0.095    0.082    1.165    0.244
+   .verbal2          -0.123    0.080   -1.544    0.123
+   .verbal3          -0.060    0.080   -0.747    0.455
+   .verbal4          -0.044    0.083   -0.527    0.598
+   .verbal5          -0.011    0.083   -0.137    0.891
+   .memory1          -0.161    0.088   -1.832    0.067
+   .memory2          -0.006    0.086   -0.067    0.947
+   .memory3          -0.019    0.081   -0.239    0.811
+   .memory4          -0.258    0.077   -3.337    0.001
+   .memory5          -0.091    0.085   -1.063    0.288
+   .memory6          -0.063    0.081   -0.779    0.436
+   .math              0.000                           
+    verbal            0.000                           
+    memory            0.000                           
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .math1             0.684    0.088    7.769    0.000
+   .math2             0.539    0.072    7.436    0.000
+   .math3             0.690    0.091    7.562    0.000
+   .math4             0.499    0.073    6.808    0.000
+   .math5             0.526    0.073    7.239    0.000
+   .verbal1           0.314    0.045    6.936    0.000
+   .verbal2           0.296    0.043    6.901    0.000
+   .verbal3           0.226    0.037    6.136    0.000
+   .verbal4           0.505    0.065    7.773    0.000
+   .verbal5           0.314    0.046    6.866    0.000
+   .memory1           0.750    0.101    7.406    0.000
+   .memory2           0.782    0.102    7.687    0.000
+   .memory3           0.521    0.080    6.546    0.000
+   .memory4           0.591    0.079    7.444    0.000
+   .memory5           0.786    0.102    7.736    0.000
+   .memory6           0.673    0.089    7.605    0.000
+   .math              1.000                           
+    verbal            1.000                           
+    memory            1.000                           
+
+
+Group 2 [Female]:
+
+Latent Variables:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  math =~                                             
+    math1   (.p1.)    0.346    0.050    6.925    0.000
+    math2   (.p2.)    0.363    0.051    7.097    0.000
+    math3   (.p3.)    0.393    0.054    7.296    0.000
+    math4   (.p4.)    0.438    0.058    7.613    0.000
+    math5   (.p5.)    0.390    0.053    7.326    0.000
+  verbal =~                                           
+    verbal1 (.p6.)    0.810    0.059   13.673    0.000
+    verbal2 (.p7.)    0.793    0.059   13.500    0.000
+    verbal3 (.p8.)    0.837    0.059   14.155    0.000
+    verbal4 (.p9.)    0.716    0.059   12.114    0.000
+    verbal5 (.10.)    0.828    0.060   13.783    0.000
+  memory =~                                           
+    memory1 (.11.)    0.613    0.074    8.322    0.000
+    memory2 (.12.)    0.542    0.073    7.402    0.000
+    memory3 (.13.)    0.667    0.072    9.292    0.000
+    memory4 (.14.)    0.529    0.069    7.703    0.000
+    memory5 (.15.)    0.528    0.073    7.241    0.000
+    memory6 (.16.)    0.522    0.071    7.340    0.000
+
+Regressions:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  math ~                                              
+    verbal   (b1f)    1.092    0.179    6.112    0.000
+    memory    (b2)    0.844    0.168    5.017    0.000
+
+Covariances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  verbal ~~                                           
+    memory            0.419    0.107    3.922    0.000
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .math1            -0.140    0.078   -1.793    0.073
+   .math2            -0.052    0.085   -0.611    0.541
+   .math3            -0.025    0.077   -0.321    0.748
+   .math4            -0.058    0.081   -0.716    0.474
+   .math5             0.095    0.083    1.150    0.250
+   .verbal1          -0.089    0.080   -1.118    0.264
+   .verbal2           0.116    0.082    1.417    0.156
+   .verbal3           0.056    0.083    0.678    0.497
+   .verbal4           0.041    0.079    0.522    0.601
+   .verbal5           0.011    0.081    0.132    0.895
+   .memory1           0.152    0.072    2.099    0.036
+   .memory2           0.005    0.077    0.070    0.944
+   .memory3           0.018    0.081    0.227    0.820
+   .memory4           0.243    0.080    3.041    0.002
+   .memory5           0.085    0.077    1.110    0.267
+   .memory6           0.059    0.082    0.724    0.469
+   .math              0.000                           
+    verbal            0.000                           
+    memory            0.000                           
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .math1             0.567    0.070    8.047    0.000
+   .math2             0.696    0.086    8.133    0.000
+   .math3             0.421    0.056    7.464    0.000
+   .math4             0.407    0.058    7.061    0.000
+   .math5             0.579    0.074    7.864    0.000
+   .verbal1           0.254    0.036    6.986    0.000
+   .verbal2           0.328    0.044    7.467    0.000
+   .verbal3           0.271    0.039    6.993    0.000
+   .verbal4           0.398    0.050    7.906    0.000
+   .verbal5           0.239    0.035    6.786    0.000
+   .memory1           0.534    0.072    7.361    0.000
+   .memory2           0.705    0.088    7.968    0.000
+   .memory3           0.680    0.091    7.502    0.000
+   .memory4           0.784    0.097    8.107    0.000
+   .memory5           0.716    0.089    8.025    0.000
+   .memory6           0.834    0.102    8.163    0.000
+   .math              0.537    0.216    2.480    0.013
+    verbal            1.124    0.200    5.629    0.000
+    memory            0.730    0.163    4.475    0.000</code></pre>
+<pre class="r"><code>## Test the constraint via a LRT:
+anova(semFit, semFit4.1)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Df"],"name":[1],"type":["int"],"align":["right"]},{"label":["AIC"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["BIC"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Chisq"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Chisq diff"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["Df diff"],"name":[6],"type":["int"],"align":["right"]},{"label":["Pr(>Chisq)"],"name":[7],"type":["dbl"],"align":["right"]}],"data":[{"1":"215","2":"11861.97","3":"12191.90","4":"300.0985","5":"NA","6":"NA","7":"NA","_rn_":"semFit"},{"1":"216","2":"11868.75","3":"12194.98","4":"308.8822","5":"8.78373","6":"1","7":"0.00303929","_rn_":"semFit4.1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>anova(semFit, semFit4.2)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Df"],"name":[1],"type":["int"],"align":["right"]},{"label":["AIC"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["BIC"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Chisq"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Chisq diff"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["Df diff"],"name":[6],"type":["int"],"align":["right"]},{"label":["Pr(>Chisq)"],"name":[7],"type":["dbl"],"align":["right"]}],"data":[{"1":"215","2":"11861.97","3":"12191.90","4":"300.0985","5":"NA","6":"NA","7":"NA","_rn_":"semFit"},{"1":"216","2":"11863.11","3":"12189.33","4":"303.2359","5":"3.137376","6":"1","7":"0.07651683","_rn_":"semFit4.2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>INTERPRET</p>
 <hr />
 <p>End of Lab 5</p>
 <hr />
