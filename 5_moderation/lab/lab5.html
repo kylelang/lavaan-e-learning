@@ -3867,6 +3867,19 @@ hs2 &lt;- data.frame(scores, sex = hs$sex)</code></pre>
 <div id="ols-regression-1" class="section level2" number="2.2">
 <h2><span class="header-section-number">2.2</span> OLS Regression</h2>
 <hr />
+<p>We will consider a model wherein student’s sex, <em>sex</em>, moderates two focal effects:</p>
+<ol style="list-style-type: decimal">
+<li>The effect of verbal ability, <em>verbal</em>, on mathematical ability, <em>math</em></li>
+<li>The effect of memory ability, <em>memory</em>, on <em>math</em></li>
+</ol>
+<p>We may hypothesize such a model if we believe that verbal ability and memory
+ability are both positively associated with mathematical ability but the
+strengths of these effects differ for boys and girls.</p>
+<ul>
+<li>E.g., perhaps the effect of <em>verbal</em> on <em>math</em> is stronger for girls because
+girls are enculturated to process information using language pathways whereas
+boys are enculturated to process information via visio-spatial and tactile pathways.</li>
+</ul>
 <div id="catOls" class="section level3" number="2.2.1">
 <h3><span class="header-section-number">2.2.1</span> </h3>
 <p><strong>Use <code>lm()</code> to estimate the moderated regression model described above.</strong></p>
@@ -3968,13 +3981,22 @@ Intercepts:
 Variances:
                    Estimate  Std.Err  z-value  P(&gt;|z|)
    .math              0.261    0.021   12.268    0.000</code></pre>
+<p>INTERPRET</p>
 <hr />
 </div>
 </div>
 <div id="multiple-group-sem" class="section level2" number="2.4">
 <h2><span class="header-section-number">2.4</span> Multiple Group SEM</h2>
 <hr />
-<p>Blah, blah, blah…</p>
+<p>Now, we will evaluate the moderation hypotheses considered above using multiple
+group SEM. By defining the <em>math</em>, <em>verbal</em>, and <em>memory</em> constructs as latent
+variables we gain two substantial advantages over the preceding path analysis:</p>
+<ol style="list-style-type: decimal">
+<li>We will remove measurement error from the definition of the <em>math</em>, <em>verbal</em>,
+and <em>memory</em> variables.</li>
+<li>We will have the ability to evaluate the equivalence of these constructs’
+measurement structure in the boys’ and girls’ samples.</li>
+</ol>
 <hr />
 <div id="section-27" class="section level3" number="2.4.1">
 <h3><span class="header-section-number">2.4.1</span> </h3>
@@ -4223,7 +4245,8 @@ Variances:
             268.790               0.904               0.855               0.600 
                 mfi 
               0.874 </code></pre>
-<p>INTERPRET</p>
+<p>Yes, the model looks good. All parameter estimates look reasonable, and the
+model fits well. Therefore, configural invariance is supported.</p>
 <hr />
 </div>
 <div id="invariance" class="section level3" number="2.4.4">
@@ -4680,7 +4703,22 @@ strongFit 359.618  228   .000 .062  .933  .929  .078  11895.487  12177.228†
                     df rmsea    cfi    tli  srmr    aic     bic
 weakFit - configFit 13 0.000 -0.002  0.001 0.008 -8.791 -56.983
 strongFit - weakFit 13 0.011 -0.024 -0.022 0.005 33.520 -14.673</code></pre>
-<p>INTERPRET</p>
+<ul>
+<li>Weak invariance holds (<span class="math inline">\(\Delta \chi^2(13) = 17.21\)</span>,
+<span class="math inline">\(p = 0.19\)</span>, <span class="math inline">\(\Delta CFI = 0.002\)</span>,
+<span class="math inline">\(\Delta RMSEA &gt; 0\)</span>)</li>
+<li>Strong invariance does not hold (<span class="math inline">\(\Delta \chi^2(13) = 59.52\)</span>,
+<span class="math inline">\(p &lt; 0.0001\)</span>, <span class="math inline">\(\Delta CFI = 0.024\)</span>,
+<span class="math inline">\(\Delta RMSEA = -0.011\)</span>)</li>
+<li>Yes, we can still test moderation with this model (and data). Although we are
+not able to establish strong invariance, tests of moderation only consider the
+latent regression estimates, not the latent means, so we only require weak
+invariance.
+<ul>
+<li>We could not use this model to evaluate hypotheses of between-group mean
+differences, though.</li>
+</ul></li>
+</ul>
 <hr />
 </div>
 <div id="mgSemSyntax" class="section level3" number="2.4.5">
@@ -4707,7 +4745,7 @@ semMod &lt;- paste(cfaMod,
 <p><strong>Estimate the unrestricted, multiple group SEM.</strong></p>
 <ul>
 <li>Covary the <em>verbal</em> and <em>memory</em> factors.</li>
-<li>Enforce whatever level of invariance contraints were supported by the analysis
+<li>Enforce whatever level of invariance constraints were supported by the analysis
 in <a href="#invariance">2.4.4</a>.</li>
 <li>Only estimate the mean structure if you were able to establish a sufficient
 level of measurement invariance in <a href="#invariance">2.4.4</a>.</li>
@@ -4719,13 +4757,219 @@ semFit &lt;- sem(semMod,
               data        = hs, 
               std.lv      = TRUE, 
               group       = &quot;sex&quot;, 
-              group.equal = &quot;loadings&quot;) </code></pre>
-<hr />
-<p>Blah, blah, blah…</p>
+              group.equal = &quot;loadings&quot;)
+
+## Check the results:
+summary(semFit)</code></pre>
+<pre><code>lavaan 0.6-12 ended normally after 53 iterations
+
+  Estimator                                         ML
+  Optimization method                           NLMINB
+  Number of model parameters                       105
+  Number of equality constraints                    16
+
+  Number of observations per group:                   
+    Male                                           146
+    Female                                         155
+
+Model Test User Model:
+                                                      
+  Test statistic                               300.099
+  Degrees of freedom                               215
+  P-value (Chi-square)                           0.000
+  Test statistic for each group:
+    Male                                       154.169
+    Female                                     145.930
+
+Parameter Estimates:
+
+  Standard errors                             Standard
+  Information                                 Expected
+  Information saturated (h1) model          Structured
+
+
+Group 1 [Male]:
+
+Latent Variables:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  math =~                                             
+    math1   (.p1.)    0.331    0.052    6.370    0.000
+    math2   (.p2.)    0.343    0.053    6.465    0.000
+    math3   (.p3.)    0.373    0.056    6.628    0.000
+    math4   (.p4.)    0.416    0.061    6.860    0.000
+    math5   (.p5.)    0.371    0.056    6.654    0.000
+  verbal =~                                           
+    verbal1 (.p6.)    0.810    0.059   13.669    0.000
+    verbal2 (.p7.)    0.793    0.059   13.503    0.000
+    verbal3 (.p8.)    0.838    0.059   14.163    0.000
+    verbal4 (.p9.)    0.717    0.059   12.121    0.000
+    verbal5 (.10.)    0.828    0.060   13.777    0.000
+  memory =~                                           
+    memory1 (.11.)    0.588    0.073    8.102    0.000
+    memory2 (.12.)    0.525    0.072    7.293    0.000
+    memory3 (.13.)    0.653    0.071    9.204    0.000
+    memory4 (.14.)    0.523    0.068    7.714    0.000
+    memory5 (.15.)    0.521    0.072    7.262    0.000
+    memory6 (.16.)    0.509    0.070    7.281    0.000
+
+Regressions:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  math ~                                              
+    verbal   (b1m)    0.688    0.167    4.111    0.000
+    memory   (b2m)    1.049    0.235    4.456    0.000
+
+Covariances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  verbal ~~                                           
+    memory            0.222    0.097    2.289    0.022
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .math1             0.149    0.082    1.804    0.071
+   .math2             0.055    0.078    0.708    0.479
+   .math3             0.026    0.087    0.301    0.763
+   .math4             0.062    0.083    0.743    0.458
+   .math5            -0.101    0.079   -1.271    0.204
+   .verbal1           0.095    0.082    1.165    0.244
+   .verbal2          -0.123    0.080   -1.544    0.123
+   .verbal3          -0.060    0.080   -0.748    0.455
+   .verbal4          -0.044    0.084   -0.526    0.599
+   .verbal5          -0.011    0.083   -0.137    0.891
+   .memory1          -0.161    0.087   -1.839    0.066
+   .memory2          -0.006    0.086   -0.067    0.947
+   .memory3          -0.019    0.081   -0.241    0.810
+   .memory4          -0.258    0.077   -3.344    0.001
+   .memory5          -0.091    0.085   -1.066    0.286
+   .memory6          -0.063    0.080   -0.786    0.432
+   .math              0.000                           
+    verbal            0.000                           
+    memory            0.000                           
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .math1             0.676    0.087    7.753    0.000
+   .math2             0.540    0.072    7.463    0.000
+   .math3             0.696    0.092    7.579    0.000
+   .math4             0.502    0.073    6.831    0.000
+   .math5             0.523    0.072    7.238    0.000
+   .verbal1           0.314    0.045    6.933    0.000
+   .verbal2           0.296    0.043    6.900    0.000
+   .verbal3           0.225    0.037    6.117    0.000
+   .verbal4           0.505    0.065    7.772    0.000
+   .verbal5           0.315    0.046    6.871    0.000
+   .memory1           0.772    0.102    7.544    0.000
+   .memory2           0.794    0.102    7.764    0.000
+   .memory3           0.521    0.078    6.644    0.000
+   .memory4           0.594    0.079    7.487    0.000
+   .memory5           0.787    0.101    7.768    0.000
+   .memory6           0.671    0.088    7.660    0.000
+   .math              1.000                           
+    verbal            1.000                           
+    memory            1.000                           
+
+
+Group 2 [Female]:
+
+Latent Variables:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  math =~                                             
+    math1   (.p1.)    0.331    0.052    6.370    0.000
+    math2   (.p2.)    0.343    0.053    6.465    0.000
+    math3   (.p3.)    0.373    0.056    6.628    0.000
+    math4   (.p4.)    0.416    0.061    6.860    0.000
+    math5   (.p5.)    0.371    0.056    6.654    0.000
+  verbal =~                                           
+    verbal1 (.p6.)    0.810    0.059   13.669    0.000
+    verbal2 (.p7.)    0.793    0.059   13.503    0.000
+    verbal3 (.p8.)    0.838    0.059   14.163    0.000
+    verbal4 (.p9.)    0.717    0.059   12.121    0.000
+    verbal5 (.10.)    0.828    0.060   13.777    0.000
+  memory =~                                           
+    memory1 (.11.)    0.588    0.073    8.102    0.000
+    memory2 (.12.)    0.525    0.072    7.293    0.000
+    memory3 (.13.)    0.653    0.071    9.204    0.000
+    memory4 (.14.)    0.523    0.068    7.714    0.000
+    memory5 (.15.)    0.521    0.072    7.262    0.000
+    memory6 (.16.)    0.509    0.070    7.281    0.000
+
+Regressions:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  math ~                                              
+    verbal   (b1f)    1.242    0.223    5.561    0.000
+    memory   (b2f)    0.636    0.191    3.329    0.001
+
+Covariances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  verbal ~~                                           
+    memory            0.436    0.112    3.883    0.000
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .math1            -0.140    0.078   -1.801    0.072
+   .math2            -0.052    0.084   -0.614    0.539
+   .math3            -0.025    0.076   -0.324    0.746
+   .math4            -0.058    0.080   -0.724    0.469
+   .math5             0.095    0.082    1.159    0.247
+   .verbal1          -0.089    0.080   -1.117    0.264
+   .verbal2           0.116    0.082    1.418    0.156
+   .verbal3           0.056    0.083    0.678    0.498
+   .verbal4           0.041    0.079    0.523    0.601
+   .verbal5           0.011    0.081    0.132    0.895
+   .memory1           0.152    0.072    2.095    0.036
+   .memory2           0.005    0.077    0.070    0.944
+   .memory3           0.018    0.081    0.225    0.822
+   .memory4           0.243    0.080    3.033    0.002
+   .memory5           0.085    0.077    1.106    0.269
+   .memory6           0.059    0.082    0.718    0.473
+   .math              0.000                           
+    verbal            0.000                           
+    memory            0.000                           
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .math1             0.566    0.070    8.042    0.000
+   .math2             0.702    0.086    8.156    0.000
+   .math3             0.421    0.056    7.478    0.000
+   .math4             0.406    0.057    7.072    0.000
+   .math5             0.577    0.073    7.868    0.000
+   .verbal1           0.256    0.037    7.014    0.000
+   .verbal2           0.327    0.044    7.472    0.000
+   .verbal3           0.273    0.039    7.016    0.000
+   .verbal4           0.397    0.050    7.908    0.000
+   .verbal5           0.240    0.035    6.806    0.000
+   .memory1           0.527    0.073    7.254    0.000
+   .memory2           0.696    0.088    7.886    0.000
+   .memory3           0.676    0.092    7.354    0.000
+   .memory4           0.767    0.096    8.000    0.000
+   .memory5           0.701    0.089    7.909    0.000
+   .memory6           0.837    0.103    8.104    0.000
+   .math              0.643    0.262    2.449    0.014
+    verbal            1.123    0.199    5.628    0.000
+    memory            0.825    0.191    4.323    0.000</code></pre>
 <hr />
 </div>
-<div id="defParTest" class="section level3" number="2.4.7">
-<h3><span class="header-section-number">2.4.7</span> </h3>
+</div>
+<div id="testing-for-moderation" class="section level2" number="2.5">
+<h2><span class="header-section-number">2.5</span> Testing for Moderation</h2>
+<hr />
+<p>The unrestricted SEM estimated in <a href="#mgSemFit">2.4.6</a> directly estimates unique focal
+effects in each group. In other words, this model allows <em>sex</em> to fully moderate
+the <span class="math inline">\(\eta_{verbal} \rightarrow \eta_{math}\)</span> effect and the
+<span class="math inline">\(\eta_{memory} \rightarrow \eta_{math}\)</span> and directly estimates all the simple
+slopes for these effects.</p>
+<p>We cannot directly test for significant moderation using only the unrestricted
+SEM, but we have several different options for conducting such a test. In the
+next several question, you will try three of these options.</p>
+<hr />
+<p>One of the simplest ways to test the moderation hypotheses we’re considering here
+is to define a new parameter that represents the difference between the simple
+slopes (i.e., the group-specific focal effect estimates). Testing the null
+hypothesis that this difference is zero is also a test of moderation. Rejecting
+the null hypothesis implies significantly different focal effects between groups,
+hence moderation by group.</p>
+<hr />
+<div id="defParTest" class="section level3" number="2.5.1">
+<h3><span class="header-section-number">2.5.1</span> </h3>
 <p><strong>Test for moderation using defined parameters.</strong></p>
 <ul>
 <li>Modify the model syntax from <a href="#mgSemSyntax">2.4.5</a> by including two defined
@@ -4739,6 +4983,8 @@ parameters.
 <li>Evaluate these two moderation hypotheses via the normal-theory z-tests of the
 defined parameters.</li>
 <li>Are the hypotheses supported?</li>
+<li>Are we violating any of the assumptions of the above z-tests? Are the
+inferences based on these tests valid?</li>
 </ul>
 <pre class="r"><code>## Add defined paramters to the SEM syntax:
 semMod2 &lt;- paste(semMod,
@@ -4948,9 +5194,9 @@ Defined Parameters:
 <p>INTERPRET</p>
 <hr />
 </div>
-<div id="section-30" class="section level3" number="2.4.8">
-<h3><span class="header-section-number">2.4.8</span> </h3>
-<p><strong>Redo the analysis from <a href="#defParTest">2.4.7</a> using the <code>lavTestWald()</code> function.</strong></p>
+<div id="section-30" class="section level3" number="2.5.2">
+<h3><span class="header-section-number">2.5.2</span> </h3>
+<p><strong>Redo the analysis from <a href="#defParTest">2.5.1</a> using the <code>lavTestWald()</code> function.</strong></p>
 <ul>
 <li>Run the tests using the fitted model from <a href="#mgSemFit">2.4.6</a>.</li>
 <li>Test each moderation hypothesis independently.</li>
@@ -4983,9 +5229,9 @@ $se
 <p>INTERPRET</p>
 <hr />
 </div>
-<div id="section-31" class="section level3" number="2.4.9">
-<h3><span class="header-section-number">2.4.9</span> </h3>
-<p><strong>Compare the results from <a href="#defParTest">2.4.7</a> and <a href="#waldTest"><strong>??</strong></a>.</strong></p>
+<div id="section-31" class="section level3" number="2.5.3">
+<h3><span class="header-section-number">2.5.3</span> </h3>
+<p><strong>Compare the results from <a href="#defParTest">2.5.1</a> and <a href="#waldTest"><strong>??</strong></a>.</strong></p>
 <ul>
 <li>Do the tests agree?</li>
 <li>What do you notice about the estimates associated with each test (e.g., test
@@ -5020,8 +5266,8 @@ parameterEstimates(semFit2) %&gt;%
 <pre><code>[1] 1.727229</code></pre>
 <hr />
 </div>
-<div id="section-32" class="section level3" number="2.4.10">
-<h3><span class="header-section-number">2.4.10</span> </h3>
+<div id="section-32" class="section level3" number="2.5.4">
+<h3><span class="header-section-number">2.5.4</span> </h3>
 <p><strong>Test the moderation hypotheses using nested-model likelihood ratio tests (i.e.,
 <span class="math inline">\(\Delta \chi^2\)</span> tests)</strong></p>
 <ul>

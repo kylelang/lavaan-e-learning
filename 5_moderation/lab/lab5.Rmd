@@ -755,6 +755,19 @@ hs2 <- data.frame(scores, sex = hs$sex)
 
 ---
 
+We will consider a model wherein student's sex, *sex*, moderates two focal effects:
+
+1. The effect of verbal ability, *verbal*, on mathematical ability, *math*
+1. The effect of memory ability, *memory*, on *math*
+
+We may hypothesize such a model if we believe that verbal ability and memory 
+ability are both positively associated with mathematical ability but the 
+strengths of these effects differ for boys and girls.
+
+- E.g., perhaps the effect of *verbal* on *math* is stronger for girls because 
+girls are enculturated to process information using language pathways whereas 
+boys are enculturated to process information via visio-spatial and tactile pathways.
+
 ### {#catOls}
 
 **Use `lm()` to estimate the moderated regression model described above.**
@@ -816,13 +829,24 @@ pathFit <- hs2 %>%
 summary(pathFit)
 ```
 
+```{asis}
+INTERPRET
+```
+
 ---
 
 ## Multiple Group SEM
 
 ---
 
-Blah, blah, blah...
+Now, we will evaluate the moderation hypotheses considered above using multiple 
+group SEM. By defining the *math*, *verbal*, and *memory* constructs as latent 
+variables we gain two substantial advantages over the preceding path analysis:
+
+1. We will remove measurement error from the definition of the *math*, *verbal*, 
+and *memory* variables.
+1. We will have the ability to evaluate the equivalence of these constructs' 
+measurement structure in the boys' and girls' samples.
 
 ---
 
@@ -877,7 +901,8 @@ fitMeasures(configFit)
 ```
 
 ```{asis}
-INTERPRET
+Yes, the model looks good. All parameter estimates look reasonable, and the 
+model fits well. Therefore, configural invariance is supported.
 ```
 
 ---
@@ -920,8 +945,39 @@ fitMeasures(strongFit)
 compareFit(configFit, weakFit, strongFit) %>% summary()
 ```
 
+```{r, include = FALSE}
+tmp  <- anova(configFit, weakFit)
+chi1 <- tmp[2, 5]
+df1  <- tmp[2, 6]
+p1   <- tmp[2, 7]
+
+tmp  <- anova(weakFit, strongFit)
+chi2 <- tmp[2, 5]
+df2  <- tmp[2, 6]
+p2   <- tmp[2, 7]
+
+tmp    <- fitMeasures(configFit) - fitMeasures(weakFit)
+cfi1   <- tmp["cfi"]
+rmsea1 <- tmp["rmsea"]
+
+tmp    <- fitMeasures(weakFit) - fitMeasures(strongFit)
+cfi2   <- tmp["cfi"]
+rmsea2 <- tmp["rmsea"]
+```
+
 ```{asis}
-INTERPRET
+- Weak invariance holds ($\Delta \chi^2(`r df1`) = `r round(chi1, 2)`$, 
+$p = `r round(p1, 3)`$, $\Delta CFI = `r round(cfi1, 3)`$, 
+$\Delta RMSEA > 0$)
+- Strong invariance does not hold ($\Delta \chi^2(`r df2`) = `r round(chi2, 2)`$, 
+$p < 0.0001$, $\Delta CFI = `r round(cfi2, 3)`$, 
+$\Delta RMSEA = `r round(rmsea2, 3)`$)
+- Yes, we can still test moderation with this model (and data). Although we are 
+not able to establish strong invariance, tests of moderation only consider the 
+latent regression estimates, not the latent means, so we only require weak 
+invariance.
+   - We could not use this model to evaluate hypotheses of between-group mean 
+   differences, though.
 ```
 
 ---
@@ -952,7 +1008,7 @@ semMod <- paste(cfaMod,
 **Estimate the unrestricted, multiple group SEM.**
 
 - Covary the *verbal* and *memory* factors.
-- Enforce whatever level of invariance contraints were supported by the analysis
+- Enforce whatever level of invariance constraints were supported by the analysis
 in \@ref(invariance).
 - Only estimate the mean structure if you were able to establish a sufficient 
 level of measurement invariance in \@ref(invariance).
@@ -965,12 +1021,36 @@ semFit <- sem(semMod,
               data        = hs, 
               std.lv      = TRUE, 
               group       = "sex", 
-              group.equal = "loadings") 
+              group.equal = "loadings")
+
+## Check the results:
+summary(semFit)
 ```
 
 ---
 
-Blah, blah, blah...
+## Testing for Moderation
+
+---
+
+The unrestricted SEM estimated in \@ref(mgSemFit) directly estimates unique focal
+effects in each group. In other words, this model allows *sex* to fully moderate 
+the $\eta_{verbal} \rightarrow \eta_{math}$ effect and the 
+$\eta_{memory} \rightarrow \eta_{math}$ and directly estimates all the simple 
+slopes for these effects.
+
+We cannot directly test for significant moderation using only the unrestricted 
+SEM, but we have several different options for conducting such a test. In the 
+next several question, you will try three of these options.
+
+---
+
+One of the simplest ways to test the moderation hypotheses we're considering here
+is to define a new parameter that represents the difference between the simple 
+slopes (i.e., the group-specific focal effect estimates). Testing the null 
+hypothesis that this difference is zero is also a test of moderation. Rejecting 
+the null hypothesis implies significantly different focal effects between groups, 
+hence moderation by group.
 
 ---
 
@@ -987,6 +1067,8 @@ parameters.
 - Evaluate these two moderation hypotheses via the normal-theory z-tests of the
 defined parameters.
 - Are the hypotheses supported?
+- Are we violating any of the assumptions of the above z-tests? Are the 
+inferences based on these tests valid?
 
 ```{r}
 ## Add defined paramters to the SEM syntax:
@@ -1004,6 +1086,18 @@ semFit2 <- sem(semMod2,
 
 ## Summarize the fitted model:
 summary(semFit2)
+```
+
+```{r, include = FALSE}
+tmp <- parameterEstimates(semFit2) %>% 
+  filter(label %in% c("verbalDiff", "memoryDiff"))
+
+est1 <- tmp[1, "est"]
+est2 <- tmp[2, "est"]
+z1 <- tmp[1, "z"]
+z2 <- tmp[2, "z"]
+p1 <- tmp[1, "pvalue"]
+p2 <- tmp[2, "pvalue"]
 ```
 
 ```{asis}
