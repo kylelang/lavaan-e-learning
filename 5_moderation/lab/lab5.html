@@ -4983,8 +4983,9 @@ parameters.
 <li>Evaluate these two moderation hypotheses via the normal-theory z-tests of the
 defined parameters.</li>
 <li>Are the hypotheses supported?</li>
-<li>Are we violating any of the assumptions of the above z-tests? Are the
-inferences based on these tests valid?</li>
+<li>Are we violating any of the assumptions of the above z-tests by using them to
+test differences between two slopes? Are the inferences based on these tests
+valid?</li>
 </ul>
 <pre class="r"><code>## Add defined paramters to the SEM syntax:
 semMod2 &lt;- paste(semMod,
@@ -5191,7 +5192,22 @@ Defined Parameters:
                    Estimate  Std.Err  z-value  P(&gt;|z|)
     verbalDiff        0.554    0.203    2.731    0.006
     memoryDiff       -0.413    0.239   -1.727    0.084</code></pre>
-<p>INTERPRET</p>
+<ul>
+<li>Yes, <em>sex</em> significantly moderates the effect of <em>verbal</em> on <em>math</em> (
+<span class="math inline">\(\Delta \beta = 0.554\)</span>, <span class="math inline">\(z = 2.73\)</span>, <span class="math inline">\(p = 0.006\)</span>
+)</li>
+<li>No, <em>sex</em> does not significantly moderate the effect of <em>memory</em> on <em>math</em> (
+<span class="math inline">\(\Delta \beta = -0.413\)</span>, <span class="math inline">\(z = -1.73\)</span>, <span class="math inline">\(p = 0.084\)</span>
+)</li>
+<li>These results are valid; we are not violating any assumptions of the z-test.
+The simple slopes are normally distributed in each group, so their difference
+is also normally distributed.</li>
+</ul>
+<hr />
+<p>We can also test these types of moderation hypotheses using multivariate Wald
+tests to evaluate the relevant equality constraints. In <strong>lavaan</strong>, we can use
+the <code>lavTestWald()</code> function to implement such tests directly on the fitted,
+unrestricted SEM.</p>
 <hr />
 </div>
 <div id="section-30" class="section level3" number="2.5.2">
@@ -5226,7 +5242,14 @@ $p.value
 
 $se
 [1] &quot;standard&quot;</code></pre>
-<p>INTERPRET</p>
+<ul>
+<li>Yes, <em>sex</em> significantly moderates the effect of <em>verbal</em> on <em>math</em> (
+<span class="math inline">\(z = 7.46\)</span>, <span class="math inline">\(p = 0.006\)</span>
+)</li>
+<li>No, <em>sex</em> does not significantly moderate the effect of <em>memory</em> on <em>math</em> (
+<span class="math inline">\(z = 2.98\)</span>, <span class="math inline">\(p = 0.084\)</span>
+)</li>
+</ul>
 <hr />
 </div>
 <div id="section-31" class="section level3" number="2.5.3">
@@ -5237,7 +5260,7 @@ $se
 <li>What do you notice about the estimates associated with each test (e.g., test
 statistics, p-values)?</li>
 </ul>
-<pre class="r"><code>## Both tests give the same p-values:
+<pre class="r"><code>## Compare p-values:
 parameterEstimates(semFit2) %&gt;% 
   filter(label %in% c(&quot;verbalDiff&quot;, &quot;memoryDiff&quot;)) %&gt;%
   select(label, pvalue)</code></pre>
@@ -5250,8 +5273,7 @@ parameterEstimates(semFit2) %&gt;%
 <pre><code>[1] 0.006306554</code></pre>
 <pre class="r"><code>memoryWald$p.value</code></pre>
 <pre><code>[1] 0.08412659</code></pre>
-<pre class="r"><code>## The Wald test statistics are equal to the square of the z-statistics for the 
-## defined parameters:
+<pre class="r"><code>## Compare test statistics:
 parameterEstimates(semFit2) %&gt;% 
   filter(label %in% c(&quot;verbalDiff&quot;, &quot;memoryDiff&quot;)) %&gt;%
   select(label, z)</code></pre>
@@ -5264,14 +5286,25 @@ parameterEstimates(semFit2) %&gt;%
 <pre><code>[1] 2.731402</code></pre>
 <pre class="r"><code>memoryWald$stat %&gt;% sqrt()</code></pre>
 <pre><code>[1] 1.727229</code></pre>
+<p>Yes, both tests agree and produce identical p-values. Furthermore, the Wald
+test statistics are equal to the square of the z-statistics for the defined
+parameters.</p>
+<hr />
+<p>The final option we will consider is a likelihood ratio test (i.e.,
+<span class="math inline">\(\Delta \chi^2\)</span> test). Testing moderation via a likelihood ratio test involves
+two steps:</p>
+<ol style="list-style-type: decimal">
+<li>Estimate a restricted model wherein the relevant simple slopes are equated
+across groups</li>
+<li>Evaluate the tenability of these constraints via a likelihood ratio test</li>
+</ol>
 <hr />
 </div>
 <div id="section-32" class="section level3" number="2.5.4">
 <h3><span class="header-section-number">2.5.4</span> </h3>
-<p><strong>Test the moderation hypotheses using nested-model likelihood ratio tests (i.e.,
-<span class="math inline">\(\Delta \chi^2\)</span> tests)</strong></p>
+<p><strong>Test the moderation hypotheses using likelihood ratio tests.</strong></p>
 <ul>
-<li>Prepare the tests by modifying the unrestricted SEM syntax from
+<li>Define restricted models by modifying the unrestricted SEM syntax from
 <a href="#mgSemSyntax">2.4.5</a> to introduce the appropriate equality constraints.</li>
 <li>Test each moderation hypothesis independently.</li>
 <li>Are the moderation hypotheses supported from these tests?</li>
@@ -6078,19 +6111,41 @@ Variances:
     verbal            1.124    0.200    5.629    0.000
     memory            0.730    0.163    4.475    0.000</code></pre>
 <pre class="r"><code>## Test the constraint via a LRT:
-anova(semFit, semFit4.1)</code></pre>
+(a1 &lt;- anova(semFit, semFit4.1))</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Df"],"name":[1],"type":["int"],"align":["right"]},{"label":["AIC"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["BIC"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Chisq"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Chisq diff"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["Df diff"],"name":[6],"type":["int"],"align":["right"]},{"label":["Pr(>Chisq)"],"name":[7],"type":["dbl"],"align":["right"]}],"data":[{"1":"215","2":"11861.97","3":"12191.90","4":"300.0985","5":"NA","6":"NA","7":"NA","_rn_":"semFit"},{"1":"216","2":"11868.75","3":"12194.98","4":"308.8822","5":"8.78373","6":"1","7":"0.00303929","_rn_":"semFit4.1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<pre class="r"><code>anova(semFit, semFit4.2)</code></pre>
+<pre class="r"><code>(a2 &lt;- anova(semFit, semFit4.2))</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Df"],"name":[1],"type":["int"],"align":["right"]},{"label":["AIC"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["BIC"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Chisq"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Chisq diff"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["Df diff"],"name":[6],"type":["int"],"align":["right"]},{"label":["Pr(>Chisq)"],"name":[7],"type":["dbl"],"align":["right"]}],"data":[{"1":"215","2":"11861.97","3":"12191.90","4":"300.0985","5":"NA","6":"NA","7":"NA","_rn_":"semFit"},{"1":"216","2":"11863.11","3":"12189.33","4":"303.2359","5":"3.137376","6":"1","7":"0.07651683","_rn_":"semFit4.2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<p>INTERPRET</p>
+<ul>
+<li>Yes, <em>sex</em> significantly moderates the effect of <em>verbal</em> on <em>math</em> (
+<span class="math inline">\(\Delta \chi^2(1) = 8.78\)</span>, <span class="math inline">\(p = 0.003\)</span>
+)</li>
+<li>No, <em>sex</em> does not significantly moderate the effect of <em>memory</em> on <em>math</em> (
+<span class="math inline">\(\Delta \chi^2(1) = 3.14\)</span>, <span class="math inline">\(p = 0.077\)</span>
+)</li>
+</ul>
+<hr />
+</div>
+</div>
+<div id="simple-slopes" class="section level2" number="2.6">
+<h2><span class="header-section-number">2.6</span> Simple Slopes</h2>
+<hr />
+<div id="section-33" class="section level3" number="2.6.1">
+<h3><span class="header-section-number">2.6.1</span> </h3>
+<p><strong>Conduct a simple slope analysis using the multiple-group SEM.</strong></p>
+<ul>
+<li>How many meaningful simple slopes can we define based on the moderation
+hypotheses considered in this section?</li>
+<li>Which of these simple slopes are statistically significant?</li>
+<li>Briefly interpret the patterns of simples slopes.</li>
+</ul>
 <hr />
 <p>End of Lab 5</p>
 <hr />

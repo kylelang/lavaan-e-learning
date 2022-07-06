@@ -1067,8 +1067,9 @@ parameters.
 - Evaluate these two moderation hypotheses via the normal-theory z-tests of the
 defined parameters.
 - Are the hypotheses supported?
-- Are we violating any of the assumptions of the above z-tests? Are the 
-inferences based on these tests valid?
+- Are we violating any of the assumptions of the above z-tests by using them to 
+test differences between two slopes? Are the inferences based on these tests 
+valid?
 
 ```{r}
 ## Add defined paramters to the SEM syntax:
@@ -1101,8 +1102,23 @@ p2 <- tmp[2, "pvalue"]
 ```
 
 ```{asis}
-INTERPRET
+- Yes, *sex* significantly moderates the effect of *verbal* on *math* (
+$\Delta \beta = `r round(est1, 3)`$, $z = `r round(z1, 2)`$, $p = `r round(p1, 3)`$
+)
+- No, *sex* does not significantly moderate the effect of *memory* on *math* (
+$\Delta \beta = `r round(est2, 3)`$, $z = `r round(z2, 2)`$, $p = `r round(p2, 3)`$
+)
+- These results are valid; we are not violating any assumptions of the z-test.
+The simple slopes are normally distributed in each group, so their difference
+is also normally distributed.
 ```
+
+---
+
+We can also test these types of moderation hypotheses using multivariate Wald
+tests to evaluate the relevant equality constraints. In **lavaan**, we can use 
+the `lavTestWald()` function to implement such tests directly on the fitted, 
+unrestricted SEM.
 
 ---
 
@@ -1119,8 +1135,14 @@ INTERPRET
 (memoryWald <- lavTestWald(semFit, 'b2m == b2f'))
 ```
 
+
 ```{asis}
-INTERPRET
+- Yes, *sex* significantly moderates the effect of *verbal* on *math* (
+$z = `r round(verbalWald$stat, 2)`$, $p = `r round(verbalWald$p.value, 3)`$
+)
+- No, *sex* does not significantly moderate the effect of *memory* on *math* (
+$z = `r round(memoryWald$stat, 2)`$, $p = `r round(memoryWald$p.value, 3)`$
+)
 ```
 
 ---
@@ -1134,7 +1156,7 @@ INTERPRET
 statistics, p-values)?
 
 ```{r}
-## Both tests give the same p-values:
+## Compare p-values:
 parameterEstimates(semFit2) %>% 
   filter(label %in% c("verbalDiff", "memoryDiff")) %>%
   select(label, pvalue)
@@ -1142,8 +1164,7 @@ parameterEstimates(semFit2) %>%
 verbalWald$p.value
 memoryWald$p.value
 
-## The Wald test statistics are equal to the square of the z-statistics for the 
-## defined parameters:
+## Compare test statistics:
 parameterEstimates(semFit2) %>% 
   filter(label %in% c("verbalDiff", "memoryDiff")) %>%
   select(label, z)
@@ -1152,14 +1173,29 @@ verbalWald$stat %>% sqrt()
 memoryWald$stat %>% sqrt()
 ```
 
+```{asis}
+Yes, both tests agree and produce identical p-values. Furthermore, the Wald 
+test statistics are equal to the square of the z-statistics for the defined 
+parameters.
+```
+
+---
+
+The final option we will consider is a likelihood ratio test (i.e., 
+$\Delta \chi^2$ test). Testing moderation via a likelihood ratio test involves 
+two steps:
+
+1. Estimate a restricted model wherein the relevant simple slopes are equated 
+across groups
+1. Evaluate the tenability of these constraints via a likelihood ratio test
+
 ---
 
 ###
 
-**Test the moderation hypotheses using nested-model likelihood ratio tests (i.e., 
-$\Delta \chi^2$ tests)**
+**Test the moderation hypotheses using likelihood ratio tests.**
 
-- Prepare the tests by modifying the unrestricted SEM syntax from 
+- Define restricted models by modifying the unrestricted SEM syntax from 
 \@ref(mgSemSyntax) to introduce the appropriate equality constraints.
 - Test each moderation hypothesis independently.
 - Are the moderation hypotheses supported from these tests?
@@ -1220,13 +1256,33 @@ summary(semFit4.1)
 summary(semFit4.2)
 
 ## Test the constraint via a LRT:
-anova(semFit, semFit4.1)
-anova(semFit, semFit4.2)
+(a1 <- anova(semFit, semFit4.1))
+(a2 <- anova(semFit, semFit4.2))
 ```
 
 ```{asis}
-INTERPRET
+- Yes, *sex* significantly moderates the effect of *verbal* on *math* (
+$\Delta \chi^2(`r a1[2, 6]`) = `r round(a1[2, 5], 2)`$, $p = `r round(a1[2, 7], 3)`$
+)
+- No, *sex* does not significantly moderate the effect of *memory* on *math* (
+$\Delta \chi^2(`r a2[2, 6]`) = `r round(a2[2, 5], 2)`$, $p = `r round(a2[2, 7], 3)`$
+)
 ```
+
+---
+
+## Simple Slopes
+
+---
+
+###
+
+**Conduct a simple slope analysis using the multiple-group SEM.**
+
+- How many meaningful simple slopes can we define based on the moderation 
+hypotheses considered in this section?
+- Which of these simple slopes are statistically significant?
+- Briefly interpret the patterns of simples slopes.
 
 ---
 
