@@ -781,7 +781,7 @@ NOTES:
 1. You should have already summarized the HS data at the beginning of the last 
 lab, so we won't do so again here. That being said, if you don't remember what's 
 going on in there, it may be a good idea to rerun the summaries you conducted 
-for [Lab 4][lab4].
+for Lab 4.
 
 ---
 
@@ -1505,5 +1505,4 @@ End of Lab 5
 [hs_data]: https://github.com/kylelang/lavaan-e-learning/raw/main/data/holzinger_swineford.rds
 [mbess]: https://cran.r-project.org/web/packages/MBESS/index.html
 [hs_code]: https://github.com/kylelang/lavaan-e-learning/blob/main/code/lab_prep/process_hs_data.R
-[lab4]: https://github.com/kylelang/lavaan-e-learning/blob/main/4_sem_mediation/lab/lab4_solutions.html
 [psych]: https://cran.r-project.org/web/packages/psych/index.html
