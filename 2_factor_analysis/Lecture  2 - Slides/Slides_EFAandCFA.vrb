@@ -1,0 +1,37 @@
+\frametitle{3. Effects-coding method - lavaan outpu}
+
+\begin{itemize}
+    \item Constrain the average of the factor loadings to 1:
+    $\frac{1}{4} \sum_{i=1}^4 \lambda_i = 1$. \\ %(hence, sum = 3).
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{parameterEstimates}\hlstd{(fit_1CFA_EffC)[}\hlnum{1}\hlopt{:}\hlnum{4}\hlstd{,}\hlnum{1}\hlopt{:}\hlnum{5}\hlstd{]}
+\end{alltt}
+\begin{verbatim}
+##            lhs op  rhs   label   est
+## 1 Extraversion =~  Q77 lambda1 1.197
+## 2 Extraversion =~  Q84 lambda2 1.027
+## 3 Extraversion =~ Q170 lambda3 0.879
+## 4 Extraversion =~ Q196 lambda4 0.898
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+    \item Constrain the average of the item intercepts to 0:
+    $\frac{1}{4} \sum_{i=1}^4 \nu_i = 0$.\\
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{parameterEstimates}\hlstd{(fit_1CFA_EffC)[}\hlnum{5}\hlopt{:}\hlnum{8}\hlstd{,}\hlnum{1}\hlopt{:}\hlnum{5}\hlstd{]}
+\end{alltt}
+\begin{verbatim}
+##    lhs op rhs label    est
+## 5  Q77 ~1       nu1 -0.765
+## 6  Q84 ~1       nu2 -0.521
+## 7 Q170 ~1       nu3  0.738
+## 8 Q196 ~1       nu4  0.548
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+\end{itemize}
+

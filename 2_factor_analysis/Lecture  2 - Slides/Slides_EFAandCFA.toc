@@ -1,0 +1,7 @@
+\beamer@sectionintoc {1}{SAPI}{3}{0}{1}
+\beamer@sectionintoc {2}{EFA and CFA}{6}{0}{2}
+\beamer@sectionintoc {3}{EFA in R}{18}{0}{3}
+\beamer@sectionintoc {4}{CFA in R}{29}{0}{4}
+\beamer@sectionintoc {5}{Scaling}{48}{0}{5}
+\beamer@sectionintoc {6}{The end}{64}{0}{6}
+\beamer@sectionintoc {7}{Extra}{67}{0}{7}
