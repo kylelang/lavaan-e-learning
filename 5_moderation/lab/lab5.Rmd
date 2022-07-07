@@ -4,7 +4,7 @@ subtitle: "Introduction to SEM with lavaan"
 author: "Kyle M. Lang"
 date: "Updated: `r format(Sys.time(), format = '%Y-%m-%d')`"
 params:
-  answers: true
+  answers: false
 output: 
   bookdown::html_document2:
     toc: true
@@ -19,10 +19,11 @@ editor_options:
 
 ```{r setup, echo = FALSE, message = FALSE, warning = FALSE}
 library(knitr)
+library(xtable)
 library(dplyr)
 library(magrittr)
 
-figDir <- "../figures/"
+figDir <- "figures/"
 
 set.seed(235711)
 
@@ -88,13 +89,13 @@ with the US Federal government.
 achievability of material success.
    - Higher scores indicate greater perceived achievability
    $\vb$
-- `progress`: A single item assessing perceived progress toward acheiving the 
+- `progress`: A single item assessing perceived progress toward achieving the 
 "American Dream"
    - Higher scores indicate greater perceived progress
    $\vb$
 - `merit`: A single item assessing endorsement of the meritocratic ideal that 
 hard work leads to success.
-   - Higher scores indicate stronger endoresement of the meritocratic ideal
+   - Higher scores indicate stronger endorsement of the meritocratic ideal
    $\vb$
 - `lib2Con`: A single item assessing liberal-to-conservative orientation
    - Lower scores are more liberal, higher scores are more conservative
@@ -149,7 +150,7 @@ str(outlook)
 We will first consider moderation by a continuous variable. Specifically, we 
 will work with a model encoding the following relations:
 
-- Belief in the acheivability of success, *success*, predicts perceived progress 
+- Belief in the achievability of success, *success*, predicts perceived progress 
 toward the American Dream, *progress*, as the focal effect.
 - Disillusionment with the US Federal government, *disillusion* moderates the 
 *success* $\rightarrow$ *progress* effect.
@@ -164,8 +165,8 @@ We will first estimate this model as an OLS regression model.
 
 **Draw the conceptual path diagram for the model described above.**
 
-```{r, eval = FALSE, echo = FALSE, out.width = "85%"}
-knitr::include_graphics(paste0(figDir, "lab5_conceptual_diagram.png"))
+```{r, echo = FALSE, out.width = "85%"}
+knitr::include_graphics(paste0(figDir, "lab5_conceptual1.png"))
 ```
 
 ---
@@ -174,8 +175,8 @@ knitr::include_graphics(paste0(figDir, "lab5_conceptual_diagram.png"))
 
 **Draw the analytic path diagram for the model described above.**
 
-```{r, eval = FALSE, echo = FALSE, out.width = "85%"}
-knitr::include_graphics(paste0(figDir, "lab5_analytic_diagram.png"))
+```{r, echo = FALSE, out.width = "85%"}
+knitr::include_graphics(paste0(figDir, "lab5_analytic1.png"))
 ```
 
 ---
@@ -200,7 +201,7 @@ Y_{progress} = \beta_0 + \beta_1 W_{lib2Con} + \beta_2 X_{success} + \beta_3 Z_{
 - Use the `lm()` function to estimate the model.
 
 ```{r}
-fit <- lm(progress ~ lib2Con + success * disillusion, data = outlook)
+olsFit <- lm(progress ~ lib2Con + success * disillusion, data = outlook)
 ```
 
 ---
@@ -213,11 +214,24 @@ fit <- lm(progress ~ lib2Con + success * disillusion, data = outlook)
 - How does disillusionment level affect the focal effect?
 
 ```{r}
-summary(fit)
+summary(olsFit)
+```
+
+```{r, include = FALSE}
+tmp <- summary(olsFit)$coef
+
+b  <- tmp["success:disillusion", "Estimate"] %>% round(3)
+t  <- tmp["success:disillusion", "t value"] %>% round(3)
+df <- olsFit$df.residual
+p  <- tmp["success:disillusion", "Pr(>|t|)"] %>% round(3)
 ```
 
 ```{asis}
-INTERPRET
+Yes, *disillusion* significantly moderates the relation between *success* and 
+*progress* (
+$\beta = `r b`$, $t(`r df`) = `r t`$, $p = `r p`$
+) such that the effect of *success* on *progress* increases as levels of 
+*disillusion* increase, after controlling for *lib2Con*.
 ```
 
 ---
@@ -229,7 +243,7 @@ slopes estimated by `plotSlopes()`.
 
 ---
 
-###
+### {#ssOls}
 
 **Probe the interaction.**
 
@@ -240,13 +254,24 @@ package to conduct a simple slopes analysis for the model from \@ref(olsFit).
 library(rockchalk)
 
 ## Estimate and plot simple slopes:
-psOut <- plotSlopes(fit, plotx = "success", modx = "disillusion")
+psOut <- plotSlopes(olsFit,
+                    plotx    = "success", 
+                    modx     = "disillusion",
+                    modxVals = "std.dev")
 
 ## Test the simple slopes:
 tsOut <- testSlopes(psOut)
 
 ## View the results:
 tsOut$hypotests
+```
+
+```{asis}
+NOTE: The message printed by `testSlopes()` gives the boundaries of the 
+*Johnson-Neyman Region of Significance* ([Johnson & Neyman, 1936)][jn]. 
+Johnson-Neyman analysis is an alternative method of probing interactions that we 
+have not covered in this course. For more information, check out 
+[Preacher, et al. (2006)][preacher_et_al_2006].
 ```
 
 ---
@@ -315,19 +340,27 @@ simple slopes and plot the estimated simple slopes, respectively.
 
 **Probe the interaction from \@ref(pathFit) using *semTools* utilities.**
 
-- Use `probe2WayMC()` to estimate and test the simple slops and intercepts.
+- Use `probe2WayMC()` to estimate and test the simple slopes and intercepts.
 - Use `plotProbe()` to visualize the simple slopes.
+- Define the simple slopes with the same conditional values of *disillusion* 
+that you used in \@ref(ssOls). 
 - Which simple slopes are significant?
+- Do these results match the results from \@ref(ssOls)?
 
 ```{r}
 library(semTools)
-
+  
 ## Compute simple slopes and intercepts:
 ssOut <- probe2WayMC(pathFit, 
                      nameX    = c("success", "disillusion", "success:disillusion"), 
                      nameY    = "progress", 
                      modVar   = "disillusion",
-                     valProbe = quantile(outlook$disillusion, c(0.25, 0.5, 0.75))
+                     valProbe = outlook %>% 
+                       summarise("m-sd" = mean(disillusion) - sd(disillusion),
+                                 mean = mean(disillusion),
+                                 "m+sd" = mean(disillusion) + sd(disillusion)
+                                 ) %>% 
+                       unlist()
                      )
 
 ## Check the results:
@@ -337,13 +370,16 @@ ssOut
 plotProbe(ssOut,
           xlim = range(outlook$success), 
           xlab = "Ease of Personal Success", 
-          ylab = "Progress toward American Dream")
+          ylab = "Progress toward American Dream",
+          legendArgs = list(legend = rownames(ssOut[[1]]))
+          )
 ```
 
 ```{asis}
-Each of the simple slopes is significant. As level of disillusionment increases, 
-the effect of *success* on *progress* also increases, but this effect is 
+- Each of the simple slopes is significant. As level of disillusionment increases, 
+the effect of *success* on *progress* also increases, and this effect is 
 significant for all levels of *disillusion* considered here.
+- Yes, these results match the simple slopes from the OLS regression analysis.
 ```
 
 ---
@@ -367,7 +403,7 @@ Centering* method.
 
 - Indicated the *success* factor from the four relevant scale items: 
    - `s1:s4`
-- Indicated the *disillusionment* factor from the three relvant scale items:
+- Indicated the *disillusionment* factor from the three relevant scale items:
    - `d1:d3`
 - Do not include the interaction factor.
 
@@ -499,21 +535,27 @@ semFit <- outlook2 %>%
 **Summarize and interpret the results.**
 
 - Is the moderation hypothesis supported?
-- Do the results differ form the path analysis version?
+- Do the results differ from the path analysis version?
 
 ```{r}
 summary(semFit)
 ```
 
 ```{r, include = FALSE}
-#tmp <- parameterEstimates(semFit3, boot.ci.type = "bca.simple") %>% tail(3)
-#out1 <- tmp[1, ]
-#out2 <- tmp[2, ]
-#out3 <- tmp[3, ]
+tmp <- parameterEstimates(semFit) %>% filter(op == "~" & rhs == "interact")
+
+b <- tmp$est %>% round(3)
+z <- tmp$z %>% round(2)
+p <- tmp$pvalue %>% round(3)
 ```
 
 ```{asis}
-Yes, the moderation hypothesis is supported. GIVE SUPPORT
+- Yes, the moderation hypothesis is supported. The level of *disillusion* 
+significantly affects the *success* to *progress* effect (
+$\beta = `r b`$, $z = `r z`$, $p = `r p`$
+).
+- The inference is the same as in the path analysis, but the moderation effect 
+is more significant (i.e., has a smaller p-value) here.
 ```
 
 ---
@@ -535,7 +577,8 @@ ssOut <- probe2WayMC(semFit,
 
 ssOut
 
-plotProbe(ssOut, xlim = c(-3, 3),   
+plotProbe(ssOut, 
+          xlim = c(-3, 3),   
           xlab = "Ease of Personal Success", 
           ylab = "Progress toward American Dream")
 ```
@@ -546,8 +589,8 @@ plotProbe(ssOut, xlim = c(-3, 3),
 
 ---
 
-Now, we will conduct the same analysis as above using the *Residual Centering* 
-approach to define the interaction factor.
+Now, we will conduct the same analysis using the *Residual Centering* approach 
+to define the interaction factor.
 
 ---
 
@@ -613,21 +656,29 @@ summary(semFit)
 ```
 
 ```{r, include = FALSE}
-#tmp <- parameterEstimates(semFit3, boot.ci.type = "bca.simple") %>% tail(3)
-#out1 <- tmp[1, ]
-#out2 <- tmp[2, ]
-#out3 <- tmp[3, ]
+tmp <- parameterEstimates(semFit) %>% filter(op == "~" & rhs == "interact")
+
+b <- tmp$est %>% round(3)
+z <- tmp$z %>% round(2)
+p <- tmp$pvalue %>% round(3)
 ```
 
 ```{asis}
-Yes, the moderation hypothesis is supported. GIVE SUPPORT
+- Yes, the moderation hypothesis is supported. The level of *disillusion* 
+significantly affects the *success* to *progress* effect (
+$\beta = `r b`$, $z = `r z`$, $p = `r p`$
+).
+- The inference is the same as in the double mean centered version, but the 
+moderation effect is slightly smaller and less significant (i.e., has a larger
+p-value) here.
 ```
 
 ---
 
 When we define the interaction construct using residual centering, we can use
 the `probe2WayRC()` function from **semTools** to conduct the simple slopes
-analysis.
+analysis. As before, we can subsequently visualize the simple slopes using the 
+`plotProbe()` function.
 
 ---
 
@@ -648,7 +699,8 @@ ssOut <- probe2WayRC(semFit,
 
 ssOut
 
-plotProbe(ssOut, xlim = c(-3, 3),   
+plotProbe(ssOut, 
+          xlim = c(-3, 3),   
           xlab = "Ease of Personal Success", 
           ylab = "Progress toward American Dream")
 ```
@@ -690,14 +742,23 @@ students in two schools. This dataset comprises `r nrow(hs)` observations of the
 following `r ncol(hs)` variables.
 
 - `id`: Numeric ID
+$\vb$
 - `age`: Student age in years
+$\vb$
 - `sex`: Biological sex of the student
+$\vb$
 - `grade`: Grade of the student
+$\vb$
 - `school`: School at which the student was tested
+$\vb$
 - `spatial1:spatial4`: Scores on four spatial reasoning tests
+$\vb$
 - `verbal1:verbal5`: Scores on five tests of verbal ability
+$\vb$
 - `speed1:speed4`: Scores on four tests of cognitive processing speed
+$\vb$
 - `memory1:memory6`: Scores on six memory tests
+$\vb$
 - `math1:math5`: Scores on five tests of mathematical ability
 
 You can access the original version of the data via the [**MBESS**][mbess] 
@@ -732,7 +793,7 @@ The following code will use the `scoreVeryFast()` function from the
 [**psych**][psych] package to create scale scores for the *math*, *verbal*, and 
 *memory* constructs.
 
-```{r, echo = TRUE}
+```{r, include = TRUE, echo = TRUE}
 ## Load the 'psych' package for scoring utilities:
 library(psych)
 
@@ -766,7 +827,42 @@ strengths of these effects differ for boys and girls.
 
 - E.g., perhaps the effect of *verbal* on *math* is stronger for girls because 
 girls are enculturated to process information using language pathways whereas 
-boys are enculturated to process information via visio-spatial and tactile pathways.
+boys are enculturated to process information via visio-spatial.
+
+---
+
+###
+
+**Draw the conceptual path diagram for the model described above.**
+
+```{r, echo = FALSE, out.width = "85%"}
+knitr::include_graphics(paste0(figDir, "lab5_conceptual2.png"))
+```
+
+---
+
+###
+
+**Draw the analytic path diagram for the model described above.**
+
+```{r, echo = FALSE, out.width = "85%"}
+knitr::include_graphics(paste0(figDir, "lab5_analytic2.png"))
+```
+
+---
+
+###
+
+**Write out the regression equation necessary to evaluate the moderation 
+hypothesis described above.**
+
+```{asis}
+\[
+Y_{math} = \beta_0 + \beta_1 X_{verbal} + \beta_2 W_{memory} + \beta_3 Z_{sex} + \beta_4 XZ + \beta_5 WZ + \varepsilon
+\]
+```
+
+---
 
 ### {#catOls}
 
@@ -791,8 +887,29 @@ ability?
 summary(olsFit)
 ```
 
+```{r, include = FALSE}
+olsCoef <- summary(olsFit)$coef
+
+b1 <- olsCoef["verbal:sexMale", "Estimate"] %>% round(3)
+t1 <- olsCoef["verbal:sexMale", "t value"] %>% round(3)
+p1 <- olsCoef["verbal:sexMale", "Pr(>|t|)"] %>% round(3)
+
+b2 <- olsCoef["sexMale:memory", "Estimate"] %>% round(3)
+t2 <- olsCoef["sexMale:memory", "t value"] %>% round(3)
+p2 <- olsCoef["sexMale:memory", "Pr(>|t|)"] %>% round(3)
+
+df <- olsFit$df.residual
+```
+
 ```{asis}
-INTERPRET
+- Yes, *sex* significantly moderates the relation between *verbal* and *math* (
+$\beta = `r b1`$, $t(`r df`) = `r t1`$, $p = `r p1`$
+), after controlling for *memory* and its interaction with *sex*. 
+The effect of *verbal* on *math* is significantly smaller for boys.
+- No, *sex* does not significantly moderate the relation between *memory* and 
+*math* (
+$\beta = `r b2`$, $t(`r df`) = `r t2`$, $p = `r p2`$
+), after controlling for *verbal* and its interaction with *sex*.
 ```
 
 ---
@@ -829,8 +946,34 @@ pathFit <- hs2 %>%
 summary(pathFit)
 ```
 
+```{r, include = FALSE}
+tmp <- parameterEstimates(pathFit) %>% filter(op == "~" & grepl(":", rhs))
+
+b <- tmp[2, "est"] %>% round(3)
+z <- tmp[2, "z"] %>% round(2)
+p <- tmp[2, "pvalue"] %>% round(3)
+```
+
 ```{asis}
-INTERPRET
+- Yes, the results are largely the same as those from the OLS regression model, 
+but *sex* now significantly---if only just---moderates the *memory* to *math* 
+effect (
+$\beta = `r b`$, $z = `r z`$, $p = `r p`$
+).
+   - This difference is attributable to slightly more precise estimates in the 
+   path model. As you can see in Table \@ref(tab:seTable), the point estimates 
+   are essentially identical, but the standard errors are a little smaller in 
+   the path model.
+```
+
+```{r seTable, echo = FALSE, results = "asis"}
+data.frame(Predictor = rep(c("verbal", "memory"), 2),
+           Method = rep(c("OLS", "PA"), each = 2),
+           Estimate = c(olsCoef[5:6, 1], tmp[ , "est"]),
+           SE = c(olsCoef[5:6, 2], tmp[ , "se"])
+           ) %>% 
+  arrange(Predictor) %>%
+  kable(caption = "OLS vs. PA Comparison")
 ```
 
 ---
@@ -850,7 +993,7 @@ measurement structure in the boys' and girls' samples.
 
 ---
 
-### 
+### {#mgCFA}
 
 **Define the model syntax for the CFA.**
 
@@ -872,7 +1015,7 @@ memory =~ memory1 + memory2 + memory3 + memory4 + memory5 + memory6
 
 ---
 
-###
+### {#config}
 
 **Estimate the configurally invariant CFA model using the HS data.**
 
@@ -909,7 +1052,7 @@ model fits well. Therefore, configural invariance is supported.
 
 ### {#invariance}
 
-**Test weak and strong invariance for the CFA define in @\ref(mgCFA).**
+**Test weak and strong invariance for the CFA define in \@ref(mgCFA).**
 
 - Is weak invariance supported?
 - Is strong invariance supported?
@@ -1033,15 +1176,15 @@ summary(semFit)
 
 ---
 
-The unrestricted SEM estimated in \@ref(mgSemFit) directly estimates unique focal
+The unrestricted SEM we fit in \@ref(mgSemFit) directly estimates unique focal
 effects in each group. In other words, this model allows *sex* to fully moderate 
 the $\eta_{verbal} \rightarrow \eta_{math}$ effect and the 
-$\eta_{memory} \rightarrow \eta_{math}$ and directly estimates all the simple 
-slopes for these effects.
+$\eta_{memory} \rightarrow \eta_{math}$ effect and directly estimates all the 
+simple slopes for these two focal effects.
 
-We cannot directly test for significant moderation using only the unrestricted 
-SEM, but we have several different options for conducting such a test. In the 
-next several question, you will try three of these options.
+We cannot directly test for moderation using only the unrestricted SEM, but we 
+have several different options for conducting such a test. In the next several 
+questions, we will explore three of these options.
 
 ---
 
@@ -1060,10 +1203,10 @@ hence moderation by group.
 
 - Modify the model syntax from \@ref(mgSemSyntax) by including two defined 
 parameters.
-   1. The first define parameter should quantify the moderating effect of 
-   $X_{sex}$ on the $\eta_{verbal} \rightarrow \eta_{math}$ effect. 
-   1. The second define parameter should quantify the moderating effect of 
-   $X_{sex}$ on the $\eta_{memory} \rightarrow \eta_{math}$ effect.
+   1. The first defined parameter should quantify the moderating effect of *sex* 
+   on the $\eta_{verbal} \rightarrow \eta_{math}$ effect. 
+   1. The second defined parameter should quantify the moderating effect of *sex*
+   on the $\eta_{memory} \rightarrow \eta_{math}$ effect.
 - Evaluate these two moderation hypotheses via the normal-theory z-tests of the
 defined parameters.
 - Are the hypotheses supported?
@@ -1072,7 +1215,7 @@ test differences between two slopes? Are the inferences based on these tests
 valid?
 
 ```{r}
-## Add defined paramters to the SEM syntax:
+## Add defined parameters to the SEM syntax:
 semMod2 <- paste(semMod,
                  'verbalDiff := b1f - b1m',
                  'memoryDiff := b2f - b2m',
@@ -1122,9 +1265,9 @@ unrestricted SEM.
 
 ---
 
-###
+### {#waldTest}
 
-**Redo the analysis from \@ref(defParTest) using the `lavTestWald()` function.**
+**Rerun the analysis from \@ref(defParTest) using the `lavTestWald()` function.**
 
 - Run the tests using the fitted model from \@ref(mgSemFit).
 - Test each moderation hypothesis independently.
@@ -1181,7 +1324,7 @@ parameters.
 
 ---
 
-The final option we will consider is a likelihood ratio test (i.e., 
+The final option we will consider is the likelihood ratio test (i.e., 
 $\Delta \chi^2$ test). Testing moderation via a likelihood ratio test involves 
 two steps:
 
@@ -1225,8 +1368,10 @@ semFit3.2 <- sem(semMod3.2,
 summary(semFit3.1)
 summary(semFit3.2)
 
-## Test the constraint via a LRT:
+## Test for moderation of the verbal effect via a LRT:
 anova(semFit, semFit3.1)
+
+## Test for moderation of the memory effect via a LRT:
 anova(semFit, semFit3.2)
 ```
 
@@ -1255,8 +1400,10 @@ semFit4.2 <- sem(semMod4.2,
 summary(semFit4.1)
 summary(semFit4.2)
 
-## Test the constraint via a LRT:
+## Test for moderation of the verbal effect via a LRT:
 (a1 <- anova(semFit, semFit4.1))
+
+## Test for moderation of the memory effect via a LRT:
 (a2 <- anova(semFit, semFit4.2))
 ```
 
@@ -1282,7 +1429,62 @@ $\Delta \chi^2(`r a2[2, 6]`) = `r round(a2[2, 5], 2)`$, $p = `r round(a2[2, 7], 
 - How many meaningful simple slopes can we define based on the moderation 
 hypotheses considered in this section?
 - Which of these simple slopes are statistically significant?
-- Briefly interpret the patterns of simples slopes.
+- Briefly interpret the patterns of simple slopes.
+
+```{asis}
+**Answers:**
+
+We can pull the simple slopes directly from the estimated, unrestricted SEM. 
+Each group-specific estimate of a focal effect is, by definition, a simple slope. 
+We have:
+
+- 2 focal effects (i.e., the effects of *verbal* and *memory* on *math*)
+- 2 groups defined by the moderator (i.e., boys and girls)
+
+So, we can define 4 meaningful simple slopes.
+```
+
+```{r ssTable, echo = FALSE, results = "asis"}
+tab <- parameterEstimates(semFit, ci = FALSE) %>% 
+  filter(label %in% c("b1f", "b1m", "b2f", "b2m")) %>%
+  select(-block, -label, -se) %>% 
+  mutate(group = case_when(group == 1 ~ "M", 
+                           group == 2 ~ "F")
+         )
+
+tmp <- tab[1:3] %>% apply(1, paste, collapse = " ")
+
+rownames(tab) <- paste(tmp, tab$group, sep = " | ")
+
+tab %>% 
+  rename(Estimate = est, Z = z, P = pvalue) %>% 
+  mutate(P = case_when(P < 0.001 ~ "< 0.001", 
+                       TRUE ~ as.character(P)
+                       )
+         ) %>%
+  select(-c(1:4)) %>% 
+  kable(digits = c(3, 2, 3),
+        align = "r",  
+        caption = "Simple Slopes")
+```
+
+```{asis}
+As shown in Table \@ref(tab:ssTable), all four simple slopes are statistically 
+significant and positive. So, verbal ability and memory ability are significant 
+predictors of math ability for both boys and girls. That being said, we can see 
+some differences in the influence of the focal predictors between the two groups.
+
+Verbal ability seems to be a substantially stronger predictor of mathematical 
+ability for girls than for boys. Since *sex* significantly moderated the effect 
+of *verbal* on *math*, we can infer a true, population-level difference in these 
+simple slopes.
+
+In terms of a qualitative comparison of the estimated simple slopes, we see the 
+opposite pattern for the effect of *memory* on *math*. That is, memory ability 
+seems to be a stronger predictor of mathematical ability for boys than for girls. 
+We should not make too much of this difference, though, because *sex* did not 
+significantly moderate the effect of *memory* on *math*.
+```
 
 ---
 
@@ -1297,6 +1499,8 @@ End of Lab 5
 [miceSyn]: https://doi.org/10.3390/psych3040045
 [outlook_code]: https://github.com/kylelang/lavaan-e-learning/blob/main/code/lab_prep/process_outlook_data.R
 [rockchalk]: https://cran.r-project.org/web/packages/rockchalk/index.html
+[jn]: http://www.worldcat.org/oclc/29082872
+[preacher_et_al_2006]: https://doi.org/10.3102%2F10769986031004437
 [semTools]: https://cran.r-project.org/web/packages/semTools/index.html
 [hs_data]: https://github.com/kylelang/lavaan-e-learning/raw/main/data/holzinger_swineford.rds
 [mbess]: https://cran.r-project.org/web/packages/MBESS/index.html
