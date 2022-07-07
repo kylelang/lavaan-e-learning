@@ -1,0 +1,12 @@
+\frametitle{Use of unconstrained and complement}
+
+In case of 1 hypothesis of interest:\\
+Use the complement.\\
+It acts as another competing (non-overlapping) hypothesis.\\
+~\\
+In case of 2 or more hypotheses of interest:\\
+Use the complement of the set, but this is not yet possible in the software.\\
+So, use the unconstrained as failsafe.\\
+This is used to check whether at least one of the hypothesis is not weak.\\
+Then, the non-weak hypotheses can be compared to all other.
+

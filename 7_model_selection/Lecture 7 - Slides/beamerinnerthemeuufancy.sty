@@ -1,0 +1,194 @@
+%%% Title:    A Beamer Inner Theme that Conforms to the Utrecht University
+%%%           Visual Identity
+%%% Author:   Kyle M. Lang (Port of fancy inner theme by Marko Barisione)
+%%% Created:  2021-10-29 (Original port from inner theme)
+%%% Modified: 2021-11-01
+
+%%%--Original Copyright Notice for Torino Theme------------------------------%%%
+% Copyright 2007 by Marco Barisione
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Public License.
+%%%--------------------------------------------------------------------------%%%
+
+\mode<presentation>
+
+% Use alternative title page style.
+\DeclareOptionBeamer{alternativetitlepage}[true]{\def\beamer@uufancy@alternativetitlepage{#1}}
+
+% Logo to use in the alternative title page.
+\def\beamer@uufancy@titlepagelogo{images/logoUU}
+\DeclareOptionBeamer{titlepagelogo}{\def\beamer@uufancy@titlepagelogo{#1}}
+
+% Scaling factor for title page logo.
+\def\beamer@uufancy@logoscale{0.7}
+\DeclareOptionBeamer{logoscale}{\def\beamer@uufancy@logoscale{#1}}
+
+% Bullet shape.
+\DeclareOptionBeamer{bullet}{\def\beamer@uufancy@bullet{#1}}
+
+\ExecuteOptionsBeamer{alternativetitlepage=true,bullet=circle}
+\ProcessOptionsBeamer
+
+% Colors.
+\setbeamercolor*{lineup}{parent=palette primary}
+\setbeamercolor*{linemid}{parent=palette secondary}
+\setbeamercolor*{linebottom}{parent=palette tertiary}
+\setbeamercolor*{title page header}{parent=palette quaternary}
+
+% Lengths.
+\newlength{\beamer@uufancy@lineup}
+\setlength{\beamer@uufancy@lineup}{0.025\paperheight}
+\newlength{\beamer@uufancy@linemid}
+\setlength{\beamer@uufancy@linemid}{0.015\paperheight}
+\newlength{\beamer@uufancy@linebottom}
+\setlength{\beamer@uufancy@linebottom}{0.01\paperheight}
+
+% Margins.
+\newlength{\beamer@uufancy@normalmargin}
+\setlength{\beamer@uufancy@normalmargin}{0.06\paperwidth}
+\setbeamersize{text margin left=\beamer@uufancy@normalmargin}
+\setbeamersize{text margin right=\beamer@uufancy@normalmargin}
+\setlength\leftmargini{0.6\beamer@uufancy@normalmargin}
+\setlength\leftmarginii{0.6\beamer@uufancy@normalmargin}
+\setlength\leftmarginiii{0.6\beamer@uufancy@normalmargin}
+
+% Normal title page.
+\defbeamertemplate*{title page normal}{uufancy theme}[1][]
+{
+  \vbox{}
+  \vfill
+  \begin{centering}
+    \begin{beamercolorbox}[wd=\paperwidth,sep=8pt,center,#1]{title page header}
+      \usebeamerfont{title}\inserttitle\par%
+      \ifx\insertsubtitle\@empty%
+      \else%
+        \vskip0.25em%
+        {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par}%
+      \fi%     
+    \end{beamercolorbox}%
+    \vskip1em\par
+    \begin{beamercolorbox}[sep=8pt,center,#1]{author}
+      \usebeamerfont{author}\insertauthor
+    \end{beamercolorbox}
+    \begin{beamercolorbox}[sep=8pt,center,#1]{institute}
+      \usebeamerfont{institute}\insertinstitute
+    \end{beamercolorbox}
+    \begin{beamercolorbox}[sep=8pt,center,#1]{date}
+      \usebeamerfont{date}\insertdate
+    \end{beamercolorbox}\vskip0.5em
+    {\usebeamercolor[fg]{titlegraphic}\inserttitlegraphic\par}
+  \end{centering}
+  \vfill
+}
+
+% Alternative title page, you should use this in a frame with the [plain]
+% option.
+\defbeamertemplate*{title page alternative}{uufancy theme}[1][]
+{
+  {\parskip0pt\offinterlineskip%
+  \hbox{\hskip-\Gm@lmargin\hbox{\vbox{%
+  \@tempdima=\textwidth\textwidth=\paperwidth\hsize=\textwidth\def\\{,}\vbox{}\vskip-1.5ex%
+    % Title.
+    \begin{beamercolorbox}[wd=\paperwidth,ht=0.4\paperheight,center,#1]{title page header}
+      \usebeamerfont{title}\inserttitle\par%
+      \ifx\insertsubtitle\@empty%
+      \else%
+        \vskip0.25em%
+        {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par}%
+      \fi%     
+      \vspace{0.125\paperheight}%
+    \end{beamercolorbox}%
+    \vbox{}\vskip-\beamer@uufancy@lineup%
+    \vbox{}\vskip-\beamer@uufancy@linemid%
+    % First line.
+    \hbox{%
+    \begin{beamercolorbox}[wd=0.2\paperwidth,ht=\beamer@uufancy@lineup,dp=0pt]{}%
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=0.8\paperwidth,ht=\beamer@uufancy@lineup,dp=0pt]{lineup}%
+    \end{beamercolorbox}%
+    }%
+    \vbox{}\vskip0ex%
+    % Second line.
+    \hbox{%
+    \begin{beamercolorbox}[wd=0.1\paperwidth,ht=\beamer@uufancy@linemid,dp=0pt]{}%
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=0.9\paperwidth,ht=\beamer@uufancy@linemid,dp=0pt]{linemid}%
+    \end{beamercolorbox}%
+    }%
+    % Third line.
+    \hbox{%
+    \begin{beamercolorbox}[wd=0.5\paperwidth,ht=\beamer@uufancy@linebottom,dp=0pt]{}%
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=0.5\paperwidth,ht=\beamer@uufancy@linebottom,dp=0pt]{linebottom}%
+    \end{beamercolorbox}%
+    }%
+    \vskip0pt%
+  }}%
+  \hskip-\Gm@rmargin%
+  }}\hfil%
+  %
+  \begin{columns}
+      \ifx\beamer@uufancy@titlepagelogo\@empty%
+          \column{\textwidth}
+      \else
+          \column{.5\textwidth}
+              % Logo.
+              \begin{centering}
+                  \vbox{}\vfill
+                  \includegraphics[scale=\beamer@uufancy@logoscale]{\beamer@uufancy@titlepagelogo}
+                  \vfill
+              \end{centering}
+          \column{.5\textwidth}
+       \fi
+          % Authors, institute and date
+          \vskip1em\par
+          \begin{beamercolorbox}[sep=8pt,center,#1]{author}
+            \usebeamerfont{author}\insertauthor
+          \end{beamercolorbox}
+          \begin{beamercolorbox}[sep=8pt,center,#1]{institute}
+            \usebeamerfont{institute}\insertinstitute
+          \end{beamercolorbox}
+          \begin{beamercolorbox}[sep=8pt,center,#1]{date}
+            \usebeamerfont{date}\insertdate
+          \end{beamercolorbox}\vskip0.5em
+          {\usebeamercolor[fg]{titlegraphic}\inserttitlegraphic\par}
+  \end{columns}
+}
+
+\defbeamertemplate*{title page}{uufancy}[1][]
+{
+  \def\beamer@uufancy@truetext{true}%
+  \ifx\beamer@uufancy@alternativetitlepage\beamer@uufancy@truetext%
+    \usebeamertemplate{title page alternative}%
+  \else%
+    \usebeamertemplate{title page normal}%
+  \fi%
+}
+
+% Items.
+\defbeamertemplate{itemize item}{squarealt}%
+{\tiny\raise0.5ex\hbox{\donotcoloroutermaths$\blacksquare$}}
+\defbeamertemplate{itemize subitem}{squarealt}%
+{\tiny\raise0.4ex\hbox{\donotcoloroutermaths$\square$}}
+\defbeamertemplate{itemize subsubitem}{squarealt}%
+{\tiny\raise0.3ex\hbox{\donotcoloroutermaths$\blacksquare$}}
+
+\defbeamertemplate{itemize item}{circlealt}%
+{\small\raise0.2ex\hbox{\donotcoloroutermaths$\bullet$}}
+\defbeamertemplate{itemize subitem}{circlealt}%
+{\small\raise0.1ex\hbox{\donotcoloroutermaths$\circ$}}
+\defbeamertemplate{itemize subsubitem}{circlealt}%
+{\scriptsize\raise0.1ex\hbox{\donotcoloroutermaths$\bullet$}}
+
+\def\circletext{circle}
+\ifx\beamer@uufancy@bullet\circletext
+  \setbeamertemplate{items}[circlealt]
+\else
+  \setbeamertemplate{items}[squarealt]
+\fi
+
+\mode<all>
+

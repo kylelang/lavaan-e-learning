@@ -1,0 +1,7 @@
+\beamer@sectionintoc {1}{IC}{4}{0}{1}
+\beamer@sectionintoc {2}{AIC in R}{20}{0}{2}
+\beamer@sectionintoc {3}{IC weights}{28}{0}{3}
+\beamer@sectionintoc {4}{GORICA in R}{36}{0}{4}
+\beamer@sectionintoc {5}{Complement}{42}{0}{5}
+\beamer@sectionintoc {6}{Extra}{49}{0}{6}
+\beamer@sectionintoc {7}{The end}{53}{0}{7}

@@ -1,0 +1,681 @@
+---
+title: "Lab Day x: Model Selection"
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+Today’s lab meeting consists of three exercises, each illustrating the evaluation of theory-based hypotheses. The first exercise does hypotheses in a two-factor confirmatory factor analysis; the second in a latent regression; and the third in a multigroup laten regression.
+
+Practical information: 
+
+* All the files for these exercises can be found at the LLL platform. 
+Make sure to unzip the files. The folder containing these files will be your working directory.
+* Solutions to the exercises can be found in the Solutions folder. 
+We provided R scripts for doing each of the exercises with the R packages lavaan and restrictor.
+
+Data:
+
+The examples below will all be applied to the same data set: a simulated data set based on the Sesame Street data (Stevens, 1996), which is included as the dataset ‘sesamsim’ in the gorica package. Thus, when you install and load the gorica package, the object sesamsim exists, which contains all the data. 
+
+Since the data sets contains simulated data, there are no missing values. All the variables are numeric, which does not affect the results in these exercises since there are no grouping variables with more than two level. We need only one grouping variable, namely sex, which consists of two levels. It can be helpful though to make it a factor such that labels can be assigned to the two levels:
+
+```{r, warning=F, message=F, eval=F}
+sesamesim$sex <- factor(sesamesim$sex, labels = c("boy", "girl"))
+```
+
+The exercises concern the effect of watching one year of the tv-series “Sesame Street” on the knowledge of numbers of N = 240 children aged between 34 to 69 months. Several variables have been measured before and after watching Sesame Street for one year: Knowledge of numbers before (Bn) and after (An) watching, and analogously, knowledge of body parts (Bb and Ab), letters (Bl and Al), forms (Bf and Af), relationships (Br and Ar), and classifications (Bc and Ac). The score ranges on these variables ranges from ‘1 to 20’ to ’1 to 70‘. In the exercises, we will use these variables as well as the following ones: biological age in months (age; score range: 34 to 69), the Peabody test measuring the mental age of children (peabody; score range: 15 to 89), and gender (sex; 1 = boy, 2 = girl).
+
+### Exercise 1: Confirmatory Factor Analysis
+
+In this exercise, we will inspect the two-factor confirmatory factor analysis (CFA), in which the A(fter) measurements (i.e., Ab, Al, Af, An, Ar, and Ac) load on the factor A, and the B(efore) measurements load on the factor B.
+
+**a. It is a good exercise to draw the model you plan to estimate for yourself.**
+
+
+**b. Specify the two-factor CFA model (such that it can be used in the lavaan function later on)**
+
+For ease of specifying the hypotheses (done next), label the parameters; e.g. use for the factor Ab: A1*Ab
+
+<details><summary><b>Click to show answers</b></summary>
+
+**Getting started:**
+
+```{r, warning=F, message=F}
+# Load the restriktor and lavaan libraries. 
+
+# install this package first (once)
+if (!require("restriktor")) install.packages("restriktor")
+
+# install this package first (once)
+if (!require("lavaan")) install.packages("lavaan")
+library(restriktor)
+library(lavaan)
+
+# Also load the gorica library because it contains the data 'sesamesim'
+if (!require("gorica")) install.packages("gorica") # install this package first (once)
+library(gorica)
+```
+
+**Specify the CFA model:**
+
+Note: the `goric` function cannot use the default labeling, so give your own labels to estimates by including them in the `lavaan` model:
+
+```{r, warning=F, message=F}
+model1 <- '
+    A =~ A1*Ab + A2*Al + A3*Af + A4*An + A5*Ar + A6*Ac 
+    B =~ B1*Bb + B2*Bl + B3*Bf + B4*Bn + B5*Br + B6*Bc 
+'
+```
+
+</details>
+
+<br>
+
+**c. Come up with one or more hypotheses and a failsafe hypothesis.**
+
+* On paper, hypotheses are specified in terms of population parameters (often Greek letters). In R, hypotheses are specified in terms of the model parameters used in 1b).
+* Make sure that the comparison of factor loadings or comparison of factor loadings to a pre-specified value is fair. Hint: You probably have hypotheses w.r.t. standardized model parameters.
+* In the solution file, we evaluate one theory-based hypothesis against its complement. The hypothesis states that each standardized factor loading is larger than .6, meaning that the indicators are strongly related to the factors to which they are assigned. 
+
+<details><summary><b>Click to show answers</b></summary>
+
+**Hypothesis of interest:**
+
+Formulate the hypothesis of interest (here, consisting of 12 order restrictions). Notably, using our own labeling:
+
+```{r, warning=F, message=F}
+H1.1 <- "
+A1 > .6; A2 > .6; A3 > .6; A4 > .6; A5 > .6; A6 > .6; 
+B1 > .6; B2 > .6; B3 > .6; B4 > .6; B5 > .6; B6 > .6
+"
+```
+
+Note: The restrictions are 'connected' by using ';'
+
+</details>
+
+<br>
+
+**d. Run the two-factor CFA specified in 1b).**
+
+<details><summary><b>Click to show answers</b></summary>
+
+**Fit the CFA model:**
+
+```{r, warning=F, message=F}
+fit1 <- sem(model1, data = sesamesim, std.lv = TRUE)
+
+# summary(fit1, standardize = T)
+# fitmeasures(fit1)
+```
+
+**Plot the model:**
+```{r, warning=F, message=F}
+# install this package first (once)
+if (!require("lavaanPlot")) install.packages("lavaanPlot") 
+library(lavaanPlot)
+
+# plot the model
+lavaanPlot(model = fit1, node_options = list(shape = "box", fontname = "Helvetica"), 
+           edge_options = list(color = "grey"), coefs = T, stand = T, covs = T)
+```
+
+</details>
+
+<br>
+
+**e. Use the goric() function in the restriktor package to evaluate the hypotheses from 1c) with the GORICA (type = "gorica").**
+
+* In case there is one hypothesis of interest, then your failsafe or competing hypothesis is its complement. Then, use: `comparison = "complement"`
+* In case the hypotheses address standardized model parameters, also include the argument: `standardized = TRUE`
+
+*Interpret the output. What are your conclusions?*
+
+<details><summary><b>Click to show answers</b></summary>
+
+Note: we need standardized estimates for a meaningful comparison:
+* 'standardized = TRUE'.
+
+Calculate `GORICA` values and weights for H1.1 and its complement: 
+* 'comparison = "complement"'.
+
+**Use `goric()` to test the different hypotheses:**
+
+Set a seed value, since penalty (PT) is obtained via sampling. 
+
+*Note: At the bottom, one can find information regarding a sensitivity check.*
+
+```{r, message=F, warning=FALSE}
+set.seed(100) 
+results1 <- goric(fit1, H1.1, comparison = "complement", type = "gorica", 
+                    standardized = TRUE) 
+```
+
+**Get a summary:**
+
+In this case, there are 12 order restrictions and thus the computation time is long. See below for possibilities to improve the computation time.
+
+```{r, message=F, warning=FALSE}
+# Note: This also includes the comparison of hypotheses
+summary(results1)
+```
+
+The order-restricted hypothesis ‘H1.1’ has 85.561 times more support than its complement.
+
+**Possible conclusion:**
+
+* The table shows that the hypothesis of interest (H1.1) has the largest fit and the smallest complexity and, thus, the smallest `GORICA` value and highest `GORICA` weight. 
+* The `GORICA` weight for H1 (against it complement) is 0.988.
+* Hence, the support in the data in favor of H1 is overwhelming: H1.1 is 0.988/0.012 = approx. 86 times more supported than its complement.
+* Thus, there is overwhelming support for the hypothesis that each factor loading is larger than .6.
+
+**Extra:**
+
+Note: The default way of calculating the PT in `goric()` is slow(er) when the number of parameters is large. Here, there are 12 parameters, so may want to use: `mix.weights = "boot"`. That is, we will use bootstrap in the calculation of the level probabilities (LPs) needed in PT. The results of course do not change, but the computation time may. 
+
+```{r, message=F, warning=FALSE}
+# install this package first (once)
+if (!require("parallel")) install.packages("parallel")
+library(parallel)
+
+# Determine number of cores that can be used, to fasten the calculation of PT even more.
+nrCPUcores <- detectCores(all.tests = FALSE, logical = TRUE)
+
+set.seed(100)
+results1_b <- goric(fit1, H1.1, comparison = "complement", type = "gorica", standardized = TRUE, 
+                   mix.weights = "boot", parallel = "snow", ncpus = nrCPUcores, mix.bootstrap = 99999)
+summary(results1_b) # Note: This also includes the comparison of hypotheses
+```
+
+
+**Sensitivity check:**
+
+Check the influence of seed on PT (negligible):
+
+```{r, message=F, warning=FALSE}
+set.seed(100)
+goric(fit1, H1.1, comparison = "complement", type = "gorica", standardized = TRUE, 
+      mix.weights = "boot", parallel = "snow", ncpus = nrCPUcores, mix.bootstrap = 99999)$result[,3]
+
+results1_b$result[,3]
+
+set.seed(100100)
+goric(fit1, H1.1, comparison = "complement", type = "gorica", standardized = TRUE, 
+       mix.weights = "boot", parallel = "snow", ncpus = nrCPUcores, mix.bootstrap = 99999)$result[,3]
+
+set.seed(123456)
+goric(fit1, H1.1, comparison = "complement", type = "gorica", standardized = TRUE, 
+       mix.weights = "boot", parallel = "snow", ncpus = nrCPUcores, mix.bootstrap = 99999)$result[,3]
+```
+
+</details>
+
+<br>
+
+### Exercise 2: Latent regression
+
+In this exercise, we will inspect a latent regression model. The factors B and A have the same indicators as in Exercise 1. The difference is the addition of a latent regression in which A is regressed on B, age, and peabody, to investigate whether children’s knowledge after watching Sesame Street for a year is predicted by their knowledge one year before, as well as by their biological and mental age (which have a correlation of .24, so there is no multicollinearity).
+
+Now, repeat the steps in Exercise 1 but now for this model, summarized by:
+
+**a. Draw the model.**
+
+<br>
+
+**b. Specify the latent regression model, using labels.**
+
+<details><summary><b>Click to show answers</b></summary>
+
+**Getting started:**
+
+```{r, warning=F, message=F, eval=F}
+# Load the restriktor and lavaan libraries. 
+
+# install this package first (once)
+if (!require("restriktor")) install.packages("restriktor")
+# install this package first (once)
+if (!require("lavaan")) install.packages("lavaan") 
+
+library(restriktor)
+library(lavaan)
+
+# Also load the gorica library because it contains the data 'sesamesim'
+# install this package first (once)
+if (!require("gorica")) install.packages("gorica") 
+
+library(gorica)
+```
+
+**Specify the latent regression model:**
+
+Note: The goric function cannot use the default labeling, so give your own labels to estimates by including them in the lavaan model:
+
+```{r, message=F, warning=FALSE}
+model2 <- '
+    A =~ Ab + Al + Af + An + Ar + Ac 
+    B =~ Bb + Bl + Bf + Bn + Br + Bc 
+    A ~ AB*B + AAge*age + APeabody*peabody
+'
+```
+
+Note on age and peabody (i.e., biological and mental age): 
+
+```{r, message=F, warning=FALSE}
+cor(sesamesim$peabody, sesamesim$age)
+```
+
+</details>
+
+<br>
+
+**c. Come up with one or more hypotheses and a failsafe hypothesis.**
+
+In the solution file, we evaluate three theory-based hypotheses (H1-H3) on standardized regression coefficients. Since these three do not overlap all the possible theories, we include the unconstrained as failsafe.
+
+* **H1:** specifies that a larger score on B corresponds to a larger score on A (i.e., a positive relation between B and A) and that age and peabody do not predict A.
+
+* **H2:** specifies that the positive relation between B and A is stronger than the positive relation between peabody and A and that age cannot be used to predict A.
+
+* **H3:** specifies that the predictive power of B is larger than that of peabody, which, in turn, is larger than that of age which in turn is positive. 
+
+Notably, only in case all these hypotheses are of interest, these should all be included in the set; especially if there is overlap like here.
+
+<details><summary><b>Click to show answers</b></summary>
+
+**Specify hypothesis of interest:**
+
+Formulate the hypotheses of interest. Notably, using our own labeling:
+
+```{r, message=F, warning=FALSE}
+H1.2 <- "AB > APeabody = AAge = 0"
+H2.2 <- "AB > APeabody > AAge = 0" 
+H3.2 <- "AB > APeabody > AAge > 0"
+```
+
+</details>
+
+<br>
+
+**d. Run the latent regression model.**
+
+<details><summary><b>Click to show answers</b></summary>
+
+**Fit the model:**
+
+Fit the confirmatory factor model using the `lavaan::sem` function
+
+```{r, message=F, warning=FALSE}
+fit2 <- sem(model2, data = sesamesim, std.lv = TRUE)
+```
+
+**Plot the results:**
+
+```{r, message=F, warning=FALSE}
+# install this package first (once)
+if (!require("lavaanPlot")) install.packages("lavaanPlot") 
+library(lavaanPlot)
+
+# plot
+lavaanPlot(model = fit2, node_options = list(shape = "box", fontname = "Helvetica"), 
+           edge_options = list(color = "grey"), coefs = T, stand = T, covs = T)
+
+# Alternative
+# install this package first (once)
+if (!require("tidySEM")) install.packages("tidySEM") 
+library(tidySEM)
+
+# plot
+graph_sem(fit2)
+
+# Another alternative
+# install this package first (once)
+if (!require("semPlot")) install.packages("semPlot") 
+library(semPlot)
+
+# plot
+semPaths(fit2, "par", weighted = FALSE, nCharNodes = 7, shapeMan = "rectangle",
+         sizeMan = 8, sizeMan2 = 5)
+```
+
+</details>
+
+<br>
+
+**e. Evaluate the hypotheses with the GORICA.**
+
+*Interpret the output. What are your conclusions? *
+
+<details><summary><b>Click to show answers</b></summary>
+
+**Use `goric()` to test the different hypotheses:**
+
+Call `goric` (`type = "gorica"`).
+
+Note: We need standardized estimates for a meaningful comparison. Because there is more than 1 hypothesis, we need to use the unconstrained as failsafe, which is the default option in goric().
+
+```{r, message=F, warning=FALSE}
+set.seed(100)
+results2 <- goric(fit2, H1.2, H2.2, H3.2, type = "gorica", standardized = TRUE) 
+summary(results2) # Note: This also includes the comparison of hypotheses
+```
+
+Note: In case of equal log-likelihood (loglik) values, the ratio weights are solely based on the difference in penalty values.
+
+**Possible conclusions:**
+
+* Since the hypotheses overlap and the most restricted one (H1.2) receives the most support (and is not weak), H1.2 is the preferred hypothesis. 
+* Because the support for the other hypotheses also contain support for H1.2, one could also compare H1.2 to its complement, see below. This shows convincing support for H1.2. 
+* Thus, there is support for the hypothesis that a larger score on B corresponds to a larger score on A (i.e., a positive effect) and that age and peabody do not predict A. Based on the evaluation below, it is approximately 7 times more likely than its complement containing competing hypotheses.
+
+Note: Hypotheses are nested, so hypotheses share support. Therefore, we examine the best of these against its compliment:
+
+```{r, message=F, warning=FALSE}
+set.seed(100)
+results2_c <- goric(fit2, H1.2, comparison = "complement", type = "gorica", 
+                    standardized = TRUE) 
+summary(results2_c) # Note: This also includes the comparison of hypotheses
+#
+#        model  loglik  penalty   gorica  gorica.weights
+#1        H1.2   6.836    0.500  -12.672           0.874
+#2  complement   6.894    2.500   -8.789           0.126
+```
+
+The order-restricted hypothesis ‘H1.2’ has  6.967 times more support than its complement.
+
+**Sensitivity check:**
+
+Check the influence of seed in PT (of H3) (negligible):
+
+```{r, message=F, warning=FALSE}
+set.seed(100)
+goric(fit2, H1.2, H2.2, H3.2, type = "gorica", standardized = TRUE)$result[,3]
+results2$result[,3]
+
+set.seed(100100)
+goric(fit2, H1.2, H2.2, H3.2, type = "gorica", standardized = TRUE)$result[,3]
+
+set.seed(123456)
+goric(fit2, H1.2, H2.2, H3.2, type = "gorica", standardized = TRUE)$result[,3]
+```
+
+</details>
+
+<br>
+
+### Exercise 3: Multigroup latent regression
+
+In this exercise, we will inspect a multi-group regression model, by including the grouping variable gender (sex) in a regression model. This means that there is one regression model for girls and one for boys, where the standardized model parameter estimates may differ between girls and boys. 
+
+In the regression, postnumb is regressed on prenumb, to investigate whether children’s knowledge of numbers after watching Sesame Street for a year is predicted by their knowledge of numbers one year before. 
+
+Now, repeat the steps in Exercise 1 but now for this model, summarized by:
+
+**a. Draw the model.** 
+
+<br>
+
+**b. Specify the multigroup regression model, using labels.**
+
+<details><summary><b>Click to show answers</b></summary>
+
+**Getting started:**
+
+Load the `restriktor` and `lavaan` libraries:
+
+```{r, warning=F, message=F, eval=F}
+# install this package first (once)
+if (!require("restriktor")) install.packages("restriktor") 
+# install this package first (once)
+if (!require("lavaan")) install.packages("lavaan") 
+
+library(restriktor)
+library(lavaan)
+
+# Also load the gorica library because it contains the data 'sesamesim'
+# install this package first (once)
+if (!require("gorica")) install.packages("gorica") 
+library(gorica)
+```
+
+Make sure that the variable 'sex' is a factor with the right labels:
+
+```{r, warning=F, message=F}
+sesamesim$sex <- factor(sesamesim$sex, labels = c("boy", "girl"))
+```
+
+**Specify the regression model:**
+
+Specify the multiple group regression model, using own labels:
+
+```{r, warning=F, message=F}
+model3 <- '
+    postnumb ~ c(Pre_b, Pre_g)*prenumb 
+'
+```
+
+</details>
+
+<br>
+
+**c. Come up with one or more hypotheses and a failsafe hypothesis.**
+
+In the solution file, we evaluate one theory-based hypothesis against its complement. The hypothesis states that the standardized relationship between postnumb and prenumb is higher for girls than for boys. In this case, the complement states that the standardized relationship between postnumb and prenumb is lower for girls than for boys.
+
+<details><summary><b>Click to show answers</b></summary>
+
+**Hypothesis of interest:**
+
+Formulate the hypotheses of interest using our own labeling:
+
+```{r, warning=F, message=F}
+H1.3 <- "Pre_b < Pre_g"
+```
+
+</details>
+
+<br>
+
+**d. Run the multigroup regression model.**
+
+<details><summary><b>Click to show answers</b></summary>
+
+**Fit the regression model:**
+
+Fit the multiple group regression model using the lavaan sem function:
+
+```{r, warning=F, message=F}
+fit3 <- sem(model3, data = sesamesim, std.lv = TRUE, group = "sex")
+```
+
+**Plot the results:**
+
+```{r, warning=F, message=F}
+# install this package first (once)
+#if (!require("lavaanPlot")) install.packages("lavaanPlot") 
+#library(lavaanPlot)
+
+# plot
+lavaanPlot(model = fit3, node_options = list(shape = "box", fontname = "Helvetica"),
+           edge_options = list(color = "grey"), coefs = T, stand = T, covs = T)
+```
+
+</details>
+
+<br>
+
+**e. Evaluate the hypotheses with the `GORICA.`**
+
+*Note: Interpret the output. What are your conclusions? *
+
+<details><summary><b>Click to show answers</b></summary>
+
+**Use `goric` to test the hypotheses of interest:**
+
+Call `goric` (`type = "gorica"`). 
+
+Note: we need standardized estimates for a meaningful comparison (`standardized = TRUE`).
+
+Calculate `GORICA` values and weights for H1.3 and its complement (`comparison = "complement"`).
+
+```{r, warning=F, message=F}
+set.seed(100)
+results3 <- goric(fit3, H1.3, comparison = "complement", type = "gorica", 
+                  standardized = T) 
+
+summary(results3) # Note: This also includes the comparison of hypotheses
+```
+
+**Sensitivity check:**
+
+Check the influence of seed in PT (none):
+
+```{r, warning=F, message=F}
+set.seed(100)
+goric(fit3, H1.3, comparison = "complement", 
+      type = "gorica", standardized = T)$result[,3]
+
+results3$result[,3]
+
+set.seed(100100)
+goric(fit3, H1.3, comparison = "complement", 
+      type = "gorica", standardized = T)$result[,3]
+
+set.seed(123456)
+goric(fit3, H1.3, comparison = "complement", 
+      type = "gorica", standardized = T)$result[,3]
+```
+
+</details>
+
+<br>
+
+#### Extra
+
+Do the same evaluation but now use the standardized estimates and their covariance matrix as input to the goric function (instead of the lavaan object). 
+
+E.g., goric(fit, H1, comparison = "complement", type = "gorica") instead of goric(est, VCOV = vcov, H1, comparison = "complement", type = "gorica ")
+
+<details><summary><b>Click to show answers</b></summary>
+
+**Getting started:**
+
+Load the restriktor and lavaan libraries:
+
+```{r, warning=F, message=F, eval=F}
+# install this package first (once)
+if (!require("restriktor")) install.packages("restriktor") 
+# install this package first (once)
+if (!require("lavaan")) install.packages("lavaan") 
+
+library(restriktor)
+library(lavaan)
+
+# Also load the gorica library because it contains the data 'sesamesim'
+# install this package first (once)
+if (!require("gorica")) install.packages("gorica") 
+
+library(gorica)
+```
+
+Make sure that the variable 'sex' is a factor with the right labels:
+
+```{r, warning=F, message=F}
+sesamesim$sex <- factor(sesamesim$sex, labels = c("boy", "girl"))
+```
+
+**Specify the regression model:**
+
+Specify the multiple group regression model:
+
+```{r, warning=F, message=F}
+model3 <- '
+    postnumb ~ prenumb 
+'
+```
+
+**Hypothesis of interest:**
+
+Formulate the hypotheses of interest. Notably, using our own labeling (which should be the same as those used below):
+
+```{r, warning=F, message=F}
+H1.3 <- "Pre_boy < Pre_girl"
+```
+
+**Fit the regression model:**
+
+Fit the multiple group regression model using the lavaan sem function:
+
+```{r, warning=F, message=F}
+fit3 <- sem(model3, data = sesamesim, std.lv = TRUE, group = "sex")
+```
+
+
+**Plot the results:**
+
+```{r, warning=F, message=F}
+# install this package first (once)
+#if (!require("lavaanPlot")) install.packages("lavaanPlot")
+library(lavaanPlot)
+
+#plot 
+lavaanPlot(model = fit3, node_options = list(shape = "box", fontname = "Helvetica"), edge_options = list(color = "grey"), coefs = T, stand = T, covs = T)
+```
+
+**Use `goric` to test the hypotheses of interest:**
+
+Call `goric` (`type = "gorica"`). Note: we need standardized estimates for a meaningful comparison (`standardized = TRUE`).
+
+Now, we will extract the estimates ourselves and use that.
+
+Obtain standardized(!) estimates from lavaan object (labelled or unlabelled):
+
+```{r, warning=F, message=F}
+est_3 <- lavaan::standardizedsolution(fit3)[c(1,6), 'est.std']
+# Note: This should be the same as the labeling used the H1.3.
+names(est_3) <- c("Pre_boy", "Pre_girl") 
+
+# Note: Use this in the 'VCOV = vcov_3' command.
+vcov_3 <- lavInspect(fit3, "vcov.std.all")[c(1,4), c(1,4)] 
+```
+
+Calculate `GORICA` values and weights for H1.3 and its complement (`comparison = "complement"`).
+
+```{r, warning=F, message=F}
+set.seed(100)
+results3 <- goric(est_3, VCOV = vcov_3, H1.3, comparison = "complement", type = "gorica") 
+summary(results3) # Note: This also includes the comparison of hypotheses
+```
+
+**Possible conclusions:**
+
+* This output table shows that the hypothesis of interest and its compliment are equally likely, since both have a weight of approximately .50. That is, they have about the same support.
+* Since the hypotheses do not overlap and are equally complex (i.e., have the same penalty value), this implies that their boundary is the preferred hypothesis, that is, H0: Pre_boy = Pre_girl.
+* Thus, there is support for the boundary of the hypothesis of interest and its complement, indicating that the relationship between postnumb and prenumb is equally high for girls and boys.
+
+**Sensitivity check:**
+
+Check the influence of seed in PT (none):
+
+```{r, warning=F, message=F}
+set.seed(100)
+goric(est_3, VCOV = vcov_3, H1.3, comparison = "complement", 
+      type = "gorica")$result[,3]
+
+results3$result[,3]
+
+set.seed(100100)
+goric(est_3, VCOV = vcov_3, H1.3, comparison = "complement", 
+      type = "gorica")$result[,3]
+
+set.seed(123456)
+goric(est_3, VCOV = vcov_3, H1.3, comparison = "complement", 
+      type = "gorica")$result[,3]
+```
+
+</details>
+
+<br>
+
+

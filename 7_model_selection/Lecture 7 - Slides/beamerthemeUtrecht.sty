@@ -1,0 +1,87 @@
+%%% Title:    A Torino-Based Beamer Theme that Conforms to the Utrecht
+%%%           University Visual Identity
+%%% Author:   Kyle M. Lang (Port of Torino theme by Marko Barisione)
+%%% Created:  2021-10-29 (Original port from Torino theme)
+%%% Modified: 2021-11-01
+
+%%% PROVIDES THEME: Utrecht
+
+%%%--Original Copyright Notice for Torino Theme------------------------------%%%
+% Copyright 2007 by Marco Barisione
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Public License.
+%%%--------------------------------------------------------------------------%%%
+
+%%% The original theme is available at: https://github.com/bbatsov/beamer-torino-theme
+
+\mode<presentation>
+
+\DeclareOptionBeamer{alternativetitlepage}[true]{\PassOptionsToPackage{alternativetitlepage=#1}{beamerinnerthemeuufancy}}
+\DeclareOptionBeamer{titlepagelogo}{\PassOptionsToPackage{titlepagelogo=#1}{beamerinnerthemeuufancy}}
+\DeclareOptionBeamer{logoscale}{\PassOptionsToPackage{logoscale=#1}{beamerinnerthemeuufancy}}
+\DeclareOptionBeamer{bullet}{\PassOptionsToPackage{bullet=#1}{beamerinnerthemeuufancy}}
+\DeclareOptionBeamer{pageofpages}{\PassOptionsToPackage{pageofpages=#1}{beamerouterthemeuulines}}
+\DeclareOptionBeamer{titleline}[true]{\PassOptionsToPackage{titleline=#1}{beamerouterthemeuulines}}
+\DeclareOptionBeamer{watermark}{\PassOptionsToPackage{watermark=#1}{beamerouterthemeuulines}}
+\DeclareOptionBeamer{watermarkheight}{\PassOptionsToPackage{watermarkheight=#1}{beamerouterthemeuulines}}
+\DeclareOptionBeamer{watermarkheightmult}{\PassOptionsToPackage{watermarkheightmult=#1}{beamerouterthemeuulines}}
+
+\ProcessOptionsBeamer
+
+\useinnertheme{uufancy}
+\useoutertheme{uulines}
+\usecolortheme{uu}
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{frametitle continuation}{}
+
+%% Use Open Sans as the default sans-serif font
+\usepackage[defaultsans, scale=0.95]{opensans} 
+
+%% Use Merriweather as the default seriffed font
+\usepackage[rm]{merriweather} 
+
+%% Typeset titles in serif font
+\setbeamerfont{title}{family=\rmfamily}
+\setbeamerfont{frametitle}{family=\rmfamily}
+\setbeamerfont{framesubtitle}{family=\rmfamily}
+
+%% Typeset math in serif font
+\usefonttheme[onlymath]{serif} 
+
+%%%-Command Definitions------------------------------------------------------%%%
+
+%% Quick color changes:
+\newcommand{\red}[0]{\textcolor{red}}
+\newcommand{\violet}[0]{\textcolor{violet}}
+\newcommand{\green}[0]{\textcolor{green}}
+\newcommand{\blue}[0]{\textcolor{blue}}
+
+%% Hide text:
+\newcommand{\mask}[0]{\textcolor{white}}
+%\newcommand{\comment}[1]{}
+
+%% Vertical spacing:
+\newcommand{\va}[0]{\vspace{12pt}}
+\newcommand{\vb}[0]{\vspace{6pt}}
+\newcommand{\vc}[0]{\vspace{3pt}}
+\newcommand{\vx}[1]{\vspace{#1pt}}
+
+%% Insert a call-out slide to introduce a new section:
+\newcommand{\sectionslide}[1]{%
+  \section{#1}
+  
+  \begin{frame}{}%
+    
+    \begin{center}%
+      \huge{\textrm{\textsc{#1}}}%
+    \end{center}%
+    
+  \end{frame}%
+}
+
+\mode
+<all>
