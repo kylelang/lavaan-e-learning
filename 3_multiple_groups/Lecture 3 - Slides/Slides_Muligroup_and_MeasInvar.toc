@@ -1,0 +1,5 @@
+\beamer@sectionintoc {1}{Multi-group (MG) analysis}{3}{0}{1}
+\beamer@sectionintoc {2}{MG regression in R}{6}{0}{2}
+\beamer@sectionintoc {3}{Measurement invariance (MI)}{16}{0}{3}
+\beamer@sectionintoc {4}{MI in R}{35}{0}{4}
+\beamer@sectionintoc {5}{The end}{46}{0}{5}

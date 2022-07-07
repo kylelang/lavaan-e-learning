@@ -1,0 +1,165 @@
+%%% Title:    A Beamer Outer Theme that Conforms to the Utrecht University
+%%%           Visual Identity
+%%% Author:   Kyle M. Lang (Port of decolines theme by Marko Barisione)
+%%% Created:  2021-10-29 (Original port from decolines theme)
+%%% Modified: 2021-11-01
+
+%%%--Original Copyright Notice for Torino Theme------------------------------%%%
+% Copyright 2007 by Marco Barisione
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Public License.
+%%%--------------------------------------------------------------------------%%%
+
+\mode<presentation>
+
+% String used between the current page and the total page count.
+\def\beamer@uulines@pageofpages{of}
+\DeclareOptionBeamer{pageofpages}{\def\beamer@uulines@pageofpages{#1}}
+
+% Show a line below the frame title.
+\DeclareOptionBeamer{titleline}[true]{\def\beamer@uulines@titleline{#1}}
+
+% Image used for the watermark.
+\def\beamer@uulines@watermarkorig{images/watermarkUU}
+\DeclareOptionBeamer{watermark}{\def\beamer@uulines@watermarkorig{#1}}
+
+% Height of the watermark.
+\def\beamer@uulines@watermarkheight{100pt}
+\DeclareOptionBeamer{watermarkheight}{\def\beamer@uulines@watermarkheight{#1}}
+
+% The original image height is watermarkheightmult * watermarkheight.
+\def\beamer@uulines@watermarkheightmult{1}
+\DeclareOptionBeamer{watermarkheightmult}{\def\beamer@uulines@watermarkheightmult{#1}}
+
+\ExecuteOptionsBeamer{titleline=true}
+\ProcessOptionsBeamer
+
+% Enable/disable the watermark.
+\def\watermarkon{%
+  \def\beamer@uulines@watermark{\beamer@uulines@watermarkorig}%
+}
+\def\watermarkoff{\def\beamer@uulines@watermark{}}
+
+% Initially enable the watermark.
+\watermarkon
+
+% Colors.
+\setbeamercolor*{lineup}{parent=palette primary}
+\setbeamercolor*{linemid}{parent=palette secondary}
+\setbeamercolor*{linebottom}{parent=palette tertiary}
+\setbeamercolor*{headertop}{parent=palette secondary}
+\setbeamercolor*{headerbottom}{parent=palette tertiary}
+
+% Lengths
+\newlength{\beamer@uulines@lineup}
+\setlength{\beamer@uulines@lineup}{.025\paperheight}
+\newlength{\beamer@uulines@linemid}
+\setlength{\beamer@uulines@linemid}{.015\paperheight}
+\newlength{\beamer@uulines@linebottom}
+\setlength{\beamer@uulines@linebottom}{.01\paperheight}
+
+% The height of the watermark part below the 3 bottom lines.
+\newlength{\beamer@uulines@watermarkheightbottom}
+\addtolength{\beamer@uulines@watermarkheightbottom}{\beamer@uulines@lineup}
+\addtolength{\beamer@uulines@watermarkheightbottom}{\beamer@uulines@linemid}
+\addtolength{\beamer@uulines@watermarkheightbottom}{\beamer@uulines@linebottom}
+
+% The height of the watermark part over the 3 bottom lines before shrinking.
+\newlength{\beamer@uulines@watermarkheightupperorig}
+\setlength{\beamer@uulines@watermarkheightupperorig}{\beamer@uulines@watermarkheight}
+\addtolength{\beamer@uulines@watermarkheightupperorig}{-\beamer@uulines@watermarkheightbottom}
+\multiply\beamer@uulines@watermarkheightupperorig by \beamer@uulines@watermarkheightmult
+
+% Footer.
+\defbeamertemplate*{footline}{uulines theme}
+{
+  \leavevmode%
+  % First line (including page number).
+  \hbox{%
+    \begin{beamercolorbox}[wd=0.2\paperwidth,ht=\beamer@uulines@lineup,dp=0pt,sep=2pt,center]{}%
+      \usebeamerfont{palette primary}\insertframenumber{} \beamer@uulines@pageofpages{} \inserttotalframenumber%
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=0.8\paperwidth,ht=\beamer@uulines@lineup,dp=0pt]{lineup}%
+    \end{beamercolorbox}%
+  } %
+  % I have not idea why, but we need this extra box to get the footer/page
+  % numbers to render correctly on Windows.
+  \hbox{} 
+  % Second line.
+  \hbox{%
+    \begin{beamercolorbox}[wd=\paperwidth,ht=\beamer@uulines@linemid,dp=0pt]{linemid}%
+    \end{beamercolorbox}%
+  } %
+  % Third line.
+  \hbox{%
+    \begin{beamercolorbox}[wd=0.1\paperwidth,ht=\beamer@uulines@linebottom,dp=0pt]{}%
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=0.9\paperwidth,ht=\beamer@uulines@linebottom,dp=0pt]{linebottom}%
+    \end{beamercolorbox}%
+  }%
+}
+
+\defbeamertemplate*{headline}{uulines theme}
+{
+  \leavevmode%
+  % First line.
+  \hbox{%
+  \begin{beamercolorbox}[wd=\paperwidth,ht=\beamer@uulines@lineup,dp=0pt]{headertop}%
+  \end{beamercolorbox}%
+  } %
+  % Second line.
+  \hbox{%
+  \begin{beamercolorbox}[wd=\paperwidth,ht=\beamer@uulines@linebottom,dp=0pt]{headerbottom}%
+  \end{beamercolorbox}%
+  } %
+  \vskip0pt%
+}
+
+\defbeamertemplate*{frametitle}{uulines theme}[1][left]
+{
+  \ifbeamercolorempty[bg]{frametitle}{}{\nointerlineskip}%
+  \@tempdima=\textwidth%
+  \advance\@tempdima by\beamer@leftmargin%
+  \advance\@tempdima by\beamer@rightmargin%
+  \vbox{}\vskip-0.8\beamer@leftmargin%
+  \begin{beamercolorbox}[sep=\beamer@leftmargin,#1,wd=\the\@tempdima]{}
+    \usebeamerfont{frametitle}\usebeamercolor[bg]{framesubtitle}%
+    \vbox{}\vskip0ex%
+    \if@tempswa\else\csname beamer@fte#1\endcsname\fi%
+    \strut\insertframetitle\strut\par%
+    {%
+      \ifx\insertframesubtitle\@empty%
+      \else%
+      {\usebeamerfont{framesubtitle}\usebeamercolor[bg]{framesubtitle}\insertframesubtitle\strut\par}%
+      \fi
+    }%
+    \vskip-0.9ex%
+    \if@tempswa\else\vskip-\beamer@leftmargin\fi
+  \end{beamercolorbox}%
+  \def\beamer@uulines@truetext{true}%
+  \ifx\beamer@uulines@titleline\beamer@uulines@truetext%
+    \vskip-.5\beamer@leftmargin%
+    \begin{beamercolorbox}[wd=\textwidth,ht=0.1ex,dp=0ex]{linemid}%
+    \end{beamercolorbox}%
+  \fi
+}
+
+% Frame title continuations, default
+\defbeamertemplate*{frametitle continuation}{uulines theme}{(\insertcontinuationcount)}
+
+\defbeamertemplate*{sidebar right}{uulines theme}
+{
+  \vskip.1\beamer@leftmargin%
+  \llap{\insertlogo\hskip0.5\beamer@leftmargin}%
+  \vfill%
+  \if\beamer@uulines@watermark\@empty\else%
+  \llap{\includegraphics[height=\beamer@uulines@watermarkheight]{\beamer@uulines@watermark}}%
+  \vskip-\beamer@uulines@watermarkheightbottom%
+  \fi
+}
+
+\mode
+<all>
