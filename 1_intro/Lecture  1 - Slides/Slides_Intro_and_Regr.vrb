@@ -1,0 +1,38 @@
+\frametitle{Model Comparisons: AIC / BIC}
+
+Suitable for comparing
+\begin{itemize}
+  \item both nested and non-nested models.
+  \item more than two models.
+\end{itemize}
+
+\vspace*{5mm}
+
+Choose the model with the \textcolor{red}{lowest} AIC and/or BIC.
+
+\vspace*{5mm}
+
+To be discussed in the Model Selection lecture
+\begin{itemize}
+  \item Quantify relative support via IC weights.\\
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{library}\hlstd{(devtools)} \hlcom{# Make sure you have Rtools}
+\hlkwd{install_github}\hlstd{(}\hlstr{"rebeccakuiper/ICweights"}\hlstd{)}
+\hlkwd{library}\hlstd{(ICweights)}
+\hlopt{?}\hlstd{IC.weights}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+  \item Extension AIC for order-restricted hypotheses \\ (GORIC and GORICA).\\
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{library}\hlstd{(restriktor)}
+\hlkwd{library}\hlstd{(goric)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+\end{itemize}
+

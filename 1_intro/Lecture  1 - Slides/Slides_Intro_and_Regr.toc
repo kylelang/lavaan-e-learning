@@ -1,0 +1,10 @@
+\beamer@sectionintoc {1}{SEM}{3}{0}{1}
+\beamer@sectionintoc {2}{SAPI}{8}{0}{2}
+\beamer@sectionintoc {3}{Lavaan commands}{11}{0}{3}
+\beamer@sectionintoc {4}{Regression}{29}{0}{4}
+\beamer@sectionintoc {5}{Path model}{39}{0}{5}
+\beamer@sectionintoc {6}{Steps}{45}{0}{6}
+\beamer@sectionintoc {7}{Technical output}{55}{0}{7}
+\beamer@sectionintoc {8}{Steps Ctd.}{86}{0}{8}
+\beamer@sectionintoc {9}{Model fit}{93}{0}{9}
+\beamer@sectionintoc {10}{The end}{109}{0}{10}
