@@ -1,0 +1,688 @@
+---
+title: 'Lab Day 2A: EFA and CFA'
+output: 
+  html_document:
+    code_folding: hide
+---
+
+## Getting started 
+
+Today’s lab meeting consists of three exercises: In exercise 1, you replicate what was done in the lecture with respect to the basics of factor analysis. Exercises 2 and 3 are additional exercises on EFA and CFA, respectively.
+
+Practical information:
+
+* All the data and other files for these exercises can be found at the LLL platform.Make sure to unzip the files. The folder containing these files will be your working directory.
+
+* Solutions to the exercises can be found in the Solutions folder. We provided R scripts for doing each of the exercises with lavaan
+
+To get started, the lavaan package is available on CRAN and can be installed by running the code below in the R (studio) console:
+
+```{r, message=F, warning=F}
+# install this package first (once)
+if (!require("lavaan")) install.packages("lavaan", dependencies = TRUE) 
+```
+
+You can check if the installation was successful by typing:
+
+```{r, message=F, warning=F, }
+library(lavaan)
+```
+
+A start-up message will be displayed showing the version number (always report this in your papers) and a reminder that this is free software. If you see this message, you are ready to start.
+
+## Exercise 1: Replicate Sapi results from the lecture 
+
+The file Sapi.txt contains the data that was used to conduct the EFA and CFA as presented in the lecture. Try to replicate the following input files and/or results of today’s presentation and see what happens to the results.
+
+Note: To prevent issues, make sure you specify -999 as missing data
+
+### Loading the data:
+
+To load the data into the R environment, run the following to load the data:
+
+Note: The data file needs to be in the same folder location that you are working in. Otherwise, you can tell R where to find it by copying the folder path. 
+
+```{r, message=F, warning=F}
+data_sapi <- read.table("Sapi.txt", header = T)
+```
+
+Now the data is loaded, you need to find missing values and set them to "NA". In this dataset, "-999" denotes a missing case. If you ‘forget’ to tell  R this, these values will be treated as being observed. 
+
+```{r, message=F, warning=F}
+data_sapi[sapply(data_sapi, function(x) as.character(x) %in% c("-999") )] <- NA 
+```
+
+### 1.1 Reflective (confirmatory) Factor Model
+
+**a. Inspect the correlations for the items of interest: Q77 Q84 Q170 Q196. Why would you inspect these before doing a CFA?**
+
+```{r}
+# Before we specify any models we need to check the correlations among the items of interest.
+# These items are: *Q77 Q84 Q170 Q196*. 
+# The correlation table gives the correlations between pairs of items, that is, the standardized covariances between a pair of items, equivalent to running covariances on the Z-scores of each item.
+# Bear in mind that the correlation for Items X and Y is the same as for Y and X.
+
+# The diagonal elements are always one because an item is always perfectly correlated with itself.
+# Recall that the magnitude of a correlation is determined by the absolute value of the correlation.
+# From this table, we see that the items have magnitudes ranging from 0.2 to 0.6.
+# In psychology and the social sciences, the magnitude of correlations above 0.30 is considered a medium effect size.
+# Due to relatively high correlations among many of the items these data would be a good candidate for factor analysis. 
+
+# The goal of factor analysis is to model the interrelationships between many items with fewer unobserved or latent variables.
+```
+
+```{r, message=F, warning=F, results='hide'}
+if (!require("Hmisc")) install.packages("Hmisc", dependencies = TRUE) # package for correlations
+library(Hmisc)
+
+res <- rcorr(as.matrix(data_sapi[, c(9:10, 12:13)])) # rcorr() accepts matrices only
+round(res$r, 3) # Correlation matrix (rounded to 3 decimals)
+```
+
+**b. Replicate the results for the extraversion model presented in the lecture slides. One can use the function lavaan() but also the function cfa() for this (the solutions use the latter).**
+
+```{r}
+# With factor analysis you can determine the extent to which items designed to measure a particular factor (in this case extraversion) actually do so.
+# It is the ‘true’ correlation between an indicator and a factor.
+# So, every factor (in this case Extraversion) is a weighted sum of the items.
+
+# In lavaan, the operator for the latent variable definition is: "=~".
+# This, thus, denotes 'is measured by' (cf., BY in Mplus).
+
+# Recall that =~ represents the indicator equation where the latent variable is on the left and the indicators (or observed variables), separated by + signs, are to the right the symbol.
+# Note that, for the latter, the names come from the data set.
+```
+
+```{r, message=F, warning=F, results='hide'}
+# Specify the model:
+model.CFA <- 'Extraversion =~ Q77 + Q84 + Q170 + Q196' # Model statement: one factor, four items, default marker method
+```
+
+```{r, message=F, warning=F, results='hide'}
+# Fit the model:
+fit_CFA <- cfa(model.CFA, data=data_sapi,
+               missing='fiml', fixed.x=F) # Specify FIML 
+
+# Runs a confirmatory factor analysis using the cfa function
+# cfa() is actually a wrapper for the lavaan function (we used on Day 1).
+```
+
+```{r, message=F, warning=F, results='hide'}
+# Inspect the model summary:
+
+# This requests textual output, listing for example 
+# - the estimator used
+# - the number of free parameters
+# - the test statistic
+# - estimated means
+# - loadings 
+# - variances
+
+# Output
+summary(fit_CFA) 
+
+summary(fit_CFA, fit.measures=TRUE) # Alternative
+```
+
+### 1.2 Scaling your latent variable 
+
+**a. Is the latent variable scaled via the variance of the factor (reference groupscaling) pr via the factor loadings (marker variable scaling)?** 
+
+*Hint: Use the function lavInspect() to obtain insight.*
+
+```{r, message=F, warning=F, results='hide'}
+# From this one can see what type of scaling is used. Because of:
+
+# - $lambda
+# - Extraversion
+# - Q77       0
+# - Q84       1
+# - Q170      2
+# - Q196      3
+
+# one can see that the first factor loading is fixed (to 1). Hence, the marker variable method is used.
+
+# Technical output
+lavInspect(fit_CFA)  # Comparable to TECH1 in Mplus
+```
+
+
+**b. Adjust the model so that you can scale in the other way. That is, if part a) was scaled by fixing a factor loadings to 1 then free this factor loading and fix the factor variance to 1; If part a) was scaled by fixing the factor variance to 1, then free the factor variance and fix one of the factor loadings to 1.** 
+
+```{r}
+# By default, lavaan chooses the marker method. To use the 'var std' method (i.e., reference group scaling), one should make use of the following:
+
+# - To free a parameter, put NA* in front of the parameter to be freed:
+# - The syntax NA*Q77 frees the loading of the first item because by default marker method fixes it to one.
+# - To fix a parameter to 1, put 1* in front of the parameter to be fixed. 
+
+#The syntax Extraversion ~~ 1*Extraversion means to fix the variance of the factor Extraversion to one.
+```
+
+```{r, message=F, warning=F, results='hide'}
+model.CFA_RefGr <- '
+ Extraversion =~ NA*Q77 + Q84 + Q170 + Q196
+ Extraversion ~~ 1*Extraversion
+'
+fit_CFA_RefGr <- cfa(model.CFA_RefGr, data=data_sapi,
+               missing='fiml', fixed.x=F) # Specify FIML 
+
+summary(fit_CFA_RefGr)
+```
+
+**c. Bonus: Scale via the factor loadings again, but now fix the factor loading og Q196 to 1, and free the factor loading that was previously fixed to 1.** 
+
+Based on your results what do you notice about the chi-square, degrees of freedom, p-values, factor loadings, and factor variance for the different methods?
+
+```{r, message=F, warning=F, results='hide'}
+# Alternatively you can use std.lv=TRUE and obtain the same results.
+# Note that the chi-square fit results are exactly the same across the models, as will be explained below. That is why both solutions can be asked for by using 'std.lv=TRUE'.
+
+# For better interpretation of the factor loadings, you would request the standardized solutions.
+# Therefore, one may want to request the summary of the marker method but also specify that standardized=TRUE;
+
+# Then you obtain both results:
+
+summary(fit_CFA, standardized=TRUE)
+
+# Now, there are two additional columns:
+# - Std.lv and Std.all (cf. STD and STDYX in Mplus).
+# - Std.all: standardizes the factor loadings by the standard deviation of both the predictor (the factor, X) and the outcome (the item, Y).
+# - Std.lv:  standardizes the factor loadings by the predictor (the factor, X).
+
+# Comparing the two: The loadings and variance of the factors are different but the residual variances are the same. 
+```
+
+```{r, message=F, warning=F, results='hide'}
+# In case you want, in the Marker variable method, another factor loading to be 1, say, the last one:
+
+# Model statement:
+model.CFA_last <- '
+ Extraversion =~ NA*Q77 + Q84 + Q170 + 1*Q196
+'
+# Notes:
+# - 1* fixes parameter or loading to one
+# - NA* frees parameter or loading (useful to override default marker method)
+
+# Fit model:
+fit_CFA_last <- cfa(model.CFA_last, data=data_sapi,
+                     missing='fiml', fixed.x=F) # Specify FIML 
+
+# Model summary:
+summary(fit_CFA_last)
+```
+
+```{r}
+# The first thing you may notice is that all chi-square fit results are exactly the same across the models.
+# This is because the different ways of scaling all result in equivalent statistical models.
+# You don’t estimate anything more or less with any of the three scaling methods.
+
+# The second thing you may notice is that the values of the loadings have changed.
+# However, loadings that are relatively large (or small) in one model, are also relatively large (or small) in the other models.
+# For example, in each model, the loading for Q77 is ~1.4 times as large as the loading of Q84.
+
+# The take home message is that it does not matter how you scale, the information that you get is the same. 	
+```
+
+### 1.3 Model fit 
+
+**Inspect the model fit. Focus on the CFI, TLI, RMSEA, and SRMR. You can use summary() or fitMeasures().**
+
+```{r, message=F, warning=F, results='hide'}
+# One method:
+summary(fit_CFA, fit.measures=TRUE) # many model fit measures
+
+# Alternative method:
+fitMeasures(fit_CFA) # many model fit measures
+
+# Four of them are:
+
+# 1. Model chi-square is the chi-square statistic obtained from the maximum likelihood statistic. 
+#   - (in lavaan: 'the Test Statistic for the Model Test User Model')
+
+# 2. CFI is the Comparative Fit Index.
+#   - Values can range between 0 and 1 
+#   - (values greater than 0.90, conservatively 0.95 indicate good fit)
+
+# 3. TLI Tucker Lewis Index which also ranges between 0 and 1 
+#   - Values greater than 0.90 indicating good fit. 
+#   - (if it’s greater than 1 it should be rounded to 1) 
+#   - If the CFI and TLI are less than one, the CFI is always greater than the TLI.
+
+# 4. RMSEA is the root mean square error of approximation. 
+#    - In lavaan, you also obtain a p-value of close fit, that the RMSEA < 0.05. 
+#    - If you reject the model, it means your model is not a close fitting model.
+```
+
+```{r}
+# Notes: 
+
+# - Failing to reject the model is good for the model at hand
+#   because it implies failing to disprove that the model is bad.
+#   Here, we reject the null hypothesis that the model fits the data. 
+#   It is well documented in CFA and SEM literature that the chi-square is 
+#   often overly sensitive in model testing especially for large samples. 
+
+#   David Kenny states that for 
+#   - models with 75 to 200 cases chi-square is a reasonable measure of fit, 
+#   - but for 400 cases or more it is nearly almost always significant.
+
+#   Our sample size is 1000.
+#   Kline (2016) notes the N:q rule, which states that 
+#   - the sample size (N) should be determined by the number of parameters in your model (q), 
+#   - the recommended ratio is 20:1. 
+#   This means that if you have 12 parameters, you should have N=240. 
+#   A sample size less than 100 is almost always untenable according to Kline.
+
+# - The larger the chi-square value the larger the difference between 
+#   the sample implied covariance matrix and the sample observed one, 
+#   and the more likely you will reject your model. 
+```
+
+```{r, message=F, warning=F, results='hide'}
+# Another alternative:
+fitMeasures(fit_CFA, c("cfi", "tli", "rmsea","srmr")) # ask for specific model fit measures
+
+# For CFI, value slightly below the recommended cut-off criterion of 0.97/0.95. 
+# For TLI, value below the recommended cut-off criterion of 0.97/0.95.
+# The RMSEA is above the cut-off of 0.05. 
+# The SRMR points to a good model fit (SRMR < 0.08).
+# Overall, the model does not seem to fit well.
+```
+
+### 1.4 Plotting the results
+
+Try to plot the results of a fit object using lavaanPlot() and tidySEM().  
+
+```{r, message=F, warning=F, results='hide', fig.show='hide'}
+# Install this package first (once):
+if (!require("lavaanPlot")) install.packages("lavaanPlot") 
+library(lavaanPlot)
+
+# Plot:
+lavaanPlot(model = fit_CFA, node_options = list(shape = "box", fontname = "Helvetica"), 
+           edge_options = list(color = "grey"), coefs = T, stand = T, covs = T)
+
+# Alternative:
+if (!require("tidySEM")) install.packages("tidySEM") # install this package first (once)
+library(tidySEM)
+graph_sem(fit_CFA)
+
+# Another alternative:
+if (!require("semPlot")) install.packages("semPlot") # install this package first (once)
+library(semPlot)
+semPaths(fit_CFA, "par", weighted = FALSE, nCharNodes = 7, shapeMan = "rectangle",
+         sizeMan = 8, sizeMan2 = 5)
+```
+
+### 1.5 Test equality of factor loadings
+
+Based on the factor loadings, items do not seem to be equally reflective of Extraversion, except for Q84 and Q196. To improve the fit of the model, one can test whether these factor loadings are equal (resulting in estimating less parameters). One can use a Wald test to test whether two factor loadings can be considered equal.
+
+**a. Test whether the factor loadings of Q84 and Q196 are the same.** 
+
+*Hint: For a lavaan object (with label names!) one can do this with lavTestWald(fit, constrains = 'insert equality restriction').* 
+
+**b. What does the test imply?**
+
+```{r, message=F, warning=F, results='hide'}
+# Specify model:
+model.CFA_equal <- '
+ # model with labeled parameters
+ Extraversion =~ Q77 + a*Q84 + Q170 + b*Q196
+'
+
+# Fit model:
+fit_CFA_equal <- cfa(model.CFA_equal, data=data_sapi,
+                     missing='fiml', fixed.x=F) # Specify FIML 
+```
+
+```{r, message=F, warning=F, results='hide'}
+# Wald test
+lavTestWald(fit_CFA_equal, constraints = 'a == b')
+
+# Wald test with df=1 is 0.3619674, p = 0.5474156. 
+# Thus, we do not reject the null that the two loadings are equal.
+# Hence, we conclude that there is no evidence for a difference between a and b.
+```
+
+```{r, message=F, warning=F, results='hide'}
+# In case one wants the model results for which the loadings are the same:
+
+# Specify model:
+model.CFA_equal <- '
+ # model with labeled parameters
+ Extraversion =~ Q77 + a*Q84 + Q170 + b*Q196
+ #
+ # constraints
+ a == b 
+'
+# Note: a* labels the parameter ‘a’, used for model constraints.
+
+# Fit model:
+fit_CFA_equal <- cfa(model.CFA_equal, data=data_sapi,
+                     missing='fiml', fixed.x=F) # Specify FIML 
+
+# Model summary:
+summary(fit_CFA_equal, standardized=TRUE, fit.measures=TRUE)
+fitMeasures(fit_CFA_equal, c("cfi", "tli", "rmsea","srmr"))
+
+# The measures did improve, but the model still does not fit well.
+```
+
+### 1.6 EFA vs CFA 
+
+**a. Specify and run the two-factor exploratory factor model (EFA) and two-factor CFA, as was shown in the lecture slides.**
+```{r, message=F, warning=F, results='hide'}
+# Two-factor EFA versus CFA:
+
+# Correlations for the items of interest: Q44 Q63 Q76 Q77 Q84 Q98 Q170 Q196
+res <- rcorr(as.matrix(data_sapi[, c(6:13)])) # rcorr() accepts matrices only
+round(res$r, 3) # Correlation matrix (rounded to 3 decimals)
+```
+
+```{r, message=F, warning=F, results='hide'}
+# Specify two-factor EFA model:
+model.2EFA <- "
+ efa('block1')*Having fun  =~ Q77 + Q84 + Q170 + Q196 + Q44 + Q63 + Q76 + Q98
+ efa('block1')*Being liked =~ Q77 + Q84 + Q170 + Q196 + Q44 + Q63 + Q76 + Q98
+"
+# Alternative:
+model.2EFA <- "
+efa('block1')*Having fun  + efa('block1')*Being liked =~ 
+Q77 + Q84 + Q170 + Q196 + Q44 + Q63 + Q76 + Q98
+"
+
+# The efa('block1') modifier indicates that the factors comprise an exploratory 
+# block (with the name block1) and thus that we do not exactly know the loading 
+# structure of the variables / items on these factors.
+```
+
+```{r, message=F, warning=F, results='hide'}
+# Fit two-factor EFA model:
+fit_2EFA <- cfa(model.2EFA, data=data_sapi,
+                missing='fiml', fixed.x=F) # Specify FIML 
+
+# estimates the EFA model (releasing the residual variances and implying the EFA constraints) using the oblique geomin rotation.
+
+# Model summary:
+summary(fit_2EFA)
+
+lavInspect(fit_2EFA)
+```
+
+```{r, message=F, warning=F, results='hide'}
+# TO DO not same factor loadings as in Mplus + two warnings (not in Mplus)
+
+# Specify two-factor CFA model:
+model.2CFA <- "
+ Having fun  =~ Q77 + Q84 + Q170 + Q196
+ Being liked =~ Q44 + Q63 + Q76 + Q98
+"
+# Fit two-factor CFA model:
+fit_2CFA <- cfa(model.2CFA, data=data_sapi,
+                missing='fiml', fixed.x=F) # Specify FIML 
+
+# Model summary:
+summary(fit_2CFA)
+lavInspect(fit_2CFA)
+```
+
+## Exercise 2: EFA 
+
+Use the data file popular_factor.txt. Make sure to denote that 99 represents the missing values. 
+
+**a. Run an EFA that provides you with a 1-factor and 2-factor solution. Interpret the results for the 2-factor solution.**
+
+**b. Which factor model do you prefer?** 
+
+*Note: you can use for example the anova() function for this.*
+
+```{r, message=F, warning=F, results='hide'}
+# Read in data:
+data_pop <- read.table("popular_factor.txt", header = T)
+# Denote missing values:
+data_pop[sapply(data_pop, function(x) as.character(x) %in% c("99") )] <- NA
+# TO DO first item is called 'ï..c1' instead of c1, so:
+colnames(data_pop)[1] <- "c1"
+```
+
+```{r, message=F, warning=F, results='hide'}
+# Correlations for the items of interest
+res <- rcorr(as.matrix(data_pop)) # rcorr() accepts matrices only
+round(res$r, 3) # Correlation matrix (rounded to 3 decimals)
+```
+
+```{r, message=F, warning=F, results='hide'}
+# Specify one-factor EFA model:
+model.1EFA <- "
+ efa('block1')*F1  =~ c1 + c2 + c3 + o1 + o2 + o3
+"
+
+# Fit one-factor EFA model:
+fit_1EFA <- cfa(model.1EFA, data=data_pop,
+                missing='fiml', fixed.x=F) # Specify FIML 
+
+# Model summary:
+summary(fit_1EFA)
+fitMeasures(fit_1EFA, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea","srmr")) 
+lavInspect(fit_1EFA)
+```
+
+```{r, message=F, warning=F, results='hide'}
+# TO DO not same factor loadings as in Mplus - fit etc is the same
+
+# Specify two-factor EFA model:
+model.2EFA <- "
+ efa('block1')*F1  =~ c1 + c2 + c3 + o1 + o2 + o3
+ efa('block1')*F2  =~ c1 + c2 + c3 + o1 + o2 + o3
+"
+# Fit two-factor EFA model:
+fit_2EFA <- cfa(model.2EFA, data=data_pop,
+                missing='fiml', fixed.x=F) # Specify FIML 
+
+# Model summary:
+summary(fit_2EFA)
+fitMeasures(fit_2EFA, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea","srmr"))
+lavInspect(fit_2EFA)
+
+# One can conclude that the 2-factor structure fits well to the data:
+# Chi-Square Test of Model Fit is not significant, 
+# CFI/TLI is  > 0.95, and 
+# RMSEA is < 0.05.
+```
+
+```{r, message=F, warning=F, results='hide'}
+# Compare the one-factor model to the two-factor model
+
+# Option 1: 
+anova(fit_1EFA, fit_2EFA)
+
+# The Chi-square difference test is significant, implying that the null stating that two factors equal one and the same is rejected. 
+# The AIC and BIC for the 2-factor model is lower than for the 1-factor model.
+# Hence, we prefer the 2-factor model.
+
+# Option 2:
+if (!require("performance")) install.packages("performance", dependencies = TRUE)
+library(performance)
+performance::compare_performance(fit_1EFA, fit_2EFA)
+
+# There are more options; 
+# e.g., see the following link where fit measures are compared:
+# https://solomonkurz.netlify.app/post/2021-05-11-yes-you-can-fit-an-exploratory-factor-analysis-with-lavaan/
+```
+
+**c. Try to plot the results using lavaanPlot(), tidysem(), or semPlot().**
+
+```{r, message=F, warning=F, results='hide', fig.show='hide'}
+# Plot
+if (!require("lavaanPlot")) install.packages("lavaanPlot") # install this package first (once)
+library(lavaanPlot)
+lavaanPlot(model = fit_2EFA, node_options = list(shape = "box", fontname = "Helvetica"), 
+           edge_options = list(color = "grey"), coefs = T, stand = T, covs = T)
+
+# Alternative
+if (!require("tidySEM")) install.packages("tidySEM") # install this package first (once)
+library(tidySEM)
+graph_sem(fit_2EFA)
+
+# Another alternative
+if (!require("semPlot")) install.packages("semPlot") # install this package first (once)
+library(semPlot)
+semPaths(fit_2EFA, "par", weighted = FALSE, nCharNodes = 7, shapeMan = "rectangle",
+         sizeMan = 8, sizeMan2 = 5)
+```
+
+## Exercise 3: CFA 
+
+Use again popular_factor.txt.
+
+**a. Now, run a CFA with 1 factor (‘anti’) and another model with 2-factors (‘covert’ and ‘overt’). In both models, scale by fixing the factor variance, rather than by fixing a loading.**
+
+**b. Which model is to be preferred? What can you say about the model fit based on the AIC and BIC?**
+
+**c. What is the correlation between the two factors?**
+
+```{r, message=F, warning=F, results='hide'}
+# CFA
+
+# Specify one-factor CFA model:
+model.1CFA <- "
+ anti  =~ NA*c1 + c2 + c3 + o1 + o2 + o3
+ anti ~~ 1*anti
+"
+
+# Fit one-factor CFA model:
+fit_1CFA <- cfa(model.1CFA, data=data_pop,
+                missing='fiml', fixed.x=F) # Specify FIML 
+
+# Model summary:
+summary(fit_1CFA)
+fitMeasures(fit_1CFA, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea","srmr")) 
+lavInspect(fit_1CFA)
+```
+
+```{r, message=F, warning=F, results='hide'}
+# Specify two-factor CFA model:
+model.2CFA <- "
+ covert  =~ NA*c1 + c2 + c3
+ overt   =~ NA*o1 + o2 + o3
+ covert ~~ 1*covert
+ overt ~~ 1*overt
+"
+# Fit two-factor CFA model:
+fit_2CFA <- cfa(model.2CFA, data=data_pop,
+                missing='fiml', fixed.x=F) # Specify FIML 
+
+# Model summary:
+summary(fit_2CFA)
+fitMeasures(fit_2CFA, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea","srmr"))
+lavInspect(fit_2CFA)
+```
+
+```{r, message=F, warning=F, results='hide'}
+# Compare the one-factor model to the two-factor model
+anova(fit_1CFA, fit_2CFA)
+
+# The Chi-square difference test is significant,implying that the null stating that two factors equal one and the same is rejected. 
+#T he AIC and BIC for the 2-factor model is lower than for the 1-factor model.
+# Hence, we prefer the 2-factor model.
+```
+
+```{r, message=F, warning=F, results='hide'}
+fitMeasures(fit_1CFA, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea","srmr"))
+fitMeasures(fit_2CFA, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea","srmr"))
+
+# Fit measures are better for the 2-factor CFA model.
+# Additionally, one can conclude that the 2-factor structure fits the data well:
+# Chi-Square Test of Model Fit is not significant, 
+# CFI/TLI is  > 0.95, and 
+# RMSEA is < 0.05.
+```
+
+```{r}
+# The correlation between the two factors
+
+# Covariances:
+#  Estimate  Std.Err  z-value  P(>|z|)
+#  covert ~~                                           
+#  overt             0.431    0.055    7.806    0.000
+
+# The correlation between OVERT and COVERT is 0.431 with a standard error of 0.055. 
+# So, the proportion of shared variance is 0.4312^2 = 0.186 = 18,6%.
+# Note that in the output one can find this in the ‘standardized results’. 
+
+# Whether the unstandardized ‘covert ~~ overt’ can be interpreted as a correlation or a covariance, depends on how the latent variable was scaled. 
+# If the factor variances are fixed to 1 (i.e., when scaling is done via the factor variances), then the ‘unstandardized’ result reflects the factor correlation, 
+# Otherwise they reflect the covariance.
+```
+
+**c. Try to plot the results using lavaanPlot(), tidysem(), or semPlot().** 
+
+```{r, message=F, warning=F, results='hide', fig.show='hide'}
+# Plot
+if (!require("lavaanPlot")) install.packages("lavaanPlot") # install this package first (once)
+library(lavaanPlot)
+lavaanPlot(model = fit_2CFA, node_options = list(shape = "box", fontname = "Helvetica"), 
+           edge_options = list(color = "grey"), coefs = T, stand = T, covs = T)
+
+# Alternative
+if (!require("tidySEM")) install.packages("tidySEM") # install this package first (once)
+library(tidySEM)
+graph_sem(fit_2CFA)
+
+# Another alternative
+if (!require("semPlot")) install.packages("semPlot") # install this package first (once)
+library(semPlot)
+semPaths(fit_2CFA, "par", weighted = FALSE, nCharNodes = 7, shapeMan = "rectangle",
+         sizeMan = 8, sizeMan2 = 5)
+```
+
+### Helpful notation:
+
+**Helpful notation in factor analysis:**
+
+*  =~ indicator, used for latent variable to observed indicator in factor analysis measurement models.
+* ~~ covariance
+* ~1 intercept or mean (e.g., q01 ~ 1 estimates the mean of variable q01)
+* 1* fixes parameter or loading to one
+* NA* frees parameter or loading (useful to override default marker method)
+* a* labels the parameter ‘a’, used for model constraints
+
+**Lavaan notation:**
+
+* in regression: ~ means is regressed on
+* for (residual) (co)variance: ~~ means is correlated with
+* intercept: ~ 1 means intercept
+* latent variable definition: =~ means is measured by
+
+**Note:**
+
+* ~ predict, used for regression of observed outcome to observed predictors
+* =~ indicator, used for latent variable to observed indicator in factor analysis measurement models
+
+**General lavaan specification:**
+
+**Regression:**
+
+* y1 + y2 ~ f1 + f2 + x1 + x2
+* f1 ~ f2 + f3
+* 2 ~ f3 + x1 + x2
+
+**Latent variable definitions:**
+
+* f1 =~ y1 + y2 + y3 
+* f2 =~ y4 + y5 + y6 
+* f3 =~ y7 + y8 + y9 + y10
+
+**Variances and covariances:**
+
+* y1 ~~ y1 
+* y ~~ y2 
+* f1 ~~ f2
+
+**Intercepts:**
+
+* y1 ~ 1 
+* f1 ~ 1
+
