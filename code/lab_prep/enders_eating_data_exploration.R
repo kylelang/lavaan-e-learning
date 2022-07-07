@@ -1,7 +1,7 @@
 ### Title:    Exploration of Enders (2010) Eating Attitudes Data
 ### Author:   Kyle M. Lang
 ### Created:  2022-07-02
-### Modified: 2022-07-03
+### Modified: 2022-07-04
 
 rm(list = ls(all = TRUE))
 
@@ -89,7 +89,7 @@ inspect(fit2, "theta") %>% eigen()
 
 ### WTF is going on!?
 
-save.image(file = "enders_eating_data.RData")
+save.image(file = "enders_eating_data_mwe.RData")
 
 ###-Singly Imputed Data------------------------------------------------------###
 

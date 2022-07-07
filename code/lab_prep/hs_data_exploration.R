@@ -9,11 +9,15 @@ library(lavaan)
 library(semTools)
 library(dplyr)
 library(magrittr)
+library(ggplot2)
+library(psych)
 
 dataDir <- "../../data/"
 
 ## Read in data:
-hs <- readRDS(paste0(dataDir, "holzinger_swineford.rds"))
+hs    <- readRDS(paste0(dataDir, "holzinger_swineford.rds"))
+items <- readRDS(paste0(dataDir, "hs_subscale_item_names.rds"))$new
+
 
 ###-Measurement Models-------------------------------------------------------###
 
@@ -100,12 +104,54 @@ medMod3 <- paste(cfaMod3,
 
 sem(medMod3, data = hs, std.lv = TRUE) %>% summary()
 
+###-Data Processing----------------------------------------------------------###
 
-###-Measurement Invariance---------------------------------------------------###
+## Create scale scores:
+keys <- list(math   = paste0("math", 1:5),
+             verbal = paste0("verbal", 1:5),
+             memory = paste0("memory", 1:6)
+             )
+scores <- scoreVeryFast(keys = keys, items = hs)
+hs2    <- data.frame(scores, sex = hs$sex)
 
-group <- "grade"
+###-Moderation---------------------------------------------------------------###
 
-configFit <- cfa(fullMod, data = hs, std.lv = TRUE, group = group)
+## OLS
+fit <- lm(math ~ verbal * sex + memory * sex, data = hs2)
+summary(fit)
+
+## Path analysis
+mod <- '
+math ~ 1 + verbal + memory + male + verbal:male + memory:male
+'
+
+fit <- hs2 %>%
+    mutate(male = as.numeric(sex == "Male")) %>%
+    sem(mod, data = .)
+
+summary(fit)
+
+ssOut <- probe2WayMC(fit,
+                     nameX   = c("verbal", "male", "verbal:male"),
+                     nameY   = "math",
+                     modVar  = "male",
+                     valProb = 0:1)
+
+ssOut
+
+plotProbe(ssOut, xlim = range(hs2$verbal))
+
+cfaMod <- with(mods, paste(math, verbal, memory, sep = '\n'))
+
+fit <- cfa(cfaMod, data = hs, std.lv = TRUE)
+summary(fit)
+fitMeasures(fit)
+
+### Measurement Invariance:
+
+group <- "sex"
+
+configFit <- cfa(cfaMod, data = hs, std.lv = TRUE, group = group)
 
 fitMeasures(configFit)
 summary(configFit)
@@ -121,4 +167,91 @@ summary(strongFit)
 
 compareFit(configFit, weakFit, strongFit) %>% summary()
 
-as.character(weakMod) %>% cat()
+### Unrestricted structural model:
+
+semMod <- paste(cfaMod,
+                'math ~ c(beta11, beta12) * verbal + c(beta21, beta22) * memory',
+                'verbal ~~ c(psi1, psi2) * memory',
+                sep = '\n')
+
+semFit <- sem(semMod,
+              data = hs,
+              std.lv = TRUE,
+              group = group,
+              group.equal = "loadings")
+
+summary(semFit)
+
+cons <- '
+beta11 == beta12
+beta21 == beta22
+psi1 == psi2
+'
+
+lavTestWald(semFit, cons)
+
+semMod0 <- paste(cfaMod,
+                 'math ~ c(beta11, beta12) * verbal + c(beta22, beta22) * memory',
+                 'verbal ~~ c(psi1, psi2) * memory',
+                 sep = '\n')
+
+semFit0 <- sem(semMod0,
+               data = hs,
+               std.lv = TRUE,
+               group = group,
+               group.equal = "loadings")
+
+summary(semFit0)
+
+tmp <- lavTestWald(semFit, 'beta11 == beta12')
+
+sqrt(tmp$stat)
+
+lavTestWald(semFit0, 'beta11 == beta12')
+
+anova(semFit, semFit0)
+fitMeasures(semFit0)
+
+
+## Generate factor scores:
+tmp <- predict(semFit)
+
+## Stack factor scores into a "tidy" dataset:
+pData <- data.frame(do.call(rbind, tmp),
+                    group = rep(names(tmp), sapply(tmp, nrow))
+                    )
+
+tmp <- inspect(semFit, "est")
+
+mBeta <- tmp$Male$beta["math", c("verbal", "memory")]
+fBeta <- tmp$Female$beta["math", c("verbal", "memory")]
+
+## Create a simple slopes plot:
+ssPlot <- ggplot(pData, aes(verbal, math, color = group)) + 
+    geom_point(alpha = 0.1) + 
+    geom_smooth(method = "lm") +
+    geom_abline(slope = mBeta[1], intercept = 0, color = "blue") +
+    geom_abline(slope = fBeta[1], intercept = 0, color = "red") +
+    theme_classic()
+
+ssPlot <- ggplot(pData, aes(memory, math, color = group)) + 
+    geom_point(alpha = 0.1) + 
+    geom_smooth(method = "lm") +
+    geom_abline(slope = mBeta[2], intercept = 0, color = "blue") +
+    geom_abline(slope = fBeta[2], intercept = 0, color = "red") +
+    theme_classic()
+
+ssPlot
+
+semMod2 <- paste(semMod,
+                 'test1 := beta11 - beta12',
+                 'test2 := beta21 - beta22',
+                 sep = '\n')
+
+semFit2 <- sem(semMod2,
+               data = hs,
+               std.lv = TRUE,
+               group = group,
+               group.equal = "loadings")
+
+summary(semFit2)

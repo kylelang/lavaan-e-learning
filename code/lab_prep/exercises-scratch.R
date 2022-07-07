@@ -1,22 +1,22 @@
 ### Title:    Lavaan Summer School Exercise Prep
 ### Author:   Kyle M. Lang
 ### Created:  2022-07-01
-### Modified: 2022-07-02
+### Modified: 2022-07-04
 
 rm(list = ls(all = TRUE))
 
-library(lavaan, lib = "~/R/manual_installs/")
+library(lavaan)
 library(semTools)
 library(dplyr)
 library(magrittr)
 
-dataDir <- "../data/"
+dataDir <- "../../data/"
 
 ## Read in data:
-hs    <- readRDS(paste0(dataDir, "holzinger_swineford.rds"))
-adams <- readRDS(paste0(dataDir, "sandbox/adams_klps_data-synthetic.rds"))
+hs <- readRDS(paste0(dataDir, "holzinger_swineford.rds"))
+ea <- readRDS(paste0(dataDir, "eating_attitudes_completed.rds"))
 
-colnames(adams)
+items <- readRDS(paste0(dataDir, "hs_subscale_item_names.rds"))
 
 ###-Measurement Models-------------------------------------------------------###
 
@@ -127,46 +127,26 @@ compareFit(configFit, weakFit, strongFit) %>% summary()
 as.character(weakMod) %>% cat()
 
 
-###-Adams KLPS EFA-----------------------------------------------------------###
+###-Create Scale Scores------------------------------------------------------###
 
-rhs <- paste(colnames(adams), collapse = ' + ')
-       
-mods <- list()
+library(psych)
 
-mods[[1]] <- paste('efa("efa") * f1',
-                   rhs,
-                   sep = ' =~ ')
+## Create scale scores:
+hs <- hs %>%
+    scoreVeryFast(keys = items$new, items = .) %>%
+    data.frame(hs, .)
 
-for(i in 9:12)
-    mods[[i]] <- paste(
-        paste0('efa("efa") * f', 1:i, collapse = ' +\n'),
-        rhs,
-        sep = ' =~ '
-    )
+ea <- ea %>%
+    scoreVeryFast(keys = list(drive = paste0("eat", c(1, 2, 10, 11, 12, 14, 24)),
+                              pre   = paste0("eat", c(3, 18, 21))
+                              ),
+                  items = .) %>%
+    data.frame(ea, .)
 
-fits <- lapply(mods[9:12], cfa, data = adams)
-warnings()
+###-Moderation---------------------------------------------------------------###
 
-lapply(fits, summary)
+ea %$% lm(anx ~ bmi) %>% summary()
+ea %$% lm(anx ~ bmi + wsb) %>% summary()
+ea %$% lm(anx ~ bmi * wsb) %>% summary()
 
-tmp <- inspect(fits[[3]], "cov.lv") %>% eigen()
-
-plot(tmp$values, type = "b")
-
-items <- list(
-    rac1  = colnames(adams)[8:10],
-    rac2  = colnames(adams)[16:18],
-    pol   = colnames(adams)[19:23],
-    wpriv = grep("wpriv\\d", colnames(adams), value = TRUE)
-)
-
-mods <- lapply(items,
-               function(x) paste("f",
-                                 paste(x, collapse = " + "),
-                                 sep = " =~ ")
-               )
-
-fits <- lapply(mods, cfa, data = adams,  std.lv = TRUE)
-
-lapply(fits, fitMeasures)
-lapply(fits, summary)
+ea %$% lm(anx ~ drive * pre + bmi) %>% summary()
