@@ -1,0 +1,1021 @@
+---
+title: 'Lab Day 1: regression'
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+Today's lab meeting consists of three exercises.
+
+
+Practical information:
+
+- All the data and other files for these exercises can be found at the course platform (i.e., Ulearning platform). Make sure to unzip any .zip files. The folder containing these files will be your working directory.
+
+
+Short description of exercises:
+
+- The first exercise of today makes an explicit comparison on how certain analyses look in the software you are used to (e.g., SPSS, Excel, Mplus, SAS, or STATA) and how the corresponding analyses look in R when using the lavaan package. The aim is to understand the similarities and differences between software packages. Most exercises include SPSS syntax and Mplus setup. 
+
+- The second exercise is aimed at doing a multivariate multiple regression analysis yourself using lavaan. In addition, you will have a look at the 'technical output'.
+
+- The third exercise is aimed at doing a path analysis yourself using lavaan. Additionally, it will make you familiar with the 'technical output'.
+
+
+## Exercise 1: Multiple regression
+
+The data for this exercise is taken from Van de Schoot et al (2010)[^1]. The study examined the understanding of anti-social behaviour and its association with popularity and sociometric status in a sample of at-risk adolescents from diverse ethnic backgrounds (*n* = 1491, average age 14.7 years). Both overt and covert types of anti-social behaviour were used to distinguish subgroups. For the current exercise, you will carry out a regression analysis where you want to predict levels of socially desirable answering patterns of adolescents (*sw*) using the predictors overt (*overt*) and covert antisocial behaviour (*covert*). 
+
+**Before you will carry out this regression analysis using lavaan, you will first conduct the analysis in a program of your own choice (SPSS, Mplus, SAS, STATA)**. By first conducting the analysis in another program, you can later check whether the results of lavaan are comparable. If they are the same, you (most certainly) know you specified everything correctly. 
+
+In the folder 'Data files', you can find four times the corresponding data set, each with a different extension: popular_regr.sav, popular_regr.xlsx, popular_regr_missingsrecoded.dat, and popular_regr.txt. Use the one that fits the software you are used to work with.
+
+Note: There are **missing data** (depending on the file you use, these are coded as system missing, -999, or -99 & -999). Make sure your software recognizes this. In R, one can for example use:
+
+```{r, echo = TRUE, eval = FALSE}
+data [sapply(data, function(x) as.character(x) %in% c("-99", "-999") )] <- NA
+```
+
+[^1]: Van de Schoot, R., Van der Velden, F., Boom, J., & Brugman, D. (2010). Can at-risk young adolescents be popular and anti-social? Sociometric status groups, anti-social behavior, gender and ethnic background. Journal of Adolescence, 33(5), 583-592. doi:10.1016/j.adolescence.2009.12.004
+
+
+### 1a
+Ask for descriptive statistics and run a **correlation** analysis between the variables of interest (*sw, overt* and *covert*). Use your software program of choice.
+
+Note that this is part of your data screening step.
+
+
+<details><summary><b>Click to show answers</b></summary>
+
+In the subfolders starting with 'Ex. 1' in the Solutions folder, you can find the files to perform the analyses in this exercise for SPSS and for Mplus.
+
+&nbsp;
+
+
+### 1c
+Run a (multiple) **regression** analysis (dependent variable (DV) is *sw*; independent variables (IVs) are *covert* and *overt*); also check the standardized results. Use your software program of choice.
+
+
+<details><summary><b>Click to show answers</b></summary>
+
+In the subfolders starting with 'Ex. 1' in the Solutions folder, you can find the files to perform the analyses in this exercise for SPSS and for Mplus.
+
+&nbsp;
+
+
+### 1d
+
+First, load (and perhaps also install) lavaan. Second, read in the data. Third, denote the missing values. 
+
+<details><summary><b>Click to show answers</b></summary>
+
+&nbsp;
+
+**Installing Lavaan**
+
+The lavaan package is available on CRAN.Therefore, to install lavaan, simply start up R (studio), and type in the R console:
+```{r, eval=FALSE}
+if (!require("lavaan")) install.packages("lavaan", dependencies = TRUE)
+```
+
+Install this package first (once). You can check if the installation was successful by typing:
+```{r}
+library(lavaan) 
+```
+
+A startup message will be displayed showing the version number (always report this in your papers), and a reminder that this is free software. 
+If you see this message, you are ready to start.
+
+**Read in data**
+
+```{r}
+data_regr <- read.table("popular_regr.txt", header = T)
+```
+
+If using data without header, then: 
+```{r}
+colnames(data_regr) <- c("respnr", "Dutch", "gender", "sw", "covert", "overt")
+```
+
+**Denote missing values**
+
+-99 and -999 is missing, so set this to NA:
+```{r}
+data_regr[sapply(data_regr, function(x) as.character(x) %in% c("-99", "-999") )] <- NA
+```
+If you forget to tell R that -99 and -999 are used to denote missing data, these values will be treated as being observed. 
+
+
+&nbsp;
+
+
+### 1d
+
+Do the same as in 1a using R.
+
+One could, for example, use the function *describe* from the *psych* package and the *rcorr* function from the *Hmisc* package, respectively.
+
+*Interpret the output. What are your conclusions?*
+
+*What do you think of the correlations with respect to significance, direction, and magnitude?*
+
+
+<details><summary><b>Click to show answers</b></summary>
+
+&nbsp;
+
+**Descriptive statistics**
+
+Variables of interest: *sw, covert,* and *overt*
+```{r}
+colnames(data_regr)
+```
+So, columns 4 to 6.
+
+The psych package can be used to obtain some extended summary statistics.
+```{r, message = FALSE}
+if (!require("psych")) install.packages("psych", dependencies = TRUE)
+library(psych) 
+```
+Descriptives like mean, median, min, and max:
+```{r}
+describe(data_regr[, 4:6])
+```
+
+**Correlations**
+
+Correlations for the three variables of interest, incl correlation significance test can be obtained using the rcorr function from the Hmisc package.
+
+```{r, message = FALSE}
+if (!require("Hmisc")) install.packages("Hmisc", dependencies = TRUE)
+library(Hmisc)
+```
+
+```{r}
+res <- rcorr(as.matrix(data_regr[, 4:6])) # rcorr() accepts matrices only
+```
+
+Correlation matrix (rounded to 3 decimals):
+```{r}
+round(res$r, 3)
+```
+P-values (rounded to 3 decimals):
+```{r}
+round(res$P, 3) 
+```
+
+Sample size:
+```{r}
+res$n 
+```
+
+Possible conclusions:
+
+- covert and overt are related to sw, so makes sense (in combination with theory) to use them as predictors.
+
+- Their relationship is negative, so an decrease in (c)overt relates to an increase in sw.
+
+- covert and overt are also related (positively) to each other, but not that much (in absolute sense) that we should worry about multicolinearity.
+
+&nbsp;
+
+
+### 1d
+
+Do the same as in 1b using R.
+
+One should use the lavaan package, for example, the lavaan function.
+
+
+*Interpret the output. What are your conclusions?*
+
+*What do you conclude with respect to significance, direction, and magnitude?*
+
+
+
+<details><summary><b>Click to show answers</b></summary>
+
+&nbsp;
+
+**Specify the regression model**
+
+Now, let us run a multiple regression model predicting levels of socially desirable answering patterns of adolescents (sw) using the predictors overt (overt) and covert antisocial behaviour (covert). 
+
+To run a multiple regression with lavaan, you first specify the model, then fit the model and finally acquire the summary. To fit the model we use the lavaan() function, which needs a model= and a data= input.
+
+The model is specified as follows: `dependent ~ predictor1 + predictor2  + etc`
+   
+The ~ is like the = in a regression equation. 
+
+Before the ~, one states the dependent variable.
+
+After the ~, one states the predictors, each separated by the + sign.
+
+Additionally, one needs to specify that the error (of the dependent variable) has a variance: `dependent ~~ dependent`.
+   
+If needed (as is the case here), one can specify to include an intercept: `dependent ~ 1`.
+
+Our regression model is specified as follows:
+```{r}
+model.regression <- '
+  sw ~ overt + covert # regression
+  sw ~~ sw            # residual variance
+  sw ~ 1              # intercept
+'
+```
+
+**Fit the regression model**
+
+```{r}
+fit_regr <- lavaan(model = model.regression, data = data_regr)
+```
+
+Note: Instead of specifying intercepts and means in the model, one can include `meanstructure=TRUE` in the lavaan function.
+
+**Output**
+
+```{r}
+summary(fit_regr, fit.measures = TRUE, ci = TRUE, rsquare = TRUE)
+```
+
+
+Can add `standardized=TRUE` to obtain standardized estimates as well.
+
+- Note that the residual variances are denoted by stating a "." before the variable name. Here: `.sw`
+   
+- Note that the intercepts are denoted by stating a "." before the variable name. Here: `.sw`
+
+**Parameter estimates**
+
+Unstandardized regression parameters
+```{r}
+coef(fit_regr) 
+```
+
+All unstandardized parameters - with extra information 
+```{r}
+parameterEstimates(fit_regr)
+```
+
+All standardized parameters - with extra information           
+```{r}
+standardizedSolution(fit_regr)
+```
+Note that now you also obtain the confidence interval of the standardized estimates.
+
+
+**Possible conclusions:**
+
+- The regression equation looks as follows:
+   $$sw = 4.997 - 0.292 * overt - 0.507 * covert + error$$
+
+- The average sw (levels of socially desirable answering patterns of adolescents) when covert and overt antisocial behaviour are 0 is 4.997;
+
+  When overt goes up with one point, then sw goes down with 0.292 points; 
+
+  When covert goes up with one point, then sw goes down with 0.507 points.
+
+  When you are the expert (and look at the scale of the data), you can judge whether these are relevant effects.
+
+- The p-values and confidence intervals indicate that both effects significantly differ from zero. Thus, both variables are (statistically) meaningful predictors.
+ 
+- The two predictors explain 0.282*100=28.2 percent of sw.
+
+- When looking at the absolute values of the standardized effects, covert is a more important predictor than overt: |-0.448| > |-0.160|.
+
+**Plot**
+
+With lavaanPlot:
+```{r, message = FALSE}
+if (!require("lavaanPlot")) install.packages("lavaanPlot") 
+library(lavaanPlot)
+lavaanPlot(model = fit_regr, 
+           node_options = list(shape = "box", fontname = "Helvetica"),
+           edge_options = list(color = "grey"), coefs = T, stand = T, covs = T)
+```
+Alternatively, with tidySEM:
+```{r, message = FALSE}
+if (!require("tidySEM")) install.packages("tidySEM")
+library(tidySEM)
+graph_sem(fit_regr)
+```
+
+Note: We could/should have also done this before to check whether our model specification seems to be as intended.
+
+
+###
+
+<details><summary><b>Click to see extra output</b></summary>
+
+&nbsp;
+
+**Fit measures**
+
+Many model fit measures
+```{r}
+fitMeasures(fit_regr)   
+```
+
+Ask for specific model fit measures
+```{r}
+fitMeasures(fit_regr, c("cfi", "tli", "rmsea","srmr")) 
+```
+
+R-square (for sw)
+```{r}
+inspect(fit_regr, 'r2') 
+```
+
+**Technical output**
+
+Comparable to TECH1 in Mplus. More details about this in Exercise 3.
+```{r}
+lavInspect(fit_regr)
+``` 
+
+###
+
+<details><summary><b>Click to see extra information regarding handling missing data</b></summary>
+
+&nbsp;
+
+**Handling missing data**
+
+Note that in the above listwise deletion is used.From the output, one can see that the total sample size used for the analyses is n=1343, while the total number of observations is 1491.
+
+lavaan used listwise deletion and deleted 148 cases:
+ - 145 cases because of missingness on the dependent variables and 
+ -   3 cases because of missingness on the predictors.
+
+It is better to use, for instance, FIML, as will be discusses later in the course.Note that in this data set, the three missing predictor cases will then be used in the analyses. This difference in sample size will most probably result in minor difference in the output.
+
+The code to use FIML is:
+```{r, warning = FALSE}
+model.regression <- '
+  sw ~ overt + covert # regression
+  sw ~~ sw            # residual variance
+  sw ~ 1              # intercept
+  #
+  # (co)variances predictors
+  overt + covert ~~ overt 
+  covert ~~ covert        
+'
+fit_regr <- lavaan(model = model.regression, data = data_regr,
+                       missing='fiml', fixed.x=F) # Specify FIML
+```
+
+Afterwards one can do the same as above. E.g., to get the output:
+```{r}
+summary(fit_regr, fit.measures = TRUE, ci = TRUE, rsquare = TRUE)
+```
+
+###
+
+<details><summary><b>Click to see extra information regarding lavaan notation</b></summary>
+
+&nbsp;
+
+*lavaan notation*
+
+formula type                | operator        | mnemonic
+----------------------------|:---------------:|:---------------
+regression                  |       ~         | is regressed on
+(residual) (co)variance     |       ~~        | is correlated with
+intercept                   |       ~ 1       | intercept
+latent variable definition  |       =~        | is measured by (Used in other days of the course)
+
+
+**General lavaan specification**
+
+*regressions*
+
+y1 + y2 ~ f1 + f2 + x1 + x2
+
+f1 ~ f2 + f3
+
+f2 ~ f3 + x1 + x2
+
+*latent variable definitions*
+
+f1 =~ y1 + y2 + y3 
+
+f2 =~ y4 + y5 + y6 
+
+f3 =~ y7 + y8 + y9 + y10
+
+*variances and covariances*
+
+y1 ~~ y1 
+
+y ~~ y2 
+
+f1 ~~ f2
+
+*intercepts*
+
+y1 ~ 1 
+
+f1 ~ 1
+
+&nbsp;
+
+###
+
+## Exercise 2: Multivariate regression
+In this exercise, we make use of a part (the Child Development Supplement) of the Panel Study of Income Dynamics (PSID)[^2]. The goal is to investigate whether three DVs, Applied problems (*APst02*), Behavioral problems (*Problems*), and Self-esteem (*Selfesteem*), can be predicted from the following two IV's: digit span (*DS02*) and letters words (*LWst02*). 
+Use the data file **CDSsummerschool.sav** or **CDSsummerschool.txt**. 
+
+[^2]: Produced and distributed by the Institute for Social Research, Survey Research Center, University of Michigan, Ann Arbor, MI
+
+
+### 2a
+It is a good practice to draw the model you plan to estimate for yourself. 
+
+Be very precise in how you draw the correlations. 
+
+
+<details><summary><b>Click to show answers</b></summary>
+
+&nbsp;
+
+In the Solutions folder, you can find the file "Ex. 2 - Path diagram.pdf", which shows such a path diagram. 
+
+&nbsp;
+
+
+### 2b 
+As part of your data screening step, request for descriptive statistics and correlations using R.
+
+Do not forget to read in your data and to denote missing values.
+
+Optional: Check if the descriptive statistics obtained in another software program are comparable. 
+
+
+<details><summary><b>Click to show answers</b></summary>
+
+&nbsp;
+
+Notably, the corresponding Mplus in- and output files can be found in the subfolder '...\\Solutions\\Ex.2\\Mplus'. 
+
+The R code looks as follows:
+
+
+**Read in data**
+
+```{r}
+data_multivar <- read.table("CDSsummerschool.txt", header = T)
+```
+
+**Denote missing values**
+
+-999 is missing, so set this to NA:
+
+```{r}
+data_multivar[sapply(data_multivar, function(x) as.character(x) %in% c("-999") )] <- NA
+```
+
+**Descriptive statistics** 
+
+Variables of interest: *APst02, Problems, Selfesteem, LWst02, DS02*
+```{r}
+colnames(data_multivar)
+```
+So, first 5 columns.
+
+The psych package can be used to obtain some extended summary statistics.
+
+```{r, message = FALSE}
+if (!require("psych")) install.packages("psych", dependencies = TRUE)
+library(psych) 
+```
+
+Descriptives like mean, median, min, and max:
+```{r}
+describe(data_multivar[,1:5])
+```
+
+**Correlations** 
+
+Correlations for the five variables of interest, incl correlation significance tests, using the Hmisc package.
+
+```{r, message = FALSE}
+if (!require("Hmisc")) install.packages("Hmisc", dependencies = TRUE)
+library(Hmisc)
+```
+
+```{r}
+res <- rcorr(as.matrix(data_multivar[, 1:5])) # rcorr() accepts matrices only
+```
+
+Correlation matrix (rounded to 3 decimals):
+```{r}
+round(res$r, 3)
+```
+P-values (rounded to 3 decimals):
+```{r}
+round(res$P, 3) 
+```
+
+Sample size:
+```{r}
+res$n 
+```
+
+&nbsp;
+
+
+### 2c 
+Create lavaan code to analyze the research question (running a multivariate regression). 
+
+In case you closed R after the first exercise, do not forget to load lavaan again.
+
+*Interpret the output. What are your conclusions?*
+
+*Also make sure that you modeled what you intended to model (Hint: Use the function ‘lavInspect()’ and/or a plot)*
+
+
+<details><summary><b>Click to show answers</b></summary>
+
+&nbsp;
+
+**Specify the regression model**
+
+Now, let us run a multivariate regression model predicting Applied problems (*APst02*), Behavioral problems (*Problems*), and Self-esteem (*Selfesteem*), using the predictors digit span (*DS02*) and letters words (*LWst02*). 
+
+To run a multivariate regression with lavaan, you first specify the model, then fit the model and finally acquire the summary. To fit the model we use the lavaan() function, which needs a model= and a data= input.
+
+The model specification is comparable to the multiple regression model in exercise 1, but now there are multiple dependent variables. One does not have to specify the regression model for each dependent variable, but one can state the dependent variables separated by the + sign: `dependent1 + dependent2 + dependent3 ~ predictor1 + predictor2  + etc`
+   
+The ~ is like the = in a regression equation. 
+
+Before the ~, one states the dependent variables, each separated by the + sign.
+
+After the ~, one states the predictors, each separated by the + sign.
+
+Additionally, one needs to specify that the error (of an dependent variable) has a variance: `dependent1 ~~ dependent1`.
+
+And now one also has to specify the residual covariances: `dependent1 ~~ dependent2`.
+
+To specify all the combinations more easily use:
+
+`dependent1 + dependent2 + Selfesteem ~~ dependent1`
+
+`dependent2 + dependent3 ~~ dependent2`
+
+`dependent3 ~~ dependent3`
+
+If needed (as is the case here), one can specify to include intercepts: `dependent1 + dependent2 + dependent3 ~ 1`. 
+
+Our regression model is specified as follows:
+
+```{r}
+model.multivar <- '
+  
+  # regressions
+  APst02 + Problems + Selfesteem ~ DS02 + LWst02 
+  
+  # residual variances and covariances
+  APst02 + Problems + Selfesteem ~~ APst02 
+  Problems + Selfesteem ~~ Problems
+  Selfesteem ~~ Selfesteem
+  
+  # variances and covariances of predictors  # *
+  DS02 + LWst02 ~~ DS02
+  LWst02 ~~ LWst02 
+  
+  # intercepts / means
+  APst02 + Problems + Selfesteem ~ 1  # intercept for each dependent
+  DS02 + LWst02 ~ 1                   # means of predictors # *
+'
+```
+
+*Remark*: This code is not needed to estimate the parameters, but it is needed such that lavaan will count these parameters correctly (see Exercise 3c).
+ 
+Note: Instead of specifying intercepts and means in the model, one can include 'meanstructure=TRUE' in the lavaan function.
+
+**Fit the regression model using the lavaan function:** 
+
+```{r, message = FALSE}
+if (!require("lavaan")) install.packages("lavaan", dependencies = TRUE)
+library(lavaan)
+```
+
+`fit_multivar <- lavaan(model = model.multivar, data = data_multivar)`
+
+Because of the missing data, we will use FIML (as explained later in the course):
+
+```{r, warning=FALSE}
+fit_multivar <- lavaan(model = model.multivar, data = data_multivar,
+                       missing='fiml', fixed.x=FALSE) # Specify FIML
+```
+
+
+**Technical output**
+
+```{r}
+lavInspect(fit_multivar)
+```
+
+In this output, we can see the numbers 1 to 20. This means that 20 parameters are estimated.
+
+Bear in mind that the values are parameter labels, not parameter values.
+
+Parameters 1 to 6 are the parameters in Beta, which reflects regression coefficients. The rows denote the outcomes and the columns the predictors, thus, in a way, each row denotes a regression equation. For instance, parameter 1 is the regression coefficient of DS02 predicting APst02 (conditional on the other predictor LWst02).
+
+Parameters 7 to 15 are the parameters in psi, where parameters 7 to 12 belong to the outcomes and thus reflect residual (co)variances and parameters 13 to 15 belong to the predictors and thus reflect the (co)variances of the predictors (which will equal the sample (co)variances).
+
+Parameters 16 to 20 are the parameters in alpha, where parameters 16 to 18 belong to the outcomes and thus reflect the intercepts in the regression equation and parameters 19 and 20 belong to the predictors and thus reflect the means of the predictors (which will equal the sample means).
+
+This is indeed the multivariate regression model we intended to fit.
+
+Note that you could also inspect the path diagram of the fitted model for some insight. This is done at the end of this answer section. This you can compare the path diagram your created in Exercise 2a.
+
+
+**Ouput**
+
+```{r}
+summary(fit_multivar, fit.measures = TRUE, ci = TRUE, rsquare = TRUE)
+```
+
+- Note that the residual variances are denoted by stating a "." before the variable name. Here: .APst02, .Problems, and .Selfesteem The variances are denoted without a ".". Here: DS02 and LWst02
+
+- Note that the intercepts are denoted by stating a "." before the variable name. Here: .APst02, .Problems, and .Selfesteem The means are denoted without a ".". Here: DS02 and LWst02
+
+**Parameter estimates**
+
+Unstandardized regression parameters
+```{r}
+coef(fit_multivar) 
+```
+
+All unstandardized parameters - with extra information 
+```{r}
+parameterEstimates(fit_multivar)
+```
+
+All standardized parameters - with extra information           
+```{r}
+standardizedSolution(fit_multivar)
+```
+
+**Fit measures**
+
+Many model fit measures
+```{r}
+fitMeasures(fit_multivar)   
+```
+
+R-square for all dependent variables
+```{r}
+inspect(fit_multivar, 'r2') 
+```
+
+
+**Possible conclusions:**
+
+- digit span (*DS02*) and letters words (*LWst02*) significantly predict all three outcomes.
+
+- The two predictors positively relate to *APst02* and *Selfesteem* and negatively to *Problems*.
+
+- The two predictors explain 36.5%, 5.2%, and 1.1% of the oucomes *APst02, Problems,* and *Selfesteem*.
+So, quite a lot of the variance in APst02 is explained.
+In all, we do miss relevant other predictors.
+
+- When you are the expert (and look at the scale of the data), you can judge whether the effect are relevant or not.
+
+- When looking at the absolute values of the standardized effects, *LWst02* is a more important predictor than *DS02* for *APst02* and *Problems*; while *DS02* is a more (or equally) important predictor than *LWst02* for *Selfesteem*.
+
+Note that the zero chi-square implies that the model is fully saturated: meaning that the theoretical covariance matrix is a function of as manyparameters as there are variances and covariances (on one side of the main diagonal) in the covariance matrix. You have essentially re-interpreted the covariance matrix, and this may be quite meaningful. Then, what you have is essentially a regression model, and you must evaluate your model in those terms: 
+
+Are the estimated relationships strong? 
+
+Are the direction of the parameter estimates consistent with theory? 
+
+Are any assumptions violated (note that this would be checked before analysis)? 
+
+Any basic regression text can guide you.
+
+**Plot**
+
+With lavaanPlot:
+```{r, message = FALSE}
+if (!require("lavaanPlot")) install.packages("lavaanPlot") 
+library(lavaanPlot)
+lavaanPlot(model = fit_multivar, 
+           node_options = list(shape = "box", fontname = "Helvetica"),
+           edge_options = list(color = "grey"), coefs = T, stand = T, covs = T)
+```
+
+Alternatively, with tidySEM:
+```{r, message = FALSE, warning=FALSE}
+if (!require("tidySEM")) install.packages("tidySEM")
+library(tidySEM)
+graph_sem(fit_multivar)
+```
+
+&nbsp;
+
+###
+
+## Exercise 3: Path analysis
+
+The data for this exercise is about corporal punishment[^3], which can be defined as the deliberate infliction of pain as retribution for an offence, or for the purpose of disciplining or reforming a wrongdoer or to change an undesirable attitude or behavior. Here, we are interested in how corporal punishment influences children's psychological maladjustment. The data come from 175 children between the ages of 8 and 18. The Physical Punishment Questionnaire (PPQ) was used to measure the level of physical punishment that was experienced.
+
+In this exercise, we focus on predicting psychological *maladjustment* (higher score implies more problems) by perceived *rejection* (e.g., my mother does not really love me; my mother ignores me as long as I do nothing to bother her; my mother goes out of her way to hurt my feelings). Moreover, *rejection* is predicted by perceived *harshness* (0 = never punished physically in any way; 16 = punished more than 12 times a week, very hard) and perceived *justness* (2 = very unfair and almost never deserved; 8 = very fair and almost always deserved). 
+
+The data consists of a covariance matrix taken from a published paper and can be found in the file **CorPun.dat** or **CorPun.txt**. Hence, besides analyzing a data set you collected yourself, in lavaan (and Mplus) it is possible to base your analyses on a covariance or correlation table (and this is the reason why reviewers always ask you to include it):
+
+`lower <- scan("CorPun.txt")`
+
+`CovMx <- getCov(lower, names = c("harsh", "just", "reject", "maladj"))`
+
+[^3]: Rohner, R. P., Bourque, S. L., & Elordi, C. A. (1996). Children's perceptions of corporal punishment, caretaker acceptance, and psychological adjustment in a poor, biracial southern community. Journal of Marriage and the Family, 58, 842-852.
+
+### 3a
+
+Make a drawing of the statistical model about corporal punishment and write down which parameters (e.g., regression paths, covariances, residuals) you expect to be estimated, and number these parameters. 
+
+<details><summary><b>Click to show answers</b></summary>
+
+&nbsp;
+
+In the Solutions folder, you can find the file "Ex. 3 - Path diagram.png", which shows such a path diagram. 
+
+
+**Number of parameters**
+
+The parameters you expect to be estimated: 
+
+- 2 x variances (*harsh*, *just*)
+
+-	1 x covariance (*harsh* with *just*)
+
+-	3 x regression paths 
+
+-	2 x residual variances (*reject* and *maladj*) 
+
+-	2 x means (*just* and *harsh*, if means are available in the data)
+
+-	2 x intercepts (*reject* and *maladj*, if means are available in the data)
+
+Thus, 8 in total without means or 12 with means.
+
+&nbsp;
+
+
+### 3b
+
+Write your lavaan code for this model based on the drawing you made in 3a and run it (after reading in your covariance matrix data). 
+
+Note that since you are using a covariance matrix as the input file, you should indicate this - as well as the number of observations - in the lavaan function using:
+
+`sample.cov = <name covariance matrix>`
+
+`sample.nobs = 175`
+
+
+
+<details><summary><b>Click to show answers</b></summary>
+
+&nbsp;
+
+**Data**
+
+Note: If you have no full dataset, but you do have a sample covariance matrix, you can still fit your model. If you wish to add a mean structure, you need to provide a mean vector too. Importantly, if only sample statistics are provided, you must specify the number of observations that were used to compute the sample moments (`sample.nobs = `). 
+The following example illustrates the use of a sample covariance matrix as input (`sample.cov = `).
+
+**Read in data: a covariance matrix**
+
+```{r}
+lower <- scan("CorPun.txt")
+CovMx <- getCov(lower, names = c("harsh", "just", "reject", "maladj"))
+```
+
+**Specify the path model**
+
+Now, let us run the model 
+
+- predicting psychological maladjustment by perceived rejection. 
+
+- predicting rejection by perceived harshness and perceived justness. 
+
+Our path model is specified as follows:
+
+```{r}
+model.path <- '
+  
+  # regressions
+  maladj ~ reject 
+  reject ~ harsh + just
+  
+  # residual variances
+  reject ~~ reject 
+  maladj ~~ maladj
+  #
+  # variances and covariances of predictors # *
+  harsh + just ~~ harsh
+  just ~~ just
+  
+  ## intercepts - if we would have mean value as input too
+  ## or use meanstructure=TRUE in the lavaan function
+  #maladj ~ 1
+  #reject ~ 1 
+'
+```
+
+*Remark*: This code is not needed to estimate the parameters, but it is needed such that lavaan will count these parameters correctly (see Exercise 3c).
+
+**Fit the regression model using the lavaan function:**
+
+```{r, message = FALSE}
+if (!require("lavaan")) install.packages("lavaan", dependencies = TRUE)
+library(lavaan)
+```
+
+```{r}
+fit_path <- lavaan(model = model.path, 
+                       sample.cov = CovMx, # Now, using a covariance matrix as input
+                       sample.nobs = 175) # In that case, the sample size is needed as well
+```
+
+&nbsp;
+
+
+### 3c
+
+Ask for the technical output to inspect which parameters are estimated. For a lavaan fit object, use the function `lavInspect()`. Note that this comparable to asking for the TECH1 output in Mplus. 
+
+In this output, you can find six matrices (nu, lambda, theta, alpha, beta, and psi) with numbers summing up to the total number of parameters that are estimated. This way you can check whether you analyzed the model you wanted (and you will discover this is not always the case). 
+
+
+
+*Which of the parameters you listed in Exercise 3a should be in which matrix?*  
+For example: the regression coefficient between *rejection* and *harshness* should be in the Beta matrix. Write this down for each parameter. 
+
+
+*Did you estimate all the parameters that you expected? If not, what should be changed to the input?*  
+
+- A first check is to see whether 'Number of model parameters' equals the number of elements in your variance-covariance matrix and if available the means. 
+
+- You can count the number of elements in your variance-covariance matrix: 
+
+  number of variables * (number of variables +1) / 2. 
+
+- If you also have means, 'Number of model parameters' should equal the number of elements in your variance-covariance matrix plus the number of variables. 
+
+- Thus, for our four variables without means, the calculation is: 4*5/2=10.
+
+- If we would have means, the number of sample statistics would be 14 (i.e., 4*5/2 +4).  
+
+
+Notice that you can also answer this question by means of a plot: e.g., using `lavaanPlot()` from the lavaanPlot package or `graph_sem()` from the tidysem package. This will show you all (means, intercepts,) regression paths, (residual) variances, and covariances. Notably, `lavaanPlot()` will not provide you with information about the means and intercepts (i.e., the nu & alpha matrices) nor the residual (co)variances. 
+
+<details><summary><b>Click to show answers</b></summary>
+
+&nbsp;
+
+**Technical output**
+
+```{r}
+lavInspect(fit_path)
+```
+
+This returns a list of the model matrices that are used internally to represent the model.
+
+Which parameter is listed in which matrix:
+ 
+The regression coefficients belong in the Beta matrix, the variances and residual variances in the Psi matrix. If you specified them!
+
+Note (related to *Remark* in Exercises 2c and 3b): When there is no specification of the variances of harsh and just and their covariance, the technical output (here, Psi) indicates that these 3 parameters are not estimated. Like in Mplus, this does not affect the degrees of freedom and thus the test result! In case you want to check this, run:
+
+```{r}
+model.path_check <- '
+  
+  # regressions
+  maladj ~ reject 
+  reject ~ harsh + just
+  
+  # residual variances
+  reject ~~ reject 
+  maladj ~~ maladj
+  #
+  # Check: Not specifying these variances and covariances
+  # variances and covariances of predictors # *
+  #harsh + just ~~ harsh
+  #just ~~ just
+  
+  ## intercepts - if we would have mean value as input too
+  ## or use meanstructure=TRUE in the lavaan function
+  #maladj ~ 1
+  #reject ~ 1 
+'
+fit_path_check <- lavaan(model = model.path_check, 
+                   sample.cov = CovMx, # Now, using a covariance matrix as input
+                   sample.nobs = 175) # In that case, the sample size is needed as well
+summary(fit_path_check, fit.measures = TRUE, ci = TRUE, rsquare = TRUE)
+lavInspect(fit_path_check)
+```
+
+Hence, always cross check that lavaan has understood what you wanted it to do by looking at the model degrees of freedom, the technical output (even the starting values) and model results. When these pieces of information do not contradict each other and lavaan gives you exactly the output you expect, then you can move forward with interpreting the model effects. 
+
+**Plot**
+
+With lavaanPlot:
+```{r, message = FALSE}
+if (!require("lavaanPlot")) install.packages("lavaanPlot") 
+library(lavaanPlot)
+lavaanPlot(model = fit_path, 
+           node_options = list(shape = "box", fontname = "Helvetica"),
+           edge_options = list(color = "grey"), coefs = T, stand = T, covs = T)
+```
+
+Alternatively, with tidySEM:
+```{r, message = FALSE}
+if (!require("tidySEM")) install.packages("tidySEM")
+library(tidySEM)
+graph_sem(fit_path)
+```
+
+&nbsp;
+
+
+
+### 3d
+
+Interpret the output.
+
+*Write down the chi-square statistic and its degrees of freedom from the model fit information. Also inspect other model fit measures.*
+
+
+<details><summary><b>Click to show answers</b></summary>
+
+&nbsp;
+
+**Output**
+
+```{r}
+summary(fit_path, fit.measures = TRUE, ci = TRUE, rsquare = TRUE)
+```
+
+Note that the residual variances are denoted by stating a "." before the variable name of the outcome / endogenous variable. Here: .reject and .maladj 
+
+The variances are denoted without a ".", so just the variable name of the predictor / exogenous variable. Here: harsh and just
+
+ 
+- The chi-square statistic and its degrees of freedom:
+
+`Model Test User Model:`
+
+`Test statistic                                 1.546`
+
+`Degrees of freedom                                 2`
+
+`P-value (Chi-square)                           0.462`
+
+
+**Parameter estimates**
+
+Unstandardized regression parameters
+```{r}
+coef(fit_path) 
+```
+
+All unstandardized parameters - with extra information 
+```{r}
+parameterEstimates(fit_path)
+```
+
+All standardized parameters - with extra information           
+```{r}
+standardizedSolution(fit_path)
+```
+
+**Fit measures**
+
+Many model fit measures
+```{r}
+fitMeasures(fit_path)   
+```
+
+Ask for specific model fit measures
+```{r}
+fitMeasures(fit_path, c("cfi", "tli", "rmsea","srmr")) 
+```
+
+- Model chi-square is the chi-square statistic obtained from the maximum likelihood statistic. (in lavaan: 'the Test Statistic for the Model Test User Model')
+
+- CFI is the Comparative Fit Index. Values can range between 0 and 1 (values greater than 0.90, conservatively 0.95 indicate good fit)
+
+- TLI Tucker Lewis Index which also ranges between 0 and 1(if it's greater than 1 it should be rounded to 1) with values greater than 0.90 indicating good fit. If the CFI and TLI are less than one, the CFI is always greater than the TLI.
+
+- RMSEA is the root mean square error of approximation. In lavaan, you also obtain a p-value of close fit, that the RMSEA < 0.05. If you reject the model, it means your model is not a close fitting model.
+
+R-square for all dependent variables:
+
+```{r}
+inspect(fit_path, 'r2')
+```
+
+
+&nbsp;
