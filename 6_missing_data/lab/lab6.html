@@ -3196,7 +3196,7 @@ data before estimating the model.</p>
 <p>As a (suboptimal) point of comparison, we’ll first fit a couple models using
 complete case analysis.</p>
 <hr />
-<div id="section-6" class="section level2" number="3.1">
+<div id="cfaSyntax" class="section level2" number="3.1">
 <h2><span class="header-section-number">3.1</span> </h2>
 <p><strong>Define the model syntax for the CFA.</strong></p>
 <p>The data only contain multi-item scales for <em>Drive for Thinness</em> and
@@ -3219,7 +3219,7 @@ pre   =~ eat3 + eat18 + eat21
 &#39;</code></pre>
 <hr />
 </div>
-<div id="section-7" class="section level2" number="3.2">
+<div id="section-6" class="section level2" number="3.2">
 <h2><span class="header-section-number">3.2</span> </h2>
 <p><strong>Estimate the CFA model on the EA data.</strong></p>
 <ul>
@@ -3228,10 +3228,10 @@ pre   =~ eat3 + eat18 + eat21
 <li>Estimate the mean structure.</li>
 <li>Use complete case analysis to treat the missing data.</li>
 </ul>
-<pre class="r"><code>naiveCfa &lt;- cfa(cfaMod, data = ea, std.lv = TRUE)</code></pre>
+<pre class="r"><code>naiveCfa &lt;- cfa(cfaMod, data = ea, std.lv = TRUE, meanstructure = TRUE)</code></pre>
 <hr />
 </div>
-<div id="section-8" class="section level2" number="3.3">
+<div id="section-7" class="section level2" number="3.3">
 <h2><span class="header-section-number">3.3</span> </h2>
 <p><strong>Summarize the fitted CFA and check the model fit.</strong></p>
 <ul>
@@ -3244,7 +3244,7 @@ pre   =~ eat3 + eat18 + eat21
 
   Estimator                                         ML
   Optimization method                           NLMINB
-  Number of model parameters                        21
+  Number of model parameters                        31
 
                                                   Used       Total
   Number of observations                           267         400
@@ -3281,6 +3281,21 @@ Covariances:
   drive ~~                                            
     pre               0.647    0.044   14.824    0.000
 
+Intercepts:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .eat1              3.884    0.064   60.958    0.000
+   .eat2              3.831    0.059   64.776    0.000
+   .eat10             3.884    0.061   63.654    0.000
+   .eat11             3.835    0.056   68.305    0.000
+   .eat12             3.888    0.060   64.296    0.000
+   .eat14             3.880    0.064   61.029    0.000
+   .eat24             3.884    0.060   65.144    0.000
+   .eat3              3.884    0.059   65.403    0.000
+   .eat18             3.895    0.060   65.119    0.000
+   .eat21             3.869    0.061   63.527    0.000
+    drive             0.000                           
+    pre               0.000                           
+
 Variances:
                    Estimate  Std.Err  z-value  P(&gt;|z|)
    .eat1              0.568    0.053   10.710    0.000
@@ -3297,7 +3312,7 @@ Variances:
     pre               1.000                           </code></pre>
 <pre class="r"><code>fitMeasures(naiveCfa)</code></pre>
 <pre><code>               npar                fmin               chisq                  df 
-             21.000               0.108              57.511              34.000 
+             31.000               0.108              57.511              34.000 
              pvalue      baseline.chisq         baseline.df     baseline.pvalue 
               0.007            1504.751              45.000               0.000 
                 cfi                 tli                nnfi                 rfi 
@@ -3305,19 +3320,19 @@ Variances:
                 nfi                pnfi                 ifi                 rni 
               0.962               0.727               0.984               0.984 
                logl   unrestricted.logl                 aic                 bic 
-          -3027.345           -2998.589            6096.690            6172.022 
+          -3027.345           -2998.589            6116.690            6227.895 
              ntotal                bic2               rmsea      rmsea.ci.lower 
-            267.000            6105.440               0.051               0.027 
+            267.000            6129.606               0.051               0.027 
      rmsea.ci.upper        rmsea.pvalue                 rmr          rmr_nomean 
-              0.073               0.447               0.039               0.039 
+              0.073               0.447               0.036               0.039 
                srmr        srmr_bentler srmr_bentler_nomean                crmr 
-              0.040               0.040               0.040               0.045 
+              0.037               0.037               0.040               0.040 
         crmr_nomean          srmr_mplus   srmr_mplus_nomean               cn_05 
-              0.045               0.040               0.040             226.640 
+              0.045               0.037               0.040             226.640 
               cn_01                 gfi                agfi                pgfi 
-            261.267               0.960               0.936               0.594 
+            261.267               0.995               0.990               0.520 
                 mfi                ecvi 
-              0.957               0.373 </code></pre>
+              0.957               0.448 </code></pre>
 <p>This model looks fine. All measurement model parameters seem reasonable, and the
 model fits the data well. That being said, 133 observations were deleted to “fix” the missing data.</p>
 <hr />
@@ -3367,7 +3382,7 @@ for the missing data).</li>
 </ol>
 <hr />
 </div>
-<div id="section-9" class="section level2" number="4.2">
+<div id="section-8" class="section level2" number="4.2">
 <h2><span class="header-section-number">4.2</span> </h2>
 <p><strong>Create traceplots of the imputations’ means and variances.</strong></p>
 <p>One especially expedient way to evaluate convergence is by plotting the
@@ -3394,7 +3409,7 @@ evidence of a global trend. So, these plots suggest convergence.</p>
 Scale Reduction Factor</em>, <span class="math inline">\(\hat{R}\)</span>, (<a href="https://doi.org/10.1214/ss/1177011136">Gelman &amp; Rubin, XXXX</a>).</p>
 <hr />
 </div>
-<div id="section-10" class="section level2" number="4.3">
+<div id="section-9" class="section level2" number="4.3">
 <h2><span class="header-section-number">4.3</span> </h2>
 <p><strong>Compute the <span class="math inline">\(\hat{R}\)</span> statistic for the means and variances.</strong></p>
 <p>For <em>mids</em> objects, we can use the <code>Rhat.mice()</code> function from <strong>miceadds</strong> to
@@ -3434,7 +3449,7 @@ that juxtapose the imputed and observed data. Since we’re comparing distributi
 kernel density plots are often a good visualization.</p>
 <hr />
 </div>
-<div id="section-11" class="section level2" number="4.4">
+<div id="section-10" class="section level2" number="4.4">
 <h2><span class="header-section-number">4.4</span> </h2>
 <p><strong>Create kernel density plots of the imputed and observed data.</strong></p>
 <p>We can create “quick-and-dirty” density plots via the <strong>mice</strong>::<code>densityplot()</code>
@@ -3466,7 +3481,7 @@ analysis. For our purposes, that means creating a list of multiply imputed
 datasets that we can analyze via <strong>semTools</strong>::<code>lavaan.mi()</code>.</p>
 <hr />
 </div>
-<div id="section-12" class="section level2" number="4.5">
+<div id="section-11" class="section level2" number="4.5">
 <h2><span class="header-section-number">4.5</span> </h2>
 <p><strong>Create a list of imputed datasets from the <em>mids</em> object generated in <a href="#mi">4.1</a>.</strong></p>
 <p>The <code>mice()</code> function returns a <em>mids</em> object that contains the imputations and
@@ -3488,20 +3503,23 @@ phase of the process. In practice, we will lean heavily on routines from the
 <a href="https://cran.r-project.org/web/packages/semTools/index.html"><strong>semTools</strong></a> package to implement both the analysis and pooling
 phases.</p>
 <hr />
-<div id="section-13" class="section level2" number="5.1">
-<h2><span class="header-section-number">5.1</span> </h2>
-<p><strong>Estimate the CFA model on the multiply imputed EA data.</strong></p>
+<div id="basic-cfasem" class="section level2" number="5.1">
+<h2><span class="header-section-number">5.1</span> Basic CFA/SEM</h2>
+<hr />
+<div id="section-12" class="section level3" number="5.1.1">
+<h3><span class="header-section-number">5.1.1</span> </h3>
+<p><strong>Estimate the CFA defined in <a href="#cfaSyntax">3.1</a> on the multiply imputed data.</strong></p>
 <ul>
 <li>Correlate the latent factors.</li>
 <li>Set the scale by standardizing the latent factors.</li>
 <li>Estimate the mean structure.</li>
 </ul>
 <p><em>HINT</em>: The <strong>semTools</strong>::<code>cfa.mi()</code> function can be a big help here.</p>
-<pre class="r"><code>cfaFit1 &lt;- cfa.mi(cfaMod, data = eaImp, std.lv = TRUE)</code></pre>
+<pre class="r"><code>miCfa &lt;- cfa.mi(cfaMod, data = eaImp, std.lv = TRUE, meanstructure = TRUE)</code></pre>
 <hr />
 </div>
-<div id="section-14" class="section level2" number="5.2">
-<h2><span class="header-section-number">5.2</span> </h2>
+<div id="section-13" class="section level3" number="5.1.2">
+<h3><span class="header-section-number">5.1.2</span> </h3>
 <p><strong>Summarize the fitted CFA and check the model fit.</strong></p>
 <ul>
 <li>Include the FMI statistics in your summary.</li>
@@ -3511,7 +3529,7 @@ phases.</p>
 <li>Do any of the FMI estimates cause you to question the results?</li>
 </ul>
 <pre class="r"><code>options(width = 100)
-summary(cfaFit1, fmi = TRUE) %&gt;% print()</code></pre>
+summary(miCfa, fmi = TRUE) %&gt;% print()</code></pre>
 <pre><code>
 The RIV will exceed 1 whenever between-imputation variance exceeds within-imputation variance (when FMI(1) &gt; 50%).
 
@@ -3532,59 +3550,74 @@ Parameter Estimates:
 Latent Variables:
                    Estimate  Std.Err  t-value       df  P(&gt;|t|)      FMI      RIV
   drive =~                                                                       
-    eat1              0.731    0.051   14.361 5028.239    0.000    0.061    0.065
-    eat2              0.652    0.047   13.926      Inf    0.000    0.018    0.018
-    eat10             0.799    0.044   18.303 2831.970    0.000    0.082    0.089
-    eat11             0.764    0.042   18.398      Inf    0.000    0.008    0.008
-    eat12             0.662    0.047   13.976 3424.716    0.000    0.074    0.080
-    eat14             0.901    0.043   20.867      Inf    0.000    0.005    0.005
-    eat24             0.615    0.049   12.662 2035.951    0.000    0.097    0.107
+    eat1              0.731    0.051   14.419 5028.239    0.000    0.061    0.065
+    eat2              0.652    0.047   13.982      Inf    0.000    0.018    0.018
+    eat10             0.799    0.044   18.377 2831.970    0.000    0.082    0.089
+    eat11             0.764    0.041   18.472      Inf    0.000    0.008    0.008
+    eat12             0.662    0.047   14.032 3424.716    0.000    0.074    0.080
+    eat14             0.901    0.043   20.951      Inf    0.000    0.005    0.005
+    eat24             0.615    0.048   12.713 2035.951    0.000    0.097    0.107
   pre =~                                                                         
-    eat3              0.774    0.048   16.158      Inf    0.000    0.038    0.040
-    eat18             0.754    0.049   15.393 1637.941    0.000    0.108    0.121
-    eat21             0.860    0.046   18.598 1924.002    0.000    0.099    0.110
+    eat3              0.774    0.048   16.223      Inf    0.000    0.038    0.040
+    eat18             0.754    0.049   15.455 1637.941    0.000    0.108    0.121
+    eat21             0.860    0.046   18.673 1924.002    0.000    0.099    0.110
 
 Covariances:
                    Estimate  Std.Err  t-value       df  P(&gt;|t|)      FMI      RIV
   drive ~~                                                                       
-    pre               0.620    0.040   15.515 7586.696    0.000    0.050    0.053
+    pre               0.620    0.040   15.578 7586.696    0.000    0.050    0.053
+
+Intercepts:
+                   Estimate  Std.Err  t-value       df  P(&gt;|t|)      FMI      RIV
+   .eat1              4.012    0.056   71.848      Inf    0.000    0.043    0.045
+   .eat2              3.939    0.051   77.279      Inf    0.000    0.019    0.020
+   .eat10             3.948    0.051   76.769 8365.873    0.000    0.048    0.050
+   .eat11             3.938    0.049   80.352      Inf    0.000    0.000    0.000
+   .eat12             3.925    0.052   76.052 5793.515    0.000    0.057    0.061
+   .eat14             3.962    0.053   74.316      Inf    0.000    0.000    0.000
+   .eat24             3.986    0.052   76.893 4440.152    0.000    0.065    0.070
+   .eat3              3.967    0.052   75.674      Inf    0.000    0.000    0.000
+   .eat18             3.983    0.053   75.128 2448.087    0.000    0.088    0.097
+   .eat21             3.949    0.052   75.410      Inf    0.000    0.025    0.026
+    drive             0.000                                                      
+    pre               0.000                                                      
 
 Variances:
                    Estimate  Std.Err  t-value       df  P(&gt;|t|)      FMI      RIV
-   .eat1              0.613    0.049   12.416 2604.622    0.000    0.085    0.093
-   .eat2              0.532    0.042   12.507 2021.696    0.000    0.097    0.107
-   .eat10             0.334    0.030   11.074 3100.033    0.000    0.078    0.085
-   .eat11             0.299    0.027   11.025      Inf    0.000    0.043    0.045
-   .eat12             0.542    0.043   12.495 1229.291    0.000    0.124    0.142
-   .eat14             0.234    0.026    9.105      Inf    0.000    0.042    0.044
-   .eat24             0.610    0.048   12.730  636.995    0.000    0.173    0.209
-   .eat3              0.412    0.042    9.814 1556.282    0.000    0.110    0.124
-   .eat18             0.465    0.044   10.474  724.078    0.000    0.162    0.193
-   .eat21             0.269    0.039    6.824  869.260    0.000    0.148    0.173
+   .eat1              0.613    0.049   12.466 2604.622    0.000    0.085    0.093
+   .eat2              0.532    0.042   12.557 2021.696    0.000    0.097    0.107
+   .eat10             0.334    0.030   11.119 3100.033    0.000    0.078    0.085
+   .eat11             0.299    0.027   11.069      Inf    0.000    0.043    0.045
+   .eat12             0.542    0.043   12.546 1229.291    0.000    0.124    0.142
+   .eat14             0.234    0.026    9.142      Inf    0.000    0.042    0.044
+   .eat24             0.610    0.048   12.781  636.995    0.000    0.173    0.209
+   .eat3              0.412    0.042    9.853 1556.282    0.000    0.110    0.124
+   .eat18             0.465    0.044   10.516  724.078    0.000    0.162    0.193
+   .eat21             0.269    0.039    6.852  869.260    0.000    0.148    0.173
     drive             1.000                                                      
     pre               1.000                                                      </code></pre>
 <pre class="r"><code>options(width = 80)
-fitMeasures(cfaFit1, stat = &quot;D3&quot;)</code></pre>
+fitMeasures(miCfa, stat = &quot;D3&quot;)</code></pre>
 <pre><code>              chisq                  df              pvalue                ariv 
-             46.207              34.000               0.079               0.188 
+             46.156              34.000               0.080               0.189 
                 fmi                npar              ntotal                logl 
-              0.159              21.000             400.000           -4676.179 
+              0.159              31.000             400.000           -4676.490 
   unrestricted.logl                 aic                 bic                bic2 
-          -4648.721            9394.358            9478.179            9411.544 
+          -4649.044            9414.979            9538.715            9440.350 
      baseline.chisq         baseline.df     baseline.pvalue                 cfi 
-           1753.617              45.000               0.000               0.993 
+           1741.955              45.000               0.000               0.993 
                 rni                nnfi                 tli                 rfi 
               0.993               0.991               0.991               0.965 
                 nfi                pnfi                 ifi                 mfi 
               0.974               0.736               0.993               0.985 
               rmsea      rmsea.ci.lower      rmsea.ci.upper        rmsea.pvalue 
-              0.030               0.000               0.050               0.949 
+              0.030               0.000               0.050               0.950 
            gammaHat         adjGammaHat                 rmr          rmr_nomean 
-              0.994               0.990               0.033               0.033 
+              0.994               0.990               0.030               0.033 
                srmr        srmr_bentler srmr_bentler_nomean                crmr 
-              0.033               0.033               0.033               0.036 
+              0.030               0.030               0.033               0.033 
         crmr_nomean          srmr_mplus   srmr_mplus_nomean 
-              0.036               0.033               0.033 </code></pre>
+              0.036               0.030               0.033 </code></pre>
 <ul>
 <li>This model looks good. All measurement model parameters seem reasonable, and the
 model fits the data very well.</li>
@@ -3596,8 +3629,8 @@ food</em> factor and the <em>drive for thinness</em> factor are correlated and r
 onto <em>anxiety</em>, <em>Western beauty standards</em> and <em>BMI</em>.</p>
 <hr />
 </div>
-<div id="semSyntax1" class="section level2" number="5.3">
-<h2><span class="header-section-number">5.3</span> </h2>
+<div id="semSyntax1" class="section level3" number="5.1.3">
+<h3><span class="header-section-number">5.1.3</span> </h3>
 <p><strong>Define the model syntax for the SEM described above.</strong></p>
 <ul>
 <li>Label the regression slopes for <em>anxiety</em> and <em>Western beauty standards</em>
@@ -3613,19 +3646,19 @@ semMod &lt;- paste(cfaMod,
                 sep = &#39;\n&#39;)</code></pre>
 <hr />
 </div>
-<div id="semFit1" class="section level2" number="5.4">
-<h2><span class="header-section-number">5.4</span> </h2>
+<div id="semFit1" class="section level3" number="5.1.4">
+<h3><span class="header-section-number">5.1.4</span> </h3>
 <p><strong>Estimate the SEM on the multiply imputed data.</strong></p>
 <ul>
 <li>Covary the latent factors.</li>
 <li>Set the scale by standardizing the latent variables.</li>
 </ul>
 <p><em>HINT</em>: The <strong>semTools</strong>::<code>sem.mi()</code> function can be a big help here.</p>
-<pre class="r"><code>semFit1 &lt;- sem.mi(semMod, data = eaImp, std.lv = TRUE)</code></pre>
+<pre class="r"><code>miSem1 &lt;- sem.mi(semMod, data = eaImp, std.lv = TRUE)</code></pre>
 <hr />
 </div>
-<div id="section-15" class="section level2" number="5.5">
-<h2><span class="header-section-number">5.5</span> </h2>
+<div id="section-14" class="section level3" number="5.1.5">
+<h3><span class="header-section-number">5.1.5</span> </h3>
 <p><strong>Summarize the fitted SEM and interpret the results.</strong></p>
 <ul>
 <li>Include the FMI statistics in your summary.</li>
@@ -3634,7 +3667,7 @@ for thinness</em> after controlling for <em>Western beauty standards</em> and <e
 <li>Does <em>Western beauty standards</em> significantly predict <em>preoccupation with food</em>
 and/or <em>drive for thinness</em> after controlling for <em>anxiety</em> and <em>BMI</em>?</li>
 </ul>
-<pre class="r"><code>summary(semFit1, fmi = TRUE) %&gt;% print()</code></pre>
+<pre class="r"><code>summary(miSem1, fmi = TRUE) %&gt;% print()</code></pre>
 <pre><code>
 The RIV will exceed 1 whenever between-imputation variance exceeds within-imputation variance (when FMI(1) &gt; 50%).
 
@@ -3786,15 +3819,19 @@ after controlling for <em>Western beauty standards</em> and <em>BMI</em>.</li>
 and <em>BMI</em>.</li>
 </ul>
 <hr />
+</div>
+</div>
+<div id="testing" class="section level2" number="5.2">
+<h2><span class="header-section-number">5.2</span> Testing</h2>
+<hr />
 <p>Given an SEM fitted to multiply imputed data via <strong>semTools</strong>::<code>lavaan.mi()</code>, we
 can use the testing utilities from <strong>semTools</strong> to evaluate (multivariate)
 hypotheses defined in terms of parameter constraints.</p>
 <p>In the next two questions, we’ll consider one such hypothesis test.</p>
 <hr />
-</div>
-<div id="waldMi" class="section level2" number="5.6">
-<h2><span class="header-section-number">5.6</span> </h2>
-<p><strong>Apply a multivariate Wald test to the fitted model from <a href="#semFit1">5.4</a>.</strong></p>
+<div id="waldMi" class="section level3" number="5.2.1">
+<h3><span class="header-section-number">5.2.1</span> </h3>
+<p><strong>Apply a multivariate Wald test to the fitted model from <a href="#semFit1">5.1.4</a>.</strong></p>
 <ul>
 <li>Test the bivariate null hypothesis that states:
 <ol style="list-style-type: decimal">
@@ -3810,7 +3847,7 @@ b1p == b1d
 b2p == b2d
 &#39;
 
-lavTestWald.mi(semFit1, cons, test = &quot;D1&quot;)</code></pre>
+lavTestWald.mi(miSem1, cons, test = &quot;D1&quot;)</code></pre>
 <pre><code>       F      df1      df2   pvalue     ariv      fmi 
    1.227    2.000 6923.960    0.293    0.071    0.067 </code></pre>
 <p>The Wald test returned a nonsignificant result (
@@ -3821,9 +3858,9 @@ lavTestWald.mi(semFit1, cons, test = &quot;D1&quot;)</code></pre>
 either outcome.</p>
 <hr />
 </div>
-<div id="section-16" class="section level2" number="5.7">
-<h2><span class="header-section-number">5.7</span> </h2>
-<p><strong>Test the hypothesis from <a href="#waldMi">5.6</a> using a likelihood ratio test.</strong></p>
+<div id="section-15" class="section level3" number="5.2.2">
+<h3><span class="header-section-number">5.2.2</span> </h3>
+<p><strong>Test the hypothesis from <a href="#waldMi">5.2.1</a> using a likelihood ratio test.</strong></p>
 <ul>
 <li>Estimate a separate restricted SEM.</li>
 <li>Compare the full and restricted fits using a LRT.</li>
@@ -3834,10 +3871,10 @@ either outcome.</p>
 semMod2 &lt;- paste(semMod, cons, sep = &#39;\n&#39;)
 
 ## Estimate the restricted model:
-semFit2 &lt;- sem.mi(semMod2, data = eaImp, std.lv = TRUE)
+miSem2 &lt;- sem.mi(semMod2, data = eaImp, std.lv = TRUE)
 
 ## Conduct the LRT:
-anova(semFit1, semFit2, stat = &quot;D3&quot;)</code></pre>
+anova(miSem1, miSem2, stat = &quot;D3&quot;)</code></pre>
 <pre><code>       F      df1      df2   pvalue     ariv      fmi 
    1.236    2.000 5773.641    0.291    0.079    0.073 </code></pre>
 <p>As above, the LRT returned a nonsignificant result (
@@ -3849,8 +3886,17 @@ and, consequently, we cannot infer a difference in the effect of either
 predictor on either outcome.</p>
 <hr />
 </div>
-<div id="section-17" class="section level2" number="5.8">
-<h2><span class="header-section-number">5.8</span> </h2>
+</div>
+<div id="mediation" class="section level2" number="5.3">
+<h2><span class="header-section-number">5.3</span> Mediation</h2>
+<hr />
+<p>Next, we’ll consider methods for modeling mediation when working with MI data.
+To keep things simple, we’re only going to estimate a simple mediation model
+wherein <em>Western beauty standards</em> predict <em>preoccupation with food</em>, and
+<em>drive for thinness</em> mediates this relation.</p>
+<hr />
+<div id="medSyntax" class="section level3" number="5.3.1">
+<h3><span class="header-section-number">5.3.1</span> </h3>
 <p><strong>Define the model syntax for the structural model.</strong></p>
 <ul>
 <li>Specify all paths needed to test the mediation hypothesis described above.</li>
@@ -3862,17 +3908,36 @@ pre   ~ b * drive + cp * wsb
 drive ~ a * wsb
 
 ab := a * b
-c  := cp + ab
 &#39;
 
 ## Add on the measurement part:
 semMod3 &lt;- paste(cfaMod, semMod3, sep = &#39;\n&#39;)</code></pre>
 <hr />
-<pre class="r"><code>library(coxed) # To calculate BCa intervals
-
-## Define a function that will take a fitted lavaan object (&#39;lavObj&#39;) and return 
-## the estimates of all defined parameters:
-getDefParEstimates &lt;- function(lavObj) {
+<p>Combining mediation with MI is a bit tricky. When treating the missing data with
+MI, we produce <span class="math inline">\(M\)</span> different datasets, but we also need to create <span class="math inline">\(B\)</span> bootstrap
+samples to test the indirect effects.</p>
+<p>The best method for combining these two layers of sampling is not immediately
+obvious, but the literature does provide some guidance. <a href="https://doi.org/10.1080/00273171.2013.816235">Wu and Jia (2013)</a> recommend an approach that they call <em>MI(Boot)</em> that entails nesting the
+bootstrapping within the MI as follows:</p>
+<ol style="list-style-type: decimal">
+<li>Impute the missing data <span class="math inline">\(M\)</span> times.</li>
+<li>For each of these <span class="math inline">\(M\)</span> imputed datasets, estimate your mediation model using
+<span class="math inline">\(B\)</span> bootstrap samples.</li>
+<li>Combine the <span class="math inline">\(M \times B\)</span> resulting estimates of the indirect effect into a
+single sample with <span class="math inline">\(N = M \times B\)</span> observations.</li>
+<li>Use this aggregated sample to construct CIs and test for mediation.</li>
+</ol>
+<hr />
+<p>The MI(Boot) approach is not currently implemented in <strong>lavaan</strong> or <strong>semTools</strong>
+(neither is any alternative method of combining MI and bootstrapping). If you
+really wanted to, however, you could implement MI(Boot) manually.</p>
+<ul>
+<li>The following three code chunks do so (in a not-so-elegant way).</li>
+</ul>
+<hr />
+<p>First, we’ll define a function that will take a fitted lavaan object (<code>lavObj</code>)
+and return the estimates of all defined parameters specified therein.</p>
+<pre class="r"><code>getDefParEstimates &lt;- function(lavObj) {
   ## Use lavaan::lav_partable_constraints_def() to generate a function that 
   ## computes all defined parameters represented in &#39;lavObj&#39;:
   getDefPar &lt;- lavObj %&gt;% parTable() %&gt;% lav_partable_constraints_def()
@@ -3880,61 +3945,145 @@ getDefParEstimates &lt;- function(lavObj) {
   ## Extract the bootstrapped coefficient estimates from &#39;lavObj&#39;:
   cf &lt;- inspect(lavObj, &quot;coef.boot&quot;)
 
-  ## Compute the defined parameters on each bootstrapped sample, and return the 
-  ## result:
+  ## Compute the defined parameters on each bootstrapped sample:
   apply(cf, 1, getDefPar)
-}
+}</code></pre>
+<p>Now, we’ll use the <code>semList()</code> function from <strong>lavaan</strong> to fit <code>semMod3</code> to each
+of the M = 20 imputed datasets in <code>eaImp</code>.</p>
+<ul>
+<li>We’ll generate B = 1000 boostrap samples for each of these 20 imputed datasets.</li>
+<li>We’ll use the <code>getDefParEstimates()</code> function defined above to extract the
+relevant estimates (i.e., the bootstrapped estimates of the indirect effect)
+from each one of our fitted models.</li>
+</ul>
+<pre class="r"><code>## Fit the models:
+fits &lt;- semList(semMod3, 
+                dataList  = eaImp, 
+                std.lv    = TRUE, 
+                se        = &quot;boot&quot;, 
+                bootstrap = 1000, 
+                FUN       = getDefParEstimates)</code></pre>
+<p>Finally, we aggregate the bootstrapped estimates of the indirect effect from
+above (these live in the <code>funList</code> slot of the <code>fits</code> object) into a single
+sample with <span class="math inline">\(N = M \times B\)</span> observations.</p>
+<ul>
+<li>This aggregated pool of estimates represents the empirical sampling
+distribution of our indirect effect, so we can summarize this aggregated sample
+for inference.</li>
+</ul>
+<pre class="r"><code>## Aggregate estimates:
+ab &lt;- fits@funList %&gt;% unlist()
 
-## Fit &#39;semMod3&#39; to each of the 20 imputed datasets in &#39;eaImp&#39;.
-## Generate B = 1000 boostrap samples for each of these 20 imputed datasets.
-tmp &lt;- semList(semMod3, 
-               dataList  = eaImp, 
-               std.lv    = TRUE, 
-               se        = &quot;boot&quot;, 
-               bootstrap = 10, 
-               FUN       = getDefParEstimates)
-
-## Aggregate all of the bootstrapped estimates for each defined parameter into a 
-## single sample with N = M * B observations:  
-est &lt;- tmp@funList %&gt;% do.call(cbind, .) %&gt;% t()
-
-## Use the coxed::bca() function to compute BCa CIs for each defined parameter:
-apply(est, 2, bca)</code></pre>
+## Use the bca() function from the coxed package to compute the BCa CI for the 
+## indirect effect:
+coxed::bca(ab)</code></pre>
+<pre><code>[1] 0.1059049 0.2159654</code></pre>
+<hr />
+<p>The MI(Boot) approach will produce theoretically optimal results, but it does so
+at a high computational cost. Implementing the approach for <strong>lavaan</strong> models is
+also a bit tricky. Thankfully, we have a very satisfactory alternative: the
+Monte Carlo method proposed by <a href="https://doi.org/10.1207/s15327906mbr3901_4">MacKinnon et al. (2004)</a>.</p>
+<p>The justification for the Monte Carlo method begins with the original motivation
+for using bootstrapping to test the indirect effect: the <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> paths are
+normally distributed, so their product cannot be. Rather than going fully
+non-parametric (as in bootstrapping), the Monte Carlo method leverages the known
+sampling distributions of <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> to synthesize an empirical sampling
+distribution of their product (i.e., the indirect effect). The Monte Carlo method
+entailsthe following procedure.</p>
+<ol style="list-style-type: decimal">
+<li>Estimate the mediation model on the full dataset.
+<ul>
+<li>When analyzing MI data, this model is estimated in the usual way, and the
+parameter estimates used in the following steps are the pooled MI estimates.
+<span class="math inline">\(\\[6pt]\)</span><br />
+</li>
+</ul></li>
+<li>Use the estimated <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> paths along with their asymptotic covariance
+matrix to define a bivariate normal distribution.
+<ul>
+<li>This distribution represents an estimate of the joint sampling distribution
+of <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> under the assumption of bivariate normality (which is usually
+a reasonable assumption).
+<span class="math inline">\(\\[6pt]\)</span></li>
+</ul></li>
+<li>Generate a very large sample (e.g., <span class="math inline">\(N \geq 20000\)</span>) from the bivariate normal
+distribution defined above.
+<ul>
+<li>Although we need to generate a very large sample to get an accurate estimate
+of the distribution, generating such a sample is computationally trivial and
+very fast.
+<span class="math inline">\(\\[6pt]\)</span></li>
+</ul></li>
+<li>For each <span class="math inline">\(\{a_n, b_n\}\)</span> pair in the above sample, compute the indirect effect,
+<span class="math inline">\(ab_n = a_n \times b_n\)</span>.
+<span class="math inline">\(\\[6pt]\)</span></li>
+<li>Use the <span class="math inline">\(N\)</span> estimates of the indirect effect to define an empirical sampling
+distribution, and summarize this distribution as you would when using bootstrapping.</li>
+</ol>
+<p>Fortunately for us, the Monte Carlo simulation approach is implemented in the
+<code>monteCarloCI()</code> function from <strong>semTools</strong>. For more information on this
+approach, see <a href="https://doi.org/10.1207/s15327906mbr3901_4">MacKinnon et al. (2004)</a> and
+<a href="https://doi.org/10.1080/19312458.2012.679848">Preacher and Selig (2012)</a>.</p>
 <hr />
 </div>
-<div id="section-18" class="section level2" number="5.9">
-<h2><span class="header-section-number">5.9</span> </h2>
-<p><strong>Use the Monte Carlo simulation approach to test the mediation hypothesis
-described above.</strong></p>
-<pre class="r"><code>miSem3 &lt;- sem.mi(semMod3, data = eaImp, std.lv = TRUE)
+<div id="section-16" class="section level3" number="5.3.2">
+<h3><span class="header-section-number">5.3.2</span> </h3>
+<p><strong>Use the Monte Carlo simulation approach to test the above mediation hypothesis.</strong></p>
+<ul>
+<li>Is the indirect effect statistically significant?</li>
+</ul>
+<pre class="r"><code>## Estimate the mediation model on the MI data:
+miSem3 &lt;- sem.mi(semMod3, data = eaImp, std.lv = TRUE)
 
+## Compute Monte Carlo CIs:
 monteCarloCI(miSem3, plot = TRUE)</code></pre>
+<img src="data:image/png;base64,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" width="672" style="display: block; margin: auto;" />
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["est"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["ci.lower"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["ci.upper"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"0.1532805","2":"0.1046951","3":"0.2073905","_rn_":"ab"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 <hr />
 </div>
 </div>
-<div id="full-information-maximum-likelihood" class="section level1" number="6">
-<h1><span class="header-section-number">6</span> Full Information Maximum Likelihood</h1>
+</div>
+<div id="fiml" class="section level1" number="6">
+<h1><span class="header-section-number">6</span> FIML</h1>
 <hr />
-<p>Blah, blah, blah…</p>
+<p>Now that we’ve had our fun with MI, lets explore the final topic of this lab:
+<em>full information maximum likelihood</em> (FIML).</p>
 <hr />
-<div id="section-19" class="section level2" number="6.1">
+<div id="section-17" class="section level2" number="6.1">
 <h2><span class="header-section-number">6.1</span> </h2>
-<p><strong>Question</strong></p>
+<p><strong>Estimate the CFA defined in <a href="#cfaSyntax">3.1</a> using FIML.</strong></p>
+<ul>
+<li>Fit the model to the incomplete EA data.</li>
+<li>Correlate the latent variables.</li>
+<li>Estimate the mean structure.</li>
+<li>Set the scale by standardizing the latent variables.</li>
+</ul>
 <pre class="r"><code>fimlCfa1 &lt;- cfa(cfaMod, data = ea, std.lv = TRUE, missing = &quot;fiml&quot;)</code></pre>
+<p>To implement basic FIML estimation, we need only add the <code>missing = &quot;fiml&quot;</code>
+option to our <code>cfa()</code> call.</p>
 <hr />
 </div>
-<div id="section-20" class="section level2" number="6.2">
+<div id="section-18" class="section level2" number="6.2">
 <h2><span class="header-section-number">6.2</span> </h2>
-<p><strong>Question</strong></p>
+<p><strong>Summarize the fitted model.</strong></p>
 <ul>
 <li>Include the FMI statistics in your summary
 <ul>
 <li>Do any of these FMI values give you pause?</li>
+<li>How do these FMI estimates compare to those from the MI-based CFA in <a href="#miCfa"><strong>??</strong></a>?
+<span class="math inline">\(\\[6pt]\)</span></li>
 </ul></li>
-<li>Does the number of missing data patterns shown in the summary match the number you calculated in <a href="#mdPattern">2.5</a>?
+<li>Does the number of missing data patterns shown in the summary match the number
+you calculated in <a href="#mdPattern">2.5</a>?
 <ul>
 <li>If not, what do you think causes this discrepancy?</li>
 </ul></li>
+<li>Do the parameter estimates looks sensible?</li>
+<li>Does the model fit the data well enough?</li>
 </ul>
 <pre class="r"><code>summary(fimlCfa1, fmi = TRUE)</code></pre>
 <pre><code>lavaan 0.6-12 ended normally after 47 iterations
@@ -4007,29 +4156,327 @@ Variances:
    .eat21             0.262    0.039    6.663    0.000    0.088
     drive             1.000                                    
     pre               1.000                                    </code></pre>
+<pre class="r"><code>fitMeasures(fimlCfa1)</code></pre>
+<pre><code>               npar                fmin               chisq                  df 
+             31.000               0.059              47.104              34.000 
+             pvalue      baseline.chisq         baseline.df     baseline.pvalue 
+              0.067            1949.598              45.000               0.000 
+                cfi                 tli                nnfi                 rfi 
+              0.993               0.991               0.991               0.968 
+                nfi                pnfi                 ifi                 rni 
+              0.976               0.737               0.993               0.993 
+               logl   unrestricted.logl                 aic                 bic 
+          -4441.944           -4418.392            8945.888            9069.624 
+             ntotal                bic2               rmsea      rmsea.ci.lower 
+            400.000            8971.259               0.031               0.000 
+     rmsea.ci.upper        rmsea.pvalue                 rmr          rmr_nomean 
+              0.051               0.940               0.029               0.032 
+               srmr        srmr_bentler srmr_bentler_nomean                crmr 
+              0.029               0.029               0.032               0.032 
+        crmr_nomean          srmr_mplus   srmr_mplus_nomean               cn_05 
+              0.035               0.029               0.032             413.723 
+              cn_01                 gfi                agfi                pgfi 
+            477.059               0.997               0.994               0.521 
+                mfi                ecvi 
+              0.984               0.273 </code></pre>
+<ul>
+<li>The parameter estimates all look reasonable, and the model fits the data well.</li>
+<li>None of the FMI values are especially large, and they tend to be a little
+smaller than the FMI values produced by MI (as shown in the following figure).</li>
+</ul>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABUAAAAPACAMAAADDuCPrAAABOFBMVEUAAAAAADoAAGYAOjoAOmYAOpAAZpAAZrYAv8QzMzM6AAA6ADo6AGY6OgA6Ojo6OmY6OpA6ZmY6ZpA6ZrY6kJA6kNtNTU1NTW5NTY5Nbo5NbqtNjshmAABmOgBmOjpmZjpmZmZmZpBmkJBmkLZmkNtmtttmtv9uTU1ubo5ujqtujshuq+SOTU2Obk2Obm6OyOSOyP+QOgCQZjqQkDqQkLaQttuQ27aQ2/+rbk2rjm6ryOSr5P+2ZgC2Zjq2kDq2kGa2kJC2tpC2ttu225C229u22/+2/7a2/9u2///Ijk3Ijm7IyKvI5P/I///bkDrbtmbbtpDb25Db27bb2//b/9vb///kq27kyI7kyKvk///4dm3/tmb/yI7/25D/27b/29v/5Kv/5Mj/5OT//7b//8j//9v//+T///+6N+lJAAAACXBIWXMAAB2HAAAdhwGP5fFlAAAgAElEQVR4nO3d/WNbh3XfYUh2SlttnDWpodhRlrZbrblWU6trG3lRsr6srZXZavoiLQ6lTppE4f//DwaA4JsEkMdXwME5wPP8EIoXNMNc4vsxrggiowkAg4y2/QUAdCWgAAMJKMBAAgowkIACDCSgAAMJKMBAAgowkIACDCSgAAMJKMBAAgowkIACDLSGgI5EGNhLAgowkIACDCSgAAMJKMBAAgowkIACDCSgAAMJKMBAAgowkIACDCSgAAMJKMBAAgowkIACDCSgAAMJKMBAAgowkIACDCSgAAMJKMBAAgowkIACDCSgAAMJKMBAAgowkIACDCSgAAMJKMBAAgowkIACDCSgAAMJKMBAAgowkIACDCSgAAMJKMBAAgowkIDGvccWbPu7DpcQ0Khth2Rfbfv7DpcQ0KhGU96h8OzK/w52lIBGNZqygEIOAY1qNGUBhRwCGtVoygIKOQQ0qtGUBRRyCGhUoykLKOQQ0KhGUxZQyCGgUY2mLKCQQ0CjGk1ZQCGHgEY1mrKAQg4BjWo0ZQGFHAIa1WjKAgo5BDSq0ZQFFHIIaFSjKQso5BDQqEZTFlDIIaBRjaYsoJBDQKMaTVlAIYeARjWasoBCDgGNajRlAYUcAhrVaMoCCjkENKrRlAUUcghoVKMpCyjkENCoRlMWUMghoFGNpiygkENAoxpNWUAhh4BGNZqygEIOAY1qNGUBhRwCGtVoygIKOQQ0qtGUBRRyCGhUoykLKOQQ0KhGUxZQyCGgUY2mLKCQQ0CjGk1ZQCGHgEY1mrKAQg4BjWo0ZQGFHAIa1WjKAgo5BDSq0ZQFFHIIaFSjKQso5BDQqEZTFlDIIaBRjaYsoJBDQKMaTVlAIYeARjWasoBCDgGNajRlAYUcAhrVaMoCCjkENKrRlAUUcghoVKMpCyjkENCoRlMWUMghoFGNpiygkENAoxpNWUAhh4BGNZqygEIOAY1qNGUBhRwCGtVoygIKOQQ0qtGUBRRyCGhUoykLKOQQ0KhGUxZQyCGgUY2mLKCQQ0CjGk1ZQCGHgEY1mrKAQg4BjWo0ZQGFHAIa1WjKAgo5BDSq0ZQFFHIIaFSjKQso5BDQqEZTFlDIIaBRjaYsoJBDQKMaTVlAIYeARjWasoBCDgGNajRlAYUcAhrVaMoCCjkENKrRlAUUcghoVKMpCyjkENCoRlMWUMghoFGNpiygkENAoxpNWUAhh4BGNZqygEIOAY1qNGUBhRwCGtVoygIKOQQ0qtGUBRRyCGhUoykLKOQQ0KhGUxZQyCGgUY2mLKCQQ0CjGk1ZQCGHgEY1mrKAQg4BjWo0ZQGFHAIa1WjKAgo5BDSq0ZQFFHIIaFSjKQso5BDQqEZTFlDIIaBRjaYsoJBDQKMaTVlAIYeARjWasoBCDgGNajRlAYUcAhrVaMoCCjkENKrRlAUUcghoVKMpCyjkENCoRlMWUMghoFGNpiygkENAoxpNWUAhh4BGNZqygEIOAY1qNGUBhRwCGtVoygIKOQQ0qtGUBRRyCGhUoykLKOQQ0KhGUxZQyCGgUY2mLKCQQ0CjGk1ZQCGHgEY1mrKAQg4BjWo0ZQGFHAIa1WjKAgo5BDSq0ZQFFHIIaFSjKQso5BDQqEZTFlDIIaBRjaYsoJBDQKMaTVlAIYeARjWasoBCDgGNajRlAYUcAhrVaMoCCjkENKrRlAUUcghoVKMpCyjkENCoRlMWUMghoFGNpiygkENAoxpNWUAhh4BGNZqygEIOAY1qNGUBhRwCGtVoygIKOQQ0qtGUBRRyCGhUoykLKOQQ0KhGUxZQyCGgUY2mLKCQQ0CjGk1ZQCGHgEY1mrKAQg4BjWo0ZQGFHAIa1WjKAgo5BDSq0ZQFFHIIaFSjKQso5BDQqEZTFlDIIaBRjaYsoJBDQKMaTVlAIYeARjWasoBCDgGNajRlAYUcAhrVaMoCCjkENKrRlAUUcghoVKMpCyjkENCoRlMWUMghoFGNpiygkENAoxpNWUAhh4BGNZqygEIOAY1qNGUBhRwCGtVoygIKOQQ0qtGUBRRyCGhUoykLKOQQ0KhGUxZQyCGgUY2mLKCQQ0CjGk1ZQCGHgEY1mrKAQg4BjWo0ZQGFHAIa1WjKAgo5BDSq0ZQFFHIIaFSjKQso5BDQqEZTFlDIIaBRjaYsoJBDQKMaTVlAIYeARjWasoBCDgGNajRlAYUcq+P36ovb4/GnX50/9Jufjsc3Lx6aCGg9Ago5Vsbv5Z3xzA+/Pjv0q/mR8c2fv/YpBLQYAYUcK+P3YPzxV5Pn98Yff3Ny5Mn45p9PZofOR3UioPUIKORYFb9nt+eZfHnn9PHmq3vjzyfzQ8dvzz6FgBYjoJBjVfwej3+0ePvZ4sjLO4tHng9ODy0+hYAWI6CQY1X8HiweZj5ZhPTCTQJam4BCjhXxe3Vvcen+7PbZX4IeO3dV//4xAS1GQCHHtw/o47PHpAJak4BCjqsD+trP3J94GlN5Ago5vu0j0Ce3b37+2scKaDUCCjm+ZUAfv/H4U0DrEVDI8e1+Cv+rJf0U0HIEFHKsfh7oZxfezrx6MP7o6zc/VECrEVDIEf9NpPlvd36z5EMFtBoBhRyr4vfq3vij134X/vHyfgpoOQIKOVbG7/m5V2N6dnv6OHTx8kwzF385SUCrEVDIsTp+z7+YpvLT+WPOeUCfjAW0CQGFHF6RPqrRlAUUcghoVKMpCyjkENCoRlMWUMixnYC+19Lbn6okvb7aS235W84Q277TZBLQuLc/VUl6fbWX2vK3nCG2fafJ5BI+qtH9Yofuxbvyv4MdJaBRjaYsoJBDQKMaTVlAIYeARjWasoBCDgGNajRlAYUcAhrVaMoCCjkENKrRlAUUcghoVKMpCyjkENCoRlMWUMghoFGNpiygkENAoxpNWUAhh4BGNZqygEIOAY1qNGUBhRwCGtVoygIKOQQ0qtGUBRRyCGhUoykLKOQQ0KhGUxZQyCGgUY2mLKCQQ0CjGk1ZQCGHgEY1mrKAQg4BjWo0ZQGFHAIa1WjKAgo5BDSq0ZQFFHIIaFSjKQso5BDQqEZTFlDIIaBRjaYsoJBDQKMaTVlAIYeARjWasoBCDgGNajRlAYUcAhrVaMoCCjkENKrRlAUUcghoVKMpCyjkENCoRlMWUMghoFGNpiygkENAoxpNWUAhh4BGNZqygEIOAY1qNGUBhRwCGtVoygIKOQQ0qtGUBRRyCGhUoykLKOQQ0KhGUxZQyCGgUY2mLKCQQ0CjGk1ZQCGHgEY1mrKAQg4BjWo0ZQGFHAIa1WjKAgo5BDSq0ZQFFHIIaFSjKQso5BDQqEZTFlDIIaBRjaYsoJBDQKMaTVlAIYeARjWasoBCDgGNajRlAYUcAhrVaMoCCjkENKrRlAUUcghoVKMpCyjkENCoRlMWUMghoFGNpiygkENAoxpNWUAhh4BGNZqygEIOAY1qNGUBhRwCGtVoygIKOQQ0qtGUBRRyCGhUoykLKOQQ0KhGUxZQyCGgUY2mLKCQQ0CjGk1ZQCGHgEY1mrKAQg4BjWo0ZQGFHAIa1WjKAgo5BDSq0ZQFFHIIaFSjKQso5BDQqEZTFlDIIaBRjaYsoJBDQKMaTVlAIYeARjWasoBCDgGNajRlAYUcAhrVaMoCCjkENKrRlAUUcghoVKMpCyjkENCoRlMWUMghoFGNpiygkENAoxpNWUAhh4BGNZqygEIOAY1qNGUBhRwCGtVoygIKOQQ0qtGUBRRyCGhUoykLKOQQ0KhGUxZQyCGgUY2mLKCQQ0CjGk1ZQCGHgEY1mrKAQg4BjWo0ZQGFHAIa1WjKAgo5BDSq0ZQFFHIIaFSjKQso5BDQqEZTFlDIIaBRjaYsoJBDQKMaTVlAIYeARjWasoBCDgGNajRlAYUcAhrVaMoCCjkENKrRlAUUcghoVKMpCyjkENCoRlMWUMghoFGNpiygkENAoxpNWUAhh4BGNZqygEIOAY1qNGUBhRwCGtVoygIKOQQ0qtGUBRRyCGhUoykLKOQQ0KhGUxZQyCGgUY2mLKCQQ0CjGk1ZQCGHgEY1mrKAQg4BjWo0ZQGFHAIa1WjKAgo5BDSq0ZQFFHIIaFSjKQso5BDQqEZTFlDIIaBRjaYsoJBDQKMaTVlAIYeARjWasoBCDgGNajRlAYUcAhrVaMoCCjkENKrRlAUUcghoVKMpCyjkENCoRlMWUMghoFGNpiygkENAoxpNWUAhh4BGNZqygEIOAY1qNGUBhRwCGtVoygIKOQQ0qtGUBRRyCGhUoykLKOQQ0KhGUxZQyCGgUY2mLKCQQ0CjGk1ZQCGHgEY1mrKAQg4BjWo0ZQGFHAIa1WjKAgo5BDSq0ZQFlB329He/90d/d/bu0a//8IODSz78xa3Rh7FP/HB0/ctv+8UIaFSjKQsoO+zpjdHo2s9O3z0cjUYHSz/wn//To4mAVtFoygLKDpsF9FwT768K6P3RdwS0jkZTFlB22DSgHxy3cebFrWvfFdAGGk1ZQNlh04D+8Y3Ta/jD0e/cFdAGGk1ZQNlh04D+yd3TKN6fvXOw7OMEtJRGUxZQdtg0oJ88PLmGf3Hr+j+dBvQ//mL286Xv/8Pszw9Hcx/OA3r0P787Gr3zX04u+89/3Myv//P03R88EtBNajRlAWWHzQL69OQa/nB0cHQS0EUzR6MfTC4G9Pu3jt9ZRPfk46791/m7039+7vpfCOgGNZqygLLDZgE9OrmGvz99eLkI6LSLsweV//cXxwU9dwk/ujZ98Pkfdxc/u59+3Lv/azL51x+PRp8cf9zoB48mR7+YNVRAN6bRlAWUHTYL6OThSR2v/WwR0Onhg+MPeHj8NNFzAZ2HcvpxswPT948fiU7fnwVz+s99uPjHBHSDGk1ZQNlh84AuruEPpzFcBPTsbzAXB84Curh0vz//iIenz8I/Tuf9k39u+oECujmNpiyg7LB5QBc/W59ewS96eXTuZ/HH6TwL6OKG48SeBvP4lnP/3H0B3aBGUxZQdtg8oMd5PLo7fTR5nMAXt0bnHJfytacxzQO6uJCfmf/xrK+exrRRjaYsoOyw44Aezq7En96YV/RbBvTg5DPdPw7oydNEBXSTGk1ZQNlhxwGdh+/hLH6nAT24+HEegZbSaMoCyg47Dui0jwfzK/izvwM9/f34Y8sD6u9At6TRlAWUHbYI6OHo+t/OruDPfuh+8tP1RUtXBPTh4llN8xfC+/Dc487F05q+HQGNajRlAWWHLQI6DeMH83KePQ908RD0cLR4iLo0oEueB3qwuFlAN6jRlAWUHbYI6PyFQGd/OPebSO/+1fTdXy5+Z3P2hM+jf3sjoOd/E+nkN5O+/w9+E2nTGk1ZQNlhJwE9ecT45u/CHz/CnL1U/fSWNwL6+u/CT35x/O67/11AN6jRlAWUHXYS0JNr76Nzr8b03WkIv/dXiw/85xvTgD56M6CLV2P6wb+dfMZ/9WpMm9doygIKOQQ0qtGUBRRyCGhUoykLKOQQ0KhGUxZQyCGgUY2mLKCQQ0CjGk1ZQCGHgEY1mrKAQg4BjWo0ZQGFHAIa1WjKAgo5BDSq0ZQFFHIIaFSjKQso5BDQqEZTFlDIIaBRjaYsoJBDQKMaTVlAIYeARjWasoBCDgGNajRlAYUcAhrVaMoCCjkENKrRlAUUcghoVKMpCyjkENCoRlMWUMghoFHvsRXb/r7DJQQ0atsh2Vfb/r7DJQQUaO+3v93Of6+AAu0JKMBAAgowkIACDCSgAAMJKEDQb6+W8nUIKNBMIJ8CCrBMoI4CCrCMgAIMJKAAAw0O6NMboxPXv5y+N/2PyeE7v/+Xjxa3H/3NT35veujFrdkNEQIKNLPegE7f+WRx++H8+FoC+uqL2+Pxp19dcWgioECutwjo+TKeBPSdGweLI/ffubGmgL68M5754deXHpp/CgEFEq05oO/+eHH0xa0/uLWmgD4Yf/zV5Pm98cffXHZo/ikEFEi05oB+55eLa/jDa3+9poA+uz1/oPnyzs2fX3Lo+FMIKJBo3QH9l8U1/P3r/7imgD4e/2jx9rNLDh1/CgEFEg3+TaQVAf33u/PDL24dvFhTQB+MP5+/fbKo5vJDx59CQIFEbxHQkx/CH0zOBfTRw/k1/PQ/1xTQV/cW1+nPbp/8jeeSQ+8fE1Ag0RqexnQwOR/Qw9n7R9PHoQIK7Lh1/x3oo3kxn944mKw/oCfPWlpyaPEpBBRItPaATu5Pr+Fn1/Gpj0AXn0JAgUTrD+j0Gn52BS+gwK5bf0Cnyfz72XOZ/BQe2HHrD+jR3Ws/mf0kfl0BPXmy54Xngb5x6PhTCCiQaP0BnTw8/zIifhMJ2FkbCOjTG/M3JwE9fdGmT5Z9mjOr4vfq3vij137xfcmh408hoECiDQT06O7ow8n6Ajp5fu6ll57dnj/ofO7VmIDt6/CK9M+/mMby0/mDzUVAzx86/ykEFEjk/5UTYCABBVibpF6+QUCB9gQUYCABBRhIQAEGElCAgQQUoBkBBRhoTwMaeiIuV9n2txG2bC8Duu3u7IxtfyNhy/Y0oNv+CiLKJ6r2VwcJBLQsAYXqBLQsAYXqBLQsAYXqBLQsAYXqBLQsAYWo997bzn+vgJYloBAloIl6LF9AIUpAE/VYvoBClIAm6rF8AYUoAU3UY/kCClECmqjH8gUUVnnvailfh4CWJaCwXCCfAro5PZYvoLBcoI4Cujk9li+gsJyAblWP5QsoLCegW9Vj+QIKyw0O6OE7v/+XjxZ/Pvqbn/zel5PJ0xvXvxz+lQhoWQIKyw0P6Gg0+uTsz9cFdIgeyxdQWO4tAvrOjYPFn++/c0NAB+mxfAGF5d4ioO/+eNHLF7f+4JaADtJj+QIKy71FQL/zy8U1/OG1vxbQYXosX0BhubcJ6L8sruHvX/9HAR2mx/IFFJYb/JtI04D++915MF/cOnghoMP0WL6AwnJvE9BHD+fX8NP/FNCBeixfQGG5t7mEf3Q4OphMjqaPQwV0oB7LF1BY7q0COu/m0xsHEwEdqMfyBRSWe6uATu5Pr+Fn1/ECOlCP5QsoLPd2AZ1ew8+u4AV0qB7LF1BY7u0COg3n38+eyySgA/VYvoDCcm8X0KO7134y+0m8gA7UY/kCCsu9XUAnD49fRkRAB+qxfAGF5d4yoE9vzN8I6EA9li+gsNxbBvTo7ujDiYAO1mP5AgrLeUX6reqxfAGF5fy/cm5Vj+ULKCwnoFvVY/kCClFJvXyDgJYloBAloIl6LF9AIUpAE/VYvoBClIAm6rF8AYUoAU3UY/kCClECmqjH8gUUogQ0UY/lCyhUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUJ6BlCShUt52A/nbb3v5/9eaV/0J9D9l7AlpW+S/U95C95xK+rPKVqP3VQQIBLUtAoToBLUtAoToBLUtAoToBLUtAoToBLUtAobrV8Xv1xe3x+NOvzh/6zU/H45sXD00EdFMEFKpbGb+Xd8YzP/z67NCv5kfGN3/+2qcQ0I0QUKhuZfwejD/+avL83vjjb06OPBnf/PPJ7ND5qE4EdFMEFKpbFb9nt+eZfHnn9PHmq3vjzyfzQ8dvzz6FgG6EgEJ1q+L3ePyjxdvPFkde3lk88nxwemjxKQR0IwQUqlsVvweLh5lPFiG9cJOAZhBQqG5F/F7dW1y6P7t99pegx85d1b9/TEA3QkChum8f0Mdnj0kFdJMEFKq7OqCv/cz9iacxJRFQqO7bPgJ9cvvm5699rIBuhoBCda/F78nxc+U/XxXQx288/hTQTRFQqG5FQFf8FP5XS/opoBsioFDd6ueBfnbh7cyrB+OPvn7zQwV0MwQUqov/JtL8tzu/WfKhAroZAgrVrYrfq3vjj177XfjHy/spoBsioFDdyvg9P/dqTM9uTx+HLl6eaebiLycJ6GYIKFS3On7Pv5im8tP5Y855QJ+MBTSVgEJ1XpG+LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6gS0LAGF6vY0oKzFtr+RsGUCynDb/kbClu1lQAHWQUABBhJQ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" width="672" style="display: block; margin: auto;" /></p>
+<p>The number of response patterns listed in the summary,
+31,
+is fewer than the number of patterns calculated from the full dataset,
+46
+.</p>
+<ul>
+<li>This discrepancy arises because we are only analyzing a subset of the
+incomplete variables here. The total number of response patterns increases when
+considering the full dataset.</li>
+</ul>
+<p>Generally, the model looks good. The parameter estimates all seem sensible, and
+the model fits the data very well.</p>
+<hr />
+<p>Although the model above seems to have produced satisfactory estimates, the MAR
+assumption will have been violated unless the missingness on the indicators of
+<code>drive</code> and <code>pre</code> is associated only with other such indicators. If, for example,
+missingness on some of the <code>pre</code> items is associated with <em>BMI</em>, then the data
+are MNAR, and the model estimates (although nice looking), and probably biased.</p>
+<p>We can address this issue by including auxiliary variables (i.e., potential
+correlates of missingness in which we have no substantive interest) via the
+[Graham (2003)][graham_2003] saturated correlates technique.</p>
 <hr />
 </div>
-<div id="section-21" class="section level2" number="6.3">
+<div id="section-19" class="section level2" number="6.3">
 <h2><span class="header-section-number">6.3</span> </h2>
-<p><strong>Question</strong></p>
+<p><strong>Rerun the CFA using <code>bmi</code>, <code>anx</code>, and <code>wsb</code> as auxiliary variables.</strong></p>
+<ul>
+<li>Include the auxiliaries via the saturated correlates approach.</li>
+<li>Keep all other model parameterization and estimation settings the same above.</li>
+</ul>
+<p><em>HINT</em>: The <strong>semTools</strong>::<code>cfa.auxiliary()</code> function can be very helpful here.</p>
 <pre class="r"><code>fimlCfa2 &lt;- cfa.auxiliary(cfaMod, 
                           data = ea, 
                           aux = c(&quot;bmi&quot;, &quot;anx&quot;, &quot;wsb&quot;), 
                           std.lv = TRUE, 
                           missing = &quot;fiml&quot;)</code></pre>
+<p>NOTE: When you run this model, you will probably receive a warning message about
+a not positive definite residual covariance matrix. As you can see from the
+eigenvalues below, it is true that the residual covariance matrix is NPD.</p>
+<pre class="r"><code>## Extract the residual covariance matrix:
+(theta &lt;- lavInspect(fimlCfa2, &quot;theta&quot;))</code></pre>
+<pre><code>      eat1  eat2  eat10 eat11 eat12 eat14 eat24 eat3  eat18 eat21 bmi   anx  
+eat1  0.604                                                                  
+eat2  0.000 0.535                                                            
+eat10 0.000 0.000 0.328                                                      
+eat11 0.000 0.000 0.000 0.300                                                
+eat12 0.000 0.000 0.000 0.000 0.538                                          
+eat14 0.000 0.000 0.000 0.000 0.000 0.234                                    
+eat24 0.000 0.000 0.000 0.000 0.000 0.000 0.599                              
+eat3  0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.415                        
+eat18 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.451                  
+eat21 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.264            
+bmi   0.940 0.945 0.730 0.740 0.764 0.877 0.887 0.705 0.700 0.773 7.374      
+anx   1.435 1.211 1.046 1.191 1.194 1.268 1.256 1.379 1.351 1.279 1.244 9.200
+wsb   0.605 0.485 0.503 0.569 0.486 0.652 0.541 0.403 0.523 0.541 1.118 1.049
+      wsb  
+eat1       
+eat2       
+eat10      
+eat11      
+eat12      
+eat14      
+eat24      
+eat3       
+eat18      
+eat21      
+bmi        
+anx        
+wsb   3.646</code></pre>
+<pre class="r"><code>## Indeed, we have a negative eigenvalue =&gt; NPD
+eigen(theta)$values</code></pre>
+<pre><code> [1] 12.2667170  6.8382415  3.3098964  0.6012041  0.5727693  0.5351208
+ [7]  0.4822731  0.4311151  0.3585560  0.3149530  0.2801749  0.2426013
+[13] -1.7461727</code></pre>
+<p>However, I honestly cannot figure out what’s wrong, and the residual covariance
+matrix itself looks fine (i.e., no Heywood cases, no extreme values, all
+covariances are legal according to the relevant triangle inequalities). So,
+I’m willing to tentatively trust these estimates.</p>
 <hr />
 </div>
-<div id="section-22" class="section level2" number="6.4">
+<div id="section-20" class="section level2" number="6.4">
 <h2><span class="header-section-number">6.4</span> </h2>
-<p><strong>Question</strong></p>
+<p><strong>Summarize the CFA model and check the model fit.</strong></p>
+<ul>
+<li>How do the results compare to the model estimated without auxiliary variables?</li>
+</ul>
+<pre class="r"><code>summary(fimlCfa2, fmi = TRUE)</code></pre>
+<pre><code>lavaan 0.6-12 ended normally after 102 iterations
+
+  Estimator                                         ML
+  Optimization method                           NLMINB
+  Number of model parameters                        70
+
+  Number of observations                           400
+  Number of missing patterns                        46
+
+Model Test User Model:
+                                                      
+  Test statistic                                49.044
+  Degrees of freedom                                34
+  P-value (Chi-square)                           0.046
+
+Parameter Estimates:
+
+  Standard errors                             Standard
+  Information                                 Observed
+  Observed information based on                Hessian
+
+Latent Variables:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)      FMI
+  drive =~                                                     
+    eat1              0.741    0.050   14.772    0.000    0.063
+    eat2              0.649    0.045   14.369    0.000    0.017
+    eat10             0.808    0.043   18.956    0.000    0.042
+    eat11             0.764    0.040   19.212    0.000    0.003
+    eat12             0.662    0.047   14.055    0.000    0.076
+    eat14             0.901    0.041   21.811    0.000    0.007
+    eat24             0.622    0.048   12.875    0.000    0.097
+  pre =~                                                       
+    eat3              0.772    0.046   16.685    0.000    0.027
+    eat18             0.751    0.048   15.558    0.000    0.091
+    eat21             0.862    0.046   18.917    0.000    0.064
+
+Covariances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)      FMI
+  drive ~~                                                     
+    pre               0.620    0.039   16.078    0.000    0.027
+  bmi ~~                                                       
+    anx               1.244    0.426    2.917    0.004    0.042
+    wsb               1.118    0.275    4.065    0.000    0.065
+  anx ~~                                                       
+    wsb               1.049    0.311    3.370    0.001    0.094
+  bmi ~~                                                       
+   .eat1              0.940    0.157    5.987    0.000    0.056
+  anx ~~                                                       
+   .eat1              1.435    0.181    7.949    0.000    0.072
+  wsb ~~                                                       
+   .eat1              0.605    0.111    5.431    0.000    0.079
+  bmi ~~                                                       
+   .eat2              0.945    0.143    6.617    0.000    0.033
+  anx ~~                                                       
+   .eat2              1.211    0.160    7.592    0.000    0.045
+  wsb ~~                                                       
+   .eat2              0.485    0.101    4.783    0.000    0.098
+  bmi ~~                                                       
+   .eat10             0.730    0.142    5.150    0.000    0.038
+  anx ~~                                                       
+   .eat10             1.046    0.160    6.534    0.000    0.038
+  wsb ~~                                                       
+   .eat10             0.503    0.103    4.885    0.000    0.097
+  bmi ~~                                                       
+   .eat11             0.740    0.133    5.574    0.000    0.007
+  anx ~~                                                       
+   .eat11             1.191    0.154    7.733    0.000    0.028
+  wsb ~~                                                       
+   .eat11             0.569    0.096    5.953    0.000    0.036
+  bmi ~~                                                       
+   .eat12             0.764    0.143    5.334    0.000    0.059
+  anx ~~                                                       
+   .eat12             1.194    0.165    7.250    0.000    0.086
+  wsb ~~                                                       
+   .eat12             0.486    0.104    4.658    0.000    0.129
+  bmi ~~                                                       
+   .eat14             0.877    0.146    6.025    0.000    0.005
+  anx ~~                                                       
+   .eat14             1.268    0.169    7.485    0.000    0.043
+  wsb ~~                                                       
+   .eat14             0.652    0.106    6.135    0.000    0.065
+  bmi ~~                                                       
+   .eat24             0.887    0.149    5.967    0.000    0.106
+  anx ~~                                                       
+   .eat24             1.256    0.166    7.564    0.000    0.098
+  wsb ~~                                                       
+   .eat24             0.541    0.104    5.213    0.000    0.106
+  bmi ~~                                                       
+   .eat3              0.705    0.141    5.007    0.000    0.015
+  anx ~~                                                       
+   .eat3              1.379    0.169    8.179    0.000    0.054
+  wsb ~~                                                       
+   .eat3              0.403    0.100    4.006    0.000    0.037
+  bmi ~~                                                       
+   .eat18             0.700    0.145    4.843    0.000    0.074
+  anx ~~                                                       
+   .eat18             1.351    0.171    7.910    0.000    0.092
+  wsb ~~                                                       
+   .eat18             0.523    0.105    4.991    0.000    0.100
+  bmi ~~                                                       
+   .eat21             0.773    0.143    5.398    0.000    0.040
+  anx ~~                                                       
+   .eat21             1.279    0.169    7.579    0.000    0.078
+  wsb ~~                                                       
+   .eat21             0.541    0.104    5.183    0.000    0.085
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)      FMI
+   .eat1              4.004    0.055   73.123    0.000    0.038
+   .eat2              3.937    0.050   79.306    0.000    0.030
+   .eat10             3.953    0.050   78.551    0.000    0.032
+   .eat11             3.937    0.047   83.777    0.000   -0.000
+   .eat12             3.929    0.051   77.411    0.000    0.052
+   .eat14             3.962    0.051   77.484    0.000   -0.000
+   .eat24             3.986    0.051   78.125    0.000    0.053
+   .eat3              3.968    0.050   78.900    0.000   -0.000
+   .eat18             3.982    0.052   77.193    0.000    0.046
+   .eat21             3.952    0.051   77.906    0.000    0.022
+    drive             0.000                                    
+    pre               0.000                                    
+    bmi              22.406    0.136  164.171    0.000    0.010
+    anx              11.971    0.154   77.834    0.000    0.028
+    wsb               8.959    0.098   90.996    0.000    0.060
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)      FMI
+   .eat1              0.604    0.049   12.436    0.000    0.076
+   .eat2              0.535    0.042   12.716    0.000    0.056
+   .eat10             0.328    0.030   11.037    0.000    0.085
+   .eat11             0.300    0.026   11.428    0.000    0.022
+   .eat12             0.538    0.043   12.430    0.000    0.088
+   .eat14             0.234    0.025    9.347    0.000    0.060
+   .eat24             0.599    0.047   12.663    0.000    0.105
+   .eat3              0.415    0.041   10.009    0.000    0.058
+   .eat18             0.451    0.044   10.305    0.000    0.106
+   .eat21             0.264    0.039    6.712    0.000    0.088
+    drive             1.000                                    
+    pre               1.000                                    
+    bmi               7.374    0.526   14.012    0.000    0.013
+    anx               9.200    0.675   13.622    0.000    0.062
+    wsb               3.646    0.268   13.615    0.000    0.067</code></pre>
+<pre class="r"><code>fitMeasures(fimlCfa2)</code></pre>
+<pre><code>               npar                fmin               chisq                  df 
+             70.000               0.061              49.044              34.000 
+             pvalue      baseline.chisq         baseline.df     baseline.pvalue 
+              0.046            1956.345              45.000               0.000 
+                cfi                 tli                nnfi                 rfi 
+              0.992               0.990               0.990               0.967 
+                nfi                pnfi                 ifi                 rni 
+              0.975               0.737               0.992               0.992 
+               logl   unrestricted.logl                 aic                 bic 
+          -6957.674           -6933.152           14055.349           14334.751 
+             ntotal                bic2               rmsea      rmsea.ci.lower 
+            400.000           14112.637               0.033               0.005 
+     rmsea.ci.upper        rmsea.pvalue                 rmr          rmr_nomean 
+              0.053               0.918               0.038               0.040 
+               srmr        srmr_bentler srmr_bentler_nomean                crmr 
+              0.025               0.025               0.027               0.027 
+        crmr_nomean          srmr_mplus   srmr_mplus_nomean               cn_05 
+              0.029               0.026               0.027             397.401 
+              cn_01                 gfi                agfi                pgfi 
+            458.232               0.999               0.996               0.326 
+                mfi                ecvi 
+              0.981               0.473 </code></pre>
+<p>The results are all very similar, and this model looks equally good. The
+similarity of the results should not be too surprising when considering the
+relatively small amount of missing data.</p>
+<p>One interesting difference is that the number of missing data patterns given in
+the output now matches the number we computed for the entire dataset. Of course,
+this is also natural since we are now using every variable from the EA dat in
+the model.</p>
+<hr />
+</div>
+<div id="fixedX" class="section level2" number="6.5">
+<h2><span class="header-section-number">6.5</span> </h2>
+<p><strong>Use FIML to estimate the latent regression model defined in <a href="#semSyntax1">5.1.3</a>.</strong></p>
+<ul>
+<li>Correlate the latent factors.</li>
+<li>Set the scale by standardizing the latent variables.</li>
+<li>Did anything unusual/unexpected happen during model estimation?
+<ul>
+<li>If you do see some unusual behavior, can you see what’s happening?</li>
+</ul></li>
+</ul>
 <pre class="r"><code>fimlSem1 &lt;- sem(semMod, data = ea, std.lv = TRUE, missing = &quot;fiml&quot;)</code></pre>
 <pre><code>Warning in lav_data_full(data = data, group = group, cluster = cluster, : lavaan WARNING: 50 cases were deleted due to missing values in 
           exogenous variable(s), while fixed.x = TRUE.</code></pre>
+<p>Some cases have been deleted due to missing values.</p>
+<p>We’re treating the observed predictors as fixed (as is customary in OLS
+regression models, and as we did in the MI-based analysis). This choice caused
+no issues when analyzing the MI data because those predictors were completed in
+every imputed dataset. Now, however, the observed predictors enter the analysis
+in their incomplete state, and FIML cannot treat their missing data because
+fixed variables are not represented in the likelihood function.</p>
+<p>Consequently, any observations with missing data on one of the observed predictor
+variables are deleted before estimating the model.</p>
 <hr />
 </div>
-<div id="section-23" class="section level2" number="6.5">
-<h2><span class="header-section-number">6.5</span> </h2>
-<p><strong>Question</strong></p>
+<div id="section-21" class="section level2" number="6.6">
+<h2><span class="header-section-number">6.6</span> </h2>
+<p><strong>Summarize the fitted SEM.</strong></p>
+<ul>
+<li>Include the FMI estimates in the summary.</li>
+<li>How do the latent regression results compare to those from the MI-based Model?</li>
+</ul>
 <pre class="r"><code>summary(fimlSem1, fmi = TRUE)</code></pre>
 <pre><code>lavaan 0.6-12 ended normally after 99 iterations
 
@@ -4113,11 +4560,43 @@ Variances:
    .eat21             0.258    0.039    6.697    0.000    0.071
    .drive             1.000                                    
    .pre               1.000                                    </code></pre>
+<pre class="r"><code>## Latent regression estimates for FIML:
+partSummary(fimlSem1, 8, fmi = TRUE)</code></pre>
+<pre><code>Regressions:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)      FMI
+  pre ~                                                        
+    anx      (b1p)    0.177    0.023    7.778    0.000    0.006
+    wsb      (b2p)    0.113    0.034    3.327    0.001    0.013
+    bmi               0.099    0.024    4.194    0.000    0.011
+  drive ~                                                      
+    anx      (b1d)    0.191    0.022    8.800    0.000    0.003
+    wsb      (b2d)    0.179    0.033    5.443    0.000    0.003
+    bmi               0.129    0.023    5.652    0.000   -0.000</code></pre>
+<pre class="r"><code>## Latent regression estimates for MI:
+partSummary(miSem1, 2, drops = &quot;riv&quot;, fmi = TRUE)</code></pre>
+<pre><code>Regressions:
+                   Estimate  Std.Err  t-value       df  P(&gt;|t|)      FMI
+  pre ~                                                                 
+    anx      (b1p)    0.185    0.022    8.363 2533.868    0.000    0.087
+    wsb      (b2p)    0.120    0.033    3.668  966.249    0.000    0.140
+    bmi               0.094    0.023    4.112      Inf    0.000    0.029
+  drive ~                                                               
+    anx      (b1d)    0.194    0.021    9.228 2365.604    0.000    0.090
+    wsb      (b2d)    0.178    0.032    5.610 2333.176    0.000    0.090
+    bmi               0.138    0.022    6.178      Inf    0.000    0.031</code></pre>
+<p>The paramter estimates are very similar to those produced by MI, and the
+inferential conclusions are all the same. The FMI estimates for the FIML-based
+regression slopes are quite a bit smaller than their MI-based counterpart, though.</p>
 <hr />
 </div>
-<div id="section-24" class="section level2" number="6.6">
-<h2><span class="header-section-number">6.6</span> </h2>
-<p><strong>Question</strong></p>
+<div id="randomX" class="section level2" number="6.7">
+<h2><span class="header-section-number">6.7</span> </h2>
+<p><strong>Rerun the model from <a href="#fixedX">6.5</a> with random predictors.</strong></p>
+<ul>
+<li>Model the observed predictor variables as random by setting <code>fixed.x = FALSE</code>
+in the <code>sem()</code> call.</li>
+<li>Keep all other settings the same as above.</li>
+</ul>
 <pre class="r"><code>fimlSem2 &lt;- sem(semMod, 
                 data    = ea, 
                 std.lv  = TRUE, 
@@ -4125,9 +4604,12 @@ Variances:
                 fixed.x = FALSE)</code></pre>
 <hr />
 </div>
-<div id="section-25" class="section level2" number="6.7">
-<h2><span class="header-section-number">6.7</span> </h2>
-<p><strong>Question</strong></p>
+<div id="section-22" class="section level2" number="6.8">
+<h2><span class="header-section-number">6.8</span> </h2>
+<p><strong>Summarize the fitted SEM from <a href="#randomX">6.7</a>.</strong></p>
+<ul>
+<li>What differences do you notice between the fixed X and random X fits?</li>
+</ul>
 <pre class="r"><code>summary(fimlSem2, fmi = TRUE)</code></pre>
 <pre><code>lavaan 0.6-12 ended normally after 114 iterations
 
@@ -4221,37 +4703,55 @@ Variances:
     anx               8.983    0.652   13.768    0.000    0.063
     wsb               3.627    0.265   13.682    0.000    0.067
     bmi               7.346    0.522   14.069    0.000    0.011</code></pre>
+<p>Naturally, we can observe a few differences when modeling the predictors as
+random variables.</p>
+<ol style="list-style-type: decimal">
+<li>We use every observation because none need to be deleted due to unmodeled
+missing data.</li>
+<li>We estimate means and variances for the observed predictors in the random-<span class="math inline">\(X\)</span>
+model and not in the fixed-<span class="math inline">\(X\)</span> model.</li>
+<li>The estimates are somewhat different between the two models, most importantly
+the latent regression estimates.</li>
+</ol>
+<p>Apart from the obviously problematic deletion of the incomplete cases when <span class="math inline">\(X\)</span>
+is treated as fixed, we cannot really say that one approach is better, or more
+correct, than the other. Treating the predictors as fixed versus random is not
+simply an estimation choice (as, for example, selecting a different optimization
+algorithm or adjusting the convergence criteria would be). When we model <span class="math inline">\(X\)</span> as
+random, we are specifying a fundamentally different model than we are when <span class="math inline">\(X\)</span>
+is treated as fixed. In the former case, our latent regression model summarizes
+the joint distribution of <span class="math inline">\(Y\)</span> and <span class="math inline">\(X\)</span>. In the latter case, <span class="math inline">\(X\)</span> has no
+distribution and simply serves to define the mean of <span class="math inline">\(Y\)</span>. Neither of these is
+the “correct” way to represent the data; they’re just different. As researchers,
+we need to be aware of the model we’re estimating, and ensure that said model
+aligns with our inferential objectives.</p>
 <hr />
 </div>
-<div id="section-26" class="section level2" number="6.8">
-<h2><span class="header-section-number">6.8</span> </h2>
-<p><strong>Estimate the structural model.</strong></p>
+<div id="section-23" class="section level2" number="6.9">
+<h2><span class="header-section-number">6.9</span> </h2>
+<p><strong>Use FIML to estimate the mediation model defined in <a href="#medSyntax">5.3.1</a>.</strong></p>
 <ul>
-<li>Include <em>bmi</em> as an auxiliary variable.</li>
-<li>Use B = 2500 bootstrap resamples to quantify the sampling variability.</li>
+<li>Include <code>bmi</code> and <code>anx</code> as auxiliary variables.</li>
+<li>Use B = 2000 bootstrap resamples to quantify the sampling variability.</li>
 </ul>
-<pre class="r"><code>fimlSem3 &lt;- sem.auxiliary(semMod3, 
+<pre class="r"><code>## Estimate the mediation model using FIML with auxiliaries and bootstrapping:
+fimlSem3 &lt;- sem.auxiliary(semMod3, 
                           data      = ea, 
                           aux       = c(&quot;bmi&quot;, &quot;anx&quot;),
                           std.lv    = TRUE, 
                           se        = &quot;boot&quot;, 
-                          bootstrap = 250)</code></pre>
+                          bootstrap = 2000)</code></pre>
 <hr />
 </div>
-<div id="section-27" class="section level2" number="6.9">
-<h2><span class="header-section-number">6.9</span> </h2>
-<p><strong>Summarize the fitted model and interpret the results.</strong></p>
+<div id="section-24" class="section level2" number="6.10">
+<h2><span class="header-section-number">6.10</span> </h2>
+<p><strong>Summarize the fitted mediation model and interpret the results.</strong></p>
 <ol style="list-style-type: lower-alpha">
-<li>Is the two-step specific indirect effect through <em>Drive for Thinness</em>
-significant according to the 95% BC CI?</li>
-<li>Is the two-step specific indirect effect through <em>Anxiety</em> significant
-according to the 95% BC CI?</li>
-<li>Is the full, three-step specific indirect effect through <em>Drive for Thinness</em>
-and <em>Anxiety</em> significant according to the 95% BC CI?</li>
-<li>Is the total indirect effect significant according to the 95% BC CI?</li>
+<li>Is the indirect effect through <em>Drive for Thinness</em> significant according to
+the 95% BC CI?</li>
 <li>Briefly interpret the indirect effects.</li>
 </ol>
-<pre class="r"><code>summary(fimlSem3)</code></pre>
+<pre class="r"><code>summary(fimlSem3, fmi = TRUE)</code></pre>
 <pre><code>lavaan 0.6-12 ended normally after 111 iterations
 
   Estimator                                         ML
@@ -4270,139 +4770,139 @@ Model Test User Model:
 Parameter Estimates:
 
   Standard errors                            Bootstrap
-  Number of requested bootstrap draws              250
-  Number of successful bootstrap draws             250
+  Number of requested bootstrap draws             2000
+  Number of successful bootstrap draws            2000
 
 Latent Variables:
                    Estimate  Std.Err  z-value  P(&gt;|z|)
   drive =~                                            
-    eat1              0.685    0.046   14.974    0.000
-    eat2              0.600    0.047   12.856    0.000
-    eat10             0.744    0.050   14.942    0.000
-    eat11             0.706    0.043   16.439    0.000
-    eat12             0.612    0.049   12.472    0.000
-    eat14             0.832    0.043   19.221    0.000
-    eat24             0.577    0.046   12.613    0.000
+    eat1              0.685    0.044   15.593    0.000
+    eat2              0.600    0.044   13.544    0.000
+    eat10             0.744    0.050   14.917    0.000
+    eat11             0.706    0.042   16.656    0.000
+    eat12             0.612    0.049   12.436    0.000
+    eat14             0.832    0.043   19.258    0.000
+    eat24             0.577    0.046   12.469    0.000
   pre =~                                              
-    eat3              0.602    0.044   13.610    0.000
-    eat18             0.588    0.046   12.708    0.000
-    eat21             0.675    0.044   15.275    0.000
+    eat3              0.602    0.045   13.525    0.000
+    eat18             0.588    0.045   12.926    0.000
+    eat21             0.675    0.046   14.823    0.000
 
 Regressions:
                    Estimate  Std.Err  z-value  P(&gt;|z|)
   pre ~                                               
-    drive      (b)    0.699    0.082    8.535    0.000
-    wsb        (c)    0.049    0.034    1.455    0.146
+    drive      (b)    0.699    0.085    8.193    0.000
+    wsb       (cp)    0.049    0.033    1.466    0.143
   drive ~                                             
-    wsb        (a)    0.219    0.032    6.771    0.000
+    wsb        (a)    0.219    0.033    6.660    0.000
 
 Covariances:
                    Estimate  Std.Err  z-value  P(&gt;|z|)
   bmi ~~                                              
-    anx               1.239    0.387    3.198    0.001
-   .eat1              0.780    0.136    5.741    0.000
+    anx               1.239    0.401    3.094    0.002
+   .eat1              0.780    0.138    5.652    0.000
   anx ~~                                              
-   .eat1              1.302    0.166    7.834    0.000
+   .eat1              1.302    0.171    7.617    0.000
   bmi ~~                                              
-   .eat2              0.806    0.145    5.556    0.000
+   .eat2              0.806    0.136    5.926    0.000
   anx ~~                                              
-   .eat2              1.091    0.168    6.501    0.000
+   .eat2              1.091    0.158    6.899    0.000
   bmi ~~                                              
-   .eat10             0.565    0.129    4.369    0.000
+   .eat10             0.565    0.129    4.388    0.000
   anx ~~                                              
-   .eat10             0.884    0.163    5.411    0.000
+   .eat10             0.884    0.164    5.382    0.000
   bmi ~~                                              
-   .eat11             0.579    0.121    4.780    0.000
+   .eat11             0.579    0.121    4.795    0.000
   anx ~~                                              
-   .eat11             1.052    0.152    6.906    0.000
+   .eat11             1.052    0.146    7.204    0.000
   bmi ~~                                              
-   .eat12             0.624    0.119    5.256    0.000
+   .eat12             0.624    0.118    5.272    0.000
   anx ~~                                              
-   .eat12             1.073    0.177    6.073    0.000
+   .eat12             1.073    0.178    6.012    0.000
   bmi ~~                                              
-   .eat14             0.688    0.123    5.595    0.000
+   .eat14             0.688    0.125    5.500    0.000
   anx ~~                                              
-   .eat14             1.100    0.162    6.796    0.000
+   .eat14             1.100    0.165    6.665    0.000
   bmi ~~                                              
-   .eat24             0.746    0.126    5.938    0.000
+   .eat24             0.746    0.132    5.643    0.000
   anx ~~                                              
-   .eat24             1.148    0.147    7.806    0.000
+   .eat24             1.148    0.158    7.278    0.000
   bmi ~~                                              
-   .eat3              0.579    0.140    4.147    0.000
+   .eat3              0.579    0.144    4.031    0.000
   anx ~~                                              
-   .eat3              1.261    0.153    8.234    0.000
+   .eat3              1.261    0.162    7.790    0.000
   bmi ~~                                              
-   .eat18             0.564    0.140    4.030    0.000
+   .eat18             0.564    0.145    3.880    0.000
   anx ~~                                              
-   .eat18             1.247    0.155    8.042    0.000
+   .eat18             1.247    0.156    8.008    0.000
   bmi ~~                                              
-   .eat21             0.626    0.139    4.491    0.000
+   .eat21             0.626    0.138    4.527    0.000
   anx ~~                                              
-   .eat21             1.157    0.141    8.200    0.000
+   .eat21             1.157    0.151    7.677    0.000
   bmi ~~                                              
-    wsb               1.052    0.264    3.989    0.000
+    wsb               1.052    0.268    3.918    0.000
   anx ~~                                              
-    wsb               0.927    0.334    2.773    0.006
+    wsb               0.927    0.326    2.845    0.004
 
 Intercepts:
                    Estimate  Std.Err  z-value  P(&gt;|z|)
-   .eat1              2.660    0.204   13.030    0.000
-   .eat2              2.762    0.186   14.849    0.000
-   .eat10             2.494    0.216   11.568    0.000
-   .eat11             2.554    0.214   11.952    0.000
-   .eat12             2.731    0.197   13.890    0.000
-   .eat14             2.332    0.236    9.878    0.000
-   .eat24             2.854    0.191   14.906    0.000
-   .eat3              2.879    0.188   15.322    0.000
-   .eat18             2.919    0.200   14.600    0.000
-   .eat21             2.733    0.217   12.595    0.000
-    wsb               8.958    0.103   87.321    0.000
+   .eat1              2.660    0.208   12.759    0.000
+   .eat2              2.762    0.188   14.697    0.000
+   .eat10             2.494    0.219   11.412    0.000
+   .eat11             2.554    0.216   11.821    0.000
+   .eat12             2.731    0.199   13.746    0.000
+   .eat14             2.332    0.238    9.781    0.000
+   .eat24             2.854    0.192   14.859    0.000
+   .eat3              2.879    0.191   15.039    0.000
+   .eat18             2.919    0.202   14.457    0.000
+   .eat21             2.733    0.221   12.380    0.000
+    wsb               8.958    0.099   90.483    0.000
    .drive             0.000                           
    .pre               0.000                           
-    bmi              22.406    0.140  159.961    0.000
-    anx              11.971    0.145   82.351    0.000
+    bmi              22.406    0.140  160.412    0.000
+    anx              11.971    0.151   79.377    0.000
 
 Variances:
                    Estimate  Std.Err  z-value  P(&gt;|z|)
-   .eat1              0.602    0.070    8.645    0.000
-   .eat2              0.534    0.056    9.617    0.000
-   .eat10             0.332    0.035    9.378    0.000
-   .eat11             0.299    0.027   10.894    0.000
-   .eat12             0.538    0.067    8.046    0.000
-   .eat14             0.234    0.030    7.899    0.000
-   .eat24             0.596    0.045   13.286    0.000
-   .eat3              0.418    0.043    9.702    0.000
-   .eat18             0.450    0.048    9.288    0.000
-   .eat21             0.262    0.041    6.340    0.000
+   .eat1              0.602    0.070    8.557    0.000
+   .eat2              0.534    0.054    9.835    0.000
+   .eat10             0.332    0.038    8.644    0.000
+   .eat11             0.299    0.028   10.776    0.000
+   .eat12             0.538    0.060    8.889    0.000
+   .eat14             0.234    0.028    8.498    0.000
+   .eat24             0.596    0.048   12.400    0.000
+   .eat3              0.418    0.043    9.710    0.000
+   .eat18             0.450    0.049    9.195    0.000
+   .eat21             0.262    0.043    6.084    0.000
    .drive             1.000                           
    .pre               1.000                           
-    wsb               3.627    0.250   14.509    0.000
-    bmi               7.360    0.495   14.882    0.000
-    anx               9.225    0.728   12.673    0.000
+    wsb               3.627    0.262   13.832    0.000
+    bmi               7.360    0.493   14.928    0.000
+    anx               9.225    0.682   13.520    0.000
 
 Defined Parameters:
                    Estimate  Std.Err  z-value  P(&gt;|z|)
-    ab                0.153    0.027    5.653    0.000</code></pre>
+    ab                0.153    0.028    5.464    0.000</code></pre>
 <pre class="r"><code>parameterEstimates(fimlSem3, boot.ci.type = &quot;bca.simple&quot;) %&gt;% 
   select(-(1:3)) %&gt;%
   tail(1)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["label"],"name":[1],"type":["chr"],"align":["left"]},{"label":["est"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["se"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["z"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["pvalue"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["ci.lower"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["ci.upper"],"name":[7],"type":["dbl"],"align":["right"]}],"data":[{"1":"ab","2":"0.1529468","3":"0.02705781","4":"5.652593","5":"1.580453e-08","6":"0.104742","7":"0.2089017","_rn_":"67"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["label"],"name":[1],"type":["chr"],"align":["left"]},{"label":["est"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["se"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["z"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["pvalue"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["ci.lower"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["ci.upper"],"name":[7],"type":["dbl"],"align":["right"]}],"data":[{"1":"ab","2":"0.1529468","3":"0.02799192","4":"5.463963","5":"4.656205e-08","6":"0.1009367","7":"0.2136638","_rn_":"67"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <ol style="list-style-type: lower-alpha">
 <li><p>Yes, the indirect effect through <em>Drive for Thinness</em> is statistically
 significant (
 <span class="math inline">\(ab = 0.153\)</span>,
-<span class="math inline">\(95\%~CI_{BC} = [0.105; 0.209]\)</span>
+<span class="math inline">\(95\%~CI_{BC} = [0.101; 0.214]\)</span>
 ).</p></li>
 <li><p>An indirect causal process by which the effect of Western beauty standards on
 preoccupation with food is transmitted through drive for thinness was supported
 by a statistically significant, positive indirect effect.</p></li>
 </ol>
 <hr />
-<p>End of Lab 4</p>
+<p>End of Lab 6</p>
 <hr />
 </div>
 </div>

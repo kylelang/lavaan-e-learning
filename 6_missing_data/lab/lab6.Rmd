@@ -337,7 +337,7 @@ complete case analysis.
 
 ---
 
-##
+## {#cfaSyntax}
 
 **Define the model syntax for the CFA.**
 
@@ -370,7 +370,7 @@ pre   =~ eat3 + eat18 + eat21
 - Use complete case analysis to treat the missing data.
 
 ```{r}
-naiveCfa <- cfa(cfaMod, data = ea, std.lv = TRUE)
+naiveCfa <- cfa(cfaMod, data = ea, std.lv = TRUE, meanstructure = TRUE)
 ```
 
 ---
@@ -586,9 +586,13 @@ phases.
 
 ---
 
-##
+## Basic CFA/SEM
 
-**Estimate the CFA model on the multiply imputed EA data.**
+---
+
+###
+
+**Estimate the CFA defined in \@ref(cfaSyntax) on the multiply imputed data.**
 
 - Correlate the latent factors.
 - Set the scale by standardizing the latent factors.
@@ -597,12 +601,12 @@ phases.
 *HINT*: The **semTools**::`cfa.mi()` function can be a big help here.
 
 ```{r cfa_mi1, cache = TRUE}
-cfaFit1 <- cfa.mi(cfaMod, data = eaImp, std.lv = TRUE)
+miCfa <- cfa.mi(cfaMod, data = eaImp, std.lv = TRUE, meanstructure = TRUE)
 ```
 
 ---
 
-## 
+### 
 
 **Summarize the fitted CFA and check the model fit.**
 
@@ -614,10 +618,10 @@ cfaFit1 <- cfa.mi(cfaMod, data = eaImp, std.lv = TRUE)
 
 ```{r}
 options(width = 100)
-summary(cfaFit1, fmi = TRUE) %>% print()
+summary(miCfa, fmi = TRUE) %>% print()
 
 options(width = 80)
-fitMeasures(cfaFit1, stat = "D3")
+fitMeasures(miCfa, stat = "D3")
 ```
 
 ```{asis}
@@ -634,7 +638,7 @@ onto *anxiety*, *Western beauty standards* and *BMI*.
 
 ---
 
-## {#semSyntax1}
+### {#semSyntax1}
 
 **Define the model syntax for the SEM described above.**
 
@@ -652,7 +656,7 @@ semMod <- paste(cfaMod,
 
 ---
 
-## {#semFit1}
+### {#semFit1}
 
 **Estimate the SEM on the multiply imputed data.**
 
@@ -662,12 +666,12 @@ semMod <- paste(cfaMod,
 *HINT*: The **semTools**::`sem.mi()` function can be a big help here.
 
 ```{r sem_mi1, cache = TRUE}
-semFit1 <- sem.mi(semMod, data = eaImp, std.lv = TRUE)
+miSem1 <- sem.mi(semMod, data = eaImp, std.lv = TRUE)
 ```
 
 ---
 
-##
+###
 
 **Summarize the fitted SEM and interpret the results.**
 
@@ -679,11 +683,11 @@ and/or *drive for thinness* after controlling for *anxiety* and *BMI*?
 
 
 ```{r}
-summary(semFit1, fmi = TRUE) %>% print()
+summary(miSem1, fmi = TRUE) %>% print()
 ```
 
 ```{r semRes1, echo = FALSE, results = "asis"}
-tmp <- summary(semFit1, fmi = TRUE) %>% quiet()
+tmp <- summary(miSem1, fmi = TRUE) %>% quiet()
 tmp <- tmp %>% filter(label != "") %>% as.data.frame()
 
 paths <- tmp %>% select(1:3) %>% apply(1, paste, collapse = " ")
@@ -716,6 +720,10 @@ and *BMI*.
 
 ---
 
+## Testing
+
+---
+
 Given an SEM fitted to multiply imputed data via **semTools**::`lavaan.mi()`, we
 can use the testing utilities from **semTools** to evaluate (multivariate) 
 hypotheses defined in terms of parameter constraints.
@@ -724,7 +732,7 @@ In the next two questions, we'll consider one such hypothesis test.
 
 ---
 
-## {#waldMi}
+### {#waldMi}
 
 **Apply a multivariate Wald test to the fitted model from \@ref(semFit1).**
 
@@ -742,11 +750,11 @@ b1p == b1d
 b2p == b2d
 '
 
-lavTestWald.mi(semFit1, cons, test = "D1")
+lavTestWald.mi(miSem1, cons, test = "D1")
 ```
 
 ```{r, echo = FALSE}
-tmp <- lavTestWald.mi(semFit1, cons, test = "D1")
+tmp <- lavTestWald.mi(miSem1, cons, test = "D1")
 
 f   <- tmp["F"] %>% round(2)
 df1 <- tmp["df1"] %>% round()
@@ -766,7 +774,7 @@ either outcome.
 
 ---
 
-##
+###
 
 **Test the hypothesis from \@ref(waldMi) using a likelihood ratio test.**
 
@@ -780,14 +788,14 @@ either outcome.
 semMod2 <- paste(semMod, cons, sep = '\n')
 
 ## Estimate the restricted model:
-semFit2 <- sem.mi(semMod2, data = eaImp, std.lv = TRUE)
+miSem2 <- sem.mi(semMod2, data = eaImp, std.lv = TRUE)
 
 ## Conduct the LRT:
-anova(semFit1, semFit2, stat = "D3")
+anova(miSem1, miSem2, stat = "D3")
 ```
 
 ```{r, echo = FALSE}
-tmp <- anova(semFit1, semFit2, stat = "D3")
+tmp <- anova(miSem1, miSem2, stat = "D3")
 
 f   <- tmp["F"] %>% round(2)
 df1 <- tmp["df1"] %>% round()
@@ -808,7 +816,18 @@ predictor on either outcome.
 
 ---
 
-##
+## Mediation
+
+---
+
+Next, we'll consider methods for modeling mediation when working with MI data. 
+To keep things simple, we're only going to estimate a simple mediation model 
+wherein *Western beauty standards* predict *preoccupation with food*, and 
+*drive for thinness* mediates this relation.
+
+---
+
+### {#medSyntax}
 
 **Define the model syntax for the structural model.**
 
@@ -822,7 +841,6 @@ pre   ~ b * drive + cp * wsb
 drive ~ a * wsb
 
 ab := a * b
-c  := cp + ab
 '
 
 ## Add on the measurement part:
@@ -831,11 +849,35 @@ semMod3 <- paste(cfaMod, semMod3, sep = '\n')
 
 ---
 
-```{r, eval = FALSE}
-library(coxed) # To calculate BCa intervals
+Combining mediation with MI is a bit tricky. When treating the missing data with 
+MI, we produce $M$ different datasets, but we also need to create $B$ bootstrap 
+samples to test the indirect effects.
 
-## Define a function that will take a fitted lavaan object ('lavObj') and return 
-## the estimates of all defined parameters:
+The best method for combining these two layers of sampling is not immediately 
+obvious, but the literature does provide some guidance. [Wu and Jia (2013)][wu_jia_2013] recommend an approach that they call *MI(Boot)* that entails nesting the 
+bootstrapping within the MI as follows:
+
+1. Impute the missing data $M$ times.
+1. For each of these $M$ imputed datasets, estimate your mediation model using 
+$B$ bootstrap samples.
+1. Combine the $M \times B$ resulting estimates of the indirect effect into a 
+single sample with $N = M \times B$ observations.
+1. Use this aggregated sample to construct CIs and test for mediation.
+
+---
+
+The MI(Boot) approach is not currently implemented in **lavaan** or **semTools** 
+(neither is any alternative method of combining MI and bootstrapping). If you 
+really wanted to, however, you could implement MI(Boot) manually. 
+
+- The following three code chunks do so (in a not-so-elegant way).
+
+---
+
+First, we'll define a function that will take a fitted lavaan object (`lavObj`) 
+and return the estimates of all defined parameters specified therein.
+
+```{r, include = TRUE, echo = TRUE}
 getDefParEstimates <- function(lavObj) {
   ## Use lavaan::lav_partable_constraints_def() to generate a function that 
   ## computes all defined parameters represented in 'lavObj':
@@ -844,79 +886,211 @@ getDefParEstimates <- function(lavObj) {
   ## Extract the bootstrapped coefficient estimates from 'lavObj':
   cf <- inspect(lavObj, "coef.boot")
 
-  ## Compute the defined parameters on each bootstrapped sample, and return the 
-  ## result:
+  ## Compute the defined parameters on each bootstrapped sample:
   apply(cf, 1, getDefPar)
 }
+```
 
-## Fit 'semMod3' to each of the 20 imputed datasets in 'eaImp'.
-## Generate B = 1000 boostrap samples for each of these 20 imputed datasets.
-tmp <- semList(semMod3, 
-               dataList  = eaImp, 
-               std.lv    = TRUE, 
-               se        = "boot", 
-               bootstrap = 10, 
-               FUN       = getDefParEstimates)
+Now, we'll use the `semList()` function from **lavaan** to fit `semMod3` to each 
+of the M = 20 imputed datasets in `eaImp`.
 
-## Aggregate all of the bootstrapped estimates for each defined parameter into a 
-## single sample with N = M * B observations:  
-est <- tmp@funList %>% do.call(cbind, .) %>% t()
+- We'll generate B = 1000 boostrap samples for each of these 20 imputed datasets.
+- We'll use the `getDefParEstimates()` function defined above to extract the 
+relevant estimates (i.e., the bootstrapped estimates of the indirect effect) 
+from each one of our fitted models. 
 
-## Use the coxed::bca() function to compute BCa CIs for each defined parameter:
-apply(est, 2, bca)
+```{r miBoot, include = TRUE, echo = TRUE, cache = TRUE}
+## Fit the models:
+fits <- semList(semMod3, 
+                dataList  = eaImp, 
+                std.lv    = TRUE, 
+                se        = "boot", 
+                bootstrap = 1000, 
+                FUN       = getDefParEstimates)
+
+```
+
+Finally, we aggregate the bootstrapped estimates of the indirect effect from 
+above (these live in the `funList` slot of the `fits` object) into a single 
+sample with $N = M \times B$ observations.
+
+- This aggregated pool of estimates represents the empirical sampling 
+distribution of our indirect effect, so we can summarize this aggregated sample
+for inference.
+
+```{r, include = TRUE, echo = TRUE}
+## Aggregate estimates:
+ab <- fits@funList %>% unlist()
+
+## Use the bca() function from the coxed package to compute the BCa CI for the 
+## indirect effect:
+coxed::bca(ab)
 ```
 
 ---
 
-##
+The MI(Boot) approach will produce theoretically optimal results, but it does so 
+at a high computational cost. Implementing the approach for **lavaan** models is 
+also a bit tricky. Thankfully, we have a very satisfactory alternative: the 
+Monte Carlo method proposed by [MacKinnon et al. (2004)][mcMed].
 
-**Use the Monte Carlo simulation approach to test the mediation hypothesis 
-described above.**
+The justification for the Monte Carlo method begins with the original motivation 
+for using bootstrapping to test the indirect effect: the $a$ and $b$ paths are 
+normally distributed, so their product cannot be. Rather than going fully 
+non-parametric (as in bootstrapping), the Monte Carlo method leverages the known 
+sampling distributions of $a$ and $b$ to synthesize an empirical sampling 
+distribution of their product (i.e., the indirect effect). The Monte Carlo method
+entailsthe following procedure.
 
-```{r mi_mediation1, cache = TRUE, eval = FALSE}
+1. Estimate the mediation model on the full dataset.
+   - When analyzing MI data, this model is estimated in the usual way, and the 
+   parameter estimates used in the following steps are the pooled MI estimates.
+$\vb$   
+1. Use the estimated $a$ and $b$ paths along with their asymptotic covariance 
+matrix to define a bivariate normal distribution.
+   - This distribution represents an estimate of the joint sampling distribution 
+   of $a$ and $b$ under the assumption of bivariate normality (which is usually 
+   a reasonable assumption). 
+$\vb$
+1. Generate a very large sample (e.g., $N \geq 20000$) from the bivariate normal 
+distribution defined above.
+   - Although we need to generate a very large sample to get an accurate estimate 
+   of the distribution, generating such a sample is computationally trivial and 
+   very fast.
+$\vb$
+1. For each $\{a_n, b_n\}$ pair in the above sample, compute the indirect effect, 
+$ab_n = a_n \times b_n$.
+$\vb$
+1. Use the $N$ estimates of the indirect effect to define an empirical sampling 
+distribution, and summarize this distribution as you would when using bootstrapping.
+
+Fortunately for us, the Monte Carlo simulation approach is implemented in the 
+`monteCarloCI()` function from **semTools**. For more information on this 
+approach, see [MacKinnon et al. (2004)][mcMed] and 
+[Preacher and Selig (2012)][preacher_selig_2012].
+
+---
+
+###
+
+**Use the Monte Carlo simulation approach to test the above mediation hypothesis.**
+
+- Is the indirect effect statistically significant?
+
+```{r mi_mediation1, cache = TRUE}
+## Estimate the mediation model on the MI data:
 miSem3 <- sem.mi(semMod3, data = eaImp, std.lv = TRUE)
 
+## Compute Monte Carlo CIs:
 monteCarloCI(miSem3, plot = TRUE)
 ```
 
 ---
 
-# Full Information Maximum Likelihood
+# FIML
 
 ---
 
-Blah, blah, blah...
+Now that we've had our fun with MI, lets explore the final topic of this lab: 
+*full information maximum likelihood* (FIML).
 
 ---
 
 ##
 
-**Question**
+**Estimate the CFA defined in \@ref(cfaSyntax) using FIML.**
+
+- Fit the model to the incomplete EA data.
+- Correlate the latent variables.
+- Estimate the mean structure.
+- Set the scale by standardizing the latent variables.
 
 ```{r}
 fimlCfa1 <- cfa(cfaMod, data = ea, std.lv = TRUE, missing = "fiml")
 ```
 
----
-
-##
-
-**Question**
-
-- Include the FMI statistics in your summary
-   - Do any of these FMI values give you pause?
-- Does the number of missing data patterns shown in the summary match the number you calculated in \@ref(mdPattern)?
-   - If not, what do you think causes this discrepancy?
-
-```{r}
-summary(fimlCfa1, fmi = TRUE)
+```{asis}
+To implement basic FIML estimation, we need only add the `missing = "fiml"` 
+option to our `cfa()` call.
 ```
 
 ---
 
 ##
 
-**Question**
+**Summarize the fitted model.**
+
+- Include the FMI statistics in your summary
+   - Do any of these FMI values give you pause?
+   - How do these FMI estimates compare to those from the MI-based CFA in \@ref(miCfa)?
+$\vb$
+- Does the number of missing data patterns shown in the summary match the number 
+you calculated in \@ref(mdPattern)?
+   - If not, what do you think causes this discrepancy?
+- Do the parameter estimates looks sensible?
+- Does the model fit the data well enough?
+
+```{r}
+summary(fimlCfa1, fmi = TRUE)
+fitMeasures(fimlCfa1)
+```
+
+```{asis}
+- The parameter estimates all look reasonable, and the model fits the data well.
+- None of the FMI values are especially large, and they tend to be a little 
+smaller than the FMI values produced by MI (as shown in the following figure).
+```
+
+```{r, echo = FALSE}
+fmi1 <- summary(fimlCfa1, fmi = TRUE)$pe$fmi
+fmi2 <- summary(miCfa, fmi = TRUE)$fmi %>% quiet()
+
+dat <- data.frame(FMI = c(fmi1, fmi2), 
+                  Method = rep(c("FIML", "MI"), each = length(fmi1))
+                  )
+
+ggplot(dat, aes(FMI, color = Method)) + 
+  geom_boxplot() +
+  theme_classic()
+```
+
+```{asis}
+The number of response patterns listed in the summary,
+`r lavInspect(fimlCfa1, "patterns") %>% nrow()`, 
+is fewer than the number of patterns calculated from the full dataset, 
+`r nrow(pats) - 1`
+.
+
+- This discrepancy arises because we are only analyzing a subset of the 
+incomplete variables here. The total number of response patterns increases when 
+considering the full dataset.
+
+Generally, the model looks good. The parameter estimates all seem sensible, and 
+the model fits the data very well.
+```
+
+---
+
+Although the model above seems to have produced satisfactory estimates, the MAR 
+assumption will have been violated unless the missingness on the indicators of 
+`drive` and `pre` is associated only with other such indicators. If, for example, 
+missingness on some of the `pre` items is associated with *BMI*, then the data 
+are MNAR, and the model estimates (although nice looking), and probably biased.
+
+We can address this issue by including auxiliary variables (i.e., potential 
+correlates of missingness in which we have no substantive interest) via the 
+[Graham (2003)][graham_2003] saturated correlates technique.
+
+---
+
+##
+
+**Rerun the CFA using `bmi`, `anx`, and `wsb` as auxiliary variables.**
+
+- Include the auxiliaries via the saturated correlates approach.
+- Keep all other model parameterization and estimation settings the same above.
+
+*HINT*: The **semTools**::`cfa.auxiliary()` function can be very helpful here.
 
 ```{r}
 fimlCfa2 <- cfa.auxiliary(cfaMod, 
@@ -926,31 +1100,114 @@ fimlCfa2 <- cfa.auxiliary(cfaMod,
                           missing = "fiml")
 ```
 
+```{asis}
+NOTE: When you run this model, you will probably receive a warning message about 
+a not positive definite residual covariance matrix. As you can see from the 
+eigenvalues below, it is true that the residual covariance matrix is NPD. 
+```
+
+```{r}
+## Extract the residual covariance matrix:
+(theta <- lavInspect(fimlCfa2, "theta"))
+
+## Indeed, we have a negative eigenvalue => NPD
+eigen(theta)$values
+```
+
+```{asis}
+However, I honestly cannot figure out what's wrong, and the residual covariance 
+matrix itself looks fine (i.e., no Heywood cases, no extreme values, all 
+covariances are legal according to the relevant triangle inequalities). So, 
+I'm willing to tentatively trust these estimates.
+```
+
 ---
 
 ##
 
-**Question**
+**Summarize the CFA model and check the model fit.**
+
+- How do the results compare to the model estimated without auxiliary variables?
+
+```{r}
+summary(fimlCfa2, fmi = TRUE)
+fitMeasures(fimlCfa2)
+```
+
+```{asis}
+The results are all very similar, and this model looks equally good. The 
+similarity of the results should not be too surprising when considering the 
+relatively small amount of missing data.
+
+One interesting difference is that the number of missing data patterns given in 
+the output now matches the number we computed for the entire dataset. Of course, 
+this is also natural since we are now using every variable from the EA dat in 
+the model.
+```
+
+---
+
+## {#fixedX}
+
+**Use FIML to estimate the latent regression model defined in \@ref(semSyntax1).**
+
+- Correlate the latent factors.
+- Set the scale by standardizing the latent variables.
+- Did anything unusual/unexpected happen during model estimation?
+   - If you do see some unusual behavior, can you see what's happening?
 
 ```{r, warning = TRUE}
 fimlSem1 <- sem(semMod, data = ea, std.lv = TRUE, missing = "fiml")
 ```
 
----
+```{asis}
+Some cases have been deleted due to missing values. 
 
-##
+We're treating the observed predictors as fixed (as is customary in OLS
+regression models, and as we did in the MI-based analysis). This choice caused 
+no issues when analyzing the MI data because those predictors were completed in 
+every imputed dataset. Now, however, the observed predictors enter the analysis 
+in their incomplete state, and FIML cannot treat their missing data because 
+fixed variables are not represented in the likelihood function.
 
-**Question**
-
-```{r}
-summary(fimlSem1, fmi = TRUE)
+Consequently, any observations with missing data on one of the observed predictor 
+variables are deleted before estimating the model.
 ```
 
 ---
 
 ##
 
-**Question**
+**Summarize the fitted SEM.**
+
+- Include the FMI estimates in the summary.
+- How do the latent regression results compare to those from the MI-based Model?
+
+```{r}
+summary(fimlSem1, fmi = TRUE)
+
+## Latent regression estimates for FIML:
+partSummary(fimlSem1, 8, fmi = TRUE)
+
+## Latent regression estimates for MI:
+partSummary(miSem1, 2, drops = "riv", fmi = TRUE)
+```
+
+```{asis}
+The paramter estimates are very similar to those produced by MI, and the 
+inferential conclusions are all the same. The FMI estimates for the FIML-based 
+regression slopes are quite a bit smaller than their MI-based counterpart, though.
+```
+
+---
+
+## {#randomX}
+
+**Rerun the model from \@ref(fixedX) with random predictors.**
+
+- Model the observed predictor variables as random by setting `fixed.x = FALSE` 
+in the `sem()` call.
+- Keep all other settings the same as above.
 
 ```{r, warning = TRUE}
 fimlSem2 <- sem(semMod, 
@@ -964,47 +1221,70 @@ fimlSem2 <- sem(semMod,
 
 ##
 
-**Question**
+**Summarize the fitted SEM from \@ref(randomX).**
+
+- What differences do you notice between the fixed X and random X fits?
 
 ```{r}
 summary(fimlSem2, fmi = TRUE)
 ```
 
----
+```{asis}
+Naturally, we can observe a few differences when modeling the predictors as 
+random variables.
 
-##
+1. We use every observation because none need to be deleted due to unmodeled 
+missing data.
+1. We estimate means and variances for the observed predictors in the random-$X$ 
+model and not in the fixed-$X$ model.
+1. The estimates are somewhat different between the two models, most importantly 
+the latent regression estimates.
 
-**Estimate the structural model.**
-
-- Include *bmi* as an auxiliary variable.
-- Use B = 2500 bootstrap resamples to quantify the sampling variability.
-
-```{r fiml_mediation_boot, cache = TRUE}
-fimlSem3 <- sem.auxiliary(semMod3, 
-                          data      = ea, 
-                          aux       = c("bmi", "anx"),
-                          std.lv    = TRUE, 
-                          se        = "boot", 
-                          bootstrap = 250)
+Apart from the obviously problematic deletion of the incomplete cases when $X$ 
+is treated as fixed, we cannot really say that one approach is better, or more 
+correct, than the other. Treating the predictors as fixed versus random is not 
+simply an estimation choice (as, for example, selecting a different optimization 
+algorithm or adjusting the convergence criteria would be). When we model $X$ as 
+random, we are specifying a fundamentally different model than we are when $X$ 
+is treated as fixed. In the former case, our latent regression model summarizes 
+the joint distribution of $Y$ and $X$. In the latter case, $X$ has no 
+distribution and simply serves to define the mean of $Y$. Neither of these is 
+the "correct" way to represent the data; they're just different. As researchers, 
+we need to be aware of the model we're estimating, and ensure that said model 
+aligns with our inferential objectives.
 ```
 
 ---
 
 ##
 
-**Summarize the fitted model and interpret the results.**
+**Use FIML to estimate the mediation model defined in \@ref(medSyntax).**
 
-a. Is the two-step specific indirect effect through *Drive for Thinness* 
-significant according to the 95% BC CI?
-a. Is the two-step specific indirect effect through *Anxiety* significant 
-according to the 95% BC CI?
-a. Is the full, three-step specific indirect effect through *Drive for Thinness* 
-and *Anxiety* significant according to the 95% BC CI?
-a. Is the total indirect effect significant according to the 95% BC CI?
+- Include `bmi` and `anx` as auxiliary variables.
+- Use B = 2000 bootstrap resamples to quantify the sampling variability.
+
+```{r fiml_mediation_boot, cache = TRUE}
+## Estimate the mediation model using FIML with auxiliaries and bootstrapping:
+fimlSem3 <- sem.auxiliary(semMod3, 
+                          data      = ea, 
+                          aux       = c("bmi", "anx"),
+                          std.lv    = TRUE, 
+                          se        = "boot", 
+                          bootstrap = 2000)
+```
+
+---
+
+##
+
+**Summarize the fitted mediation model and interpret the results.**
+
+a. Is the indirect effect through *Drive for Thinness* significant according to 
+the 95% BC CI?
 a. Briefly interpret the indirect effects.
 
 ```{r}
-summary(fimlSem3)
+summary(fimlSem3, fmi = TRUE)
 
 parameterEstimates(fimlSem3, boot.ci.type = "bca.simple") %>% 
   select(-(1:3)) %>%
@@ -1013,10 +1293,6 @@ parameterEstimates(fimlSem3, boot.ci.type = "bca.simple") %>%
 
 ```{r, include = FALSE}
 out <- parameterEstimates(fimlSem3, boot.ci.type = "bca.simple") %>% tail(1)
-#out1 <- tmp[1, ]
-#out2 <- tmp[2, ]
-#out3 <- tmp[3, ]
-#out4 <- tmp[4, ]
 ```
 
 ```{asis}
@@ -1033,7 +1309,7 @@ by a statistically significant, positive indirect effect.
 
 ---
 
-End of Lab 4
+End of Lab 6
 
 ---
 
@@ -1048,3 +1324,6 @@ End of Lab 4
 [ggmice_density]: https://amices.org/ggmice/articles/old_friends.html
 [lavaan]: https://cran.r-project.org/web/packages/lavaan/
 [semTools]: https://cran.r-project.org/web/packages/semTools/index.html
+[wu_jia_2013]: https://doi.org/10.1080/00273171.2013.816235
+[mcMed]: https://doi.org/10.1207/s15327906mbr3901_4
+[preacher_selig_2012]: https://doi.org/10.1080/19312458.2012.679848
