@@ -1,0 +1,934 @@
+---
+title: "Lab 6: Missing Data"
+subtitle: "Introduction to SEM with lavaan"
+author: "Kyle M. Lang"
+date: "Updated: `r format(Sys.time(), format = '%Y-%m-%d')`"
+params:
+  answers: true
+output: 
+  bookdown::html_document2:
+    toc: true
+    toc_depth: 1
+    toc_float: true
+    number_sections: true
+    df_print: paged
+    css: "../../resources/style.css"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, echo = FALSE, message = FALSE, warning = FALSE}
+library(knitr)
+library(dplyr)
+library(magrittr)
+
+figDir <- "../figures/"
+
+set.seed(235711)
+
+## Define an asis engine that will evaluate inline code within an asis block:
+knit_engines$set(asis = function(options) {
+  if(options$echo && options$eval) knit_child(text = options$code)
+}
+)
+
+opts_chunk$set(include = params$answers, 
+               echo = params$answer, 
+               message = FALSE,
+               warning = FALSE,
+               fig.align = "center",
+               comment = NA)
+```
+
+<!-- 
+Define some hacky LaTeX commands to force nice spacing between lines    
+NOTE: These must be called within a math environment (e.g., $\va$)
+-->
+\newcommand{\va}{\\[12pt]}
+\newcommand{\vb}{\\[6pt]}
+\newcommand{\vc}{\\[3pt]}
+\newcommand{\vx}[1]{\\[#1pt]}
+
+---
+
+In this lab, you will practice methods for dealing with missing data when using 
+[**lavaan**][lavaan] to fit latent variable models.
+
+---
+
+# Data
+
+---
+
+```{r, include = FALSE}
+dataDir <- "../../data/"
+ea      <- readRDS(paste0(dataDir, "eating_attitudes.rds"))
+```
+
+For this lab, we will go back to working with the *Eating Attitudes* data from 
+Lab 4. These data are available as [*eating_attitudes.rds*][ea_data1]. Unlike 
+the completed version that we analyzed in Lab 4, we will now work with the 
+incomplete version that is actually analyzed in [Enders (2010)][amda].
+
+As before, this dataset includes `r nrow(ea)` observations of the following 
+`r ncol(ea)` variables. Note that the variables are listed in the order that 
+they appear on the dataset.
+
+- `id`: A numeric ID
+- `eat1:eat24`: Seven indicators of a *Drive for Thinness* construct
+- `eat3:eat21`: Three indicators of a *Preoccupation with Food* construct
+- `bmi`: Body mass index
+- `wsb`: A single item assessing *Western Standards of Beauty*
+- `anx`: A single item assessing *Anxiety Level*
+
+You can download the original data [here][ea_data0], and you can access the code 
+used to process the data [here][ea_code].
+
+---
+
+##
+
+**Read in the *eating_attitudes_completed.rds* dataset.**
+
+```{r, eval = FALSE}
+dataDir <- "../../data/"
+ea      <- readRDS(paste0(dataDir, "eating_attitudes.rds"))
+```
+
+NOTE: 
+
+1. In the following, I will refer to these data as the *EA data*.
+1. Unless otherwise specified, the data analyzed in all following questions are 
+the EA data.
+
+---
+
+##
+
+**Summarize the EA data to get a sense of their characteristics.**
+
+- Pay attention to the missing values.
+
+```{r}
+head(ea)
+summary(ea)
+str(ea)
+```
+
+---
+
+# Missing Data Screening
+
+---
+
+Before we can make any headway with missing data treatment or substantive 
+analyses, we need to get a handle on the extent of our missing data problem. So, 
+we will begin with some descriptive analysis of the missing data.
+
+---
+
+##
+
+**Calculate the proportion of missing data for each variable.**
+
+```{r}
+library(dplyr)
+
+## Calculate variablewise proportions missing:
+(pm <- ea %>% is.na() %>% colMeans())
+```
+
+---
+
+## {#calcCover}
+
+**Calculate the covariance coverage rates.**
+
+- You can use the `md.pairs()` function from the **mice** package to count the 
+number of jointly observed cases for every pair or variables.
+  
+```{r}
+library(mice)     # Provides md.pairs()
+library(magrittr) # Provides the extract2() alias function
+
+## Calculate covariance coverage:
+cc <- (ea %>% select(-id) %>% md.pairs() %>% extract2("rr")) /  nrow(ea)
+cc %>% round(2)
+```
+
+---
+
+##
+
+**Summarize the coverages from \@ref(calcCover).**
+
+Covariance coverage matrices are often very large and, hence, difficult to parse. 
+It is often useful to distill this information into a few succinct summaries to 
+help extract the useful knowledge.
+
+```{asis}
+One of the most useful numeric summaries is the range. We'll start there.
+
+NOTE:
+
+- When computing the range, it is often helpful to exclude coverages of 1.0 
+since variables that are fully jointly observed won't have much direct influence 
+on our missing data treatment.
+- We usually want to exclude the diagonal elements from the coverage matrix, too. 
+These values represent *variance* coverages instead of *covariance* coverages. 
+In other words, the diagonal of the coverage matrix gives the proportion of 
+observed cases for each variable.
+```
+
+```{r}
+## Range of coverages < 1.0:
+## NOTE: Use lower.tri() to select only the elements below the diagonal.
+uniqueCc <- cc[lower.tri(cc)] 
+uniqueCc[uniqueCc < 1] %>% range()
+```
+
+```{asis}
+Often it can also be useful to count the number of coverages that satisfy some 
+condition (e.g., fall below some threshold).
+
+- When doing such a summary, we need to remember two idiosyncrasies of the 
+covaraince coverage matrix:
+
+1. The diagonal elements are not covariance coverages.
+1. The matrix is symmetic.
+
+So, to get a count of covariance coverages without double counting, we consider 
+only the elements from the lower (or upper) triangle.
+```
+
+```{r}
+## Count the number of coverages lower than 0.8:
+sum(uniqueCc < 0.8)
+```
+
+---
+
+##
+
+**Visualize the covariance coverage rates from \@ref(calcCover).**
+  
+As with numeric summaries, visualizations are also a good way to distill 
+meaningful knowledge from the raw information in a coveriance coverage matrix.
+  
+```{asis}
+We'll try two different visualizations. 
+
+First, we'll create a simple histogram of the coverages to get a sense of their 
+distribution. To see why such a visualization is useful, consider two 
+hypothetical situations wherein the range of coverages is [0.2; 0.8].
+
+1. Half of these coverages are lower than 0.3
+1. Only one of the coverages is lower than 0.3
+
+Clearly, the second situation is less problematic, but we cannot differentiate 
+between these two simply by examining the range of coverages.
+```
+
+```{r}
+library(ggplot2)
+
+## Simple histogram of coverages:
+data.frame(Coverage = uniqueCc) %>% 
+  ggplot(aes(Coverage)) + 
+  geom_histogram(bins = 15, color = "black")
+```
+
+```{asis}
+Next, we'll create a heatmap of the coverage matrix itself. Such a visualization
+could help us locate clusters of variables with especially low coverages, for 
+example.
+```
+
+```{r}
+## Convert the coverage matrix into a plottable, tidy-formatted data.frame:
+pDat <- data.frame(Coverage = as.numeric(cc), 
+                   x        = rep(colnames(cc), ncol(cc)), 
+                   y        = rep(colnames(cc), each = ncol(cc))
+                   )
+
+## Create the heatmap via the "tile" geom:
+ggplot(pDat, aes(x = x, y = y, fill = Coverage)) + 
+  geom_tile() + 
+  scale_x_discrete(limits = rev(colnames(cc))) +
+  scale_y_discrete(limits = colnames(cc)) + 
+  scale_fill_distiller(palette = "Oranges") + 
+  xlab(NULL) + 
+  ylab(NULL)
+```
+
+---
+
+## {#mdPattern}
+
+**Visualize the missing data patterns.**
+
+- How many unique response patterns are represented in the EA data?
+
+*HINT*: 
+
+- The `plot_pattern()` function from [**ggmice**][ggmice] will create a nice 
+visualization of the patterns.
+- The `md.pattern()` function from *mice* will create a (somewhat less beautiful) 
+visualization but will return a numeric pattern matrix that you can further analyze.
+
+```{r, fig.asp = 1.25}
+library(ggmice)
+
+## Visualize the response patterns:
+plot_pattern(ea)
+
+## Create an analyzable pattern matrix (without visualization):
+(pats <- md.pattern(ea, plot = FALSE))
+
+## Count the number of unique response patterns:
+nrow(pats) - 1
+```
+
+```{asis}
+As shown by the above code, there are `r nrow(pats) - 1` unique response 
+patterns in the EA data.
+```
+
+---
+
+##
+
+**Calculate the fraction of missing information for the summary statistics.**
+
+The fraction of missing information (FMI) is a crucial statistic for quantifying 
+the extent to which missing data (and their treatment) have affected parameter 
+estimation. We generally calculate the FMI for the estimates of our substantive 
+model parameters, but we can also use the FMI as a screening tool before fitting 
+any substantive model.
+
+- The FMI for the sufficient statistics (e.g., means, variance, and covariances)
+of our data can give is a good idea of what level of FMI to expect for models 
+fit to those data.
+- With the `fmi()` function from **semTools**, we can efficiently compute the 
+FMI for sufficient statistics using the FIML-based approach described by 
+[Savalei and Rhemtulla (2012)][fimlFmi].
+
+```{r}
+library(semTools)
+
+ea %>% select(-id) %>% fmi()
+```
+
+---
+
+# Naive Analysis
+
+---
+
+Of course, we can estimate models in **lavaan** without doing anything fancy to 
+the missing data. If we fit a model to incomplete data using **lavaan**, the 
+software will automatically apply listwise deletion to remove any missing 
+data before estimating the model.
+
+As a (suboptimal) point of comparison, we'll first fit a couple models using 
+complete case analysis.
+
+---
+
+##
+
+**Define the model syntax for the CFA.**
+
+The data only contain multi-item scales for *Drive for Thinness* and 
+*Preoccupation with Food*, so we only need a two-dimensional CFA evaluating the 
+measurement structure of these two factors.
+
+- Indicated the *Drive for Thinness* factor from the seven relevant scale items.
+   - `eat1`, `eat2`, `eat10`, `eat11`, `eat12`, `eat14`, `eat24`
+- Indicated the *Preoccupation with Food* factor from the remaining three scale 
+items.
+   - `eat3`, `eat18`, `eat21`
+   
+```{r}
+cfaMod <- '
+drive =~ eat1 + eat2  + eat10 + eat11 + eat12 + eat14 + eat24
+pre   =~ eat3 + eat18 + eat21
+'
+```
+
+---
+
+##
+
+**Estimate the CFA model on the EA data.**
+
+- Correlate the latent factors.
+- Set the scale by standardizing the latent factors.
+- Estimate the mean structure.
+- Use complete case analysis to treat the missing data.
+
+```{r}
+naiveCfa <- cfa(cfaMod, data = ea, std.lv = TRUE)
+```
+
+---
+
+## 
+
+**Summarize the fitted CFA and check the model fit.**
+
+- Do the parameter estimates look sensible?
+- Does the model fit the data well enough?
+- How many observations were deleted?
+
+```{r}
+summary(naiveCfa)
+fitMeasures(naiveCfa)
+```
+
+```{asis}
+This model looks fine. All measurement model parameters seem reasonable, and the 
+model fits the data well. That being said, `r nrow(ea) - lavInspect(naiveCfa, "nobs")` observations were deleted to "fix" the missing data.
+```
+
+---
+
+# Multiple Imputation
+
+---
+
+Now, we'll move into the realm of recommended approaches. Specifically, we will 
+treat the missing data via principled methods that correct the missing data 
+problem through a theoretically motivated model for the missing values.
+
+The first such approach we will consider is *multiple imputation* (MI). MI is a 
+pre-processing method that treats the missing data as a separate step prior to 
+estimating the analysis model. Consequently, the fist step in our journey toward 
+an MI-based analysis will be multiply imputing the missing data.
+
+---
+
+## {#mi} 
+
+**Multiply impute the missing data.**
+
+Use the **mice**::`mice()` function to impute the missing data using the 
+following settings.
+
+- Create 20 imputations.
+- Use 25 iterations of the MICE algorithm.
+- Use *predictive mean matching* (PMM) as the elementary imputation method.
+- Set the pseudo random number seed to 235711.
+
+*HINT*: 
+
+- If you are unsure of how to implement these options check the documentation 
+for the `mice()` function.
+- If you are really, really stuck, unhide the solution below.
+
+<details>
+
+<summary>*View the parameterized `mice()` call.*</summary>
+
+```{r mi, include = TRUE, echo = TRUE, cache = TRUE, results = "hide"}
+## Generate 20 imputations of the missing data:
+miceOut <- mice(ea, m = 20, maxit = 25, method = "pmm", seed = 235711)
+``` 
+
+</details>
+
+---
+
+Before we can proceed with the analysis, we need to check two important criteria:
+
+1. The imputation model has converged onto a stationary solution
+1. The imputations are sensible (i.e., they look like reasonable replacements 
+for the missing data).
+
+---
+
+## 
+
+**Create traceplots of the imputations' means and variances.**
+
+One especially expedient way to evaluate convergence is by plotting the 
+iteration history of the means and variances of the imputed values for each 
+variable. Once the algorithm has converged, the individual lines in these plots 
+(each of which corresponds to one imputation) should mix thoroughly, and the 
+overall mass of the tracelines should show no trend.
+
+- Use the `plot_trace()` function from **ggmice** to create traceplots for each 
+imputed variable.
+- Do these plots suggest convergence?
+
+```{r trace_plots, animation.hook = "gifski", cache = TRUE}
+## Get the names of the imputed variables:
+targets <- which(miceOut$method != "") %>% names()
+
+## Create traceplots of the imputed means and variances:
+for(v in targets)
+    plot_trace(miceOut, v) %>% print()
+```
+
+```{asis}
+The plots show well-mixed trace-lines for each imputation and there is no 
+evidence of a global trend. So, these plots suggest convergence.
+```
+
+---
+
+We can also evaluate convergence via numeric statistics such as the *Potential 
+Scale Reduction Factor*, $\hat{R}$, ([Gelman & Rubin, XXXX][psrf]).
+
+---
+
+##
+
+**Compute the $\hat{R}$ statistic for the means and variances.**
+
+For *mids* objects, we can use the `Rhat.mice()` function from **miceadds** to 
+compute the $\hat{R}$ statistics for the means and variances of the imputed data.
+
+- At convergence, these statistic should all be close to 1.0 (i.e., 
+$\forall \hat{R} < 1.1$)
+- Do the $\hat{R}$ statistics suggest convergence?
+
+```{r}
+library(miceadds)
+
+## Compute the PSR factors for the means and variances of the imputed data:
+Rhat.mice(miceOut)
+```
+
+```{asis}
+Yes, all $\hat{R}$ statistics are less than 1.1 (and very near 1.0), so these
+statistics suggest convergence.
+```
+
+---
+
+After we confirm that the imputation model has converged, we still need to sanity
+check the imputed values, themselves. A convergent imputation model can still
+produce completely ridiculous and useless imputations.
+
+One of the best ways to check the plausibility of the imputations is with plots
+that juxtapose the imputed and observed data. Since we're comparing distributions,
+kernel density plots are often a good visualization.
+
+---
+
+## 
+
+**Create kernel density plots of the imputed and observed data.**
+
+We can create "quick-and-dirty" density plots via the **mice**::`densityplot()` 
+function, but **ggmice**::`ggmice()` allows us to create the same figures with
+all the control provided by `ggplot()`. For more details check 
+[this page][ggmice_density].
+
+- Do the imputed values look reasonable?
+
+```{r density_plots, animation.hook = "gifski", cache = TRUE}
+for(v in targets) {
+  p <- ggmice(miceOut, aes_string(v, group = ".imp", size = ".where")) + 
+    geom_density() + 
+    scale_size_manual(values = c("observed" = 1, "imputed" = 0.5),
+                      guide  = "none") +
+    theme(legend.position = "none")
+  print(p)
+}
+```
+
+```{asis}
+Yes, the imputed values all seem plausible. The kernel desities for the imputed
+data all seem as though they could represent samples from a population similar 
+to the one that generated the complete data.
+
+- Note that the populations that generate the observed and imputed data need not 
+be the same when the data are missing at random.
+```
+
+---
+
+Assuming our imputations pass the above checks, it's time to move on with the 
+analysis. For our purposes, that means creating a list of multiply imputed 
+datasets that we can analyze via **semTools**::`lavaan.mi()`.
+
+---
+
+## 
+
+**Create a list of imputed datasets from the *mids* object generated in \@ref(mi).**
+
+The `mice()` function returns a *mids* object that contains the imputations and 
+a bunch of other metadata but not the imputed datasets.
+
+- We use the **mice**::`complete()` function to create the final imputed datasets.
+- Return the imputed data as a list (with length 20) of multiply imputed datasets.
+
+```{r}
+## Replace the missing values with the imputations (and return a list of datasets):
+eaImp <- complete(miceOut, "all")
+```
+
+---
+
+# MI-Bases Analysis
+
+---
+
+Now that we've multiply imputed our data, it's time to move into the analysis
+phase of the process. In practice, we will lean heavily on routines from the
+[**semTools**][semTools] package to implement both the analysis and pooling 
+phases.
+
+---
+
+##
+
+**Estimate the CFA model on the multiply imputed EA data.**
+
+- Correlate the latent factors.
+- Set the scale by standardizing the latent factors.
+- Estimate the mean structure.
+
+*HINT*: The **semTools**::`cfa.mi()` function can be a big help here.
+
+```{r cfa_mi1, cache = TRUE}
+cfaFit1 <- cfa.mi(cfaMod, data = eaImp, std.lv = TRUE)
+```
+
+---
+
+## 
+
+**Summarize the fitted CFA and check the model fit.**
+
+- Include the FMI statistics in your summary.
+- Use the D3 statistic to define the model fit indices.
+- Do the parameter estimates look sensible?
+- Does the model fit the data well enough?
+- Do any of the FMI estimates cause you to question the results?
+
+```{r}
+options(width = 100)
+summary(cfaFit1, fmi = TRUE) %>% print()
+
+options(width = 80)
+fitMeasures(cfaFit1, stat = "D3")
+```
+
+```{asis}
+- This model looks good. All measurement model parameters seem reasonable, and the 
+model fits the data very well.
+- None of the FMI values looks worryingly large.
+```
+
+---
+
+##
+
+**Question**
+
+```{r}
+## Add the latent regression paths to the CFA syntax:
+semMod <- paste(cfaMod, 
+                'pre   ~ b1p * anx + b2p * wsb + bmi', 
+                'drive ~ b1d * anx + b2d * wsb + bmi', 
+                sep = '\n')
+```
+
+---
+
+##
+
+**Question**
+
+```{r sem_mi1, cache = TRUE}
+semFit1 <- sem.mi(semMod, data = eaImp, std.lv = TRUE)
+```
+
+---
+
+##
+
+**Question**
+
+```{r}
+summary(semFit1, fmi = TRUE)
+```
+
+---
+
+##
+
+**Question**
+
+```{r}
+cons <- '
+b1p == b1d
+b2p == b2d
+'
+
+lavTestWald.mi(semFit1, cons, test = "D1")
+```
+
+---
+
+##
+
+**Question**
+
+```{r sem_anova1, cache = TRUE}
+semMod2 <- paste(semMod, cons, sep = '\n')
+
+semFit2 <- sem.mi(semMod2, data = eaImp, std.lv = TRUE)
+
+anova(semFit1, semFit2, stat = "D3")
+```
+
+---
+
+##
+
+**Question**
+
+```{r mi_mediation1, cache = TRUE, eval = FALSE}
+miSem3 <- sem.mi(semMod3, data = eaImp, std.lv = TRUE)
+
+monteCarloCI(miSem3, plot = TRUE)
+```
+
+```{r, eval = FALSE}
+library(boot)
+library(coxed)
+
+#semFit <- sem(semMod3, data = eaImp[[1]], std.lv = TRUE, se = "boot", bootstrap = 100)
+
+getEst <- function(lavObj) {
+  ## Define a function to compute the defined parameters:
+  getDefPar <- lavObj %>% parTable() %>% lav_partable_constraints_def()
+  
+  ## Extract the bootstrapped coefficient estimates:
+  cf <- inspect(lavObj, "coef.boot")
+
+  ## Compute the defined parameters from each bootstrapped resample:
+  apply(cf, 1, getDefPar)
+}
+
+tmp <- semList(semMod3, 
+               dataList  = eaImp, 
+               std.lv    = TRUE, 
+               se        = "boot", 
+               bootstrap = 100, 
+               FUN       = getEst)
+
+est <- tmp@funList %>% unlist()
+
+bca(est)
+
+tmp <- boot(est, sum, R = length(est))
+
+ls(tmp)
+
+tmp$R  <- length(est)
+tmp$t  <- matrix(est)
+tmp$t0 <- miSem3 %>% coef() %>% getDefPar()
+
+boot.ci(tmp, type = "bca")
+```
+
+
+---
+
+# Full Information Maximum Likelihood
+
+---
+
+Blah, blah, blah...
+
+---
+
+##
+
+**Question**
+
+```{r}
+fimlCfa1 <- cfa(cfaMod, data = ea, std.lv = TRUE, missing = "fiml")
+```
+
+---
+
+##
+
+**Question**
+
+- Include the FMI statistics in your summary
+   - Do any of these FMI values give you pause?
+- Does the number of missing data patterns shown in the summary match the number you calculated in \@ref(mdPattern)?
+   - If not, what do you think causes this discrepancy?
+
+```{r}
+summary(fimlCfa1, fmi = TRUE)
+```
+
+---
+
+##
+
+**Question**
+
+```{r}
+fimlCfa2 <- cfa.auxiliary(cfaMod, 
+                          data = ea, 
+                          aux = c("bmi", "anx", "wsb"), 
+                          std.lv = TRUE, 
+                          missing = "fiml")
+```
+
+---
+
+##
+
+**Question**
+
+```{r, warning = TRUE}
+fimlSem1 <- sem(semMod, data = ea, std.lv = TRUE, missing = "fiml")
+```
+
+---
+
+##
+
+**Question**
+
+```{r}
+summary(fimlSem1, fmi = TRUE)
+```
+
+---
+
+##
+
+**Question**
+
+```{r, warning = TRUE}
+fimlSem2 <- sem(semMod, 
+                data    = ea, 
+                std.lv  = TRUE, 
+                missing = "fiml", 
+                fixed.x = FALSE)
+```
+
+---
+
+##
+
+**Question**
+
+```{r}
+summary(fimlSem2, fmi = TRUE)
+```
+
+---
+
+##
+
+**Define the model syntax for the structural model.**
+
+- Specify all paths needed to test the multiple mediation hypothesis described 
+above.
+- Include defined parameters to quantify all specific indirect effects and the 
+total indirect effect.
+
+```{r}
+## Define only the new structural parts:
+semMod3 <- '
+pre   ~ b * drive + c * wsb
+drive ~ a * wsb
+
+ab := a * b
+'
+
+## Add on the measurement part:
+semMod3 <- paste(cfaMod, semMod3, sep = '\n')
+```
+
+---
+
+##
+
+**Estimate the structural model.**
+
+- Include *bmi* as an auxiliary variable.
+- Use B = 2500 bootstrap resamples to quantify the sampling variability.
+
+```{r fiml_mediation_boot, cache = TRUE}
+fimlSem3 <- sem.auxiliary(semMod3, 
+                          data      = ea, 
+                          aux       = c("bmi", "anx"),
+                          std.lv    = TRUE, 
+                          se        = "boot", 
+                          bootstrap = 250)
+```
+
+---
+
+##
+
+**Summarize the fitted model and interpret the results.**
+
+a. Is the two-step specific indirect effect through *Drive for Thinness* 
+significant according to the 95% BC CI?
+a. Is the two-step specific indirect effect through *Anxiety* significant 
+according to the 95% BC CI?
+a. Is the full, three-step specific indirect effect through *Drive for Thinness* 
+and *Anxiety* significant according to the 95% BC CI?
+a. Is the total indirect effect significant according to the 95% BC CI?
+a. Briefly interpret the indirect effects.
+
+```{r}
+summary(fimlSem3)
+
+parameterEstimates(fimlSem3, boot.ci.type = "bca.simple") %>% 
+  select(-(1:3)) %>%
+  tail(1)
+```
+
+```{r, include = FALSE}
+out <- parameterEstimates(fimlSem3, boot.ci.type = "bca.simple") %>% tail(1)
+#out1 <- tmp[1, ]
+#out2 <- tmp[2, ]
+#out3 <- tmp[3, ]
+#out4 <- tmp[4, ]
+```
+
+```{asis}
+a. Yes, the indirect effect through *Drive for Thinness* is statistically 
+significant (
+$ab = `r round(out$est, 3)`$, 
+$95\%~CI_{BC} = [`r round(out$ci.lower, 3)`; `r round(out$ci.upper, 3)`]$
+).
+
+a. An indirect causal process by which the effect of Western beauty standards on 
+preoccupation with food is transmitted through drive for thinness was supported 
+by a statistically significant, positive indirect effect.
+```
+
+---
+
+End of Lab 4
+
+---
+
+
+[amda]: https://www.cms.guilford.com/books/Applied-Missing-Data-Analysis/Craig-Enders/9781606236390
+[ea_data0]: https://www.appliedmissingdata.com/analyses
+[ea_data1]: https://github.com/kylelang/lavaan-e-learning/raw/main/4_sem_mediation/data/eating_attitudes_completed.rds
+[ea_code]: https://github.com/kylelang/lavaan-e-learning/blob/main/code/lab_prep/process_eating_data.R
+[fimlFmi]: https://doi.org/10.1080/10705511.2012.687669
+[psrf]: https://doi.org/10.1214/ss/1177011136
+[ggmice]: https://amices.org/ggmice/index.html
+[ggmice_density]: https://amices.org/ggmice/articles/old_friends.html
+[lavaan]: https://cran.r-project.org/web/packages/lavaan/
+[semTools]: https://cran.r-project.org/web/packages/semTools/index.html
