@@ -2771,7 +2771,7 @@ div.tocify {
 <h1 class="title toc-ignore">Lab 6: Missing Data</h1>
 <h3 class="subtitle">Introduction to SEM with lavaan</h3>
 <h4 class="author">Kyle M. Lang</h4>
-<h4 class="date">Updated: 2022-07-11</h4>
+<h4 class="date">Updated: 2022-07-12</h4>
 
 </div>
 
@@ -3591,10 +3591,21 @@ model fits the data very well.</li>
 <li>None of the FMI values looks worryingly large.</li>
 </ul>
 <hr />
+<p>Now, we will estimate a latent regression model wherein the <em>preoccupation with
+food</em> factor and the <em>drive for thinness</em> factor are correlated and regressed
+onto <em>anxiety</em>, <em>Western beauty standards</em> and <em>BMI</em>.</p>
+<hr />
 </div>
-<div id="section-15" class="section level2" number="5.3">
+<div id="semSyntax1" class="section level2" number="5.3">
 <h2><span class="header-section-number">5.3</span> </h2>
-<p><strong>Question</strong></p>
+<p><strong>Define the model syntax for the SEM described above.</strong></p>
+<ul>
+<li>Label the regression slopes for <em>anxiety</em> and <em>Western beauty standards</em>
+<ul>
+<li>Give each slope a distinct label (you should end up with four unique labels).</li>
+</ul></li>
+<li>Do not include the intercepts in the latent regression equations.</li>
+</ul>
 <pre class="r"><code>## Add the latent regression paths to the CFA syntax:
 semMod &lt;- paste(cfaMod, 
                 &#39;pre   ~ b1p * anx + b2p * wsb + bmi&#39;, 
@@ -3602,16 +3613,28 @@ semMod &lt;- paste(cfaMod,
                 sep = &#39;\n&#39;)</code></pre>
 <hr />
 </div>
-<div id="section-16" class="section level2" number="5.4">
+<div id="semFit1" class="section level2" number="5.4">
 <h2><span class="header-section-number">5.4</span> </h2>
-<p><strong>Question</strong></p>
+<p><strong>Estimate the SEM on the multiply imputed data.</strong></p>
+<ul>
+<li>Covary the latent factors.</li>
+<li>Set the scale by standardizing the latent variables.</li>
+</ul>
+<p><em>HINT</em>: The <strong>semTools</strong>::<code>sem.mi()</code> function can be a big help here.</p>
 <pre class="r"><code>semFit1 &lt;- sem.mi(semMod, data = eaImp, std.lv = TRUE)</code></pre>
 <hr />
 </div>
-<div id="section-17" class="section level2" number="5.5">
+<div id="section-15" class="section level2" number="5.5">
 <h2><span class="header-section-number">5.5</span> </h2>
-<p><strong>Question</strong></p>
-<pre class="r"><code>summary(semFit1, fmi = TRUE)</code></pre>
+<p><strong>Summarize the fitted SEM and interpret the results.</strong></p>
+<ul>
+<li>Include the FMI statistics in your summary.</li>
+<li>Does <em>anxiety</em> significantly predict <em>preoccupation with food</em> and/or <em>drive
+for thinness</em> after controlling for <em>Western beauty standards</em> and <em>BMI</em>?</li>
+<li>Does <em>Western beauty standards</em> significantly predict <em>preoccupation with food</em>
+and/or <em>drive for thinness</em> after controlling for <em>anxiety</em> and <em>BMI</em>?</li>
+</ul>
+<pre class="r"><code>summary(semFit1, fmi = TRUE) %&gt;% print()</code></pre>
 <pre><code>
 The RIV will exceed 1 whenever between-imputation variance exceeds within-imputation variance (when FMI(1) &gt; 50%).
 
@@ -3621,17 +3644,167 @@ See class?lavaan.mi help page for available methods.
 Convergence information:
 The model converged on 20 imputed data sets 
 
-Rubin&#39;s (1987) rules were used to pool point and SE estimates across 20 imputed data sets, and to calculate degrees of freedom for each parameter&#39;s t test and CI.</code></pre>
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["lhs"],"name":[1],"type":["chr"],"align":["left"]},{"label":["op"],"name":[2],"type":["chr"],"align":["left"]},{"label":["rhs"],"name":[3],"type":["chr"],"align":["left"]},{"label":["exo"],"name":[4],"type":["int"],"align":["right"]},{"label":["est"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["se"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["t"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["pvalue"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["fmi"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["riv"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["label"],"name":[12],"type":["chr"],"align":["left"]}],"data":[{"1":"drive","2":"=~","3":"eat1","4":"0","5":"0.55772303","6":"0.03875750","7":"14.390067","8":"5413.4115","9":"4.198327e-46","10":"0.05924358","11":"0.06297441","12":""},{"1":"drive","2":"=~","3":"eat2","4":"0","5":"0.49603743","6":"0.03562470","7":"13.923976","8":"Inf","9":"4.529869e-44","10":"0.03793646","11":"0.03943239","12":""},{"1":"drive","2":"=~","3":"eat10","4":"0","5":"0.58973960","6":"0.03414462","7":"17.271817","8":"2261.2254","9":"6.957145e-63","10":"0.09166528","11":"0.10091575","12":""},{"1":"drive","2":"=~","3":"eat11","4":"0","5":"0.57235925","6":"0.03230687","7":"17.716333","8":"6730.3116","9":"1.116571e-68","10":"0.05313237","11":"0.05611383","12":""},{"1":"drive","2":"=~","3":"eat12","4":"0","5":"0.50133223","6":"0.03608138","7":"13.894488","8":"2425.8437","9":"2.730949e-42","10":"0.08850043","11":"0.09709322","12":""},{"1":"drive","2":"=~","3":"eat14","4":"0","5":"0.66679068","6":"0.03420753","7":"19.492509","8":"6530.9316","9":"2.674438e-82","10":"0.05393730","11":"0.05701240","12":""},{"1":"drive","2":"=~","3":"eat24","4":"0","5":"0.46923423","6":"0.03684608","7":"12.734985","8":"3366.3630","9":"2.568039e-36","10":"0.07512705","11":"0.08122959","12":""},{"1":"pre","2":"=~","3":"eat3","4":"0","5":"0.62881166","6":"0.04005886","7":"15.697193","8":"2596.0483","9":"4.052411e-53","10":"0.08555008","11":"0.09355360","12":""},{"1":"pre","2":"=~","3":"eat18","4":"0","5":"0.61438818","6":"0.04077345","7":"15.068339","8":"2682.8081","9":"2.575872e-49","10":"0.08415540","11":"0.09188830","12":""},{"1":"pre","2":"=~","3":"eat21","4":"0","5":"0.68447368","6":"0.03980166","7":"17.197114","8":"1208.6162","9":"1.842652e-59","10":"0.12538125","11":"0.14335532","12":""},{"1":"pre","2":"~","3":"anx","4":"0","5":"0.18456824","6":"0.02207031","7":"8.362738","8":"2533.8680","9":"9.976581e-17","10":"0.08659340","11":"0.09480269","12":"b1p"},{"1":"pre","2":"~","3":"wsb","4":"0","5":"0.12008316","6":"0.03273359","7":"3.668500","8":"966.2486","9":"2.573056e-04","10":"0.14022723","11":"0.16309801","12":"b2p"},{"1":"pre","2":"~","3":"bmi","4":"0","5":"0.09447817","6":"0.02297508","7":"4.112203","8":"Inf","9":"3.919021e-05","10":"0.02919053","11":"0.03006824","12":""},{"1":"drive","2":"~","3":"anx","4":"0","5":"0.19407141","6":"0.02103004","7":"9.228297","8":"2365.6036","9":"5.915729e-20","10":"0.08962018","11":"0.09844263","12":"b1d"},{"1":"drive","2":"~","3":"wsb","4":"0","5":"0.17790689","6":"0.03170973","7":"5.610483","8":"2333.1757","9":"2.256378e-08","10":"0.09024083","11":"0.09919200","12":"b2d"},{"1":"drive","2":"~","3":"bmi","4":"0","5":"0.13786705","6":"0.02231623","7":"6.177882","8":"Inf","9":"6.496704e-10","10":"0.03091102","11":"0.03189699","12":""},{"1":"eat1","2":"~~","3":"eat1","4":"0","5":"0.59248424","6":"0.04787407","7":"12.375889","8":"2757.2696","9":"2.820520e-34","10":"0.08301129","11":"0.09052597","12":""},{"1":"eat2","2":"~~","3":"eat2","4":"0","5":"0.51726995","6":"0.04143331","7":"12.484399","8":"1886.9232","9":"1.998399e-34","10":"0.10034591","11":"0.11153833","12":""},{"1":"eat10","2":"~~","3":"eat10","4":"0","5":"0.35287705","6":"0.03109198","7":"11.349457","8":"3248.5199","9":"2.640008e-29","10":"0.07647756","11":"0.08281072","12":""},{"1":"eat11","2":"~~","3":"eat11","4":"0","5":"0.29931661","6":"0.02695122","7":"11.105865","8":"Inf","9":"1.174740e-28","10":"0.04281919","11":"0.04473469","12":""},{"1":"eat12","2":"~~","3":"eat12","4":"0","5":"0.53173926","6":"0.04257193","7":"12.490372","8":"1349.3853","9":"5.870633e-34","10":"0.11866122","11":"0.13463747","12":""},{"1":"eat14","2":"~~","3":"eat14","4":"0","5":"0.25311414","6":"0.02624700","7":"9.643545","8":"Inf","9":"5.234823e-22","10":"0.03956500","11":"0.04119488","12":""},{"1":"eat24","2":"~~","3":"eat24","4":"0","5":"0.59591483","6":"0.04686701","7":"12.715016","8":"633.0514","9":"3.791389e-33","10":"0.17324364","11":"0.20954619","12":""},{"1":"eat3","2":"~~","3":"eat3","4":"0","5":"0.40305584","6":"0.04092000","7":"9.849849","8":"1498.5848","9":"3.192025e-22","10":"0.11259942","11":"0.12688680","12":""},{"1":"eat18","2":"~~","3":"eat18","4":"0","5":"0.45305348","6":"0.04336578","7":"10.447259","8":"778.0682","9":"5.350803e-24","10":"0.15626725","11":"0.18520942","12":""},{"1":"eat21","2":"~~","3":"eat21","4":"0","5":"0.28827964","6":"0.03811428","7":"7.563560","8":"1162.6388","9":"7.939478e-14","10":"0.12783636","11":"0.14657382","12":""},{"1":"drive","2":"~~","3":"drive","4":"0","5":"1.00000000","6":"0.00000000","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":""},{"1":"pre","2":"~~","3":"pre","4":"0","5":"1.00000000","6":"0.00000000","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":""},{"1":"drive","2":"~~","3":"pre","4":"0","5":"0.38071380","6":"0.05712434","7":"6.664651","8":"4408.9029","9":"2.979521e-11","10":"0.06564649","11":"0.07025873","12":""},{"1":"anx","2":"~~","3":"anx","4":"1","5":"9.07316375","6":"0.00000000","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":""},{"1":"anx","2":"~~","3":"wsb","4":"1","5":"1.00529313","6":"0.00000000","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":""},{"1":"anx","2":"~~","3":"bmi","4":"1","5":"1.20465213","6":"0.00000000","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":""},{"1":"wsb","2":"~~","3":"wsb","4":"1","5":"3.63726313","6":"0.00000000","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":""},{"1":"wsb","2":"~~","3":"bmi","4":"1","5":"1.07508352","6":"0.00000000","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":""},{"1":"bmi","2":"~~","3":"bmi","4":"1","5":"7.37171642","6":"0.00000000","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":""}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
+Rubin&#39;s (1987) rules were used to pool point and SE estimates across 20 imputed data sets, and to calculate degrees of freedom for each parameter&#39;s t test and CI.
+
+Parameter Estimates:
+
+  Standard errors                             Standard
+  Information                                 Expected
+  Information saturated (h1) model          Structured
+
+Latent Variables:
+                   Estimate  Std.Err  t-value       df  P(&gt;|t|)      FMI
+  drive =~                                                              
+    eat1              0.558    0.039   14.390 5413.411    0.000    0.059
+    eat2              0.496    0.036   13.924      Inf    0.000    0.038
+    eat10             0.590    0.034   17.272 2261.225    0.000    0.092
+    eat11             0.572    0.032   17.716 6730.312    0.000    0.053
+    eat12             0.501    0.036   13.894 2425.844    0.000    0.089
+    eat14             0.667    0.034   19.493 6530.932    0.000    0.054
+    eat24             0.469    0.037   12.735 3366.363    0.000    0.075
+  pre =~                                                                
+    eat3              0.629    0.040   15.697 2596.048    0.000    0.086
+    eat18             0.614    0.041   15.068 2682.808    0.000    0.084
+    eat21             0.684    0.040   17.197 1208.616    0.000    0.125
+      RIV
+         
+    0.063
+    0.039
+    0.101
+    0.056
+    0.097
+    0.057
+    0.081
+         
+    0.094
+    0.092
+    0.143
+
+Regressions:
+                   Estimate  Std.Err  t-value       df  P(&gt;|t|)      FMI
+  pre ~                                                                 
+    anx      (b1p)    0.185    0.022    8.363 2533.868    0.000    0.087
+    wsb      (b2p)    0.120    0.033    3.668  966.249    0.000    0.140
+    bmi               0.094    0.023    4.112      Inf    0.000    0.029
+  drive ~                                                               
+    anx      (b1d)    0.194    0.021    9.228 2365.604    0.000    0.090
+    wsb      (b2d)    0.178    0.032    5.610 2333.176    0.000    0.090
+    bmi               0.138    0.022    6.178      Inf    0.000    0.031
+      RIV
+         
+    0.095
+    0.163
+    0.030
+         
+    0.098
+    0.099
+    0.032
+
+Covariances:
+                   Estimate  Std.Err  t-value       df  P(&gt;|t|)      FMI
+ .drive ~~                                                              
+   .pre               0.381    0.057    6.665 4408.903    0.000    0.066
+      RIV
+         
+    0.070
+
+Variances:
+                   Estimate  Std.Err  t-value       df  P(&gt;|t|)      FMI
+   .eat1              0.592    0.048   12.376 2757.270    0.000    0.083
+   .eat2              0.517    0.041   12.484 1886.923    0.000    0.100
+   .eat10             0.353    0.031   11.349 3248.520    0.000    0.076
+   .eat11             0.299    0.027   11.106      Inf    0.000    0.043
+   .eat12             0.532    0.043   12.490 1349.385    0.000    0.119
+   .eat14             0.253    0.026    9.644      Inf    0.000    0.040
+   .eat24             0.596    0.047   12.715  633.051    0.000    0.173
+   .eat3              0.403    0.041    9.850 1498.585    0.000    0.113
+   .eat18             0.453    0.043   10.447  778.068    0.000    0.156
+   .eat21             0.288    0.038    7.564 1162.639    0.000    0.128
+   .drive             1.000                                             
+   .pre               1.000                                             
+      RIV
+    0.091
+    0.112
+    0.083
+    0.045
+    0.135
+    0.041
+    0.210
+    0.127
+    0.185
+    0.147
+         
+         </code></pre>
+<table>
+<caption><span id="tab:semRes1">Table 5.1: </span>Latent Regression Estimates</caption>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">Estimate</th>
+<th align="right">t</th>
+<th align="right">p</th>
+<th align="right">FMI</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">pre ~ anx</td>
+<td align="right">0.185</td>
+<td align="right">8.363</td>
+<td align="right">&lt; 0.001</td>
+<td align="right">0.087</td>
+</tr>
+<tr class="even">
+<td align="left">pre ~ wsb</td>
+<td align="right">0.120</td>
+<td align="right">3.668</td>
+<td align="right">&lt; 0.001</td>
+<td align="right">0.140</td>
+</tr>
+<tr class="odd">
+<td align="left">drive ~ anx</td>
+<td align="right">0.194</td>
+<td align="right">9.228</td>
+<td align="right">&lt; 0.001</td>
+<td align="right">0.090</td>
+</tr>
+<tr class="even">
+<td align="left">drive ~ wsb</td>
+<td align="right">0.178</td>
+<td align="right">5.610</td>
+<td align="right">&lt; 0.001</td>
+<td align="right">0.090</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Yes, as shown in Table <a href="#tab:semRes1">5.1</a>, <em>anxiety</em> is significantly and
+positively associated with both <em>preoccupation with food</em> and <em>drive for thinness</em>
+after controlling for <em>Western beauty standards</em> and <em>BMI</em>.</li>
+<li>Likewise, <em>Western beauty standards</em> significantly and positively predicts
+<em>preoccupation with food</em> and <em>drive for thinness</em> after controlling for <em>anxiety</em>
+and <em>BMI</em>.</li>
+</ul>
+<hr />
+<p>Given an SEM fitted to multiply imputed data via <strong>semTools</strong>::<code>lavaan.mi()</code>, we
+can use the testing utilities from <strong>semTools</strong> to evaluate (multivariate)
+hypotheses defined in terms of parameter constraints.</p>
+<p>In the next two questions, we’ll consider one such hypothesis test.</p>
 <hr />
 </div>
-<div id="section-18" class="section level2" number="5.6">
+<div id="waldMi" class="section level2" number="5.6">
 <h2><span class="header-section-number">5.6</span> </h2>
-<p><strong>Question</strong></p>
+<p><strong>Apply a multivariate Wald test to the fitted model from <a href="#semFit1">5.4</a>.</strong></p>
+<ul>
+<li>Test the bivariate null hypothesis that states:
+<ol style="list-style-type: decimal">
+<li>The effect of <em>anxiety</em> on both outcomes is equal</li>
+<li>The effect of <em>Western beauty standards</em> on both outcomes is equal</li>
+</ol></li>
+<li>Use the <span class="math inline">\(D1\)</span> statistic to conduct the test.</li>
+<li>What is the conculsion of this test?</li>
+</ul>
+<p><em>HINT</em>: The <strong>semTools</strong>::<code>lavTestWald.mi()</code> function can be very helpful here.</p>
 <pre class="r"><code>cons &lt;- &#39;
 b1p == b1d
 b2p == b2d
@@ -3640,62 +3813,102 @@ b2p == b2d
 lavTestWald.mi(semFit1, cons, test = &quot;D1&quot;)</code></pre>
 <pre><code>       F      df1      df2   pvalue     ariv      fmi 
    1.227    2.000 6923.960    0.293    0.071    0.067 </code></pre>
+<p>The Wald test returned a nonsignificant result (
+<span class="math inline">\(F[2, 6923.96] = 1.23\)</span>,
+<span class="math inline">\(p = 0.293\)</span>,
+<span class="math inline">\(FMI = 0.067\)</span>
+). Hence, we cannot infer a difference in the effect of either predictor on
+either outcome.</p>
 <hr />
 </div>
-<div id="section-19" class="section level2" number="5.7">
+<div id="section-16" class="section level2" number="5.7">
 <h2><span class="header-section-number">5.7</span> </h2>
-<p><strong>Question</strong></p>
-<pre class="r"><code>semMod2 &lt;- paste(semMod, cons, sep = &#39;\n&#39;)
+<p><strong>Test the hypothesis from <a href="#waldMi">5.6</a> using a likelihood ratio test.</strong></p>
+<ul>
+<li>Estimate a separate restricted SEM.</li>
+<li>Compare the full and restricted fits using a LRT.</li>
+<li>Use the <span class="math inline">\(D3\)</span> statistic to conduct the test.</li>
+<li>What is the conclusion of this test?</li>
+</ul>
+<pre class="r"><code>## Define the restricted model by combining the constraint and SEM syntax:
+semMod2 &lt;- paste(semMod, cons, sep = &#39;\n&#39;)
 
+## Estimate the restricted model:
 semFit2 &lt;- sem.mi(semMod2, data = eaImp, std.lv = TRUE)
 
+## Conduct the LRT:
 anova(semFit1, semFit2, stat = &quot;D3&quot;)</code></pre>
 <pre><code>       F      df1      df2   pvalue     ariv      fmi 
    1.236    2.000 5773.641    0.291    0.079    0.073 </code></pre>
+<p>As above, the LRT returned a nonsignificant result (
+<span class="math inline">\(F[2, 5773.64] = 1.24\)</span>,
+<span class="math inline">\(p = 0.291\)</span>,
+<span class="math inline">\(FMI = 0.073\)</span>
+). So, the restricted model does not fit significantly worse than the full model,
+and, consequently, we cannot infer a difference in the effect of either
+predictor on either outcome.</p>
 <hr />
 </div>
-<div id="section-20" class="section level2" number="5.8">
+<div id="section-17" class="section level2" number="5.8">
 <h2><span class="header-section-number">5.8</span> </h2>
-<p><strong>Question</strong></p>
-<pre class="r"><code>miSem3 &lt;- sem.mi(semMod3, data = eaImp, std.lv = TRUE)
+<p><strong>Define the model syntax for the structural model.</strong></p>
+<ul>
+<li>Specify all paths needed to test the mediation hypothesis described above.</li>
+<li>Include defined parameters to quantify the indirect and total effects.</li>
+</ul>
+<pre class="r"><code>## Define only the new structural parts:
+semMod3 &lt;- &#39;
+pre   ~ b * drive + cp * wsb
+drive ~ a * wsb
 
-monteCarloCI(miSem3, plot = TRUE)</code></pre>
-<pre class="r"><code>library(boot)
-library(coxed)
+ab := a * b
+c  := cp + ab
+&#39;
 
-#semFit &lt;- sem(semMod3, data = eaImp[[1]], std.lv = TRUE, se = &quot;boot&quot;, bootstrap = 100)
+## Add on the measurement part:
+semMod3 &lt;- paste(cfaMod, semMod3, sep = &#39;\n&#39;)</code></pre>
+<hr />
+<pre class="r"><code>library(coxed) # To calculate BCa intervals
 
-getEst &lt;- function(lavObj) {
-  ## Define a function to compute the defined parameters:
+## Define a function that will take a fitted lavaan object (&#39;lavObj&#39;) and return 
+## the estimates of all defined parameters:
+getDefParEstimates &lt;- function(lavObj) {
+  ## Use lavaan::lav_partable_constraints_def() to generate a function that 
+  ## computes all defined parameters represented in &#39;lavObj&#39;:
   getDefPar &lt;- lavObj %&gt;% parTable() %&gt;% lav_partable_constraints_def()
   
-  ## Extract the bootstrapped coefficient estimates:
+  ## Extract the bootstrapped coefficient estimates from &#39;lavObj&#39;:
   cf &lt;- inspect(lavObj, &quot;coef.boot&quot;)
 
-  ## Compute the defined parameters from each bootstrapped resample:
+  ## Compute the defined parameters on each bootstrapped sample, and return the 
+  ## result:
   apply(cf, 1, getDefPar)
 }
 
+## Fit &#39;semMod3&#39; to each of the 20 imputed datasets in &#39;eaImp&#39;.
+## Generate B = 1000 boostrap samples for each of these 20 imputed datasets.
 tmp &lt;- semList(semMod3, 
                dataList  = eaImp, 
                std.lv    = TRUE, 
                se        = &quot;boot&quot;, 
-               bootstrap = 100, 
-               FUN       = getEst)
+               bootstrap = 10, 
+               FUN       = getDefParEstimates)
 
-est &lt;- tmp@funList %&gt;% unlist()
+## Aggregate all of the bootstrapped estimates for each defined parameter into a 
+## single sample with N = M * B observations:  
+est &lt;- tmp@funList %&gt;% do.call(cbind, .) %&gt;% t()
 
-bca(est)
+## Use the coxed::bca() function to compute BCa CIs for each defined parameter:
+apply(est, 2, bca)</code></pre>
+<hr />
+</div>
+<div id="section-18" class="section level2" number="5.9">
+<h2><span class="header-section-number">5.9</span> </h2>
+<p><strong>Use the Monte Carlo simulation approach to test the mediation hypothesis
+described above.</strong></p>
+<pre class="r"><code>miSem3 &lt;- sem.mi(semMod3, data = eaImp, std.lv = TRUE)
 
-tmp &lt;- boot(est, sum, R = length(est))
-
-ls(tmp)
-
-tmp$R  &lt;- length(est)
-tmp$t  &lt;- matrix(est)
-tmp$t0 &lt;- miSem3 %&gt;% coef() %&gt;% getDefPar()
-
-boot.ci(tmp, type = &quot;bca&quot;)</code></pre>
+monteCarloCI(miSem3, plot = TRUE)</code></pre>
 <hr />
 </div>
 </div>
@@ -3704,13 +3917,13 @@ boot.ci(tmp, type = &quot;bca&quot;)</code></pre>
 <hr />
 <p>Blah, blah, blah…</p>
 <hr />
-<div id="section-21" class="section level2" number="6.1">
+<div id="section-19" class="section level2" number="6.1">
 <h2><span class="header-section-number">6.1</span> </h2>
 <p><strong>Question</strong></p>
 <pre class="r"><code>fimlCfa1 &lt;- cfa(cfaMod, data = ea, std.lv = TRUE, missing = &quot;fiml&quot;)</code></pre>
 <hr />
 </div>
-<div id="section-22" class="section level2" number="6.2">
+<div id="section-20" class="section level2" number="6.2">
 <h2><span class="header-section-number">6.2</span> </h2>
 <p><strong>Question</strong></p>
 <ul>
@@ -3796,7 +4009,7 @@ Variances:
     pre               1.000                                    </code></pre>
 <hr />
 </div>
-<div id="section-23" class="section level2" number="6.3">
+<div id="section-21" class="section level2" number="6.3">
 <h2><span class="header-section-number">6.3</span> </h2>
 <p><strong>Question</strong></p>
 <pre class="r"><code>fimlCfa2 &lt;- cfa.auxiliary(cfaMod, 
@@ -3806,7 +4019,7 @@ Variances:
                           missing = &quot;fiml&quot;)</code></pre>
 <hr />
 </div>
-<div id="section-24" class="section level2" number="6.4">
+<div id="section-22" class="section level2" number="6.4">
 <h2><span class="header-section-number">6.4</span> </h2>
 <p><strong>Question</strong></p>
 <pre class="r"><code>fimlSem1 &lt;- sem(semMod, data = ea, std.lv = TRUE, missing = &quot;fiml&quot;)</code></pre>
@@ -3814,7 +4027,7 @@ Variances:
           exogenous variable(s), while fixed.x = TRUE.</code></pre>
 <hr />
 </div>
-<div id="section-25" class="section level2" number="6.5">
+<div id="section-23" class="section level2" number="6.5">
 <h2><span class="header-section-number">6.5</span> </h2>
 <p><strong>Question</strong></p>
 <pre class="r"><code>summary(fimlSem1, fmi = TRUE)</code></pre>
@@ -3902,7 +4115,7 @@ Variances:
    .pre               1.000                                    </code></pre>
 <hr />
 </div>
-<div id="section-26" class="section level2" number="6.6">
+<div id="section-24" class="section level2" number="6.6">
 <h2><span class="header-section-number">6.6</span> </h2>
 <p><strong>Question</strong></p>
 <pre class="r"><code>fimlSem2 &lt;- sem(semMod, 
@@ -3912,7 +4125,7 @@ Variances:
                 fixed.x = FALSE)</code></pre>
 <hr />
 </div>
-<div id="section-27" class="section level2" number="6.7">
+<div id="section-25" class="section level2" number="6.7">
 <h2><span class="header-section-number">6.7</span> </h2>
 <p><strong>Question</strong></p>
 <pre class="r"><code>summary(fimlSem2, fmi = TRUE)</code></pre>
@@ -4010,29 +4223,8 @@ Variances:
     bmi               7.346    0.522   14.069    0.000    0.011</code></pre>
 <hr />
 </div>
-<div id="section-28" class="section level2" number="6.8">
+<div id="section-26" class="section level2" number="6.8">
 <h2><span class="header-section-number">6.8</span> </h2>
-<p><strong>Define the model syntax for the structural model.</strong></p>
-<ul>
-<li>Specify all paths needed to test the multiple mediation hypothesis described
-above.</li>
-<li>Include defined parameters to quantify all specific indirect effects and the
-total indirect effect.</li>
-</ul>
-<pre class="r"><code>## Define only the new structural parts:
-semMod3 &lt;- &#39;
-pre   ~ b * drive + c * wsb
-drive ~ a * wsb
-
-ab := a * b
-&#39;
-
-## Add on the measurement part:
-semMod3 &lt;- paste(cfaMod, semMod3, sep = &#39;\n&#39;)</code></pre>
-<hr />
-</div>
-<div id="section-29" class="section level2" number="6.9">
-<h2><span class="header-section-number">6.9</span> </h2>
 <p><strong>Estimate the structural model.</strong></p>
 <ul>
 <li>Include <em>bmi</em> as an auxiliary variable.</li>
@@ -4046,8 +4238,8 @@ semMod3 &lt;- paste(cfaMod, semMod3, sep = &#39;\n&#39;)</code></pre>
                           bootstrap = 250)</code></pre>
 <hr />
 </div>
-<div id="section-30" class="section level2" number="6.10">
-<h2><span class="header-section-number">6.10</span> </h2>
+<div id="section-27" class="section level2" number="6.9">
+<h2><span class="header-section-number">6.9</span> </h2>
 <p><strong>Summarize the fitted model and interpret the results.</strong></p>
 <ol style="list-style-type: lower-alpha">
 <li>Is the two-step specific indirect effect through <em>Drive for Thinness</em>

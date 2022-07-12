@@ -26,6 +26,8 @@ figDir <- "../figures/"
 
 set.seed(235711)
 
+source("../../code/supportFunctions.R")
+
 ## Define an asis engine that will evaluate inline code within an asis block:
 knit_engines$set(asis = function(options) {
   if(options$echo && options$eval) knit_child(text = options$code)
@@ -626,9 +628,19 @@ model fits the data very well.
 
 ---
 
-##
+Now, we will estimate a latent regression model wherein the *preoccupation with 
+food* factor and the *drive for thinness* factor are correlated and regressed 
+onto *anxiety*, *Western beauty standards* and *BMI*.
 
-**Question**
+---
+
+## {#semSyntax1}
+
+**Define the model syntax for the SEM described above.**
+
+- Label the regression slopes for *anxiety* and *Western beauty standards*
+   - Give each slope a distinct label (you should end up with four unique labels).
+- Do not include the intercepts in the latent regression equations.
 
 ```{r}
 ## Add the latent regression paths to the CFA syntax:
@@ -640,9 +652,14 @@ semMod <- paste(cfaMod,
 
 ---
 
-##
+## {#semFit1}
 
-**Question**
+**Estimate the SEM on the multiply imputed data.**
+
+- Covary the latent factors.
+- Set the scale by standardizing the latent variables.
+
+*HINT*: The **semTools**::`sem.mi()` function can be a big help here.
 
 ```{r sem_mi1, cache = TRUE}
 semFit1 <- sem.mi(semMod, data = eaImp, std.lv = TRUE)
@@ -652,17 +669,72 @@ semFit1 <- sem.mi(semMod, data = eaImp, std.lv = TRUE)
 
 ##
 
-**Question**
+**Summarize the fitted SEM and interpret the results.**
+
+- Include the FMI statistics in your summary.
+- Does *anxiety* significantly predict *preoccupation with food* and/or *drive 
+for thinness* after controlling for *Western beauty standards* and *BMI*?
+- Does *Western beauty standards* significantly predict *preoccupation with food* 
+and/or *drive for thinness* after controlling for *anxiety* and *BMI*?
+
 
 ```{r}
-summary(semFit1, fmi = TRUE)
+summary(semFit1, fmi = TRUE) %>% print()
+```
+
+```{r semRes1, echo = FALSE, results = "asis"}
+tmp <- summary(semFit1, fmi = TRUE) %>% quiet()
+tmp <- tmp %>% filter(label != "") %>% as.data.frame()
+
+paths <- tmp %>% select(1:3) %>% apply(1, paste, collapse = " ")
+dat   <- tmp %>% 
+  select(est, t, pvalue, fmi) %>%
+  round(3) %>%
+  mutate(p = case_when(pvalue < 0.001 ~ "< 0.001",
+                       TRUE           ~ as.character(pvalue)
+                       ),
+         .before = "fmi",
+         .keep = "unused")
+
+rownames(dat) <- paths
+
+kable(dat, 
+      row.names = TRUE, 
+      col.names = c("Estimate", "t", "p", "FMI"),
+      align     = "r",
+      caption   = "Latent Regression Estimates")
+```
+
+```{asis}
+- Yes, as shown in Table \@ref(tab:semRes1), *anxiety* is significantly and 
+positively associated with both *preoccupation with food* and *drive for thinness* 
+after controlling for *Western beauty standards* and *BMI*.
+- Likewise, *Western beauty standards* significantly and positively predicts 
+*preoccupation with food* and *drive for thinness* after controlling for *anxiety* 
+and *BMI*.
 ```
 
 ---
 
-##
+Given an SEM fitted to multiply imputed data via **semTools**::`lavaan.mi()`, we
+can use the testing utilities from **semTools** to evaluate (multivariate) 
+hypotheses defined in terms of parameter constraints.
 
-**Question**
+In the next two questions, we'll consider one such hypothesis test.
+
+---
+
+## {#waldMi}
+
+**Apply a multivariate Wald test to the fitted model from \@ref(semFit1).**
+
+- Test the bivariate null hypothesis that states:
+   1. The effect of *anxiety* on both outcomes is equal
+   1. The effect of *Western beauty standards* on both outcomes is equal
+- Use the $D1$ statistic to conduct the test.
+- What is the conculsion of this test?
+
+*HINT*: The **semTools**::`lavTestWald.mi()` function can be very helpful here.
 
 ```{r}
 cons <- '
@@ -673,71 +745,139 @@ b2p == b2d
 lavTestWald.mi(semFit1, cons, test = "D1")
 ```
 
----
+```{r, echo = FALSE}
+tmp <- lavTestWald.mi(semFit1, cons, test = "D1")
 
-##
+f   <- tmp["F"] %>% round(2)
+df1 <- tmp["df1"] %>% round()
+df2 <- tmp["df2"] %>% round(2)
+p   <- tmp["pvalue"] %>% round(3)
+fmi <- tmp["fmi"] %>% round(3)
+```
 
-**Question**
-
-```{r sem_anova1, cache = TRUE}
-semMod2 <- paste(semMod, cons, sep = '\n')
-
-semFit2 <- sem.mi(semMod2, data = eaImp, std.lv = TRUE)
-
-anova(semFit1, semFit2, stat = "D3")
+```{asis}
+The Wald test returned a nonsignificant result (
+$F[`r df1`, `r df2`] = `r f`$, 
+$p = `r p`$,
+$FMI = `r fmi`$
+). Hence, we cannot infer a difference in the effect of either predictor on 
+either outcome.
 ```
 
 ---
 
 ##
 
-**Question**
+**Test the hypothesis from \@ref(waldMi) using a likelihood ratio test.**
+
+- Estimate a separate restricted SEM.
+- Compare the full and restricted fits using a LRT.
+- Use the $D3$ statistic to conduct the test.
+- What is the conclusion of this test?
+
+```{r sem_anova1, cache = TRUE}
+## Define the restricted model by combining the constraint and SEM syntax:
+semMod2 <- paste(semMod, cons, sep = '\n')
+
+## Estimate the restricted model:
+semFit2 <- sem.mi(semMod2, data = eaImp, std.lv = TRUE)
+
+## Conduct the LRT:
+anova(semFit1, semFit2, stat = "D3")
+```
+
+```{r, echo = FALSE}
+tmp <- anova(semFit1, semFit2, stat = "D3")
+
+f   <- tmp["F"] %>% round(2)
+df1 <- tmp["df1"] %>% round()
+df2 <- tmp["df2"] %>% round(2)
+p   <- tmp["pvalue"] %>% round(3)
+fmi <- tmp["fmi"] %>% round(3)
+```
+
+```{asis}
+As above, the LRT returned a nonsignificant result (
+$F[`r df1`, `r df2`] = `r f`$, 
+$p = `r p`$,
+$FMI = `r fmi`$
+). So, the restricted model does not fit significantly worse than the full model, 
+and, consequently, we cannot infer a difference in the effect of either 
+predictor on either outcome.
+```
+
+---
+
+##
+
+**Define the model syntax for the structural model.**
+
+- Specify all paths needed to test the mediation hypothesis described above.
+- Include defined parameters to quantify the indirect and total effects.
+
+```{r}
+## Define only the new structural parts:
+semMod3 <- '
+pre   ~ b * drive + cp * wsb
+drive ~ a * wsb
+
+ab := a * b
+c  := cp + ab
+'
+
+## Add on the measurement part:
+semMod3 <- paste(cfaMod, semMod3, sep = '\n')
+```
+
+---
+
+```{r, eval = FALSE}
+library(coxed) # To calculate BCa intervals
+
+## Define a function that will take a fitted lavaan object ('lavObj') and return 
+## the estimates of all defined parameters:
+getDefParEstimates <- function(lavObj) {
+  ## Use lavaan::lav_partable_constraints_def() to generate a function that 
+  ## computes all defined parameters represented in 'lavObj':
+  getDefPar <- lavObj %>% parTable() %>% lav_partable_constraints_def()
+  
+  ## Extract the bootstrapped coefficient estimates from 'lavObj':
+  cf <- inspect(lavObj, "coef.boot")
+
+  ## Compute the defined parameters on each bootstrapped sample, and return the 
+  ## result:
+  apply(cf, 1, getDefPar)
+}
+
+## Fit 'semMod3' to each of the 20 imputed datasets in 'eaImp'.
+## Generate B = 1000 boostrap samples for each of these 20 imputed datasets.
+tmp <- semList(semMod3, 
+               dataList  = eaImp, 
+               std.lv    = TRUE, 
+               se        = "boot", 
+               bootstrap = 10, 
+               FUN       = getDefParEstimates)
+
+## Aggregate all of the bootstrapped estimates for each defined parameter into a 
+## single sample with N = M * B observations:  
+est <- tmp@funList %>% do.call(cbind, .) %>% t()
+
+## Use the coxed::bca() function to compute BCa CIs for each defined parameter:
+apply(est, 2, bca)
+```
+
+---
+
+##
+
+**Use the Monte Carlo simulation approach to test the mediation hypothesis 
+described above.**
 
 ```{r mi_mediation1, cache = TRUE, eval = FALSE}
 miSem3 <- sem.mi(semMod3, data = eaImp, std.lv = TRUE)
 
 monteCarloCI(miSem3, plot = TRUE)
 ```
-
-```{r, eval = FALSE}
-library(boot)
-library(coxed)
-
-#semFit <- sem(semMod3, data = eaImp[[1]], std.lv = TRUE, se = "boot", bootstrap = 100)
-
-getEst <- function(lavObj) {
-  ## Define a function to compute the defined parameters:
-  getDefPar <- lavObj %>% parTable() %>% lav_partable_constraints_def()
-  
-  ## Extract the bootstrapped coefficient estimates:
-  cf <- inspect(lavObj, "coef.boot")
-
-  ## Compute the defined parameters from each bootstrapped resample:
-  apply(cf, 1, getDefPar)
-}
-
-tmp <- semList(semMod3, 
-               dataList  = eaImp, 
-               std.lv    = TRUE, 
-               se        = "boot", 
-               bootstrap = 100, 
-               FUN       = getEst)
-
-est <- tmp@funList %>% unlist()
-
-bca(est)
-
-tmp <- boot(est, sum, R = length(est))
-
-ls(tmp)
-
-tmp$R  <- length(est)
-tmp$t  <- matrix(est)
-tmp$t0 <- miSem3 %>% coef() %>% getDefPar()
-
-boot.ci(tmp, type = "bca")
-```
-
 
 ---
 
@@ -828,30 +968,6 @@ fimlSem2 <- sem(semMod,
 
 ```{r}
 summary(fimlSem2, fmi = TRUE)
-```
-
----
-
-##
-
-**Define the model syntax for the structural model.**
-
-- Specify all paths needed to test the multiple mediation hypothesis described 
-above.
-- Include defined parameters to quantify all specific indirect effects and the 
-total indirect effect.
-
-```{r}
-## Define only the new structural parts:
-semMod3 <- '
-pre   ~ b * drive + c * wsb
-drive ~ a * wsb
-
-ab := a * b
-'
-
-## Add on the measurement part:
-semMod3 <- paste(cfaMod, semMod3, sep = '\n')
 ```
 
 ---

@@ -186,3 +186,16 @@ summary(semFit2)
 ## Estimate the model on the singly imputed data:
 semFit2 <- sem(semMod2, data = eat1, std.lv = TRUE)
 summary(semFit2)
+
+
+###-Boot & MI Stuff----------------------------------------------------------###
+
+tmp <- boot(est, sum, R = length(est))
+
+ls(tmp)
+
+tmp$R  <- length(est)
+tmp$t  <- matrix(est)
+tmp$t0 <- miSem3 %>% coef() %>% getDefPar()
+
+boot.ci(tmp, type = "bca")
