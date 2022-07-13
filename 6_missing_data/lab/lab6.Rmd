@@ -21,6 +21,7 @@ editor_options:
 library(knitr)
 library(dplyr)
 library(magrittr)
+library(mice)
 
 figDir <- "../figures/"
 
@@ -35,7 +36,8 @@ knit_engines$set(asis = function(options) {
 )
 
 opts_chunk$set(include = params$answers, 
-               echo = params$answer, 
+               echo = params$answers, 
+               eval = params$answers,
                message = FALSE,
                warning = FALSE,
                fig.align = "center",
@@ -66,7 +68,7 @@ In this lab, you will practice methods for dealing with missing data when using
 
 ---
 
-```{r, include = FALSE}
+```{r, eval = TRUE, include = FALSE}
 dataDir <- "../../data/"
 ea      <- readRDS(paste0(dataDir, "eating_attitudes.rds"))
 ```
@@ -360,7 +362,7 @@ measurement structure of these two factors.
 items.
    - `eat3`, `eat18`, `eat21`
    
-```{r}
+```{r, eval = TRUE}
 cfaMod <- '
 drive =~ eat1 + eat2  + eat10 + eat11 + eat12 + eat14 + eat24
 pre   =~ eat3 + eat18 + eat21
@@ -449,7 +451,7 @@ for the `mice()` function.
 
 <summary>*View the parameterized `mice()` call.*</summary>
 
-```{r mi, include = TRUE, echo = TRUE, cache = TRUE, results = "hide"}
+```{r mi, eval = TRUE, include = TRUE, echo = TRUE, cache = TRUE, results = "hide"}
 ## Generate 20 imputations of the missing data:
 miceOut <- mice(ea, m = 20, maxit = 25, method = "pmm", seed = 235711)
 ``` 
@@ -468,7 +470,7 @@ a bunch of other metadata but not the imputed datasets.
 - We use the **mice**::`complete()` function to create the final imputed datasets.
 - Return the imputed data as a list (with length 20) of multiply imputed datasets.
 
-```{r}
+```{r, eval = TRUE}
 ## Replace the missing values with the imputations (and return a list of datasets):
 eaImp <- complete(miceOut, "all")
 ```
@@ -879,7 +881,7 @@ include_graphics("figures/lab6_mediation.png")
 - Specify all paths needed to test the mediation hypothesis described above.
 - Include a defined parameter to quantify the indirect effect.
 
-```{r}
+```{r, eval = TRUE}
 ## Define only the new structural parts:
 semMod3 <- '
 pre   ~ b * drive + cp * wsb
@@ -928,7 +930,7 @@ First, we'll define a function that will take a fitted lavaan object (`lavObj`)
 as input and return the bootstrapped estimates of all defined parameters 
 specified in the model syntax of `lavObj`.
 
-```{r, include = TRUE, echo = TRUE}
+```{r, eval = TRUE, include = TRUE, echo = TRUE}
 getDefParEstimates <- function(lavObj) {
   ## Use lavaan::lav_partable_constraints_def() to generate a function that 
   ## computes all defined parameters represented in 'lavObj':
@@ -957,7 +959,7 @@ code yourself, consider first doing so with a small number of bootstrap samples
    - If you want a more accurate estimate, you can time this baby run with 
    `system.time()` and extrapolate from there.
 
-```{r miBoot, include = TRUE, echo = TRUE, cache = TRUE}
+```{r miBoot, eval = TRUE, include = TRUE, echo = TRUE, cache = TRUE}
 ## Fit the models:
 fits <- semList(semMod3, 
                 dataList  = eaImp, 
@@ -976,7 +978,7 @@ sample with $N = 20 \times 1000 = 20000$ observations.
 distribution of our indirect effect, so we can summarize this aggregated sample
 for inference (e.g., by compute the BCa CI of the indirect effect).
 
-```{r, include = TRUE, echo = TRUE}
+```{r, eval = TRUE, include = TRUE, echo = TRUE}
 ## Aggregate estimates:
 ab <- fits@funList %>% unlist()
 
