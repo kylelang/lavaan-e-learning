@@ -1,7 +1,7 @@
 ### Title:    MWE for Enders (2010) Eating Attitudes Data NPD Theta Matrix
 ### Author:   Kyle M. Lang
 ### Created:  2022-07-02
-### Modified: 2022-07-02
+### Modified: 2022-07-13
 
 load("enders_eating_data.RData")
 
@@ -29,7 +29,7 @@ summary(fit0)
                                         #                      aux    = c("bmi", "anx", "wsb"),
                                         #                      std.lv = TRUE)
 
-### When I add auxiliaries, I get a NPD residual covariance matrix.
+### When I add auxiliaries, I get a NPD residual covariance matrix:
 
 ## Warning message:
 ## In lav_object_post_check(object) :
@@ -58,7 +58,7 @@ eigen(theta) # One (large) negative eigenvalue
 
 ### The model runs fine and gives the same estimates reported in Enders (2010).
 ### The negative eigenvalue is too large to be due simply to numerical fuzz, and
-### it doesn seem to be caused by any illegal estimates.
+### it doesn't seem to be caused by any illegal estimates.
 
 inspect(fit1, "sigma") %>% eigen() # The model-implied covariance matrix is fine
 
@@ -74,6 +74,10 @@ fitMeasures(fit2)
 
 inspect(fit2, "theta") %>% eigen()
 
-### Same issue...
+### Same issue
+
+### I also get the same NPD residual covariance matrix if I run the model in
+### Mplus using the code provided in the supplement for Enders (2010). So, it
+### looks like this is a fundamental issue with the model, not a lavaan problem.
 
 ### WTF is going on!?
