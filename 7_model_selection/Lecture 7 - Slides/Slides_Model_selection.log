@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.5.23)  2 JUL 2022 11:08
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.5.23)  30 JUN 2023 11:32
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1162,7 +1162,7 @@ LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <10> not available
 <images//Model-Unc.png, id=1192, 373.395pt x 167.097pt>
 File: images//Model-Unc.png Graphic file (type png)
 <use images//Model-Unc.png>
-Package pdftex.def Info: images//Model-Unc.png  used on input line 385.
+Package pdftex.def Info: images//Model-Unc.png  used on input line 386.
 (pdftex.def)             Requested size: 184.3758pt x 82.50801pt.
  [14
 
@@ -1175,21 +1175,21 @@ Package pdftex.def Info: images//Model-Unc.png  used on input line 385.
 <images//ORICvsAIC_n10.png, id=1446, 616.55344pt x 317.68687pt>
 File: images//ORICvsAIC_n10.png Graphic file (type png)
 <use images//ORICvsAIC_n10.png>
-Package pdftex.def Info: images//ORICvsAIC_n10.png  used on input line 455.
+Package pdftex.def Info: images//ORICvsAIC_n10.png  used on input line 456.
 (pdftex.def)             Requested size: 332.9339pt x 171.54834pt.
 
-Overfull \hbox (25.64403pt too wide) in paragraph at lines 455--455
+Overfull \hbox (25.64403pt too wide) in paragraph at lines 456--456
  [] 
  []
 
 LaTeX Font Info:    Font shape `OT1/cmss/b/n' in size <14.4> not available
-(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 455.
+(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 456.
 
 LaTeX Font Info:    Font shape `OT1/cmss/b/n' in size <10> not available
-(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 455.
+(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 456.
 
 LaTeX Font Info:    Font shape `OT1/cmss/b/n' in size <7> not available
-(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 455.
+(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 456.
 
 [17
 
@@ -1197,10 +1197,10 @@ LaTeX Font Info:    Font shape `OT1/cmss/b/n' in size <7> not available
 <images//ORICvsAIC_n100.png, id=1533, 617.30624pt x 318.43968pt>
 File: images//ORICvsAIC_n100.png Graphic file (type png)
 <use images//ORICvsAIC_n100.png>
-Package pdftex.def Info: images//ORICvsAIC_n100.png  used on input line 466.
+Package pdftex.def Info: images//ORICvsAIC_n100.png  used on input line 467.
 (pdftex.def)             Requested size: 333.34041pt x 171.95486pt.
 
-Overfull \hbox (26.05054pt too wide) in paragraph at lines 466--466
+Overfull \hbox (26.05054pt too wide) in paragraph at lines 467--467
  [] 
  []
 
@@ -1213,7 +1213,7 @@ Overfull \hbox (26.05054pt too wide) in paragraph at lines 466--466
 
 ]
 LaTeX Font Info:    Font shape `OT1/cmss/b/n' in size <5> not available
-(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 495.
+(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 496.
 
  [21
 
@@ -1237,7 +1237,7 @@ LaTeX Font Info:    Font shape `OT1/cmss/b/n' in size <5> not available
 \openout4 = `Slides_Model_selection.vrb'.
 
  (./Slides_Model_selection.vrb)
-Overfull \vbox (7.20947pt too high) detected at line 596
+Overfull \vbox (7.20947pt too high) detected at line 597
  []
 
 [25
@@ -1321,8 +1321,20 @@ Overfull \hbox (4.19354pt too wide) in paragraph at lines 13--13
 n:[][] 
  []
 
+
+Overfull \hbox (28.7072pt too wide) in paragraph at lines 15--15
+[][]\OT1/cmtt/m/n/10 AIC_Unstand[] []<-[] []goric[][](fit_MGregr,[] []hypothese
+s[] []=[] []list[][]([][]H_AIC[][]=H_AIC))[][] 
+ []
+
+
+Overfull \hbox (18.20729pt too wide) in paragraph at lines 32--32
+[][]\OT1/cmtt/m/n/10 AIC_Stand[] []<-[] []goric[][](fit_MGregr,[] []hypotheses[
+] []=[] []list[][]([][]H_AIC[][]=H_AIC),[][] 
+ []
+
 )
-Overfull \vbox (3.75807pt too high) detected at line 931
+Overfull \vbox (3.75807pt too high) detected at line 939
  []
 
 [39
@@ -1335,25 +1347,8 @@ Overfull \vbox (3.75807pt too high) detected at line 931
 ]
 \openout4 = `Slides_Model_selection.vrb'.
 
- (./Slides_Model_selection.vrb
-Overfull \hbox (12.95734pt too wide) in paragraph at lines 15--15
-[]\OT1/cmtt/m/n/10 ##           model   loglik  penalty    gorica gorica.weight
-s[] 
- []
-
-
-Overfull \hbox (12.95734pt too wide) in paragraph at lines 15--15
-[]\OT1/cmtt/m/n/10 ## 1            H1 10.26185 3.195804 -14.13209      0.690871
-3[] 
- []
-
-
-Overfull \hbox (12.95734pt too wide) in paragraph at lines 15--15
-[]\OT1/cmtt/m/n/10 ## 2 unconstrained 10.26185 4.000000 -12.52370      0.309128
-7[] 
- []
-
-) [41
+ (./Slides_Model_selection.vrb)
+[41
 
 ] (./Slides_Model_selection.toc) [42
 
@@ -1361,7 +1356,7 @@ Overfull \hbox (12.95734pt too wide) in paragraph at lines 15--15
 <images//MaxWeigth.png, id=3671, 582.72443pt x 541.64464pt>
 File: images//MaxWeigth.png Graphic file (type png)
 <use images//MaxWeigth.png>
-Package pdftex.def Info: images//MaxWeigth.png  used on input line 1003.
+Package pdftex.def Info: images//MaxWeigth.png  used on input line 1010.
 (pdftex.def)             Requested size: 116.54282pt x 108.327pt.
  [43
 
@@ -1369,32 +1364,32 @@ Package pdftex.def Info: images//MaxWeigth.png  used on input line 1003.
 [44
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 1043--1043
+Underfull \hbox (badness 10000) in paragraph at lines 1050--1050
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1043--1043
+Underfull \hbox (badness 10000) in paragraph at lines 1050--1050
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1043--1043
+Underfull \hbox (badness 10000) in paragraph at lines 1050--1050
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1043--1043
+Underfull \hbox (badness 10000) in paragraph at lines 1050--1050
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1043--1043
+Underfull \hbox (badness 10000) in paragraph at lines 1050--1050
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1043--1043
+Underfull \hbox (badness 10000) in paragraph at lines 1050--1050
 
  []
 
@@ -1402,7 +1397,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 1043--1043
 File: images//Weigth_Compl_and_Hu.png Graphic file (type png)
 <use images//Weigth_Compl_and_Hu.png>
 Package pdftex.def Info: images//Weigth_Compl_and_Hu.png  used on input line 10
-43.
+50.
 (pdftex.def)             Requested size: 179.99303pt x 189.57846pt.
 [45
 
@@ -1412,21 +1407,9 @@ Package pdftex.def Info: images//Weigth_Compl_and_Hu.png  used on input line 10
 \openout4 = `Slides_Model_selection.vrb'.
 
  (./Slides_Model_selection.vrb
-Overfull \hbox (2.45743pt too wide) in paragraph at lines 17--17
-[]\OT1/cmtt/m/n/10 ##        model    loglik  penalty    gorica gorica.weights[
-] 
- []
-
-
-Overfull \hbox (2.45743pt too wide) in paragraph at lines 17--17
-[]\OT1/cmtt/m/n/10 ## 1         H1 10.261849 3.195804 -14.13209      0.6219892[
-] 
- []
-
-
-Overfull \hbox (2.45743pt too wide) in paragraph at lines 17--17
-[]\OT1/cmtt/m/n/10 ## 2 complement  9.872241 3.304196 -13.13609      0.3780108[
-] 
+Overfull \hbox (9.4435pt too wide) in paragraph at lines 11--11
+[][]\OT1/cmtt/m/it/10 #results_MGregr_compl$result # Output too long for the sl
+ide[][] 
  []
 
 ) [47
@@ -1443,10 +1426,10 @@ Overfull \hbox (2.45743pt too wide) in paragraph at lines 17--17
 
 ]
 LaTeX Font Info:    Font shape `OT1/cmss/b/n' in size <8> not available
-(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 1150
+(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 1156
 .
 LaTeX Font Info:    Font shape `OT1/cmss/b/n' in size <6> not available
-(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 1150
+(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 1156
 .
  [51
 
@@ -1477,7 +1460,7 @@ Package rerunfilecheck Info: File `Slides_Model_selection.out' has not changed.
 Here is how much of TeX's memory you used:
  30370 strings out of 478300
  628567 string characters out of 5849123
- 964752 words of memory out of 5000000
+ 963752 words of memory out of 5000000
  47749 multiletter control sequences out of 15000+600000
  485266 words of font info for 85 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -1500,7 +1483,7 @@ sfonts/cm/cmsy5.pfb><c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/
 cmsy7.pfb><c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb>
 <c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb><c:/texli
 ve/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.pfb>
-Output written on Slides_Model_selection.pdf (55 pages, 621368 bytes).
+Output written on Slides_Model_selection.pdf (55 pages, 622262 bytes).
 PDF statistics:
  4911 PDF objects out of 5155 (max. 8388607)
  4688 compressed objects within 47 object streams

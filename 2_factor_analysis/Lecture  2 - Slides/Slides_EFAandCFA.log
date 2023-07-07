@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.5.23)  24 JUN 2022 09:57
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.5.23)  8 JUL 2022 10:38
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1578,10 +1578,10 @@ Package pdftex.def Info: images/slide66.png  used on input line 1913.
 <images/slide21.png, id=7098, 511.9125pt x 446.66875pt>
 File: images/slide21.png Graphic file (type png)
 <use images/slide21.png>
-Package pdftex.def Info: images/slide21.png  used on input line 2086.
+Package pdftex.def Info: images/slide21.png  used on input line 2091.
 (pdftex.def)             Requested size: 286.89557pt x 250.33044pt.
 
-Overfull \vbox (1.00455pt too high) detected at line 2086
+Overfull \vbox (1.00455pt too high) detected at line 2091
  []
 
 [69
@@ -1628,7 +1628,7 @@ live/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmssi8.pfb><c:/texlive/2022
 /texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/texlive/2022/texmf-di
 st/fonts/type1/public/amsfonts/cm/cmsy9.pfb><c:/texlive/2022/texmf-dist/fonts/t
 ype1/public/amsfonts/cm/cmtt10.pfb>
-Output written on Slides_EFAandCFA.pdf (71 pages, 1838251 bytes).
+Output written on Slides_EFAandCFA.pdf (71 pages, 1838114 bytes).
 PDF statistics:
  7500 PDF objects out of 8907 (max. 8388607)
  7214 compressed objects within 73 object streams

@@ -1,17 +1,38 @@
 ---
 title: "Lab: Multigroup Models and Measurement Invariance"
 output:
-  html_document: default
+  html_document: 
+    toc: true
+    toc_float: true
+    number_sections: true
+    toc_depth: 2
   pdf_document: default
-  word_document: default
+editor_options:
+  chunk_output_type: console
 ---
+
+
+<style>
+body {
+  width: 100%;
+  margin: 0 auto;
+}
+</style>
+
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(tidy.opts = list(width.cutoff = 80), tidy = TRUE)
+knitr::opts_chunk$set(comment = NA, warning = FALSE)
+options(width = 1200) # width console output
+```
+
 
 Today’s lab meeting consists of two exercises.
 
 
 Practical information:
 
-- All the data files for these exercises can be found at the course platform (i.e., Ulearning platform). Make sure to download and unzip the .zip file. The folder containing the data files will probably be your working directory.
+- All the data files for these exercises can be found at the course platform (i.e., UU learning platform). Make sure to download and unzip the .zip file. The folder containing the data files will probably be your working directory.
 
 
 Short description of exercises:
@@ -22,7 +43,7 @@ Short description of exercises:
 
 
 
-## Exercise 1: Multigroup Regression
+# Exercise 1: Multigroup Regression
 
 In this exercise, we extend the regression analysis of Day 1 to a multi-group analysis, like also done in today's lecture. 
 Thus, use the data file **popular_regr.txt** again and remember that -99 and -999 denote missings. 
@@ -30,7 +51,7 @@ Thus, use the data file **popular_regr.txt** again and remember that -99 and -99
 In the multigroup analysis, you want to predict levels of socially desirable answering patterns of adolescents (sw) by overt (overt) and covert antisocial behaviour (covert), for males and females (gender).
 
 
-### 1a 
+## Exercise 1a 
 
 Create lavaan code for a multigroup comparison between males and females to answer the question whether there are differences in the regression coefficients between sw and overt and between sw and covert.
 You will now obtain results for males and females separately. 
@@ -50,7 +71,7 @@ Bear in mind that
  * We did not use FIML in the regression analysis of Day 1. Therefore, we will also not do that here.
   
  
-### 1b 
+## Exercise 1b 
 
 Compute a significance test (Wald test) to test whether the regression coefficients for males and females are the same or not.
 
@@ -61,7 +82,7 @@ Now, there is only one equation for both groups, so one needs to assign two labe
 *What do you conclude about the equality of regression parameters?*
 
 
-### Answers Exercise 1
+## Answers Exercise 1
 
 <details><summary><b>Click to show answers</b></summary>
 
@@ -138,7 +159,7 @@ summary(fit_MGregr, standardized=TRUE, fit.measures = TRUE, rsquare = TRUE, ci =
 
 **Parameter estimates**
 
-You can call for the parameter estimates in a few different ways, as outlined below. 
+You can ask for the parameter estimates in a few different ways, as outlined below. 
 
 ```{r, message=F, warning=F}
 coef(fit_MGregr)                 # unstandardized regression parameters
@@ -150,7 +171,7 @@ standardizedSolution(fit_MGregr) # all standardized parameters - with extra info
 
 **Model fit measures**
 
-You can call for the model fit measures in a few different ways, as outlined below. 
+You can ask for the model fit measures in a few different ways, as outlined below. 
 
 ```{r, message=F, warning=F}
 fitMeasures(fit_MGregr)   # many model fit measures
@@ -188,14 +209,24 @@ semPaths(fit_MGregr, "par", weighted = FALSE, nCharNodes = 7, shapeMan = "rectan
 **Possible conclusions**
 
 * The standardized effect of covert on sw appears to be stronger for females (-0.478) than males (-0.438) and reverse for the effect of overt (-0.161 for males compared to -0.112 for females). 
+
 * However, the confidence intervals for sw on covert and overt show a large overlap for males and females. 
-* Additionally, the regression coefficients for the males are included in the confidence intervals for the females and vice versa. 
-* Therefore, we are below going to test whether the differences between the regression coefficients for males and females are statistically significant. 
+
+  The regression coefficients for the males are included in the confidence intervals for the females and vice versa. 
+
+Next, we are going to test whether the differences between the regression coefficients for males and females are statistically significant. 
 
 
 **Test equality of the regression coefficients**
 
+<!-- # TO DO -->
+<!-- Je zou eigenlijk op gestand. est. moeten doen -->
+<!-- > Ik kan zelf al niet tot gestand komen vanuit ongestand: -0.497/(sqrt(0.361)/sqrt(0.336)) = -0.4794821 en niet -0.438 -->
+<!-- > Zie evt https://groups.google.com/g/lavaan/c/Z4v2whX8TS4 hoe je het zou kunnen doen -->
+
 Next, we want to test whether the regression coefficients for males and females are the same.
+
+Note: One should actually do this for comparable parameters, which often comes down to inspecting standardized parameters. Unfortunately, this is difficult when using lavaan (or Mplus for that metter). However, since we look at the same relationship for two different groups, the comparability of the estimates may not be a problem. Moreover, the variances of the predictors and dependent variable are about the same for both groups, so we can probably compare the unstandardized parameters as well. 
 
 Now, we want to constrain 'a single parameter' to be equal across two groups. Therefore, we need to label this parameter for both groups, so using 2 labels. This we need to do for both regression coefficient parameters.
 
@@ -254,7 +285,7 @@ fitMeasures(fit_MGregr_equal, c("cfi", "tli", "rmsea","srmr")) # alternative for
 &nbsp;
 
 
-## Exercise 2: Measurement Invariance
+# Exercise 2: Measurement Invariance
 
 In this exercise, you will do measurement invariance analyses. You will use data regarding Prolonged Grief Disorder, contained in **PGDdata2.txt**, where missing data is denoted by -999. The data set consists of the grouping variable Kin2 (with two levels: partner and else) and 5 items taken from the Inventory of Complicated Grief: 
 
@@ -267,7 +298,7 @@ In this exercise, you will do measurement invariance analyses. You will use data
 For more information, you are referred to the pdf of Boelen et al. (2010) in your (unzipped) Data files folder.
 
 
-### 2a
+## Exercise 2a
 
 Run a 1-factor CFA on the data set ignoring the multigroup structure, using the default parameterization in the cfa() function.
 
@@ -278,14 +309,14 @@ Run a 1-factor CFA on the data set ignoring the multigroup structure, using the 
 *Which item has the weakest contribution to the latent factor (in terms of standardized factor loading and explained variance)?*
 
 
-### 2b
+## Exercise 2b
 
 Run a 1-factor multigroup CFA on the data, using: group = "Kin".
 
 *How many subjects are there per group?*
 
 
-### 2c
+## Exercise 2c
 
 Test for configural, metric (weak) and scalar (strong) invariance:
 
@@ -300,13 +331,10 @@ One can compare these models with: *lavTestLRT()* or *anova()*, both give the sa
 *Which model do you prefer?*
 
 
-### 2d
+## Exercise 2d
 
 Add constraints such that also the residual variances are constrained to be the same for both groups. 
 <details><summary><b>Click to show a hint</b></summary>
-
-&nbsp;
-
 In the cfa function, in the group.equal argument, one should add "residuals".
 </details>
 <br>
@@ -315,7 +343,7 @@ Check for AIC and BIC differences and use the Chi-square difference test, by usi
 *Did the model get significantly worse? *
 
 
-### Answers Exercise 2
+## Answers Exercise 2
 
 <details><summary><b>Click to show answers</b></summary>
 
@@ -375,16 +403,16 @@ fitMeasures(fit_1CFA, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea","srmr"))
 lavInspect(fit_1CFA) 
 ```
 
-The number of observations is 571. Thus, there are 571 subjects.
+The number of observations is 571. Thus, there are 571 subjects/persons.
 
-Using the rules of thumb, we can conclude that the fit of the model is acceptable. Namely, RMSEA < .06, SRMR < .08, and CFI/TLI > .95. 
+Using the rules of thumb, we can conclude that the fit of the model is acceptable. Namely, CFI/TLI > .95, RMSEA < .06, and SRMR < .08. 
 
 Item 2 has the weakest contribution to the factor. Its standardized factor loading (Std.all) is 0.494. Hence, the item explains $100\%*0.494^2 \approx 24.4\%$ of the factor its variance.
 
 &nbsp;
 
 
-**one-factor Multigroup CFA**
+**One-factor Multigroup CFA**
 
 Specify and fit the model, then obtain the summary and fit measures:
 
@@ -412,14 +440,14 @@ lavInspect(fit_MG1CFA)
 The number of observations per group are:
 
 * 190 in the partner group
-* 379 other
+* 379 in the 'else' group
 
 &nbsp;
 
 
 **Measurement invariance testing**
 
-Before one compares parameters across multiple groups, one first needs to establish measurement invariance. When data is continuous, testing for measurement invariance involves a fixed sequence of model comparison tests. A typical sequence involves three models:
+Before one compares parameters across multiple groups in CFA, one first needs to establish measurement invariance. When data is continuous, testing for measurement invariance involves a fixed sequence of model comparison tests. A typical sequence involves three models:
 
 Model 1: configural invariance. 
 
@@ -469,7 +497,7 @@ Because we provided three model fits, it produces two tests:
 2. the second model versus the third model. 
 
 
-**Possible Conclusions**
+**Possible conclusions**
 
 0. The configural model fits the data ($\chi^2(10) = 11.329, \ p = .33$):
 
@@ -535,9 +563,9 @@ lavTestLRT(fit_MG1CFA_si_res, fit_MG1CFA_si) # or:
 
 **Possible conclusion**
 
-Since $\Delta Chi^2(5) = 10.268, \ p= 0.068$, the equal-residual-variances model is not significantly worse. That is, the residual variances are also equal. 
+Since $\Delta \chi^2(5) = 10.268, \ p= 0.068$, the equal-residual-variances model is not significantly worse. That is, the residual variances are also equal. 
 
-Bear in mind that we always prefer a more parsimonious model (= more df, that is, less parameters to be estimated) when we compare two models. 
+Bear in mind that, when we compare two models, we always prefer a more parsimonious model (= more df, that is, less parameters to be estimated). 
 
 </details>
 

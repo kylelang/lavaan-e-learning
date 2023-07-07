@@ -47,6 +47,7 @@
 }
 
 \begin{document}
+%\SweaveOpts{concordance=TRUE}
 
 <<setup, include = FALSE, cache = FALSE>>=
 library(tidySEM)
@@ -69,13 +70,13 @@ library(restriktor)
 
 Suitable for comparing
 \begin{itemize}
-  \item both nested and non-nested models.
-  \item more than two models.
+  \item both nested and non-nested models/hypotheses.
+  \item more than two models/hypotheses.
 \end{itemize}
 
 \vspace*{5mm}
 
-Choose the model with the \textcolor{red}{lowest} AIC and/or BIC.
+Choose the model/hypothesis with the \textcolor{red}{lowest} AIC and/or BIC.
 
 \vspace*{5mm}
 
@@ -113,7 +114,7 @@ To be discussed in the Model Selection lecture
 	\frametitle{Why information criteria?}
 	Why do we need information criteria?
 	\begin{itemize}
-		\item to compare \textbf{non-nested} models.
+		\item to compare \textbf{non-nested} models/hypotheses.
 		%\pause
 		\item to compare \textbf{more than two} models at the time.
 		%\pause
@@ -127,7 +128,7 @@ To be discussed in the Model Selection lecture
 	\frametitle{Model selection using information criteria}
 	
 	Describe data as good as possible (fit) \\
-	with least amount of parameters (simplicity / non-complexity).
+  with fewest number of parameters (simplicity / non-complexity).
 	
 	\bigskip
 	
@@ -139,7 +140,7 @@ To be discussed in the Model Selection lecture
 	\end{block}
 
 	\bigskip
-	Model with the \textbf{smallest value} is considered the best model.
+	Model/Hypothesis with the \textbf{smallest value} is considered the best model.
 \end{frame}
 %------------------------------------------------------------------------------%
 %
@@ -281,7 +282,7 @@ Thus, is most complex one (not parsimonious).
 \vspace{.5 cm}
 
 	\footnotesize{
-	Alt{\i}n{\i}\c{s}{\i}k, Y., Van Lissa, C. J., Hoijtink, H., Oldehinkel, A. J., and Kuiper, R. M. (2021). Evaluation of inequality constrained hypotheses using a generalization of the AIC. Psychological Methods, 26(5), 599-621. %\url{https://doi.org/10.1037/met0000406}
+	Alt{\i}n{\i}\c{s}{\i}k, Y., Van Lissa, C. J., Hoijtink, H., Oldehinkel, A. J., and Kuiper, R. M. (2021). Evaluation of inequality constrained hypotheses using a generalization of the AIC. \emph{Psychological Methods}, 26(5), 599-621. %\url{https://doi.org/10.1037/met0000406}
 	}
 	
 \end{frame}
@@ -301,7 +302,7 @@ Thus, is most complex one (not parsimonious).
 	Differences compared to GORIC:
 		\begin{itemize}
 			\item Uses asymptotic expression of the likelihood (is a normal): \\
-			can therefore be easily applied to all types of models. \\
+			can therefore be easily applied to all types of statistical models. \\
 			Disadvantage: might work less well in case of small samples.
 			\item Does not need data set, but
 			mle's and their covariance matrix.
@@ -625,15 +626,21 @@ But how much?
 \end{frame}
 %------------------------------------------------------------------------------%
 %
-\begin{frame}[fragile]{IC weights: Another interpretation}
+\begin{frame}[fragile]{IC weights: Interpretation}
 	
-	Say, $\mathit{w_{m}}$/$\mathit{w_{m'}} = 5$.\\
+	Say, $\mathit{w_{m}}$/$\mathit{w_{m'}}$ $= .8 / .2 = 4$.\\
 	~\\
-	Possible interpretation in terms of betting odds:
+	Possible interpretation:
 	\begin{itemize}
-	  \item If I'm in favor of $H_m$ and I'm correct, \\ you give me 1 Euro. 
-	  \item If I'm in favor of $H_m$ and I'm wrong (i.e., $H_{m'}$ is correct), \\ I give you 5 Euros.
+	  \item $H_m$ is 4 times more likely than $H_{m'}$. 
+	  \item $H_m$ is 4 times more supported than $H_{m'}$.
 	\end{itemize}
+	
+	~\\
+	
+	If $H_{m'}$ is complement of $H_m$ (i.e., denoting all other possibilities):\\
+	There is $\mathit{w_{m'}}*100$\% = 20\% that $H_m$ is not the best.
+	
 \end{frame}
 %------------------------------------------------------------------------------%
 %
@@ -699,7 +706,7 @@ Thus, there is quite some evidence that $H_{Equal}$ is the best of this set.
 %------------------------------------------------------------------------------%
 %
 \begin{frame}
-	\frametitle{\textit{Repition:} Note on comparable estimates}
+	\frametitle{\textit{Repetition:} Note on comparable estimates}
 	
 	\begin{block}{Continuous predictors}
 		If compare relative strength/importance of parameters (e.g., $\beta_1 > \beta_2$), \\ 
@@ -750,7 +757,8 @@ Thus, there is quite some evidence that $H_{Equal}$ is the best of this set.
 if (!require("restriktor")) install.packages("restriktor") 
 library(restriktor)
 #
-#goric(fitted.lavaan.model, H_1, H_2, ..., H_M,
+#goric(fitted.lavaan.model, 
+#      hypotheses = list(H_1, H_2, ..., H_M),
 #      standardized = TRUE)
 #
 #type = "gorica" # default in case of fitted lavaan model
@@ -793,17 +801,17 @@ H_AIC <- "abs(b1_m) = abs(b1_f);  abs(b2_m) = abs(b2_f)"
 <<>>=
 #On unstandardized estimates, as done by default in lavaan:
 set.seed(100)
-results_MGregr_AIC_Unstand <- goric(fit_MGregr, H_AIC) 
-results_MGregr_AIC_Unstand$result$gorica.weights
+AIC_Unstand <- goric(fit_MGregr, hypotheses = list(H_AIC=H_AIC)) 
+AIC_Unstand$result$gorica.weights
 # Same as for AIC obtained via lavaan
 @ 
 
 <<>>=
 #On standardized estimates
 set.seed(100)
-results_MGregr_AIC_Stand <- goric(fit_MGregr, H_AIC, 
-                                  standardized = T) 
-results_MGregr_AIC_Stand$result$gorica.weights
+AIC_Stand <- goric(fit_MGregr, hypotheses = list(H_AIC=H_AIC), 
+                   standardized = T) 
+AIC_Stand$result$gorica.weights
 @ 
 
 \end{frame}
@@ -829,15 +837,16 @@ Remark: I assume we want to compare the absolute strength.
 
 <<>>=
 set.seed(100)
-results_MGregr <- goric(fit_MGregr, H1, standardized = T) 
-#summary(results_MGregr)
-results_MGregr$result
+results_MGregr <- goric(fit_MGregr, hypotheses = list(H1), 
+                        standardized = T) 
+#results_MGregr$result # Output too long for the slide
+results_MGregr$result$gorica.weights
 results_MGregr$ratio.gw
 @ 
 
-$H_1$ is $.691/.309 \approx 2.235 > 1$ times more supported than $H_{Unc}$.\\
+$H_1$ is $.691/.309 \approx 2.235 > 1$ times more supported than the unc.\\
 Thus, there is some evidence that $H_1$ is the best of this set.\\
-Note that $H_{Unc}$ includes the true hypothesis... % So, the support is somewhat divided over the hypotheses.
+Note that the unconstrained always includes the true hypothesis... % So, the support is somewhat divided over the hypotheses.
 
 \end{frame}
 %------------------------------------------------------------------------------%
@@ -923,11 +932,12 @@ Note that $H_{Unc}$ includes the true hypothesis... % So, the support is somewha
 
 <<>>=
 set.seed(100)
-results_MGregr_compl <- goric(fit_MGregr, H1, 
+results_MGregr_compl <- goric(fit_MGregr, 
+                              hypotheses = list(H1), 
                               comparison = "complement", 
                               standardized = T) 
-#summary(results_MGregr_compl)
-results_MGregr_compl$result
+#results_MGregr_compl$result # Output too long for the slide
+results_MGregr_compl$result$gorica.weights
 results_MGregr_compl$ratio.gw[1,2]
 @ 
 
@@ -962,10 +972,10 @@ Then, the non-weak hypotheses can be compared to all other.
 \begin{frame}{Contact}
 
 \begin{block}{Websites}
+\url{https://github.com/rebeccakuiper/Tutorials}
 \url{www.uu.nl/staff/RMKuiper/Software}\\
 \url{www.uu.nl/staff/RMKuiper/Websites\%20\%2F\%20Shiny\%20apps}\\
 \url{informative-hypotheses.sites.uu.nl/software/goric/}
-\url{https://github.com/rebeccakuiper/Tutorials}
 \end{block}
 
 \begin{block}{E-mail}

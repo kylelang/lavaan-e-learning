@@ -1,17 +1,36 @@
 ---
 title: 'Lab: EFA and CFA'
-output: 
-  html_document: default
+output:
+  html_document: 
+    toc: true
+    toc_float: true
+    number_sections: true
+    toc_depth: 2
   pdf_document: default
-  word_document: default
+editor_options:
+  chunk_output_type: console
 ---
+
+<style>
+body {
+  width: 100%;
+  margin: 0 auto;
+}
+</style>
+
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(tidy.opts = list(width.cutoff = 80), tidy = TRUE)
+knitr::opts_chunk$set(comment = NA, warning = FALSE)
+options(width = 1200) # width console output
+```
 
 Today’s lab meeting consists of three exercises.
 
 
 Practical information:
 
-- All the data files for these exercises can be found at the course platform (i.e., Ulearning platform). Make sure to download and unzip the .zip file. The folder containing the data files will probably be your working directory.
+- All the data files for these exercises can be found at the course platform (i.e., UU learning platform). Make sure to download and unzip the .zip file. The folder containing the data files will probably be your working directory.
 
 
 Short description of exercises:
@@ -31,10 +50,10 @@ Short description of exercises:
 
 operator | meaning
 --|:----
-=~  | indicator, used for latent variable to observed indicator in factor analysis measurement models.
+=~  | indicator; used for latent variable to observed indicator in factor analysis measurement models.
 ~~  | (residual) covariance.
 ~1  | intercept or mean (e.g., x ~ 1 estimates the mean of variable x).
-~ (in regression) | is regressed on; used for the regression of observed outcome on observed predictors.
+~ (in regression) | is regressed on.
 1*  | fixes parameter or loading to one.
 NA* | frees parameter or loading (useful to override default marker-variable method in CFA).
 a*  | labels the parameter as ‘a’, used for model constraints.
@@ -43,17 +62,17 @@ a*  | labels the parameter as ‘a’, used for model constraints.
 
 **General `lavaan` specification**
 
-**Regression:**
-
-* y1 + y2 ~ f1 + f2 + x1 + x2
-* f1 ~ f2 + f3
-* f2 ~ f3 + x1 + x2
-
 **Latent variable definitions:**
 
 * f1 =~ y1 + y2 + y3 
 * f2 =~ y4 + y5 + y6 
 * f3 =~ y7 + y8 + y9 + y10
+
+**Regression:**
+
+* y1 + y2 ~ f1 + f2 + x1 + x2
+* f1 ~ f2 + f3
+* f2 ~ f3 + x1 + x2
 
 **Variances and covariances:**
 
@@ -71,7 +90,7 @@ a*  | labels the parameter as ‘a’, used for model constraints.
 &nbsp;
 
 
-## Exercise 1: Replicate SAPI results from the lecture 
+# Exercise 1: Replicate SAPI results from the lecture 
 
 The file **Sapi.txt** contains the data that was used to conduct the EFA and CFA as presented in the lecture. 
 
@@ -80,12 +99,12 @@ Note: To avoid issues, make sure that you specify -999 as missing data.
 &nbsp;
 
 
-### 1.1 Reflective (confirmatory) Factor Model
+## Exercise 1.1: Reflective (confirmatory) Factor Model
 
 &nbsp;
 
 
-#### 1.1a 
+### Exercise 1.1a 
 
 Inspect the correlations for the items of interest: Q77 Q84 Q170 Q196. 
 
@@ -161,7 +180,7 @@ The goal of factor analysis is to model the interrelationships between many item
 &nbsp;
 
 
-#### 1.1b
+### Exercise 1.1b
 
 Replicate the results for the one-factor extraversion model presented in the lecture slides (using the item Q77, Q84, Q170, and Q196). 
 
@@ -185,7 +204,7 @@ model.CFA <- 'Extraversion =~ Q77 + Q84 + Q170 + Q196'
 
 **Fit the model**
 
-This code runs a confirmatory factor analysis using the `cfa()` function, which is actually a wrapper for the `lavaan()` function (we used on Day 1).
+This code runs a confirmatory factor analysis using the `cfa()` function, which is actually a wrapper for the `lavaan()` function (which we used on Day 1).
 
 ```{r, message=F, warning=F}
 # Fit the model:
@@ -217,11 +236,11 @@ summary(fit_CFA, fit.measures=TRUE)
 &nbsp;
 
 
-### 1.2 Scaling your latent variable 
+## Exercise 1.2: Scaling your latent variable 
 
 &nbsp;
 
-#### 1.2a
+### Exercise 1.2a
 
 Is the latent variable scaled via the variance of the factor (reference group scaling) or via the factor loadings (marker variable scaling)?
 
@@ -249,7 +268,7 @@ one can see that the first factor loading is not estimated, since it is fixed (t
 &nbsp;
 
 
-#### 1.2b
+### Exercise 1.2b
 
 Adjust the model such that you scale in the other way. 
 
@@ -285,7 +304,7 @@ fit_CFA_RefGr <- cfa(model.CFA_RefGr, data=data_sapi,
 summary(fit_CFA_RefGr)
 ```
 
-Alternatively, you can use std.lv=TRUE and obtain the same results. Note that the Chi-square fit results are exactly the same across the models, as will be explained below. That is why both solutions can be asked for by using 'std.lv=TRUE'.
+Alternatively, you can use std.lv=TRUE and obtain the same results. Note that the Chi-square fit results are exactly the same across the models, as will be explained below. 
 
 For better interpretation of the factor loadings, you should request the standardized solutions. Therefore, one may want to request the summary of the marker method but also specify that standardized=TRUE. Then you obtain both results:
 
@@ -305,7 +324,7 @@ Comparing the unstandardized estimates with the Std.lv ones: The loadings and va
 &nbsp;
 
 
-#### 1.2c
+### Exercise 1.2c
 
 Bonus: Scale via the factor loadings again, but now fix the factor loading of Q196 to 1, and free the factor loading that was previously fixed to 1.
 
@@ -318,10 +337,10 @@ Bonus: Scale via the factor loadings again, but now fix the factor loading of Q1
 
 Remember:
 
-* 1* fixes parameter or loading to one
-* NA* frees parameter or loading (useful to override default marker method)
+* 1* fixes a parameter or loading to one
+* NA* frees a parameter or loading (useful to override default marker method)
 
-In case you want, in the Marker variable method, another factor loading - here, the last one - to be 1, use:
+In case you want, in the Marker variable method, another factor loading (here, the last one) to be 1, use:
 ```{r, message=F, warning=F}
 # Model statement:
 model.CFA_last <- '
@@ -339,14 +358,16 @@ summary(fit_CFA_last)
 &nbsp;
 
 
-d. Based on the output of the models run in 1.1b, 1.2b, and 1.2c, what do you notice about the Chi-square ($\chi^2$)), degrees of freedom, $p$-values, factor loadings, and factor variance for the different methods?
+### Exercise 1.2d
+
+Based on the output of the models run in 1.1b, 1.2b, and 1.2c, what do you notice about the Chi-square ($\chi^2$)), degrees of freedom, $p$-values, factor loadings, and factor variance for the different methods?
 
 
 <details><summary><b>Click to show answers</b></summary>
 
 &nbsp;
 
-The first thing you may notice is that all Chi-square fit results are exactly the same across the models. This is because the different ways of scaling all result in equivalent statistical models. You don’t estimate anything more or less with any of the three scaling methods.
+The first thing you may notice is that all Chi-square fit results are exactly the same across the models. This is because the different ways of scaling all result in equivalent statistical models. You do not estimate anything more or less with any of the three scaling methods.
 
 The second thing you may notice is that the values of the loadings have changed. However, loadings that are relatively large (or small) in one model, are also relatively large (or small) in the other models. For example, in each model, the loading for Q77 is approximately 1.4 times as large as the loading of Q84.
 
@@ -357,7 +378,7 @@ The take home message is that it does not matter how you scale, the information 
 &nbsp;
 
 
-### 1.3 Model fit 
+## Exercise 1.3: Model fit 
 
 Inspect the model fit. Focus on the Chi-square, CFI, TLI, RMSEA, and SRMR. 
 
@@ -387,12 +408,12 @@ Four measures of model fit are:
     * Values greater than 0.90, or conservatively 0.95, indicate good fit.
 
 3. TLI is the Tucker Lewis Index
-    * Values can range between 0 and 1. If it’s greater than 1, it should be rounded to 1.
+    * Values can range between 0 and 1. If it is greater than 1, it should be rounded to 1.
     * Values greater than 0.90 indicating good fit. 
     * If the CFI and TLI are less than one, the CFI is always greater than the TLI.
 
 4. RMSEA is the root mean square error of approximation. 
-    * In 'lavaan', you also obtain a p-value of close fit, that is, for the test whether RMSEA < 0.05.
+    * You also obtain a p-value of close fit, that is, for the test whether RMSEA < 0.05.
     * If you reject the model, it means your model is not a close fitting model.
     
 You can obtain these using the following code:
@@ -414,26 +435,26 @@ Notes on Chi-square:
 
 * It is well documented in CFA and SEM literature that the Chi-square is often overly sensitive in model testing especially for large samples. 
 
-* David Kenny states that, for models with 75 to 200 cases, the Chi-square is a reasonable measure of fit; but for 400 cases or more it is nearly almost always significant.Our sample size is 1000.
+* David Kenny states that, for models with 75 to 200 cases, the Chi-square is a reasonable measure of fit; but for 400 cases or more it is nearly almost always significant. Our sample size is 1000.
 
 * Kline (2016) notes the N:q rule, which states that 
 
-    - the sample size (N) should be determined by the number of parameters in your model (q). 
+    - the sample size (N) should be 'in line with' the number of parameters in your model (q). 
 
     - the recommended ratio is 20:1.
 
     - this means that if you have 12 parameters, you should have N=240.
 
-    - a sample size less than 100 is almost always untenable according to Kline.
+   Additonally, a sample size less than 100 is almost always untenable according to Kline.
 
 * The larger the Chi-square value, the larger the difference between the sample implied covariance matrix and the sample observed one; and the more likely you will reject your model. 
 
 
 Other fit measures:
 
-* For CFI, value slightly below the recommended cut-off criterion of 0.97/0.95. 
+* For CFI, value slightly below the recommended cut-off criterion of 0.95. 
 
-* For TLI, value below the recommended cut-off criterion of 0.97/0.95.
+* For TLI, value below the recommended cut-off criterion of 0.90.
 
 * The RMSEA is above the cut-off of 0.05. 
 
@@ -479,13 +500,13 @@ semPaths(fit_CFA, "par", weighted = FALSE, nCharNodes = 7, shapeMan = "rectangle
 
 
 
-### 1.4 Test equality of factor loadings
+## Exercise 1.4: Test equality of factor loadings
 
 Based on the factor loadings, items do not seem to be equally reflective of Extraversion, except for Q84 and Q196. To improve the fit of the model, one can test whether these factor loadings are equal (resulting in estimating less parameters). One can use a Wald test to test whether two factor loadings can be considered equal.
 
 &nbsp;
 
-#### 1.4a
+### Exercise 1.4a
 
 Test whether the factor loadings of Q84 and Q196 are the same.
 
@@ -526,7 +547,7 @@ lavTestWald(fit_CFA_equal, constraints = 'a == b')
 &nbsp;
 
 
-#### 1.4b 
+### Exercise 1.4b 
 
 What does the test imply?
 
@@ -534,7 +555,7 @@ What does the test imply?
 
 &nbsp;
 
-The Wald test with df=1 is 0.362, with p = 0.547. Thus, we do not reject the null that the two loadings are equal. Hence, we conclude that there is no evidence for a difference between a and b, that is, the factor loadings of Q84 and Q196 are the same.
+The Wald test with df=1 is 0.362, with $p$ = 0.547. Thus, we do not reject the null that the two loadings are equal. Hence, we conclude that there is no evidence for a difference between a and b, that is, the factor loadings of Q84 and Q196 are the same.
 
 In case one wants the model results for which the loadings are the same: 
 
@@ -571,7 +592,7 @@ The measures did improve, but the model still does not fit well.
 &nbsp;
 
 
-### 1.5 EFA vs CFA 
+## Exercise 1.5: EFA vs CFA 
 
 Specify and run the two-factor exploratory factor model (EFA) and two-factor CFA, as was shown in the lecture slides (using the items: Q44, Q63, Q76, Q77, Q84, Q98, Q170, and Q196).
 
@@ -642,14 +663,14 @@ lavInspect(fit_2CFA)
 &nbsp;
 
 
-## Exercise 2: EFA 
+# Exercise 2: EFA 
 
 Use the data file popular_factor.txt. Make sure to denote that 99 represents a missing value. 
 
 &nbsp;
 
 
-#### 2a
+## Exercise 2a
 
 Run an EFA that provides you with a 1-factor and a 2-factor solution. Interpret the results for the 2-factor solution.
 
@@ -724,7 +745,7 @@ One can conclude that the 2-factor structure fits well to the data:
 &nbsp;
 
 
-#### 2b
+## Exercise 2b
 
 Which factor model do you prefer?
 
@@ -792,13 +813,13 @@ semPaths(fit_2EFA, "par", weighted = FALSE, nCharNodes = 7, shapeMan = "rectangl
 &nbsp;
 
 
-## Exercise 3: CFA 
+# Exercise 3: CFA 
 
-Use again popular_factor.txt.
+Use again data file popular_factor.txt.
 
 &nbsp;
 
-#### 3a
+## Exercise 3a
 
 Now, run a CFA with 1 factor (‘anti’) and another model with 2-factors (‘covert’ and ‘overt’) based on the 2-factor EFA model. Bear in mind that you should normally not run both an EFA and CFA on the same data set; normally, the EFA model generates a hypothesis for a next study (or for another part of your data set).
 
@@ -863,7 +884,7 @@ lavInspect(fit_2CFA)
 &nbsp;
 
 
-#### 3b
+## Exercise 3b
 
 Which model is to be preferred? What can you say about the model fit based on the AIC and BIC?
 
@@ -897,9 +918,9 @@ Fit measures are better for the 2-factor CFA model. Additionally, one can conclu
 &nbsp;
 
 
-#### 3c
+## Exercise 3c
 
-What is the correlation between the two factors?
+What is the correlation between the two factors (i.e., overt and covert)?
 
 
 <details><summary><b>Click to show a hint</b></summary>
@@ -924,7 +945,7 @@ The correlation between the two factors is:
 parameterEstimates(fit_2CFA)[15,]
 ```
 
-The correlation between OVERT and COVERT is 0.431 with a standard error of 0.055. 
+The correlation between overt and covert is 0.431 with a standard error of 0.055. 
 
 
 Consequently, the proportion of shared variance is 0.4312^2 = 0.186 = 18.6%.
