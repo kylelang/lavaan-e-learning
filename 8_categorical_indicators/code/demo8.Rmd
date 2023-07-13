@@ -1,0 +1,476 @@
+---
+title: "Demonstration 8: Categorical Indicators" 
+subtitle: "Introduction to SEM with lavaan"
+author: "Kyle M. Lang"
+date: "Updated: `r format(Sys.time(), format = '%Y-%m-%d')`"
+params:
+  answers: true
+output: 
+  bookdown::html_document2:
+    toc: true
+    toc_depth: 1
+    toc_float: true
+    number_sections: true
+    df_print: paged
+    css: "../../resources/style.css"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, echo = FALSE, message = FALSE, warning = FALSE}
+library(knitr)
+#library(kableExtra)
+library(dplyr)
+library(magrittr)
+
+figDir <- "../figures/"
+
+set.seed(235711)
+
+## Define an asis engine that will evaluate inline code within an asis block:
+knit_engines$set(asis = function(options) {
+  if(options$echo && options$eval) knit_child(text = options$code)
+}
+)
+
+opts_chunk$set(include = params$answers, 
+               echo = params$answer, 
+               message = FALSE,
+               warning = FALSE,
+               fig.align = "center",
+               comment = NA)
+```
+
+<!-- 
+Define some hacky LaTeX commands to force nice spacing between lines    
+NOTE: These must be called within a math environment (e.g., $\va$)
+-->
+\newcommand{\va}{\\[12pt]}
+\newcommand{\vb}{\\[6pt]}
+\newcommand{\vc}{\\[3pt]}
+\newcommand{\vx}[1]{\\[#1pt]}
+
+---
+
+In this demonstration, we'll explore methods of doing CFA/SEM with categorical 
+data using **lavaan**.
+
+---
+
+# Data
+
+---
+
+```{r, include = FALSE}
+dataDir <- "../../data/"
+outlook <- readRDS(paste0(dataDir, "outlook.rds"))
+```
+
+We will first revisit the synthetic [*Outlook on Life Survey*][outlook0] data 
+from Lab 5. Recall that the original data were collected in the United States in 
+2012 to measure, among other things, attitudes about racial issues, opinions of 
+the Federal government, and beliefs about the future.
+
+We will agian work with a synthesized subset of the original data. You can access
+these synthetic data as [*outlook.rds*][outlook1]. This dataset comprises 
+`r nrow(outlook)` observations of the following `r ncol(outlook)` variables.
+
+- `d1:d3`: Three observed indicators of a construct measuring disillusionment 
+with the US Federal government.
+   - Higher scores indicate more disillusionment
+   $\vb$
+- `s1:s4`: Four observed indicators of a construct measuring the perceived 
+achievability of material success.
+   - Higher scores indicate greater perceived achievability
+   $\vb$
+- `progress`: A single item assessing perceived progress toward achieving the 
+"American Dream"
+   - Higher scores indicate greater perceived progress
+   $\vb$
+- `merit`: A single item assessing endorsement of the meritocratic ideal that 
+hard work leads to success.
+   - Higher scores indicate stronger endorsement of the meritocratic ideal
+   $\vb$
+- `lib2Con`: A single item assessing liberal-to-conservative orientation
+   - Lower scores are more liberal, higher scores are more conservative
+   $\vb$
+- `party`: A four-level factor indicating self-reported political party affiliation
+   $\vb$
+- `disillusion`: A scale score representing disillusionment with the US Federal 
+government
+   - Created as the mean of `d1:d3`
+   $\vb$
+- `success`: A scale score representing the perceived achievability of material 
+success
+   - Created as the mean of `s1:s4`
+
+---
+
+###
+
+**Read in the *outlook.rds* dataset.**
+
+```{r, eval = FALSE}
+dataDir <- "../data/"
+outlook <- readRDS(paste0(dataDir, "outlook.rds"))
+```
+
+NOTE: In the following, I will refer to these data as the *outlook data*.
+
+---
+
+For the following, we don't need/want the scale scores for *disillusionment* or
+*success* or the observations for which `party = "other"`. Run the following
+code to exclude these parts of the dataset.
+
+```{r subset}
+library(dplyr)
+library(magrittr)
+
+outlook %<>% select(-disillusion, -success) %>% filter(party != "other")
+```
+
+---
+
+###
+
+**Summarize the distributions of the *disillusionment* and *success* items.**
+
+What do you notice about the measurement level of these items?
+
+```{r}
+tmp <- outlook %>% select(d1:s4)
+
+head(tmp)
+summary(tmp)
+lapply(tmp, unique)
+```
+
+```{asis}
+Clearly, these variables are not continuous and have some sort of discrete scale. 
+Although you cannot tell simply from the numeric summaries above, these items 
+represent ratings on 4- and 5-point scales.
+```
+
+---
+
+# Categorical Variable CFA
+
+---
+
+```{r}
+cfaMod <- '
+disillusion =~ d1 + d2 + d3
+success =~ s1 + s2 + s3 + s4
+'
+```
+
+```{r}
+library(lavaan)
+
+## Naive ML fit:
+fit0 <- cfa(cfaMod, data = outlook, std.lv = TRUE)
+``` 
+
+```{r}
+## Robust ML fit:
+fit1.1 <- cfa(cfaMod,
+              data = outlook,
+              std.lv = TRUE,
+              estimator = "MLR")
+``` 
+
+```{r}
+## Basic DWLS fit:
+fit1.2 <- cfa(cfaMod,
+              data = outlook,
+              std.lv = TRUE,
+              ordered = TRUE,
+              estimator = "DWLS")
+``` 
+
+```{r}
+## Treat all endogenous variables as ordinal:
+fit1.3 <- cfa(cfaMod,
+              data = outlook,
+              std.lv = TRUE,
+              ordered = TRUE,
+              estimator = "WLSMV")
+
+## Explicitly name the ordinal variables:
+fit1.3.1 <- cfa(cfaMod,
+              data = outlook,
+              std.lv = TRUE,
+              ordered = c(paste0("d", 1:3), paste0("s", 1:4)),
+              estimator = "WLSMV")
+
+## Cast the ordinal variables as ordered factors in the data frame:
+fit1.3.2 <- outlook %>% mutate(across(d1:s4, as.ordered)) %>%
+   cfa(cfaMod,
+       data = .,
+       std.lv = TRUE,
+       estimator = "WLSMV")
+
+all.equal(coef(fit1.3), coef(fit1.3.1))
+all.equal(coef(fit1.3), coef(fit1.3.2))
+
+all.equal(fitMeasures(fit1.3), fitMeasures(fit1.3.1))
+all.equal(fitMeasures(fit1.3), fitMeasures(fit1.3.2))
+``` 
+
+```{r}
+summary(fit0)
+summary(fit1.1)
+summary(fit1.2)
+summary(fit1.3)
+```
+
+```{r}
+s1 <- c("chisq", "df", "pvalue")
+s2 <- c("cfi", 
+        "tli", 
+        "rmsea", 
+        "rmsea.ci.lower", 
+        "rmsea.ci.upper", 
+        "srmr")
+s3 <- c(paste(s1, "scaled", sep = "."),
+        paste(s2, "robust", sep = ".")
+        )
+
+fitMeasures(fit0, c(s1, s2))
+fitMeasures(fit1.1, s3)
+fitMeasures(fit1.2, c(s1, s2))
+fitMeasures(fit1.3, s3)
+```
+
+```{r}
+calcThresholds <- function(x) {
+   cummulants <- table(x) %>% cumsum()
+   probs <- head(cummulants, -1) / tail(cummulants, 1)
+   qnorm(probs)
+}
+
+manual <- outlook %>% select(d1:s4) %>% lapply(calcThresholds) %>% unlist()
+lavaan <- lavInspect(fit1.3, "est")$tau
+```
+
+```{r, echo = FALSE}
+data.frame(manual, 
+           lavaan = as.numeric(lavaan), 
+           row.names = rownames(lavaan)
+           ) %>%
+  kable(booktabs = TRUE)
+```
+
+```{r}
+## Treat all endogenous variables as ordinal:
+fit1.4 <- cfa(cfaMod,
+              data = outlook,
+              std.lv = TRUE,
+              ordered = TRUE,
+              estimator = "WLSMV",
+              parameterization = "theta")
+```
+
+```{r}
+summary(fit1.4)
+```
+
+---
+
+# Polychoric Correlations
+
+---
+
+```{r}
+library(mvtnorm)
+library(polycor)
+
+## Generate some multivariate normal data:
+X <- rmvnorm(100000, c(0, 0), matrix(c(1.0, 0.5, 0.5, 1.0), 2, 2)) %>%
+  data.frame()
+
+colMeans(X)
+cor(X)
+
+## Coarsen the data:
+Z <- X %>% mutate(X1 = cut(X1, c(-Inf, -0.5, 0.5, Inf), labels = FALSE), 
+                  X2 = cut(X2, c(-Inf, -1.0, 1.0, Inf), labels = FALSE)
+)
+
+## Compare different correlations:
+X %$% cor(X1, X2)
+Z %$% cor(X1, X2)
+Z %$% polychor(X1, X2)
+```
+
+---
+
+# Measurement Invariance
+
+---
+
+```{r}
+## Estimate the baseline (configurally invariant) model:
+baseOut <- cfa(model            = cfaMod,
+               data             = outlook,
+               group            = "party",
+               ordered          = TRUE,
+               estimator        = "WLSMV",
+               parameterization = "delta",
+               std.lv           = TRUE)
+```
+
+```{r}
+summary(baseOut)
+```
+
+```{r}
+s4 <- paste(c(s1, s2), "scaled", sep = ".")
+
+## Check the model fit:
+fitMeasures(baseOut, s4)
+```
+
+```{r}
+library(semTools)
+
+## Define the model syntax for the threshold-invariant model:
+tMod <- measEq.syntax(configural.model = cfaMod,
+                      data             = outlook,
+                      ordered          = TRUE,
+                      parameterization = "delta",
+                      ID.fac           = "std.lv",
+                      ID.cat           = "Wu.Estabrook.2016",
+                      group            = "party",
+                      group.equal      = "thresholds")
+```
+
+```{r}
+tMod %>% as.character() %>% cat()
+```
+
+```{r}
+## Estimate the threshold-invariant model:
+tOut <- cfa(model     = as.character(tMod),
+            data      = outlook,
+            group     = "party",
+            ordered   = TRUE,
+            estimator = "WLSMV")
+```
+
+```{r}
+## Summarize the results:
+summary(tOut)
+```
+
+```{r}
+## Check the model fit:
+fitMeasures(tOut, s4)
+```
+
+```{r}
+## Test threshold invariance via model comparisons:
+compareFit(baseOut, tOut) %>% summary()
+```
+
+```{r}
+## Define the model syntax for the threshold/loading-invariant model:
+tlMod <- measEq.syntax(configural.model = cfaMod,
+                       data             = outlook,
+                       ordered          = TRUE,
+                       parameterization = "delta",
+                       ID.fac           = "std.lv",
+                       ID.cat           = "Wu.Estabrook.2016",
+                       group            = "party",
+                       group.equal      = c("thresholds", "loadings")
+                       )
+```
+
+```{r}
+## Check the resulting syntax:
+tlMod %>% as.character() %>% cat()
+```
+
+```{r}
+## Estimate the threshold/loading-invariant model:
+tlOut <- cfa(model     = as.character(tlMod),
+             data      = outlook,
+             group     = "party",
+             ordered   = TRUE,
+             estimator = "WLSMV")
+```
+
+```{r}
+## Summarize the results:
+summary(tlOut)
+```
+
+```{r}
+## Check the model fit:
+fitMeasures(tlOut, s4)
+```
+
+```{r}
+## Test threshold/loading invariance via model comparisons:
+compareFit(tOut, tlOut) %>% summary()
+compareFit(baseOut, tlOut) %>% summary()
+```
+
+```{r}
+## Define the model syntax for the threshold/loading/intercept-invariant model:
+tliMod <-
+    measEq.syntax(configural.model = cfaMod,
+                  data             = outlook,
+                  ordered          = TRUE,
+                  parameterization = "delta",
+                  ID.fac           = "std.lv",
+                  ID.cat           = "Wu.Estabrook.2016",
+                  group            = "party",
+                  group.equal      = c("thresholds", "loadings", "intercepts")
+                  )
+```
+
+```{r}
+tliMod %>% as.character() %>% cat()
+```
+
+```{r}
+## Estimate the threshold/loading/intercept-invariant model:
+tliOut <- cfa(model     = as.character(tliMod),
+              data      = outlook,
+              group     = "party",
+              ordered   = TRUE,
+              estimator = "WLSMV")
+```
+
+```{r}
+## Summarize the results:
+summary(tliOut)
+```
+
+```{r}
+## Check the model fit:
+fitMeasures(tliOut, s4)
+```
+
+```{r}
+## Test threshold/loading/intercept invariance via model comparisons:
+compareFit(tlOut, tliOut) %>% summary()
+compareFit(baseOut, tliOut) %>% summary()
+```
+
+
+---
+
+End of Demonstration
+
+---
+
+[hs_data]: https://github.com/kylelang/lavaan-e-learning/raw/main/4_sem_mediation/data/holzinger_swineford.rds
+[mbess]: https://cran.r-project.org/web/packages/MBESS/index.html
+[hs_code]: https://github.com/kylelang/lavaan-e-learning/blob/main/code/lab_prep/process_hs_data.R
+[amda]: https://www.cms.guilford.com/books/Applied-Missing-Data-Analysis/Craig-Enders/9781606236390
+[ea_data0]: https://www.appliedmissingdata.com/analyses
+[ea_data1]: https://github.com/kylelang/lavaan-e-learning/raw/main/4_sem_mediation/data/eating_attitudes_completed.rds
+[ea_code]: https://github.com/kylelang/lavaan-e-learning/blob/main/code/lab_prep/process_eating_data.R

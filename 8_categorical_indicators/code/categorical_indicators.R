@@ -5,15 +5,38 @@
 
 rm(list = ls(all = TRUE))
 
-#install.packages(c("mice", "semTools"), repos = "https://cloud.r-project.org")
+install.packages(c("polycor"), repos = "https://cloud.r-project.org")
 
 library(dplyr)
 library(lavaan)
 library(semTools)
 library(mice)
 library(magrittr)
+library(mvtnorm)
+library(polycor)
 
 dataDir <- "../../data/"
+
+
+###-Polychoric Correlations-------------------------------------------------###
+
+X <- rmvnorm(100000, c(0, 0), matrix(c(1.0, 0.5, 0.5, 1.0), 2, 2)) %>%
+  data.frame()
+
+Z <- X %>% mutate(X1 = cut(X1, c(-Inf, -0.5, 0.5, Inf), labels = FALSE), 
+                  X2 = cut(X2, c(-Inf, -1.0, 1.0, Inf), labels = FALSE)
+)
+
+X %$% cor(X1, X2)
+Z %$% cor(X1, X2)
+Z %$% polychor(X1, X2)
+
+head(X)
+head(Z)
+
+hist(Z$X2)
+
+cov(X)
 
 ## Original, incomplete data:
 eat0 <- readRDS(paste0(dataDir, "eating_attitudes.rds"))
@@ -24,19 +47,26 @@ eat1 <- readRDS(paste0(dataDir, "eating_attitudes_completed.rds"))
 ## mids object containing 500 multiple imputations:
 eatMids <- readRDS(paste0(dataDir, "eating_attitudes_mids.rds"))
 
+## Outlook on life data:
+outlook <- readRDS(paste0(dataDir, "outlook.rds")) %>% 
+  select(-disillusion, -success)
+
 ## Define the measurement model syntax:
 cfaMod <- '
 drive =~ eat1 + eat2 + eat10 + eat11 + eat12 + eat14 + eat24
 obsess =~ eat3 + eat18 + eat21
 '
 
-###-FIML---------------------------------------------------------------------###
+cfaMod <- '
+disillusion =~ d1 + d2 + d3
+success =~ s1 + s2 + s3 + s4
+'
 
-### Naive ML fit:
-fit0 <- cfa(cfaMod, data = eat1, std.lv = TRUE)
+fit1.0 <- cfa(cfaMod, data = outlook, std.lv = TRUE)
+fit1.1 <- cfa(cfaMod, data = outlook, std.lv = TRUE, ordered = TRUE, estimator = "WLSMV")
 
-fitMeasures(fit0)
-summary(fit0)
+summary(fit1.0)
+summary(fit1.1)
 
 ?lavOptions
 
