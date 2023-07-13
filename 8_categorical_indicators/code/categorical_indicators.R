@@ -49,7 +49,8 @@ eatMids <- readRDS(paste0(dataDir, "eating_attitudes_mids.rds"))
 
 ## Outlook on life data:
 outlook <- readRDS(paste0(dataDir, "outlook.rds")) %>% 
-  select(-disillusion, -success)
+  select(-disillusion, -success) %>%
+  filter(party != "other")
 
 ## Define the measurement model syntax:
 cfaMod <- '
@@ -63,13 +64,16 @@ success =~ s1 + s2 + s3 + s4
 '
 
 fit1.0 <- cfa(cfaMod, data = outlook, std.lv = TRUE)
-fit1.1 <- cfa(cfaMod, data = outlook, std.lv = TRUE, ordered = TRUE, estimator = "WLSMV")
+fit1.1 <-cfa(cfaMod, data = outlook, std.lv = TRUE, ordered = TRUE, estimator = "WLSMV")
+fit1.2 <- cfa(cfaMod, data = outlook, std.lv = TRUE, ordered = TRUE, estimator = "WLSMV", group = "party")
 
 summary(fit1.0)
 summary(fit1.1)
+summary(fit1.2)
 
+head(outlook)
 ?lavOptions
-
+levels(outlook$party)
 ## DWLS fit:
 fit1.1 <- cfa(cfaMod, data = eat1, std.lv = TRUE, ordered = TRUE)
 
