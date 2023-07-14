@@ -144,7 +144,7 @@ In essence, the estimation methods we'll employ when analyzing categorical
 indicators replace $\mathbf{S}$ with a polychoric correlation matrix. Rather than
 simply estimating a standalone polychoric correlation matrix and using this 
 matrix as input to the model, **lavaan** implements a version of the 
-*categorical variable methodology* (CVM) proposed by [Muthen (1984)]().
+*categorical variable methodology* (CVM) proposed by [Muthen (1984)](https://doi.org/10.1007/bf02294210).
 
 The recommended **lavaan** flavor of CVM entails four changes to the standard ML 
 approach:
@@ -694,6 +694,19 @@ models of different levels of invariance for ordered categorical outcomes.
 
 ---
 
+We'll explore these ideas by adding political party affiliation to our previous 
+CFA as a grouping factor.
+
+```{r}
+summary(outlook$party)
+```
+
+---
+
+First, we estimate the configural invariance model by adding the grouping factor
+without placing any cross-group constraints (i.e., in the same way that we did 
+for continous indicator models). 
+
 ```{r}
 ## Estimate the baseline (configurally invariant) model:
 baseOut <- cfa(model            = cfaMod,
@@ -705,9 +718,13 @@ baseOut <- cfa(model            = cfaMod,
                std.lv           = TRUE)
 ```
 
+Check the summary to ensure that everything looks sensible.
+
 ```{r}
 summary(baseOut)
 ```
+
+Check the model fit to test configural invariance.
 
 ```{r}
 s4 <- paste(c(s1, s2), "scaled", sep = ".")
@@ -715,6 +732,29 @@ s4 <- paste(c(s1, s2), "scaled", sep = ".")
 ## Check the model fit:
 fitMeasures(baseOut, s4)
 ```
+
+The model fits well. Configural invariance holds.
+
+---
+
+Now, we need to test threshold invariance. We do so via the same procedure we 
+would use to test invariance of factor loadings or intercepts.
+
+1. We estimate a restricted model wherein the threhsolds are constrained to 
+equality across groups.
+1. We test the tenability of the constraint by comparing to the configurally 
+invariant model.
+
+We must establish threshold invariance before considering weak or strong invariance 
+because weak and strong invariance both concern paths linking the latent response 
+variables to the latent constructs. We must first demonstrate, therefore, that 
+the latent response variables are defined equivalently in all groups.
+
+---
+
+We can make our lives much easier by using the `measEa.syntax()` function from 
+the **semTools** package to programatically generate the **lavaan** model syntax
+for our models.
 
 ```{r}
 library(semTools)
@@ -730,9 +770,25 @@ tMod <- measEq.syntax(configural.model = cfaMod,
                       group.equal      = "thresholds")
 ```
 
+We can view the resulting syntax by casting the `tMod` object as a character vector
+and printing it with the `cat()` function.
+
 ```{r}
 tMod %>% as.character() %>% cat()
 ```
+
+---
+
+Now, we estimate the threshold invariant model. 
+
+*Notes:*
+
+- We do not need to specify anything for the `group.equal` argument, because all 
+invariance constraints are defined in the model syntax we generated via 
+`measEq.syntax()`.
+- We must type cast the object returned by `measEq.syntax()` as a character vector 
+(i.e., by wrapping it with `as.character()`) to get the `cfa()` function to recognize 
+it as model syntax.
 
 ```{r}
 ## Estimate the threshold-invariant model:
@@ -741,22 +797,63 @@ tOut <- cfa(model     = as.character(tMod),
             group     = "party",
             ordered   = TRUE,
             estimator = "WLSMV")
-```
 
-```{r}
 ## Summarize the results:
 summary(tOut)
 ```
+
+As expected, the thresholds are equal across groups. Constraining the thresholds
+helps identify the model, so we can freely estimate the item intercepts and the 
+scales of the latent response variables in the second and third groups.
 
 ```{r}
 ## Check the model fit:
 fitMeasures(tOut, s4)
 ```
 
+The model still fits very well.
+
+---
+
+We test threshold invariance by comparing to the configurally invariant model.
+
+- The `semTools::compareFit()` function provides several different flavors of
+model comparison.
+   - Nested model $\Delta \chi^2$ test (i.e., likelihood ratio test).
+   - Differences in CFI, TLI, RMSEA, and SRMR
+- We specify `method = "satorra.bentler.2010"` via the `argsLRT` argument to get
+the most refined $\Delta \chi^2$ test.
+   - The $\Delta \chi^2$ test needs to be conducted with particular corrections
+   to account for the scaled and shifted fit statistics.
+   
 ```{r}
 ## Test threshold invariance via model comparisons:
-compareFit(baseOut, tOut) %>% summary()
+compareFit(baseOut, 
+           tOut, 
+           argsLRT = list(method = "satorra.bentler.2010")
+           ) %>% 
+  summary()
 ```
+
+The $\Delta \chi^2$ test is significant, so we should reject the null hypothesis 
+of invariant thresholds. We have not established threshold invariance.
+
+- The $\Delta \mathrm{CFI}$ and $\Delta \mathrm{RMSEA}$ are both quite small, but
+the methodological work evaluating measurement invariance testing with approximate 
+fit indices has not considered the robust/scaled versions of these indices. So, 
+we don't have much basis for using these indices for measurement invariance testing. 
+
+---
+
+Though we're not really justified in doing so, we'll continue with the process of
+measurement invariance testing, for didactic purposes.
+
+---
+
+After establishing threshold invariance, the next step is testing the additional 
+constraint of loading invariance (i.e., weak invariance or metric invariance).
+
+- Again, we can use the `measEq.syntax()` function to streamline the process.
 
 ```{r}
 ## Define the model syntax for the threshold/loading-invariant model:
@@ -769,12 +866,14 @@ tlMod <- measEq.syntax(configural.model = cfaMod,
                        group            = "party",
                        group.equal      = c("thresholds", "loadings")
                        )
-```
 
-```{r}
 ## Check the resulting syntax:
 tlMod %>% as.character() %>% cat()
 ```
+
+---
+
+We estimate the model in the usual way.
 
 ```{r}
 ## Estimate the threshold/loading-invariant model:
@@ -783,23 +882,48 @@ tlOut <- cfa(model     = as.character(tlMod),
              group     = "party",
              ordered   = TRUE,
              estimator = "WLSMV")
-```
 
-```{r}
 ## Summarize the results:
 summary(tlOut)
 ```
+
+Now that we've equated the factor loadings across groups, we have the additional
+identification necessary to freely estimate the latent variances in the second 
+and third groups.
 
 ```{r}
 ## Check the model fit:
 fitMeasures(tlOut, s4)
 ```
 
+Again, model fit is still excellent.
+
+---
+
+We evaluate weak invariance by comparing back to the threshold-invariance model.
+
 ```{r}
 ## Test threshold/loading invariance via model comparisons:
-compareFit(tOut, tlOut) %>% summary()
-compareFit(baseOut, tlOut) %>% summary()
+compareFit(tOut, 
+           tlOut, 
+           argsLRT = list(method = "satorra.bentler.2010")
+           ) %>% 
+  summary()
+compareFit(baseOut, 
+           tlOut, 
+           argsLRT = list(method = "satorra.bentler.2010")
+           ) %>% 
+  summary()
 ```
+
+Relative to the threshold-invariant model, we haven't lost a significant amount
+of fit by equating the factor loadings across groups. Conditioning on the dubious
+threshold invariance, we can claim weak invariance.
+
+---
+
+We conclude by equating the item intercepts accross groups to test strong/metric
+invariance.
 
 ```{r}
 ## Define the model syntax for the threshold/loading/intercept-invariant model:
@@ -813,37 +937,75 @@ tliMod <-
                   group            = "party",
                   group.equal      = c("thresholds", "loadings", "intercepts")
                   )
-```
 
-```{r}
+## Check the syntax:
 tliMod %>% as.character() %>% cat()
-```
 
-```{r}
 ## Estimate the threshold/loading/intercept-invariant model:
 tliOut <- cfa(model     = as.character(tliMod),
               data      = outlook,
               group     = "party",
               ordered   = TRUE,
               estimator = "WLSMV")
-```
 
-```{r}
 ## Summarize the results:
 summary(tliOut)
 ```
+
+Constraining the item intercepts allows us to freely estimate the latent means
+in the second and third groups.
 
 ```{r}
 ## Check the model fit:
 fitMeasures(tliOut, s4)
 ```
 
+The strongly invariant model still fits very well.
+
 ```{r}
 ## Test threshold/loading/intercept invariance via model comparisons:
-compareFit(tlOut, tliOut) %>% summary()
-compareFit(baseOut, tliOut) %>% summary()
+compareFit(tlOut, 
+           tliOut, 
+           argsLRT = list(method = "satorra.bentler.2010")
+           ) %>% 
+  summary()
+compareFit(baseOut, 
+           tliOut, 
+           argsLRT = list(method = "satorra.bentler.2010")
+           ) %>% 
+  summary()
 ```
 
+We don't lose a significant amount of fit by constraining the item intercepts in
+addition to the factor loadings and thresholds. Given our acceptance of the weakly 
+invariant model, we can claim strong invariance.
+
+---
+
+# Concluding Remarks
+
+---
+
+The only substantial differences between modeling ordinal indicators via CVM and
+modeling continuous indicators via normal-theory ML concern the measurement model. 
+So, after adapting the CFA as described above, all the structural modeling and 
+testing works pretty much as it does for ordinary normal-theory models.
+
+There are two common caveats to the above statement.
+
+1. As you've seen above, the difference in two scaled $\chi^2$ statistics is not 
+$\chi^2$ distributed. So, you must apply an appropriate correction to any 
+$\Delta \chi^2$ tests. 
+   - Fortunately, these corrections are applied automatically when you conduct 
+   the tests with `anova()`, `lavTestLRT()`, or `compareFit()`.
+1. The WLS and DLWS estimators cannot handle missing data (i.e., there is no WLS 
+analog to FIML), so you must treat any missing prior to model estimation. With 
+FIML off the table, you should use multiple imputation (MI) unless you have 
+trivial amount of missing data (in which case a single stochastic regression 
+imputation will suffice).
+   - Again, **semTools** comes to the rescue here. The `lavaan.mi()` routines 
+   covered in Module 6 make the process of conducting these analyses with multiply 
+   imputed data relatively painless.
 
 ---
 

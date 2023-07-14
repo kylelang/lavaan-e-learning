@@ -2859,7 +2859,7 @@ propagates throughout the model and biases the estimated CFA/SEM parameters.</p>
 indicators replace <span class="math inline">\(\mathbf{S}\)</span> with a polychoric correlation matrix. Rather than
 simply estimating a standalone polychoric correlation matrix and using this
 matrix as input to the model, <strong>lavaan</strong> implements a version of the
-<em>categorical variable methodology</em> (CVM) proposed by <a href>Muthen (1984)</a>.</p>
+<em>categorical variable methodology</em> (CVM) proposed by <a href="https://doi.org/10.1007/bf02294210">Muthen (1984)</a>.</p>
 <p>The recommended <strong>lavaan</strong> flavor of CVM entails four changes to the standard ML
 approach:</p>
 <ol style="list-style-type: decimal">
@@ -3721,6 +3721,15 @@ models of different levels of invariance for ordered categorical outcomes.
 <em>Psychometrika, 81</em>(4). 1014 – 1045. <a href="https://doi.org/10.1007/s11336-016-9506-0" class="uri">https://doi.org/10.1007/s11336-016-9506-0</a></li>
 </ul>
 <hr />
+<p>We’ll explore these ideas by adding political party affiliation to our previous
+CFA as a grouping factor.</p>
+<pre class="r"><code>summary(outlook$party)</code></pre>
+<pre><code> republican    democrat independent       other 
+        332        1264         576           0 </code></pre>
+<hr />
+<p>First, we estimate the configural invariance model by adding the grouping factor
+without placing any cross-group constraints (i.e., in the same way that we did
+for continous indicator models).</p>
 <pre class="r"><code>## Estimate the baseline (configurally invariant) model:
 baseOut &lt;- cfa(model            = cfaMod,
                data             = outlook,
@@ -3729,6 +3738,7 @@ baseOut &lt;- cfa(model            = cfaMod,
                estimator        = &quot;WLSMV&quot;,
                parameterization = &quot;delta&quot;,
                std.lv           = TRUE)</code></pre>
+<p>Check the summary to ensure that everything looks sensible.</p>
 <pre class="r"><code>summary(baseOut)</code></pre>
 <pre><code>lavaan 0.6.15 ended normally after 25 iterations
 
@@ -4002,6 +4012,7 @@ Scales y*:
     s2                1.000                           
     s3                1.000                           
     s4                1.000                           </code></pre>
+<p>Check the model fit to test configural invariance.</p>
 <pre class="r"><code>s4 &lt;- paste(c(s1, s2), &quot;scaled&quot;, sep = &quot;.&quot;)
 
 ## Check the model fit:
@@ -4012,6 +4023,24 @@ fitMeasures(baseOut, s4)</code></pre>
                 0.997                 0.994                 0.028 
 rmsea.ci.lower.scaled rmsea.ci.upper.scaled 
                 0.013                 0.041 </code></pre>
+<p>The model fits well. Configural invariance holds.</p>
+<hr />
+<p>Now, we need to test threshold invariance. We do so via the same procedure we
+would use to test invariance of factor loadings or intercepts.</p>
+<ol style="list-style-type: decimal">
+<li>We estimate a restricted model wherein the threhsolds are constrained to
+equality across groups.</li>
+<li>We test the tenability of the constraint by comparing to the configurally
+invariant model.</li>
+</ol>
+<p>We must establish threshold invariance before considering weak or strong invariance
+because weak and strong invariance both concern paths linking the latent response
+variables to the latent constructs. We must first demonstrate, therefore, that
+the latent response variables are defined equivalently in all groups.</p>
+<hr />
+<p>We can make our lives much easier by using the <code>measEa.syntax()</code> function from
+the <strong>semTools</strong> package to programatically generate the <strong>lavaan</strong> model syntax
+for our models.</p>
 <pre class="r"><code>library(semTools)
 
 ## Define the model syntax for the threshold-invariant model:
@@ -4023,6 +4052,8 @@ tMod &lt;- measEq.syntax(configural.model = cfaMod,
                       ID.cat           = &quot;Wu.Estabrook.2016&quot;,
                       group            = &quot;party&quot;,
                       group.equal      = &quot;thresholds&quot;)</code></pre>
+<p>We can view the resulting syntax by casting the <code>tMod</code> object as a character vector
+and printing it with the <code>cat()</code> function.</p>
 <pre class="r"><code>tMod %&gt;% as.character() %&gt;% cat()</code></pre>
 <pre><code>## LOADINGS:
 
@@ -4095,13 +4126,25 @@ success ~~ c(1, 1, 1)*success + c(psi.2_2.g1, psi.2_2.g2, psi.2_2.g3)*success
 ## COMMON-FACTOR COVARIANCES:
 
 disillusion ~~ c(NA, NA, NA)*success + c(psi.2_1.g1, psi.2_1.g2, psi.2_1.g3)*success</code></pre>
+<hr />
+<p>Now, we estimate the threshold invariant model.</p>
+<p><em>Notes:</em></p>
+<ul>
+<li>We do not need to specify anything for the <code>group.equal</code> argument, because all
+invariance constraints are defined in the model syntax we generated via
+<code>measEq.syntax()</code>.</li>
+<li>We must type cast the object returned by <code>measEq.syntax()</code> as a character vector
+(i.e., by wrapping it with <code>as.character()</code>) to get the <code>cfa()</code> function to recognize
+it as model syntax.</li>
+</ul>
 <pre class="r"><code>## Estimate the threshold-invariant model:
 tOut &lt;- cfa(model     = as.character(tMod),
             data      = outlook,
             group     = &quot;party&quot;,
             ordered   = TRUE,
-            estimator = &quot;WLSMV&quot;)</code></pre>
-<pre class="r"><code>## Summarize the results:
+            estimator = &quot;WLSMV&quot;)
+
+## Summarize the results:
 summary(tOut)</code></pre>
 <pre><code>lavaan 0.6.15 ended normally after 77 iterations
 
@@ -4376,6 +4419,9 @@ Scales y*:
     s2                0.984    0.062   15.837    0.000
     s3                0.915    0.056   16.473    0.000
     s4                0.909    0.051   17.774    0.000</code></pre>
+<p>As expected, the thresholds are equal across groups. Constraining the thresholds
+helps identify the model, so we can freely estimate the item intercepts and the
+scales of the latent response variables in the second and third groups.</p>
 <pre class="r"><code>## Check the model fit:
 fitMeasures(tOut, s4)</code></pre>
 <pre><code>         chisq.scaled             df.scaled         pvalue.scaled 
@@ -4384,20 +4430,41 @@ fitMeasures(tOut, s4)</code></pre>
                 0.993                 0.992                 0.033 
 rmsea.ci.lower.scaled rmsea.ci.upper.scaled 
                 0.022                 0.043 </code></pre>
+<p>The model still fits very well.</p>
+<hr />
+<p>We test threshold invariance by comparing to the configurally invariant model.</p>
+<ul>
+<li>The <code>semTools::compareFit()</code> function provides several different flavors of
+model comparison.
+<ul>
+<li>Nested model <span class="math inline">\(\Delta \chi^2\)</span> test (i.e., likelihood ratio test).</li>
+<li>Differences in CFI, TLI, RMSEA, and SRMR</li>
+</ul></li>
+<li>We specify <code>method = &quot;satorra.bentler.2010&quot;</code> via the <code>argsLRT</code> argument to get
+the most refined <span class="math inline">\(\Delta \chi^2\)</span> test.
+<ul>
+<li>The <span class="math inline">\(\Delta \chi^2\)</span> test needs to be conducted with particular corrections
+to account for the scaled and shifted fit statistics.</li>
+</ul></li>
+</ul>
 <pre class="r"><code>## Test threshold invariance via model comparisons:
-compareFit(baseOut, tOut) %&gt;% summary()</code></pre>
+compareFit(baseOut, 
+           tOut, 
+           argsLRT = list(method = &quot;satorra.bentler.2010&quot;)
+           ) %&gt;% 
+  summary()</code></pre>
 <pre><code>################### Nested Model Comparison #########################
 
-Scaled Chi-Squared Difference Test (method = &quot;satorra.2000&quot;)
+Scaled Chi-Squared Difference Test (method = &quot;satorra.bentler.2010&quot;)
 
 lavaan NOTE:
     The &quot;Chisq&quot; column contains standard test statistics, not the
     robust test that should be reported per model. A robust difference
     test is a function of two standard (not robust) statistics.
  
-        Df AIC BIC  Chisq Chisq diff Df diff Pr(&gt;Chisq)    
-baseOut 39         39.635                                  
-tOut    59         65.388     46.788      20  0.0006277 ***
+        Df AIC BIC  Chisq Chisq diff Df diff Pr(&gt;Chisq)   
+baseOut 39         39.635                                 
+tOut    59         65.388       43.1      20   0.001983 **
 ---
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 
@@ -4412,6 +4479,23 @@ tOut    .025†
 ################## Differences in Fit Indices #######################
                df.scaled rmsea.scaled cfi.scaled tli.scaled srmr
 tOut - baseOut        20        0.005     -0.004     -0.002    0</code></pre>
+<p>The <span class="math inline">\(\Delta \chi^2\)</span> test is significant, so we should reject the null hypothesis
+of invariant thresholds. We have not established threshold invariance.</p>
+<ul>
+<li>The <span class="math inline">\(\Delta \mathrm{CFI}\)</span> and <span class="math inline">\(\Delta \mathrm{RMSEA}\)</span> are both quite small, but
+the methodological work evaluating measurement invariance testing with approximate
+fit indices has not considered the robust/scaled versions of these indices. So,
+we don’t have much basis for using these indices for measurement invariance testing.</li>
+</ul>
+<hr />
+<p>Though we’re not really justified in doing so, we’ll continue with the process of
+measurement invariance testing, for didactic purposes.</p>
+<hr />
+<p>After establishing threshold invariance, the next step is testing the additional
+constraint of loading invariance (i.e., weak invariance or metric invariance).</p>
+<ul>
+<li>Again, we can use the <code>measEq.syntax()</code> function to streamline the process.</li>
+</ul>
 <pre class="r"><code>## Define the model syntax for the threshold/loading-invariant model:
 tlMod &lt;- measEq.syntax(configural.model = cfaMod,
                        data             = outlook,
@@ -4421,8 +4505,9 @@ tlMod &lt;- measEq.syntax(configural.model = cfaMod,
                        ID.cat           = &quot;Wu.Estabrook.2016&quot;,
                        group            = &quot;party&quot;,
                        group.equal      = c(&quot;thresholds&quot;, &quot;loadings&quot;)
-                       )</code></pre>
-<pre class="r"><code>## Check the resulting syntax:
+                       )
+
+## Check the resulting syntax:
 tlMod %&gt;% as.character() %&gt;% cat()</code></pre>
 <pre><code>## LOADINGS:
 
@@ -4495,13 +4580,16 @@ success ~~ c(1, NA, NA)*success + c(psi.2_2.g1, psi.2_2.g2, psi.2_2.g3)*success
 ## COMMON-FACTOR COVARIANCES:
 
 disillusion ~~ c(NA, NA, NA)*success + c(psi.2_1.g1, psi.2_1.g2, psi.2_1.g3)*success</code></pre>
+<hr />
+<p>We estimate the model in the usual way.</p>
 <pre class="r"><code>## Estimate the threshold/loading-invariant model:
 tlOut &lt;- cfa(model     = as.character(tlMod),
              data      = outlook,
              group     = &quot;party&quot;,
              ordered   = TRUE,
-             estimator = &quot;WLSMV&quot;)</code></pre>
-<pre class="r"><code>## Summarize the results:
+             estimator = &quot;WLSMV&quot;)
+
+## Summarize the results:
 summary(tlOut)</code></pre>
 <pre><code>lavaan 0.6.15 ended normally after 75 iterations
 
@@ -4776,6 +4864,9 @@ Scales y*:
     s2                0.961    0.049   19.663    0.000
     s3                0.988    0.051   19.392    0.000
     s4                0.886    0.043   20.384    0.000</code></pre>
+<p>Now that we’ve equated the factor loadings across groups, we have the additional
+identification necessary to freely estimate the latent variances in the second
+and third groups.</p>
 <pre class="r"><code>## Check the model fit:
 fitMeasures(tlOut, s4)</code></pre>
 <pre><code>         chisq.scaled             df.scaled         pvalue.scaled 
@@ -4784,11 +4875,18 @@ fitMeasures(tlOut, s4)</code></pre>
                 0.993                 0.993                 0.030 
 rmsea.ci.lower.scaled rmsea.ci.upper.scaled 
                 0.020                 0.040 </code></pre>
+<p>Again, model fit is still excellent.</p>
+<hr />
+<p>We evaluate weak invariance by comparing back to the threshold-invariance model.</p>
 <pre class="r"><code>## Test threshold/loading invariance via model comparisons:
-compareFit(tOut, tlOut) %&gt;% summary()</code></pre>
+compareFit(tOut, 
+           tlOut, 
+           argsLRT = list(method = &quot;satorra.bentler.2010&quot;)
+           ) %&gt;% 
+  summary()</code></pre>
 <pre><code>################### Nested Model Comparison #########################
 
-Scaled Chi-Squared Difference Test (method = &quot;satorra.2000&quot;)
+Scaled Chi-Squared Difference Test (method = &quot;satorra.bentler.2010&quot;)
 
 lavaan NOTE:
     The &quot;Chisq&quot; column contains standard test statistics, not the
@@ -4797,7 +4895,7 @@ lavaan NOTE:
  
       Df AIC BIC  Chisq Chisq diff Df diff Pr(&gt;Chisq)
 tOut  59         65.388                              
-tlOut 69         76.807     13.005      10     0.2234
+tlOut 69         76.807     10.874      10     0.3674
 
 ####################### Model Fit Indices ###########################
       chisq.scaled df.scaled pvalue.scaled rmsea.scaled cfi.scaled tli.scaled
@@ -4810,19 +4908,23 @@ tlOut .027
 ################## Differences in Fit Indices #######################
              df.scaled rmsea.scaled cfi.scaled tli.scaled  srmr
 tlOut - tOut        10       -0.002          0      0.001 0.002</code></pre>
-<pre class="r"><code>compareFit(baseOut, tlOut) %&gt;% summary()</code></pre>
+<pre class="r"><code>compareFit(baseOut, 
+           tlOut, 
+           argsLRT = list(method = &quot;satorra.bentler.2010&quot;)
+           ) %&gt;% 
+  summary()</code></pre>
 <pre><code>################### Nested Model Comparison #########################
 
-Scaled Chi-Squared Difference Test (method = &quot;satorra.2000&quot;)
+Scaled Chi-Squared Difference Test (method = &quot;satorra.bentler.2010&quot;)
 
 lavaan NOTE:
     The &quot;Chisq&quot; column contains standard test statistics, not the
     robust test that should be reported per model. A robust difference
     test is a function of two standard (not robust) statistics.
  
-        Df AIC BIC  Chisq Chisq diff Df diff Pr(&gt;Chisq)   
-baseOut 39         39.635                                 
-tlOut   69         76.807     55.521      30   0.003097 **
+        Df AIC BIC  Chisq Chisq diff Df diff Pr(&gt;Chisq)  
+baseOut 39         39.635                                
+tlOut   69         76.807     49.735      30    0.01321 *
 ---
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 
@@ -4837,6 +4939,12 @@ tlOut   .027
 ################## Differences in Fit Indices #######################
                 df.scaled rmsea.scaled cfi.scaled tli.scaled  srmr
 tlOut - baseOut        30        0.003     -0.004     -0.001 0.002</code></pre>
+<p>Relative to the threshold-invariant model, we haven’t lost a significant amount
+of fit by equating the factor loadings across groups. Conditioning on the dubious
+threshold invariance, we can claim weak invariance.</p>
+<hr />
+<p>We conclude by equating the item intercepts accross groups to test strong/metric
+invariance.</p>
 <pre class="r"><code>## Define the model syntax for the threshold/loading/intercept-invariant model:
 tliMod &lt;-
     measEq.syntax(configural.model = cfaMod,
@@ -4847,8 +4955,10 @@ tliMod &lt;-
                   ID.cat           = &quot;Wu.Estabrook.2016&quot;,
                   group            = &quot;party&quot;,
                   group.equal      = c(&quot;thresholds&quot;, &quot;loadings&quot;, &quot;intercepts&quot;)
-                  )</code></pre>
-<pre class="r"><code>tliMod %&gt;% as.character() %&gt;% cat()</code></pre>
+                  )
+
+## Check the syntax:
+tliMod %&gt;% as.character() %&gt;% cat()</code></pre>
 <pre><code>## LOADINGS:
 
 disillusion =~ c(NA, NA, NA)*d1 + c(lambda.1_1, lambda.1_1, lambda.1_1)*d1
@@ -4925,8 +5035,9 @@ tliOut &lt;- cfa(model     = as.character(tliMod),
               data      = outlook,
               group     = &quot;party&quot;,
               ordered   = TRUE,
-              estimator = &quot;WLSMV&quot;)</code></pre>
-<pre class="r"><code>## Summarize the results:
+              estimator = &quot;WLSMV&quot;)
+
+## Summarize the results:
 summary(tliOut)</code></pre>
 <pre><code>lavaan 0.6.15 ended normally after 68 iterations
 
@@ -5201,6 +5312,8 @@ Scales y*:
     s2                0.954    0.049   19.658    0.000
     s3                0.985    0.050   19.662    0.000
     s4                0.885    0.043   20.389    0.000</code></pre>
+<p>Constraining the item intercepts allows us to freely estimate the latent means
+in the second and third groups.</p>
 <pre class="r"><code>## Check the model fit:
 fitMeasures(tliOut, s4)</code></pre>
 <pre><code>         chisq.scaled             df.scaled         pvalue.scaled 
@@ -5209,11 +5322,16 @@ fitMeasures(tliOut, s4)</code></pre>
                 0.991                 0.993                 0.031 
 rmsea.ci.lower.scaled rmsea.ci.upper.scaled 
                 0.022                 0.040 </code></pre>
+<p>The strongly invariant model still fits very well.</p>
 <pre class="r"><code>## Test threshold/loading/intercept invariance via model comparisons:
-compareFit(tlOut, tliOut) %&gt;% summary()</code></pre>
+compareFit(tlOut, 
+           tliOut, 
+           argsLRT = list(method = &quot;satorra.bentler.2010&quot;)
+           ) %&gt;% 
+  summary()</code></pre>
 <pre><code>################### Nested Model Comparison #########################
 
-Scaled Chi-Squared Difference Test (method = &quot;satorra.2000&quot;)
+Scaled Chi-Squared Difference Test (method = &quot;satorra.bentler.2010&quot;)
 
 lavaan NOTE:
     The &quot;Chisq&quot; column contains standard test statistics, not the
@@ -5222,7 +5340,7 @@ lavaan NOTE:
  
        Df AIC BIC  Chisq Chisq diff Df diff Pr(&gt;Chisq)  
 tlOut  69         76.807                                
-tliOut 79         95.029     19.857      10    0.03064 *
+tliOut 79         95.029     17.817      10    0.05814 .
 ---
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 
@@ -5237,19 +5355,23 @@ tliOut .027
 ################## Differences in Fit Indices #######################
                df.scaled rmsea.scaled cfi.scaled tli.scaled srmr
 tliOut - tlOut        10        0.001     -0.002          0    0</code></pre>
-<pre class="r"><code>compareFit(baseOut, tliOut) %&gt;% summary()</code></pre>
+<pre class="r"><code>compareFit(baseOut, 
+           tliOut, 
+           argsLRT = list(method = &quot;satorra.bentler.2010&quot;)
+           ) %&gt;% 
+  summary()</code></pre>
 <pre><code>################### Nested Model Comparison #########################
 
-Scaled Chi-Squared Difference Test (method = &quot;satorra.2000&quot;)
+Scaled Chi-Squared Difference Test (method = &quot;satorra.bentler.2010&quot;)
 
 lavaan NOTE:
     The &quot;Chisq&quot; column contains standard test statistics, not the
     robust test that should be reported per model. A robust difference
     test is a function of two standard (not robust) statistics.
  
-        Df AIC BIC  Chisq Chisq diff Df diff Pr(&gt;Chisq)    
-baseOut 39         39.635                                  
-tliOut  79         95.029     75.071      40  0.0006524 ***
+        Df AIC BIC  Chisq Chisq diff Df diff Pr(&gt;Chisq)   
+baseOut 39         39.635                                 
+tliOut  79         95.029     67.923      40   0.003818 **
 ---
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 
@@ -5264,6 +5386,38 @@ tliOut  .027
 ################## Differences in Fit Indices #######################
                  df.scaled rmsea.scaled cfi.scaled tli.scaled  srmr
 tliOut - baseOut        40        0.003     -0.005     -0.001 0.002</code></pre>
+<p>We don’t lose a significant amount of fit by constraining the item intercepts in
+addition to the factor loadings and thresholds. Given our acceptance of the weakly
+invariant model, we can claim strong invariance.</p>
+<hr />
+</div>
+<div id="concluding-remarks" class="section level1" number="5">
+<h1><span class="header-section-number">5</span> Concluding Remarks</h1>
+<hr />
+<p>The only substantial differences between modeling ordinal indicators via CVM and
+modeling continuous indicators via normal-theory ML concern the measurement model.
+So, after adapting the CFA as described above, all the structural modeling and
+testing works pretty much as it does for ordinary normal-theory models.</p>
+<p>There are two common caveats to the above statement.</p>
+<ol style="list-style-type: decimal">
+<li>As you’ve seen above, the difference in two scaled <span class="math inline">\(\chi^2\)</span> statistics is not
+<span class="math inline">\(\chi^2\)</span> distributed. So, you must apply an appropriate correction to any
+<span class="math inline">\(\Delta \chi^2\)</span> tests.
+<ul>
+<li>Fortunately, these corrections are applied automatically when you conduct
+the tests with <code>anova()</code>, <code>lavTestLRT()</code>, or <code>compareFit()</code>.</li>
+</ul></li>
+<li>The WLS and DLWS estimators cannot handle missing data (i.e., there is no WLS
+analog to FIML), so you must treat any missing prior to model estimation. With
+FIML off the table, you should use multiple imputation (MI) unless you have
+trivial amount of missing data (in which case a single stochastic regression
+imputation will suffice).
+<ul>
+<li>Again, <strong>semTools</strong> comes to the rescue here. The <code>lavaan.mi()</code> routines
+covered in Module 6 make the process of conducting these analyses with multiply
+imputed data relatively painless.</li>
+</ul></li>
+</ol>
 <hr />
 <p>End of Demonstration</p>
 <hr />
