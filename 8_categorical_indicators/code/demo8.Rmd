@@ -1,0 +1,1101 @@
+---
+title: "Demonstration 8: Categorical Indicators" 
+subtitle: "Introduction to SEM with lavaan"
+author: "Kyle M. Lang"
+date: "Updated: `r format(Sys.time(), format = '%Y-%m-%d')`"
+params:
+  answers: true
+output: 
+  bookdown::html_document2:
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    number_sections: true
+    df_print: paged
+    css: "../../resources/style.css"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, echo = FALSE, message = FALSE, warning = FALSE}
+library(knitr)
+library(dplyr)
+library(magrittr)
+library(ggplot2)
+
+source("../../code/supportFunctions.R")
+
+figDir <- "../figures/"
+
+set.seed(235711)
+
+## Define an asis engine that will evaluate inline code within an asis block:
+knit_engines$set(asis = function(options) {
+  if(options$echo && options$eval) knit_child(text = options$code)
+}
+)
+
+opts_chunk$set(include = params$answers, 
+               echo = params$answer, 
+               message = FALSE,
+               warning = FALSE,
+               fig.align = "center",
+               comment = NA)
+```
+
+<!-- 
+Define some hacky LaTeX commands to force nice spacing between lines    
+NOTE: These must be called within a math environment (e.g., $\va$)
+-->
+\newcommand{\va}{\\[12pt]}
+\newcommand{\vb}{\\[6pt]}
+\newcommand{\vc}{\\[3pt]}
+\newcommand{\vx}[1]{\\[#1pt]}
+
+---
+
+In this demonstration, we'll explore methods of doing CFA/SEM with categorical 
+data using **lavaan**.
+
+---
+
+# Background
+
+---
+
+```{r cfa1, echo = FALSE, out.width = "90%", fig.cap = "Continous Variable CFA"} 
+include_graphics(paste0(figDir, "basic_cfa.png"))
+```
+
+For the most part, the models we've been working with in this course have a form 
+similar to the CFA shown in Figure \@ref(fig:cfa1). In such models, the observed 
+indicators $\{D1, D2, \ldots, S4\}$ act as dependent variables in a multivariate 
+linear model that is estimated using maximum likelihood (ML). 
+
+Since ML works by numerically optimizing some likelihood function, we must assume 
+some distribution for the observed data to define this likelihood function. 
+In **lavaan** (as in most applications), this distribution is the multivariate 
+normal. If this assumption does not hold (i.e., the observed data are not 
+multivariate normally distributed), we can encounter different problems.
+
+1. Biased parameter estimates
+1. Incorrect standard errors (usually too small)
+1. Incorrect fit statistics (usually too optimistic)
+
+The multivariate normality assumption can be violated in many ways (e.g., highly 
+skewed or kurtotic indicators), but we are here concerned with violations 
+caused by categorical indicators (i.e., binary/dichotomous or ordinal variables). 
+At the time of writing, **lavaan** cannot accommodate nominal indicators with 
+more than two levels (e.g., grouping factors with 3+ groups), so we will 
+restrict our discussion to binary and ordinal data.
+
+---
+
+## Polychoric Correlations
+
+---
+
+To understand the problems that arise when naively modeling categorical indicators
+as though they were continuous, it is helpful to step back to the basic problem
+of estimating bivariate correlations.
+
+The following code generates a dataset, $\mathbf{X}$, containing 100000 observations from 
+a bivariate normal distribution wherein the two variables, $x1$ and $x2$, are 
+correlated at $\rho = 0.5$.
+
+```{r}
+library(mvtnorm)
+library(polycor)
+
+## Generate some multivariate normal data:
+X <- rmvnorm(100000, c(0, 0), matrix(c(1.0, 0.5, 0.5, 1.0), 2, 2)) %>%
+  data.frame() %>% 
+  rename_with(tolower)
+
+colMeans(X)
+cor(X)
+```
+
+Now, we'll create ordinal variables, $z1$ and $z2$, by coarsening $x1$ and $x2$ 
+to simulate a situation wherein we are only able to measure a discrete 
+approximation of the true underlying continuous variables.
+
+```{r}
+## Coarsen the data:
+Z <- X %>% mutate(z1 = cut(x1, c(-Inf, -0.7, 0.5, Inf), labels = FALSE), 
+                  z2 = cut(x2, c(-Inf, -0.5, 1.0, Inf), labels = FALSE),
+                  .keep = "none")
+```
+
+Finally, we'll calculate three different flavors of bivariate correlation to 
+evaluate the effect of coarsening and potential remedies.
+
+1. The Pearson product moment correlation between $x1$ and $x2$.
+   - In reality, we would not be able to calculate this value, but we'd like to 
+   have some means of estimating this association. We care about the relation
+   between $x1$ and $x2$ in the population (where they are continuous variables),
+   not the association between the coarsened versions, $z1$ and $z2$, that we 
+   have in our data.
+1. The Pearson product moment correlation between $z1$ and $z2$.
+   - This is the correlation we would get if we naively calculated a standard 
+   correlation from our data.
+1. The polychoric correlation between $z1$ and $z2$.
+   - This value is meant to estimate the true association between the underlying
+   continuous variables using only their coarsened representations.
+   
+```{r}
+## Compare different correlations:
+X %$% cor(x1, x2)
+Z %$% cor(z1, z2)
+Z %$% polychor(z1, z2)
+```
+
+When we naively estimate the correlation from the coarsened variables, we see a
+substantial attenuation, which we'd expect due to the restriction of range
+induced by the coarsening. The polychoric correlation, on the other hand, accurately
+estimates the correlation between the underlying latent response factors.
+
+---
+
+### Relevance to CFA/SEM
+
+So, why should we care about this polychoric correlation business? Well, it turns
+out that the methods we'll use to model ordinal indicators apply a similar logic.
+In standard ML, we estimate the model parameters by minimizing the following loss
+function:
+
+$$
+F_{\mathit{ML}} = \ln | \Sigma | + tr(\mathbf{S}\Sigma^{-1}) - \ln | \mathbf{S} | - p
+$$
+
+Where $\mathbf{S}$ is the observed covariance matrix of the indicators, $\Sigma$ 
+is the corresponding model-implied covariance matrix, and $p$ is the number of 
+observed variables in the model. 
+
+If we apply this approach to ordinal data and, hence, naively compute $\mathbf{S}$ 
+from ordinal indicators, we get the same attenuated measures of association seen 
+in the toy example above. This attenuation propagates throughout the model and 
+biases the estimated CFA/SEM parameters.
+
+---
+
+## Modeling Categorical Indicators
+
+---
+
+In essence, the estimation methods we'll employ when analyzing categorical
+indicators replace $\mathbf{S}$ with a polychoric correlation matrix. Rather than
+simply estimating a standalone polychoric correlation matrix and using this 
+matrix as input to the model, however, **lavaan** implements a version of the 
+*categorical variable methodology* (CVM) proposed by [Muthen (1984)](https://doi.org/10.1007/bf02294210).
+
+We could set up a CVM analysis in many ways, but the recommended **lavaan** 
+flavor entails four modifications to the standard ML approach:
+
+1. Extending the measurement model by adding latent response variables
+1. Estimate the model with diagonally weighted least squares
+1. Estimate the standard errors with robust sandwich estimators
+1. Evaluate model fit using mean and variance adjusted fit indices
+
+---
+
+### Latent Response Variables
+
+The first step in CVM is to extend the basic definition of the measurement model
+by including so-called *latent response variables* (LRVs) that represent the 
+continuous variables assumed to underlie the observed ordinal indicators. In 
+terms of the toy example above, our data contain $z1$ and $z2$, but the LRVs
+represent $x1$ and $x2$.
+
+The modified version of the CFA from above would look something like the following.
+
+```{r cfa2, echo = FALSE, out.width = "90%", fig.cap = "CFA with Latent Response Variables"} 
+include_graphics(paste0(figDir, "latent_response_cfa_tau.png"))
+```
+
+---
+
+### Item Thresholds
+
+To define the LRVs, $\{D1^*, D2^*, \ldots, S4^*\}$, we must introduce a new layer 
+of measurement parameters: the item thresholds, 
+$\{\tau_{D1}\}, \{\tau_{D1}\}, \ldots, \{\tau_{S4}\}$. 
+
+To estimate the LRV underlying an ordinal variable with $G$ levels we need $G - 1$ 
+thresholds. Each threshold represents the "tipping point" at which the level of 
+the underlying LRV crosses into a new regime that translates to the next level of 
+the observed indicator.
+
+---
+
+Using the toy data from the above polychoric correlation example, we can 
+visualize the putative data generating process through which the underlying 
+latent version of a variable ($x2$, in this case) is assumed to give rise to the 
+observed, ordinal $z2$.
+
+---
+
+**1. Visualize the distribution of the latent response.**
+
+We assume that the putative concept tapped by our item, $x2$, is continuous in 
+the wild.
+
+```{r, echo = FALSE}
+tau <- Z %$% table(z2) %>% cumsum() %>% {head(., -1) / tail(., 1)} %>% qnorm()
+x <- seq(-4, 4, length.out = 1000)
+dat <- data.frame(x, y = dnorm(x))
+
+(
+  p1 <- ggplot(dat, aes(x, y)) + 
+    geom_line() + 
+    theme_classic() +
+    xlab("Latent x2") + 
+    ylab("Density")
+)
+```
+
+---
+
+**2. Overlay the thresholds.**
+
+For some reason, however, we are only able to assess the concept in a discrete 
+way (e.g., by collecting data using rating scales). We assume there is some 
+implicit coarsening process that translates the true level of the continuous LRV 
+to the discrete levels we measure. 
+
+The thresholds divide the underlying continuous distribution into ranges that 
+will end up translating to different levels of the discrete response we are able 
+to measure.
+
+```{r, echo = FALSE}
+(
+  p2 <- p1 + 
+    geom_vline(xintercept = tau, linetype = 2) + 
+    xlab("Latent x2 w/ Thresholds")
+)
+```
+
+---
+
+**3. Color-code the ranges defined by the thresholds.**
+
+In this case, we've measured a three-level factor. So, two thresholds partition 
+the distribution of $x2$ into the following three ranges. 
+
+```{r, echo = FALSE}
+tmp1 <- dat %>% filter(x <= tau[1])
+tmp2 <- dat %>% filter(x > tau[1], x <= tau[2])
+tmp3 <- dat %>% filter(x > tau[2])
+
+cbPalette <- c("#999999", 
+               "#E69F00", 
+               "#56B4E9", 
+               "#009E73", 
+               "#F0E442", 
+               "#0072B2", 
+               "#D55E00", 
+               "#CC79A7")
+fills <- cbPalette[2:4]
+
+p2 + geom_ribbon(data = tmp1, 
+                 mapping = aes(x = x, ymin = 0, ymax = y), 
+                 fill = fills[1]) +
+  geom_ribbon(data = tmp2, 
+              mapping = aes(x = x, ymin = 0, ymax = y), 
+              fill = fills[2]) +
+  geom_ribbon(data = tmp3, 
+              mapping = aes(x = x, ymin = 0, ymax = y), 
+              fill = fills[3]) +
+  xlab("Latent x2 w/ Thresholds & Coarsened Ranges")
+```
+
+---
+
+**4. Bin the observations according to their thresholded range to coarsen the variable.**
+
+This barplot represents the distribution of the observed data that we have actually
+collected.
+
+```{r, echo = FALSE}
+ggplot(Z, aes(x = z2)) + 
+  theme_classic() + 
+  geom_bar(aes(y = after_stat(prop)), fill = fills) +
+  xlab("Observed z2") +
+  ylab("Density")
+```
+
+---
+
+When we estimate a measurement model including LRVs, we essentially reverse the 
+process illustrated above. 
+
+1. We first estimate the thresholds from the observed cross-tabulation of our 
+discrete indicators. 
+1. We use these thresholds to define the LRVs under the assumption that these 
+LRVs follow a multivariate normal distribution.
+   - More general definitions are possible, but **lavaan** assumes a multivariate
+   normal distribution for the LRVs.
+1. We can then estimate a standard CFA wherein the LRVs act as the indicators or 
+the common latent factors.
+
+The covariance matrix of the latent response variables is equivalent to the
+polychoric correlation matrix of the ordinal indicators. So, applying this 
+procedure corrects for the attenuation caused by naively analyzing ordinal items
+with continuous variable methodology.
+
+---
+
+### Estimation
+
+In **lavaan**, we cannot use ML to estimate models that include latent response 
+factors such as the CFA represented in Figure \@ref(fig:cfa2). We need to use 
+one of two possible alternatives:
+
+1. *Weighted Least Squares* (WLS) 
+   - `estimator = "wls"`
+1. *Diagonally Weighted Least Squares* (DWLS) 
+   - `estimator = "dwls"`
+   
+In practice, however, we will almost always want to use DWLS. 
+
+---
+
+Both WLS and DWLS use loss functions of the following form.
+
+$$
+F_{\mathit{WLS}} = (\mathbf{r} - \rho)^T \mathbf{W}^{-1} (\mathbf{r} - \rho)
+$$
+
+Where $\mathbf{r}$ is a vector containing the unique thresholds and polychoric 
+correlations, $\rho$ is the analogous vector of model-implied statistics, and 
+$\mathbf{W}$ is (some part of) the asymptotic covariance matrix of the elements 
+in $\mathbf{r}$ (which acts as a weighting matrix).
+
+We generally prefer DWLS because of how the two estimators define $\mathbf{W}$.
+WLS uses the entire asymptotic covariance matrix for $\mathbf{W}$, whereas DWLS 
+uses only the diagonal elements. Naturally, the size of this matrix grows rapidly 
+as more variables are added to the model. WLS requires very large samples to invert
+$\mathbf{W}$ without computational problems. Since DWLS needs only to invert the 
+diagonal elements of $\mathbf{W}$, it is much more stable and does not require
+such large samples.
+
+---
+
+#### Standard Errors and Fit Statistics
+
+Although simply estimating the LRV-formulated model with DWLS will suffice to 
+provide unbiased parameter estimates. The resulting standard errors and fit 
+statistics will typically be adversely affected (i.e., SEs are usually too small 
+and fit statistics are usually too optimistic). These effects are more pronounced 
+when the indicators are substantially skewed or kurtotic.
+
+Fortunately, these problems are easily addressed by using a robust sandwich-style
+estimator for the standard errors (e.g., by specifying `se = "robust"`) and a 
+scaled version of the fit statistics (e.g., by specifying `test = "scaled.shifted"`).
+
+For convenience, we can request the recommended combination by specifying the 
+`estimator = wlsmv` option (mirroring MPlus nomenclature). The `estimator = wlsmv` 
+option implies the following parameterization.
+
+- DWLS estimation
+- Robust standard errors
+- Mean and variance adjusted fit statistics
+
+---
+
+## Additional Resources
+
+---
+
+Paul Johnson^[Incidentally, I am eternally indebted to PJ for introducing me 
+to Linux (not to mention his tireless help in debug my hideously mangled systems 
+in those early days) and giving me my first significant exposure to open-science 
+and open-source ideas.] has a nice set of lecture slides covering the basic 
+ideas we're considering here.
+
+- [CRMDA Workshop: Ordinal Variable SEM](
+https://pj.freefaculty.org/guides/crmda_workshops/sem/sem-3/sem-3-3-sem_ordinal/sem-3-3-sem_ordinal.pdf
+)
+
+Although the following chapter is locked behind a paywall, it nevertheless gives 
+the best overall summary of these ideas that I have yet found. If you can track 
+down a copy, I'd strongly recommend giving it a read. 
+
+- Finney, S. J., & DiStefano, C. (2006). Nonnormal and categorical data in 
+structural equation modeling. In G. R. Hancock & R. O. Mueller (Eds.), 
+*Structural equation modeling: A second course* (pp. 269 -- 314). Information 
+Age Publishing.
+
+The **lavaan** tutorial pages provide a brief overview of the options available 
+for modeling categorical data in **lavaan**.
+
+- [**lavaan** Tutorial: Categorical Data](https://lavaan.ugent.be/tutorial/cat.html)
+
+---
+
+OK, that's enough background. Let's take a look at some actual analyses.
+
+---
+
+# Data
+
+---
+
+```{r, echo = FALSE}
+dataDir <- "../../data/"
+outlook <- readRDS(paste0(dataDir, "outlook.rds"))
+```
+
+We will revisit the synthetic [*Outlook on Life Survey*][outlook0] data 
+from Lab 5. Recall that the original data were collected in the United States in 
+2012 to measure, among other things, attitudes about racial issues, opinions of 
+the Federal government, and beliefs about the future.
+
+We will again work with a synthesized subset of the original data. You can access
+these synthetic data as [*outlook.rds*][outlook1]. This dataset comprises 
+`r nrow(outlook)` observations of the following `r ncol(outlook)` variables.
+
+- `d1:d3`: Three observed indicators of a construct measuring disillusionment 
+with the US Federal government.
+   - Higher scores indicate more disillusionment
+   $\vb$
+- `s1:s4`: Four observed indicators of a construct measuring the perceived 
+achievability of material success.
+   - Higher scores indicate greater perceived achievability
+   $\vb$
+- `progress`: A single item assessing perceived progress toward achieving the 
+"American Dream"
+   - Higher scores indicate greater perceived progress
+   $\vb$
+- `merit`: A single item assessing endorsement of the meritocratic ideal that 
+hard work leads to success.
+   - Higher scores indicate stronger endorsement of the meritocratic ideal
+   $\vb$
+- `lib2Con`: A single item assessing liberal-to-conservative orientation
+   - Lower scores are more liberal, higher scores are more conservative
+   $\vb$
+- `party`: A four-level factor indicating self-reported political party affiliation
+   $\vb$
+- `disillusion`: A scale score representing disillusionment with the US Federal 
+government
+   - Created as the mean of `d1:d3`
+   $\vb$
+- `success`: A scale score representing the perceived achievability of material 
+success
+   - Created as the mean of `s1:s4`
+
+---
+
+First, we'll read in the *outlook.rds* dataset, and save the resulting data frame
+as `outlook`.
+
+```{r, eval = FALSE}
+dataDir <- "../data/"
+outlook <- readRDS(paste0(dataDir, "outlook.rds"))
+```
+
+---
+
+For the following, we don't need/want the scale scores for *disillusionment* or
+*success* or the observations for which `party = "other"`. The following code 
+will exclude these parts of the dataset.
+
+```{r subset}
+library(dplyr)
+library(magrittr)
+
+outlook %<>% select(-disillusion, -success) %>% 
+   filter(party != "other") %>% 
+   mutate(party = droplevels(party))
+```
+
+---
+
+Now, we'll explore our data a bit and summarize the distributions of the 
+*disillusionment* and *success* items.
+
+```{r}
+tmp <- outlook %>% select(d1:s4)
+
+head(tmp)
+summary(tmp)
+lapply(tmp, unique)
+```
+
+Clearly, these variables are not continuous and have some sort of discrete scale. 
+Although we cannot tell simply from the numeric summaries above, these items 
+represent questionnaire responses on 4- and 5-point rating scales.
+
+It would probably not be a very good idea to naively analyze these items as
+continuous indicators. Let's see how we get on with a more principled treatment.
+
+---
+
+# Categorical Variable CFA
+
+---
+
+Let's assume we want to fit the CFA model depicted in Figure \@ref(fig:cfa2). 
+The following **lavaan** model syntax will suffice to define our model.
+
+```{r}
+cfaMod <- '
+disillusion =~ d1 + d2 + d3
+success =~ s1 + s2 + s3 + s4
+'
+```
+
+---
+
+## Naive Fit
+
+First, as a point of comparison, we'll use ML to naively fit the basic CFA shown 
+in Figure \@ref(fig:cfa1).
+
+```{r}
+library(lavaan)
+
+## Naive ML fit:
+fit0 <- cfa(cfaMod, data = outlook, std.lv = TRUE)
+
+summary(fit0)
+``` 
+
+---
+
+## Basic DWLS Fit
+
+Now, we'll fit the appropriate LRV-formulated model using DWLS, but we won't yet
+request robust SEs or fit statistics.
+
+```{r}
+## Basic DWLS fit:
+fit1.1 <- cfa(cfaMod,
+              data = outlook,
+              std.lv = TRUE,
+              ordered = TRUE,     # Tell lavaan that our data are ordinal
+              estimator = "DWLS") # Use DWLS to estimate the model
+
+summary(fit1.1)
+``` 
+
+Notice that the model now contains a set of estimated thresholds to define the 
+latent response factors.
+
+---
+
+We can actually calculate these thresholds directly from the raw data in a few 
+simple steps.
+
+1. Calculate the cumulative frequencies of each response level.
+1. Convert these cumulative frequencies to proportions.
+1. For each proportion, calculate the quantile on the standard normal distribution 
+that "cuts off" that proportion of the lower tail.
+   - These quantiles are the estimated thresholds.
+   
+```{r}
+## Define a function to calculate thresholds from the raw data:
+calcThresholds <- function(x) {
+   cummulants <- table(x) %>% cumsum()
+   probs <- head(cummulants, -1) / tail(cummulants, 1)
+   qnorm(probs)
+}
+
+## Calculate the thresholds from the data:
+manual <- outlook %>% select(d1:s4) %>% lapply(calcThresholds) %>% unlist()
+
+## Extract the estimated thresholds from the model estimated by lavaan:
+lavaan <- lavInspect(fit1.1, "est")$tau
+```
+
+When we compare the manual approach to **lavaan**'s estimates, we see the expected 
+equivalence.
+
+```{r, echo = FALSE}
+data.frame(manual, 
+           lavaan = as.numeric(lavaan), 
+           row.names = rownames(lavaan)
+           ) %>%
+  kable(booktabs = TRUE)
+```
+
+---
+
+It's also interesting to note that the latent correlation is stronger in the DWLS 
+model. The attenuation in the ML model is caused by the same type of 
+restriction-of-range attenuation discussed in the toy polychoric correlation 
+example above.
+
+```{r, echo = FALSE}
+tmp <- data.frame(ML = lavInspect(fit0, "est")$psi[1, 2],
+                  DWLS = lavInspect(fit1.1, "est")$psi[1, 2]) 
+rownames(tmp) <- "Latent Covariance"
+kable(tmp, digits = 3)
+```
+
+---
+
+## Robust DWLS Fit
+
+Finally, we'll do things the right way by estimating the model with DWLS and using
+robust SEs and scaled fit statistics.
+
+```{r}
+## Robust DWLS fit:
+fit1.2 <- cfa(cfaMod,
+              data = outlook,
+              std.lv = TRUE,
+              ordered = TRUE,
+              estimator = "WLSMV")
+
+summary(fit1.2)
+```
+
+---
+
+Notice that the parameter estimates are identical in the normal and robust versions
+of the DWLS fit since we're using the same estimator to fit both models.
+
+```{r}
+all.equal(coef(fit1.1), coef(fit1.2))
+```
+
+---
+
+The differences, of course, come into play with the standard errors and fit 
+statistics.
+
+```{r}
+## Basic DWLS estimates:
+partSummary(fit1.1, c(7:8))
+
+## Robust DWLS estimates:
+partSummary(fit1.2, c(7:8))
+```
+
+The robust SEs tend to be somewhat larger than their naive counterparts, 
+especially for the latent covariance.
+
+```{r}
+## Define a few character vectors to specify which fit indices we want:
+s1 <- c("chisq", "df", "pvalue")
+s2 <- c("cfi", 
+        "tli", 
+        "rmsea", 
+        "rmsea.ci.lower", 
+        "rmsea.ci.upper", 
+        "srmr")
+s3 <- c(paste(s1, "scaled", sep = "."),
+        paste(s2, "robust", sep = ".")
+        )
+
+## Fit statistics for the basic DWLS fit:
+fitMeasures(fit1.1, c(s1, s2))
+
+## Fit measures for the robust DWLS fit:
+fitMeasures(fit1.2, s3)
+```
+
+Likewise, the scaled/robust fit statistics/indices suggest slightly worse fit 
+than the naive versions. 
+
+---
+
+## Alternative `cfa()` Specifications
+
+When estimating the last model, we actually used a bit of a shortcut. By 
+setting `ordered = TRUE`, we tell the `cfa()` function that all of our observed
+data are ordinal (the same will hold for `lavaan()` or any of its other wrappers). 
+This approach won't work when our model also contains continuous variables. 
+Fortunately, there are two alternative means of flagging ordinal variables.
+
+---
+
+The `ordered` argument accepts a character vector containing the names of the 
+ordinal variables. 
+
+```{r}
+## Explicitly name the ordinal variables:
+fit1.2.1 <- cfa(cfaMod,
+              data = outlook,
+              std.lv = TRUE,
+              ordered = c(paste0("d", 1:3), paste0("s", 1:4)),
+              estimator = "WLSMV")
+```
+
+---
+
+We can also type cast the ordinal variables as ordered factors and provide the 
+typed data to the `data` argument. When taking this approach, the `ordered` 
+argument is not necessary.
+
+```{r}
+## Cast the ordinal variables as ordered factors in the data frame:
+fit1.2.2 <- outlook %>% mutate(across(d1:s4, as.ordered)) %>%
+   cfa(cfaMod,
+       data = .,
+       std.lv = TRUE,
+       estimator = "WLSMV")
+```
+
+---
+
+All three approaches have the same effect.
+
+```{r}
+all.equal(coef(fit1.2), coef(fit1.2.1))
+all.equal(coef(fit1.2), coef(fit1.2.2))
+
+all.equal(fitMeasures(fit1.2), fitMeasures(fit1.2.1))
+all.equal(fitMeasures(fit1.2), fitMeasures(fit1.2.2))
+``` 
+
+---
+
+# Measurement Invariance
+
+---
+
+When working with categorical indicators, we need to modify our procedure for 
+testing measurement invariance because we've introduced a new layer of parameters
+in the measurement model that links the observed indicators to the latent factors.
+Essentially, we have to add one additional step to the process. After establishing 
+configural invariance, we must test the thresholds for invariance before moving 
+on to testing weak and strong invariance.
+
+We must establish threshold invariance before testing weak invariance because the 
+thresholds are responsible for defining the LRVs that take the place occupied by 
+observed indicators in standard CFA models. If the thresholds are not invariant, 
+then the LRVs are not comparable across groups, and no further comparisons are 
+justified.
+
+The following paper represents the definitive resource on this topic.
+
+- Wu, H., & Estabrook, R. (2016). Identification of confirmatory factor analysis 
+models of different levels of invariance for ordered categorical outcomes. 
+*Psychometrika, 81*(4). 1014 -- 1045. <https://doi.org/10.1007/s11336-016-9506-0> 
+
+---
+
+## Grouping Factor
+
+We'll explore these ideas by adding political party affiliation to our previous 
+CFA as a grouping factor.
+
+```{r}
+summary(outlook$party)
+```
+
+---
+
+## Configural Invariance
+
+First, we estimate the configural invariance model by adding the grouping factor
+without placing any cross-group constraints (i.e., in the same way that we did 
+for continuous indicator models). 
+
+```{r}
+## Estimate the baseline (configurally invariant) model:
+baseOut <- cfa(model            = cfaMod,
+               data             = outlook,
+               group            = "party",
+               ordered          = TRUE,
+               estimator        = "WLSMV",
+               parameterization = "delta",
+               std.lv           = TRUE)
+```
+
+Check the summary to ensure that everything looks sensible.
+
+```{r}
+summary(baseOut)
+```
+
+Check the model fit to test configural invariance.
+
+```{r}
+s4 <- paste(c(s1, s2), "scaled", sep = ".")
+
+## Check the model fit:
+fitMeasures(baseOut, s4)
+```
+
+The model fits well. Configural invariance holds.
+
+---
+
+## Threshold Invariance
+
+Now, we need to test threshold invariance. We do so via the same procedure we 
+would use to test invariance of factor loadings or intercepts.
+
+1. Estimate a restricted model wherein the thresholds are constrained to 
+equality across groups.
+1. Test the tenability of the constraint by comparing to the configurally 
+invariant model.
+
+We must establish threshold invariance before considering weak or strong invariance 
+because weak and strong invariance both concern paths linking the LRVs to the 
+common latent factors. We must first demonstrate, therefore, that the LRVs are 
+defined equivalently in all groups.
+
+---
+
+We can make our lives much easier by using the `measEq.syntax()` function from 
+the **semTools** package to programmatically generate the **lavaan** model syntax
+for our various restricted models.
+
+```{r}
+library(semTools)
+
+## Define the model syntax for the threshold-invariant model:
+tMod <- measEq.syntax(configural.model = cfaMod,
+                      data             = outlook,
+                      ordered          = TRUE,
+                      parameterization = "delta",
+                      ID.fac           = "std.lv",
+                      ID.cat           = "Wu.Estabrook.2016",
+                      group            = "party",
+                      group.equal      = "thresholds")
+```
+
+We can view the resulting syntax by casting the `tMod` object as a character vector
+and printing it with the `cat()` function.
+
+```{r}
+tMod %>% as.character() %>% cat()
+```
+
+---
+
+Now, we estimate the threshold invariant model. 
+
+*Notes:*
+
+- We do not need to specify anything for the `group.equal` argument because all 
+invariance constraints are defined in the model syntax we generated via 
+`measEq.syntax()`.
+- We must type cast the object returned by `measEq.syntax()` as a character vector 
+(i.e., by wrapping it with `as.character()`) to get the `cfa()` function to 
+recognize this object as model syntax.
+
+```{r}
+## Estimate the threshold-invariant model:
+tOut <- cfa(model     = as.character(tMod),
+            data      = outlook,
+            group     = "party",
+            ordered   = TRUE,
+            estimator = "WLSMV")
+
+## Summarize the results:
+summary(tOut)
+```
+
+As expected, the thresholds are equal across groups. Additionally, constraining 
+the thresholds helps identify the model, so we can freely estimate the item 
+intercepts and the scales of the latent response variables in the second and 
+third groups.
+
+```{r}
+## Check the model fit:
+fitMeasures(tOut, s4)
+```
+
+The model still fits very well.
+
+---
+
+We test threshold invariance by comparing to the configurally invariant model.
+
+- The `semTools::compareFit()` function provides several different flavors of
+model comparison.
+   - Nested model $\Delta \chi^2$ test (i.e., likelihood ratio test).
+   - Differences in CFI, TLI, RMSEA, and SRMR
+- We specify `method = "satorra.bentler.2010"` via the `argsLRT` argument to get
+the most refined $\Delta \chi^2$ test.
+   - The naive difference between two scaled $\chi^2$ statistics is not $\chi^2$ 
+   distributed.
+   - The $\Delta \chi^2$ test needs to be conducted with particular corrections
+   to account for the scaled fit statistics.
+   
+```{r}
+## Test threshold invariance via model comparisons:
+compareFit(baseOut, 
+           tOut, 
+           argsLRT = list(method = "satorra.bentler.2010")
+           ) %>% 
+  summary()
+```
+
+The $\Delta \chi^2$ test is significant, so we should reject the null hypothesis 
+of invariant thresholds. We have not established threshold invariance.
+
+- The $\Delta \mathrm{CFI}$ and $\Delta \mathrm{RMSEA}$ are both quite small, but
+the methodological work evaluating measurement invariance testing with approximate 
+fit indices has not considered the robust/scaled versions of these indices. So, 
+we don't have much basis for using these indices for measurement invariance testing. 
+
+---
+
+Though we're not really justified in doing so, we'll continue with the process of
+measurement invariance testing, for didactic purposes.
+
+---
+
+## Weak Invariance
+
+After establishing threshold invariance, the next step is testing the additional 
+constraint of loading invariance (i.e., weak invariance or metric invariance).
+
+- Again, we can use the `measEq.syntax()` function to streamline the process.
+
+```{r}
+## Define the model syntax for the threshold/loading-invariant model:
+tlMod <- measEq.syntax(configural.model = cfaMod,
+                       data             = outlook,
+                       ordered          = TRUE,
+                       parameterization = "delta",
+                       ID.fac           = "std.lv",
+                       ID.cat           = "Wu.Estabrook.2016",
+                       group            = "party",
+                       group.equal      = c("thresholds", "loadings")
+                       )
+
+## Check the resulting syntax:
+tlMod %>% as.character() %>% cat()
+```
+
+---
+
+We estimate the model in the usual way.
+
+```{r}
+## Estimate the threshold/loading-invariant model:
+tlOut <- cfa(model     = as.character(tlMod),
+             data      = outlook,
+             group     = "party",
+             ordered   = TRUE,
+             estimator = "WLSMV")
+
+## Summarize the results:
+summary(tlOut)
+```
+
+Now that we've equated the factor loadings across groups, we have the additional
+identification necessary to freely estimate the latent variances in the second 
+and third groups.
+
+```{r}
+## Check the model fit:
+fitMeasures(tlOut, s4)
+```
+
+Again, model fit is still excellent.
+
+---
+
+We evaluate weak invariance by comparing back to the threshold-invariance model.
+
+```{r}
+## Test threshold/loading invariance via model comparisons:
+compareFit(tOut, 
+           tlOut, 
+           argsLRT = list(method = "satorra.bentler.2010")
+           ) %>% 
+  summary()
+```
+
+Relative to the threshold-invariant model, we haven't lost a significant amount
+of fit by equating the factor loadings across groups. Conditioning on the dubious
+threshold invariance, we can claim weak invariance.
+
+---
+
+## Strong Invariance
+
+We conclude by equating the item intercepts across groups to test strong/metric
+invariance.
+
+```{r}
+## Define the model syntax for the threshold/loading/intercept-invariant model:
+tliMod <-
+    measEq.syntax(configural.model = cfaMod,
+                  data             = outlook,
+                  ordered          = TRUE,
+                  parameterization = "delta",
+                  ID.fac           = "std.lv",
+                  ID.cat           = "Wu.Estabrook.2016",
+                  group            = "party",
+                  group.equal      = c("thresholds", "loadings", "intercepts")
+                  )
+
+## Check the syntax:
+tliMod %>% as.character() %>% cat()
+
+## Estimate the threshold/loading/intercept-invariant model:
+tliOut <- cfa(model     = as.character(tliMod),
+              data      = outlook,
+              group     = "party",
+              ordered   = TRUE,
+              estimator = "WLSMV")
+
+## Summarize the results:
+summary(tliOut)
+```
+
+Constraining the item intercepts allows us to freely estimate the latent means
+in the second and third groups.
+
+```{r}
+## Check the model fit:
+fitMeasures(tliOut, s4)
+```
+
+The strongly invariant model still fits very well.
+
+```{r}
+## Test threshold/loading/intercept invariance via model comparisons:
+compareFit(tlOut, 
+           tliOut, 
+           argsLRT = list(method = "satorra.bentler.2010")
+           ) %>% 
+  summary()
+```
+
+We don't lose a significant amount of fit by constraining the item intercepts in
+addition to the factor loadings and thresholds. Given our acceptance of the weakly 
+invariant model, we can claim strong invariance.
+
+---
+
+# Concluding Remarks
+
+---
+
+The only substantial differences between modeling ordinal indicators via CVM and
+modeling continuous indicators via normal-theory ML concern the measurement model. 
+So, after adapting the CFA as described above, all the structural modeling and 
+testing works pretty much as it does for ordinary normal-theory models.
+
+There are, however, two frequently applicable caveats to the above statement.
+
+1. As you've seen above, the difference in two scaled $\chi^2$ statistics is not 
+$\chi^2$ distributed. So, you must apply an appropriate correction to any 
+$\Delta \chi^2$ tests. 
+   - Fortunately, these corrections are applied automatically when you conduct 
+   the tests with `anova()`, `lavTestLRT()`, or `compareFit()`.
+1. The WLS and DWLS estimators cannot handle missing data (i.e., there is no WLS 
+analog to FIML). So, you must treat any missing prior to model estimation. With 
+FIML off the table, you should use multiple imputation (MI) unless you have a
+trivial amount of missing data (in which case a single stochastic regression 
+imputation will suffice).
+   - Again, **semTools** comes to the rescue here. The `lavaan.mi()` routines 
+   covered in Module 6 make the process of conducting the above analyses with 
+   multiply imputed data relatively painless.
+
+---
+
+End of Demonstration
+
+[outlook0]: https://doi.org/10.3886/ICPSR35348.v1
+[outlook1]: https://github.com/kylelang/lavaan-e-learning/raw/main/data/outlook.rds
