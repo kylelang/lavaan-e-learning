@@ -1,0 +1,656 @@
+---
+title: "Lab 8: Categorical Indicators" 
+subtitle: "SEM in R with lavaan"
+author: "Kyle M. Lang"
+date: "Updated: `r format(Sys.time(), format = '%Y-%m-%d')`"
+params:
+  answers: true
+output: 
+  bookdown::html_document2:
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    number_sections: true
+    df_print: paged
+    css: "../../resources/style.css"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, echo = FALSE, message = FALSE, warning = FALSE}
+library(knitr)
+library(dplyr)
+library(magrittr)
+library(ggplot2)
+
+source("../../code/supportFunctions.R")
+
+figDir <- "../figures/"
+
+set.seed(235711)
+
+## Define an asis engine that will evaluate inline code within an asis block:
+knit_engines$set(asis = function(options) {
+  if(options$echo && options$eval) knit_child(text = options$code)
+}
+)
+
+opts_chunk$set(include = params$answers, 
+               echo = params$answer, 
+               message = FALSE,
+               warning = FALSE,
+               fig.align = "center",
+               comment = NA)
+```
+
+<!-- 
+Define some hacky LaTeX commands to force nice spacing between lines    
+NOTE: These must be called within a math environment (e.g., $\va$)
+-->
+\newcommand{\va}{\\[12pt]}
+\newcommand{\vb}{\\[6pt]}
+\newcommand{\vc}{\\[3pt]}
+\newcommand{\vx}[1]{\\[#1pt]}
+
+---
+
+In this lab, you'll explore methods of doing CFA/SEM with categorical data
+using **lavaan**.
+
+---
+
+# Data
+
+---
+
+```{r, echo = FALSE}
+dataDir <- "../../data/"
+outlook <- readRDS(paste0(dataDir, "outlook.rds"))
+```
+
+
+- `Q1`: I notice changes in my body, such as whether my breathing slows down or speeds up. 
+- `Q2`: I'm good at finding the words to describe my feelings. 
+- `Q3`: When I do things, my mind wanders off and I'm easily distracted. 
+- `Q4`: I criticize myself for having irrational or inappropriate emotions. 
+- `Q5`: I pay attention to whether my muscles are tense or relaxed. 
+- `Q6`: I can easily put my beliefs, opinions, and expectations into words. 
+- `Q7`: When I'm doing something, I'm only focused on what I'm doing, nothing else. 
+- `Q8`: I tend to evaluate whether my perceptions are right or wrong. 
+- `Q9`: When I'm walking, I deliberately notice the sensations of my body moving. 
+- `Q10`: I'm good at thinking of words to express my perceptions, such as how things taste, smell, or sound. 
+- `Q11`: I drive on "automatic pilot" without paying attention to what I'm doing. 
+- `Q12`: I tell myself that I shouldn't be feeling the way I'm feeling. 
+- `Q13`: When I take a shower or bath, I stay alert to the sensations of water on my body. 
+- `Q14`: It's hard for me to find the words to describe what I'm thinking. 
+- `Q15`: When I'm reading, I focus all my attention on what I'm reading. 
+- `Q16`: I believe some of my thoughts are abnormal or bad and I shouldn't think that way.  
+- `Q17`: I notice how foods and drinks affect my thoughts, bodily sensations, and emotions. 
+- `Q18`: I have trouble thinking of the right words to express how I feel about things. 
+- `Q19`: When I do things, I get totally wrapped up in them and don't think about anything else. 
+- `Q20`: I make judgments about whether my thoughts are good or bad. 
+- `Q21`: I pay attention to sensations, such as the wind in my hair or sun on my face
+- `Q22`: When I have a sensation in my body, it's difficult for me to describe it because I cant find the right words. 
+- `Q23`: I don't pay attention to what I'm doing because I'm daydreaming, worrying, or otherwise distracted. 
+- `Q24`: I tend to make judgments about how worthwhile or worthless my experiences are. 
+- `Q25`: I pay attention to sounds, such as clocks ticking, birds chirping, or cars passing. 
+- `Q26`: Even when I'm feeling terribly upset, I can find a way to put it into words. 
+- `Q27`: When I'm doing chores, such as cleaning or laundry, I tend to daydream or think of other things. 
+- `Q28`: I tell myself that I shouldn't be thinking the way I'm thinking. 
+- `Q29`: I notice the smells and aromas of things. 
+- `Q30`: I intentionally stay aware of my feelings. 
+- `Q31`: I tend to do several things at once rather than focusing on one thing at a time. 
+- `Q32`: I think some of my emotions are bad or inappropriate and I shouldn't feel them. 
+- `Q33`: I notice visual elements in art or nature, such as colors, shapes, textures, or patterns of light and shadow. 
+- `Q34`: My natural tendency is to put my experiences into words. 
+- `Q35`: When I'm working on something, part of my mind is occupied with other topics, such as what I'll be doing later, or things I'd rather be doing. 
+- `Q36`: I disapprove of myself when I have irrational ideas. 
+- `Q37`: I pay attention to how my emotions affect my thoughts and behavior. 
+- `Q38`: I get completely absorbed in what I'm doing, so that all my attention is focused on it. 
+- `Q39`: I notice when my moods begin to change.
+
+
+We will revisit the synthetic [*Outlook on Life Survey*][outlook0] data 
+from Lab 5. Recall that the original data were collected in the United States in 
+2012 to measure, among other things, attitudes about racial issues, opinions of 
+the Federal government, and beliefs about the future.
+
+We will again work with a synthesized subset of the original data. You can access
+these synthetic data as [*outlook.rds*][outlook1]. This dataset comprises 
+`r nrow(outlook)` observations of the following `r ncol(outlook)` variables.
+
+- `d1:d3`: Three observed indicators of a construct measuring disillusionment 
+with the US Federal government.
+   - Higher scores indicate more disillusionment
+   $\vb$
+- `s1:s4`: Four observed indicators of a construct measuring the perceived 
+achievability of material success.
+   - Higher scores indicate greater perceived achievability
+   $\vb$
+- `progress`: A single item assessing perceived progress toward achieving the 
+"American Dream"
+   - Higher scores indicate greater perceived progress
+   $\vb$
+- `merit`: A single item assessing endorsement of the meritocratic ideal that 
+hard work leads to success.
+   - Higher scores indicate stronger endorsement of the meritocratic ideal
+   $\vb$
+- `lib2Con`: A single item assessing liberal-to-conservative orientation
+   - Lower scores are more liberal, higher scores are more conservative
+   $\vb$
+- `party`: A four-level factor indicating self-reported political party affiliation
+   $\vb$
+- `disillusion`: A scale score representing disillusionment with the US Federal 
+government
+   - Created as the mean of `d1:d3`
+   $\vb$
+- `success`: A scale score representing the perceived achievability of material 
+success
+   - Created as the mean of `s1:s4`
+
+---
+
+First, we'll read in the *kims.rds* dataset, and save the resulting data frame
+as `kims`.
+
+```{r, eval = FALSE}
+#dataDir <- "../data/"
+dataDir <- "data/"
+kims    <- readRDS(paste0(dataDir, "kims.rds"))
+```
+
+---
+
+Now, we'll explore our data a bit and summarize the distributions of the 
+*disillusionment* and *success* items.
+
+```{r}
+tmp <- outlook %>% select(d1:s4)
+
+head(tmp)
+summary(tmp)
+lapply(tmp, unique)
+```
+
+Clearly, these variables are not continuous and have some sort of discrete scale. 
+Although we cannot tell simply from the numeric summaries above, these items 
+represent questionnaire responses on 4- and 5-point rating scales.
+
+It would probably not be a very good idea to naively analyze these items as
+continuous indicators. Let's see how we get on with a more principled treatment.
+
+---
+
+# Categorical Variable CFA
+
+---
+
+Let's assume we want to fit the CFA model depicted in Figure \@ref(fig:cfa2). 
+The following **lavaan** model syntax will suffice to define our model.
+
+```{r}
+## Create separate strings for each constructs model, so I can mix and match:
+obsMod <- 'obs =~ Q5 + Q9  + Q13 + Q17 + Q25 + Q29 + Q30 + Q33 + Q37 + Q39'
+desMod <- 'des =~ Q6 + Q10 + Q14 + Q18 + Q22 + Q26 + Q34'
+accMod <- 'acc =~ Q8 + Q12 + Q16 + Q20 + Q24 + Q28 + Q32 + Q36'
+actMod <- 'act =~ Q7 + Q11 + Q15 + Q19 + Q23 + Q27 + Q31 + Q35 + Q38'
+
+## Paste the construct-specific strings into a single CFA syntax string:
+cfaMod <- paste(obsMod, desMod, accMod, actMod, sep = "\n")
+```
+
+---
+
+## Basic DWLS Fit
+
+```{r}
+library(lavaan)
+## Basic DWLS fit:
+fit1.1 <- cfa(cfaMod,
+              data = kims,
+              std.lv = TRUE,
+              ordered = TRUE,
+              estimator = "DWLS")
+
+summary(fit1.1)
+```
+
+---
+
+## Robust DWLS Fit
+
+Finally, we'll do things the right way by estimating the model with DWLS and using
+robust SEs and scaled fit statistics.
+
+```{r}
+## Robust DWLS fit:
+fit1.2 <- cfa(cfaMod,
+              data = kims,
+              std.lv = TRUE,
+              ordered = TRUE,
+              estimator = "WLSMV")
+
+summary(fit1.2)
+```
+
+---
+
+Notice that the parameter estimates are identical in the normal and robust versions
+of the DWLS fit since we're using the same estimator to fit both models.
+
+```{r}
+all.equal(coef(fit1.1), coef(fit1.2))
+```
+
+---
+
+The differences, of course, come into play with the standard errors and fit 
+statistics.
+
+```{r}
+## Basic DWLS estimates:
+partSummary(fit1.1, c(7:8))
+
+## Robust DWLS estimates:
+partSummary(fit1.2, c(7:8))
+```
+
+The robust SEs tend to be somewhat larger than their naive counterparts, 
+especially for the latent covariance.
+
+```{r}
+## Define a few character vectors to specify which fit indices we want:
+s1 <- c("chisq", "df", "pvalue")
+s2 <- c("cfi", 
+        "tli", 
+        "rmsea", 
+        "rmsea.ci.lower", 
+        "rmsea.ci.upper", 
+        "srmr")
+s3 <- c(paste(s1, "scaled", sep = "."),
+        paste(s2, "robust", sep = ".")
+        )
+
+## Fit statistics for the basic DWLS fit:
+fitMeasures(fit1.1, c(s1, s2))
+
+## Fit measures for the robust DWLS fit:
+fitMeasures(fit1.2, s3)
+```
+
+Likewise, the scaled/robust fit statistics/indices suggest slightly worse fit 
+than the naive versions. 
+
+---
+
+## Alternative `cfa()` Specifications
+
+When estimating the last model, we actually used a bit of a shortcut. By 
+setting `ordered = TRUE`, we tell the `cfa()` function that all of our observed
+data are ordinal (the same will hold for `lavaan()` or any of its other wrappers). 
+This approach won't work when our model also contains continuous variables. 
+Fortunately, there are two alternative means of flagging ordinal variables.
+
+---
+
+The `ordered` argument accepts a character vector containing the names of the 
+ordinal variables. 
+
+```{r}
+cfaMod <- paste(obsMod, desMod, sep = "\n")
+
+## Explicitly name the ordinal variables:
+fit1.2.1 <- cfa(cfaMod,
+                data = outlook,
+                std.lv = TRUE,
+                ordered = paste0("Q", c(6, 10, 14, 18, 22, 26, 34)),
+                estimator = "WLSMV")
+
+summary(fit1.2.1)
+```
+
+---
+
+# SEM
+
+---
+
+```{r}
+semMod <- paste(cfaMod, "act ~ obs + des + acc", sep = "\n")
+
+semFit <- sem(semMod, data = kims, ordered = TRUE, estimator = "WLSMV", std.lv = TRUE)
+summary(semFit)
+fitMeasures(semFit)
+```
+
+---
+
+```{r}
+semMod <- paste(obsMod, accMod, "acc ~ obs + age + male", sep = "\n")
+
+semFit <- mutate(kims, male = ifelse(sex == "male", 1, 0)) %>% 
+  sem(semMod, data = ., ordered = TRUE, estimator = "WLSMV", std.lv = TRUE)
+summary(semFit)
+fitMeasures(semFit)
+```
+
+---
+
+# Measurement Invariance
+
+---
+
+## Configural Invariance
+
+First, we estimate the configural invariance model by adding the grouping factor
+without placing any cross-group constraints (i.e., in the same way that we did 
+for continuous indicator models). 
+
+```{r}
+## Estimate the baseline (configurally invariant) model:
+baseOut <- cfa(model            = cfaMod,
+               data             = kims,
+               group            = "sex",
+               ordered          = TRUE,
+               estimator        = "WLSMV",
+               parameterization = "delta",
+               std.lv           = TRUE,
+               test             = "satorra.bentler")
+```
+
+Check the summary to ensure that everything looks sensible.
+
+```{r}
+summary(baseOut)
+```
+
+Check the model fit to test configural invariance.
+
+```{r}
+s4 <- paste(c(s1, s2), "scaled", sep = ".")
+
+## Check the model fit:
+fitMeasures(baseOut)
+fitMeasures(baseOut, s4)
+```
+
+The model fits well. Configural invariance holds.
+
+---
+
+## Threshold Invariance
+
+Now, we need to test threshold invariance. We do so via the same procedure we 
+would use to test invariance of factor loadings or intercepts.
+
+1. Estimate a restricted model wherein the thresholds are constrained to 
+equality across groups.
+1. Test the tenability of the constraint by comparing to the configurally 
+invariant model.
+
+We must establish threshold invariance before considering weak or strong invariance 
+because weak and strong invariance both concern paths linking the LRVs to the 
+common latent factors. We must first demonstrate, therefore, that the LRVs are 
+defined equivalently in all groups.
+
+---
+
+We can make our lives much easier by using the `measEq.syntax()` function from 
+the **semTools** package to programmatically generate the **lavaan** model syntax
+for our various restricted models.
+
+```{r}
+library(semTools)
+
+## Define the model syntax for the threshold-invariant model:
+tMod <- measEq.syntax(configural.model = cfaMod,
+                      data             = kims,
+                      ordered          = TRUE,
+                      parameterization = "delta",
+                      ID.fac           = "std.lv",
+                      ID.cat           = "Wu.Estabrook.2016",
+                      group            = "sex",
+                      group.equal      = "thresholds")
+```
+
+We can view the resulting syntax by casting the `tMod` object as a character vector
+and printing it with the `cat()` function.
+
+```{r}
+tMod %>% as.character() %>% cat()
+```
+
+---
+
+Now, we estimate the threshold invariant model. 
+
+*Notes:*
+
+- We do not need to specify anything for the `group.equal` argument because all 
+invariance constraints are defined in the model syntax we generated via 
+`measEq.syntax()`.
+- We must type cast the object returned by `measEq.syntax()` as a character vector 
+(i.e., by wrapping it with `as.character()`) to get the `cfa()` function to 
+recognize this object as model syntax.
+
+```{r}
+## Estimate the threshold-invariant model:
+tOut <- cfa(model     = as.character(tMod),
+            data      = kims,
+            group     = "sex",
+            ordered   = TRUE,
+            estimator = "WLSMV",
+            test      = "satorra.bentler")
+
+## Summarize the results:
+summary(tOut)
+```
+
+As expected, the thresholds are equal across groups. Additionally, constraining 
+the thresholds helps identify the model, so we can freely estimate the item 
+intercepts and the scales of the latent response variables in the second and 
+third groups.
+
+```{r}
+## Check the model fit:
+fitMeasures(tOut, s4)
+```
+
+The model still fits very well.
+
+---
+
+We test threshold invariance by comparing to the configurally invariant model.
+
+- The `semTools::compareFit()` function provides several different flavors of
+model comparison.
+   - Nested model $\Delta \chi^2$ test (i.e., likelihood ratio test).
+   - Differences in CFI, TLI, RMSEA, and SRMR
+- We specify `method = "satorra.bentler.2010"` via the `argsLRT` argument to get
+the most refined $\Delta \chi^2$ test.
+   - The naive difference between two scaled $\chi^2$ statistics is not $\chi^2$ 
+   distributed.
+   - The $\Delta \chi^2$ test needs to be conducted with particular corrections
+   to account for the scaled fit statistics.
+   
+```{r}
+## Test threshold invariance via model comparisons:
+compareFit(baseOut, 
+           tOut, 
+           argsLRT = list(method = "satorra.bentler.2010")
+           ) %>% 
+  summary()
+```
+
+The $\Delta \chi^2$ test is significant, so we should reject the null hypothesis 
+of invariant thresholds. We have not established threshold invariance.
+
+- The $\Delta \mathrm{CFI}$ and $\Delta \mathrm{RMSEA}$ are both quite small, but
+the methodological work evaluating measurement invariance testing with approximate 
+fit indices has not considered the robust/scaled versions of these indices. So, 
+we don't have much basis for using these indices for measurement invariance testing. 
+
+---
+
+Though we're not really justified in doing so, we'll continue with the process of
+measurement invariance testing, for didactic purposes.
+
+---
+
+## Weak Invariance
+
+After establishing threshold invariance, the next step is testing the additional 
+constraint of loading invariance (i.e., weak invariance or metric invariance).
+
+- Again, we can use the `measEq.syntax()` function to streamline the process.
+
+```{r}
+## Define the model syntax for the threshold/loading-invariant model:
+tlMod <- measEq.syntax(configural.model = cfaMod,
+                       data             = outlook,
+                       ordered          = TRUE,
+                       parameterization = "delta",
+                       ID.fac           = "std.lv",
+                       ID.cat           = "Wu.Estabrook.2016",
+                       group            = "party",
+                       group.equal      = c("thresholds", "loadings")
+                       )
+
+## Check the resulting syntax:
+tlMod %>% as.character() %>% cat()
+```
+
+---
+
+We estimate the model in the usual way.
+
+```{r}
+## Estimate the threshold/loading-invariant model:
+tlOut <- cfa(model     = as.character(tlMod),
+             data      = outlook,
+             group     = "party",
+             ordered   = TRUE,
+             estimator = "WLSMV")
+
+## Summarize the results:
+summary(tlOut)
+```
+
+Now that we've equated the factor loadings across groups, we have the additional
+identification necessary to freely estimate the latent variances in the second 
+and third groups.
+
+```{r}
+## Check the model fit:
+fitMeasures(tlOut, s4)
+```
+
+Again, model fit is still excellent.
+
+---
+
+We evaluate weak invariance by comparing back to the threshold-invariance model.
+
+```{r}
+## Test threshold/loading invariance via model comparisons:
+compareFit(tOut, 
+           tlOut, 
+           argsLRT = list(method = "satorra.bentler.2010")
+           ) %>% 
+  summary()
+```
+
+Relative to the threshold-invariant model, we haven't lost a significant amount
+of fit by equating the factor loadings across groups. Conditioning on the dubious
+threshold invariance, we can claim weak invariance.
+
+---
+
+## Strong Invariance
+
+We conclude by equating the item intercepts across groups to test strong/metric
+invariance.
+
+```{r}
+## Define the model syntax for the threshold/loading/intercept-invariant model:
+tliMod <-
+    measEq.syntax(configural.model = cfaMod,
+                  data             = outlook,
+                  ordered          = TRUE,
+                  parameterization = "delta",
+                  ID.fac           = "std.lv",
+                  ID.cat           = "Wu.Estabrook.2016",
+                  group            = "party",
+                  group.equal      = c("thresholds", "loadings", "intercepts")
+                  )
+
+## Check the syntax:
+tliMod %>% as.character() %>% cat()
+
+## Estimate the threshold/loading/intercept-invariant model:
+tliOut <- cfa(model     = as.character(tliMod),
+              data      = outlook,
+              group     = "party",
+              ordered   = TRUE,
+              estimator = "WLSMV")
+
+## Summarize the results:
+summary(tliOut)
+```
+
+Constraining the item intercepts allows us to freely estimate the latent means
+in the second and third groups.
+
+```{r}
+## Check the model fit:
+fitMeasures(tliOut, s4)
+```
+
+The strongly invariant model still fits very well.
+
+```{r}
+## Test threshold/loading/intercept invariance via model comparisons:
+compareFit(tlOut, 
+           tliOut, 
+           argsLRT = list(method = "satorra.bentler.2010")
+           ) %>% 
+  summary()
+```
+
+We don't lose a significant amount of fit by constraining the item intercepts in
+addition to the factor loadings and thresholds. Given our acceptance of the weakly 
+invariant model, we can claim strong invariance.
+
+---
+
+# Concluding Remarks
+
+---
+
+The only substantial differences between modeling ordinal indicators via CVM and
+modeling continuous indicators via normal-theory ML concern the measurement model. 
+So, after adapting the CFA as described above, all the structural modeling and 
+testing works pretty much as it does for ordinary normal-theory models.
+
+There are, however, two frequently applicable caveats to the above statement.
+
+1. As you've seen above, the difference in two scaled $\chi^2$ statistics is not 
+$\chi^2$ distributed. So, you must apply an appropriate correction to any 
+$\Delta \chi^2$ tests. 
+   - Fortunately, these corrections are applied automatically when you conduct 
+   the tests with `anova()`, `lavTestLRT()`, or `compareFit()`.
+1. The WLS and DWLS estimators cannot handle missing data (i.e., there is no WLS 
+analog to FIML). So, you must treat any missing prior to model estimation. With 
+FIML off the table, you should use multiple imputation (MI) unless you have a
+trivial amount of missing data (in which case a single stochastic regression 
+imputation will suffice).
+   - Again, **semTools** comes to the rescue here. The `lavaan.mi()` routines 
+   covered in Module 6 make the process of conducting the above analyses with 
+   multiply imputed data relatively painless.
+
+---
+
+End of Demonstration
+
+[outlook0]: https://doi.org/10.3886/ICPSR35348.v1
+[outlook1]: https://github.com/kylelang/lavaan-e-learning/raw/main/data/outlook.rds
