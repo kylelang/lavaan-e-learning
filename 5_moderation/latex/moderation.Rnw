@@ -1483,17 +1483,6 @@ partSummary(out, 7:8)
 \begin{frame}[fragile]{LMS Example}
 
 <<>>=
-partSummary(out, 8)
-@
-
-\end{frame}
-
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}[fragile]{LMS Example}
-
-<<>>=
 partSummary(out, 9)
 @
 
