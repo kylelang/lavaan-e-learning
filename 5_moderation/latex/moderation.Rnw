@@ -247,7 +247,7 @@ knit_theme$set('edit-kwrite')
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+\watermarkoff %%%------------------------------------------------------------%%%
 
 \begin{frame}{Conceptual vs. Analytic Diagrams}
   
@@ -277,7 +277,7 @@ knit_theme$set('edit-kwrite')
   
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+\watermarkon %%%-------------------------------------------------------------%%%
 
 \begin{frame}{Testing Moderation}
   
@@ -347,7 +347,7 @@ knit_theme$set('edit-kwrite')
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+\watermarkoff%-----------------------------------------------------------------%
 
 \begin{frame}{Diagrams}
   
@@ -371,7 +371,7 @@ knit_theme$set('edit-kwrite')
     
 \end{frame}
 
-\watermarkoff%-----------------------------------------------------------------%
+%%%--------------------------------------------------------------------------%%%
 
 \begin{frame}[fragile]{Example}
 
@@ -1362,22 +1362,41 @@ all.equal(dat3[colnames(products)],
   \begin{itemize}
   \item We cannot use ordinary ML estimation methods.
   \end{itemize}
-  \va
-  Three approaches seem sensible. 
+  \vb
+  Three approaches seem most sensible/promising. 
   \vc
   \begin{enumerate}
   \item Latent moderated structural equations \citep[LMS;][]{kleinEtAl:1997, 
     kleinMoosbrugger:2000}. 
     \vc
-  \item Structural-after-measurement (SAM) estimation \citep{rosseelLoh:2022}.
+  \item Structural-after-measurement \citep[SAM;][]{rosseelLoh:2022}.
     \vc
   \item Bayesian SEM. 
   \end{enumerate}
-  \va
-  Only the SAM approach is currently implemented in \pkg{lavaan}.
+  
+\end{frame}
+
+%%%--------------------------------------------------------------------------%%%
+
+\begin{frame}{Estimating Products of Latent Variables}
+  
+  Both Bayesian SEM and SAM have \pkg{lavaan} implementations.
   \vc
   \begin{itemize}
-  \item The current implementation cannot probably handle latent variable interactions.
+  \item The \pkg{blavaan} package \citep{blavaanJags, blavaanStan}
+    \vc
+  \item The \src{lavaan::sam()} function.
+  \end{itemize}
+  \va
+  Unfortunately, neither implementation can currently accommodate latent
+  variable interactions.
+  \vc
+  \begin{itemize}
+    \item \pkg{blavaan} won't allow you to estimate models that contain latent
+      variable interactions.
+      \vc
+    \item The current implementation of \src{sam()} does not correctly model
+      uncertainty in the interaction factors.
   \end{itemize}
   
 \end{frame}
@@ -1386,9 +1405,12 @@ all.equal(dat3[colnames(products)],
 
 \begin{frame}{Estimating Products of Latent Variables}
   
-  We can directly estimate the interaction between two latent variables with the
-  \emph{latent moderated structural equations} (LMS) method.
+  The \emph{latent moderated structural equations} (LMS) approach is currently
+  the most mature and well-implemented method of directly estimating latent
+  variable interactions.
+
   \va
+
   \begin{itemize}
   \item Introduced by \citet{kleinEtAl:1997} and formalized by
     \citet{kleinMoosbrugger:2000} 
@@ -1396,7 +1418,7 @@ all.equal(dat3[colnames(products)],
   \item Uses numerical integration to estimate the unobserved latent interaction 
     term
     \vb
-  \item Traditionally, only available in Mplus (via the \src{Xwith} command)
+  \item Traditionally, only available in MPlus (via the \src{Xwith} command)
     \vb
   \item Now available in R through \pkg{modsem} \citep{modsem}
   \end{itemize}
@@ -1541,21 +1563,18 @@ plot_interaction(model = out,
   \begin{itemize}
     \item Tends to perform the best out of all available methods
       \begin{itemize}
-        \item Though, SAM may do better
+        \item SAM may do better \citep{burghgraeve:2021}
       \end{itemize}
+    \item No need to manually construct product indicators
       \vc
-    \item No need to pre-process the data by manually computing
-      product terms
-      \vc
-    \item Pretty easy to implement in Mplus or \pkg{modsem}.
+    \item Pretty easy to implement in MPlus or \pkg{modsem}
   \end{itemize}
   \vb
   \textsc{LMS Weaknesses:}
   \begin{itemize}
-    \item The \pkg{modsem} implementation is quite limited, for now.
+    \item The \pkg{modsem} implementation is quite limited, for now
       \vc
-    \item Numerical integration is very slow and precludes calculation
-      of most fit indices
+    \item Numerical integration is slow and cannot produce most fit indices
       \vc
     \item LMS does not work with categorical observed moderators
   \end{itemize}
@@ -2020,8 +2039,8 @@ socSup$sex2 <- relevel(socSup$sex, ref = "male")
 out5  <- lm(bdi ~ tanSat * sex2, data = socSup)
 out66 <- lm(BDI ~ tangiblesat + gender, data = socsupport)
 
-p3 <- ggplot(data    = socsupport,
-             mapping = aes(x = tangiblesat, y = BDI, colour = gender)) +
+p3 <- mutate(socsupport, gender = factor(gender)) %>%
+  ggplot(mapping = aes(x = tangiblesat, y = BDI, color = gender)) +
     theme_classic() +
     theme(text = element_text(family = "Courier", size = 16))
 
@@ -2388,7 +2407,7 @@ dat1 %>%
  
 <<echo = FALSE>>=
 ## Check the simple slopes and intercepts:
-partSummary(out3, c(8, 10, 11, 14, 16, 17), c(1:9, 20, 22:31, 42))
+partSummary(out3, c(8, 10, 11, 14, 16, 17), c(1:7, 21, 22:29, 40:41))
 @ 
 
 \end{frame}
