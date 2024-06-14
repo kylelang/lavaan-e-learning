@@ -1,0 +1,1629 @@
+---
+title: "Lab 5: Moderation"
+subtitle: "Introduction to SEM with lavaan"
+author: "Kyle M. Lang"
+date: "Updated: `r format(Sys.time(), format = '%Y-%m-%d')`"
+params:
+  answers: false
+output: 
+  bookdown::html_document2:
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    number_sections: true
+    df_print: paged
+    css: "../../resources/style.css"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, echo = FALSE, message = FALSE, warning = FALSE}
+library(knitr)
+library(xtable)
+library(dplyr)
+library(magrittr)
+
+figDir <- "figures/"
+
+set.seed(235711)
+
+## Define an asis engine that will evaluate inline code within an asis block:
+knit_engines$set(asis = function(options) {
+  if(options$echo && options$eval) knit_child(text = options$code)
+}
+)
+
+params <- list(answers = TRUE) #################################################
+
+opts_chunk$set(include = params$answers, 
+               echo = params$answer, 
+               message = FALSE,
+               warning = FALSE,
+               fig.align = "center",
+               comment = NA)
+```
+
+<!-- 
+Define some hacky LaTeX commands to force nice spacing between lines    
+NOTE: These must be called within a math environment (e.g., $\va$)
+-->
+\newcommand{\va}{\\[12pt]}
+\newcommand{\vb}{\\[6pt]}
+\newcommand{\vc}{\\[3pt]}
+\newcommand{\vx}[1]{\\[#1pt]}
+
+---
+
+In this lab, you will practice moderation analysis using path analysis and SEM 
+in [**lavaan**][lavaan]. You will work with both continuous and categorical 
+moderators.
+
+---
+
+# Continuous Moderators
+
+---
+
+## Data
+
+---
+
+```{r, include = FALSE}
+dataDir <- "../data/"
+outlook <- readRDS(paste0(dataDir, "outlook.rds"))
+head(outlook)
+```
+
+We will first analyze a synthetic version of the [*Outlook on Life Survey*][outlook0]
+data. The original data were collected in the United States in 2012 to measure, 
+among other things, attitudes about racial issues, opinions of the Federal 
+government, and beliefs about the future.
+
+We will work with a synthesized subset of the original data. You can access
+these synthetic data as [*outlook.rds*][outlook1]. This dataset comprises 
+`r nrow(outlook)` observations of the following `r ncol(outlook)` variables.
+
+- `d1:d3`: Three observed indicators of a construct measuring disillusionment 
+with the US Federal government.
+   - Higher scores indicate more disillusionment
+   $\vb$
+- `s1:s4`: Four observed indicators of a construct measuring the perceived 
+achievability of material success.
+   - Higher scores indicate greater perceived achievability
+   $\vb$
+- `progress`: A single item assessing perceived progress toward achieving the 
+"American Dream"
+   - Higher scores indicate greater perceived progress
+   $\vb$
+- `merit`: A single item assessing endorsement of the meritocratic ideal that 
+hard work leads to success.
+   - Higher scores indicate stronger endorsement of the meritocratic ideal
+   $\vb$
+- `lib2Con`: A single item assessing liberal-to-conservative orientation
+   - Lower scores are more liberal, higher scores are more conservative
+   $\vb$
+- `party`: A four-level factor indicating self-reported political party affiliation
+   $\vb$
+- `disillusion`: A scale score representing disillusionment with the US Federal 
+government
+   - Created as the mean of `d1:d3`
+   $\vb$
+- `success`: A scale score representing the perceived achievability of material 
+success
+   - Created as the mean of `s1:s4`
+
+To satisfy the [access and licensing][access] conditions under which the original 
+data are distributed, the data contained in *outlook.rds* were synthesized from 
+the original variables using the methods described by [Volker and Vink (2021)][miceSyn]. 
+You can access the original data [here][outlook0], and you can access the code 
+used to process the data [here][outlook_code].
+
+---
+
+###
+
+**Read in the *outlook.rds* dataset.**
+
+```{r, eval = FALSE}
+dataDir <- "../data/"
+outlook <- readRDS(paste0(dataDir, "outlook.rds"))
+```
+
+NOTE: In the following, I will refer to these data as the *outlook data*.
+
+---
+
+###
+
+**Summarize the outlook data to get a sense of their characteristics.**
+
+```{r}
+head(outlook)
+summary(outlook)
+str(outlook)
+```
+
+---
+
+## OLS Regression
+
+---
+
+We will first consider moderation by a continuous variable. Specifically, we 
+will work with a model encoding the following relations:
+
+- Belief in the achievability of success, *success*, predicts perceived progress 
+toward the American Dream, *progress*, as the focal effect.
+- Disillusionment with the US Federal government, *disillusion* moderates the 
+*success* $\rightarrow$ *progress* effect.
+- Placement on the liberal-to-conservative continuum, *lib2Con* is partialed out 
+as a covariate.
+
+We will first estimate this model as an OLS regression model.
+
+---
+
+###
+
+**Draw the conceptual path diagram for the model described above.**
+
+```{r, echo = FALSE, out.width = "85%"}
+knitr::include_graphics(paste0(figDir, "lab5_conceptual1.png"))
+```
+
+---
+
+###
+
+**Draw the analytic path diagram for the model described above.**
+
+```{r, echo = FALSE, out.width = "85%"}
+knitr::include_graphics(paste0(figDir, "lab5_analytic1.png"))
+```
+
+---
+
+###
+
+**Write out the regression equation necessary to evaluate the moderation 
+hypothesis described above.**
+
+```{asis}
+\[
+Y_{progress} = \beta_0 + \beta_1 W_{lib2Con} + \beta_2 X_{success} + \beta_3 Z_{disillusion} + \beta_4 XZ + \varepsilon
+\]
+```
+
+---
+
+### {#olsFit}
+
+**Estimate the moderated regression model via OLS regression.**
+
+- Use the `lm()` function to estimate the model.
+
+```{r}
+olsFit <- lm(progress ~ lib2Con + success * disillusion, data = outlook)
+```
+
+---
+
+### 
+
+**Summarize the fitted model and interpret the results.**
+
+- Is the moderation hypothesis supported?
+- How does disillusionment level affect the focal effect?
+
+```{r}
+summary(olsFit)
+```
+
+```{r, include = FALSE}
+tmp <- summary(olsFit)$coef
+
+b  <- tmp["success:disillusion", "Estimate"] %>% round(3)
+t  <- tmp["success:disillusion", "t value"] %>% round(3)
+df <- olsFit$df.residual
+p  <- tmp["success:disillusion", "Pr(>|t|)"] %>% round(3)
+```
+
+```{asis}
+Yes, *disillusion* significantly moderates the relation between *success* and 
+*progress* (
+$\beta = `r b`$, $t(`r df`) = `r t`$, $p = `r p`$
+) such that the effect of *success* on *progress* increases as levels of 
+*disillusion* increase, after controlling for *lib2Con*.
+```
+
+---
+
+The [**rockchalk**][rockchalk] package contains some useful routines for probing
+interactions estimated via `lm()`. Specifically, the `plotslopes()` function will
+estimate and plot simple slopes, and the `testSlopes()` function tests the simple
+slopes estimated by `plotSlopes()`.
+
+---
+
+### {#ssOls}
+
+**Probe the interaction.**
+
+- Use the `plotSlopes()` and `testSlopes()` functions from the **rockchalk** 
+package to conduct a simple slopes analysis for the model from \@ref(olsFit).
+
+```{r}
+library(rockchalk)
+
+## Estimate and plot simple slopes:
+psOut <- plotSlopes(olsFit,
+                    plotx    = "success", 
+                    modx     = "disillusion",
+                    modxVals = "std.dev")
+
+## Test the simple slopes:
+tsOut <- testSlopes(psOut)
+
+## View the results:
+tsOut$hypotests
+```
+
+```{asis}
+NOTE: The message printed by `testSlopes()` gives the boundaries of the 
+*Johnson-Neyman Region of Significance* ([Johnson & Neyman, 1936)][jn]. 
+Johnson-Neyman analysis is an alternative method of probing interactions that we 
+have not covered in this course. For more information, check out 
+[Preacher, et al. (2006)][preacher_et_al_2006].
+```
+
+---
+
+## Path Analysis
+
+---
+
+We will now use **lavaan** to estimate the moderated regression model from above 
+as a path analysis model.
+
+---
+
+###
+
+**Define the model syntax for the path analytic version of the model described above.**
+
+- Parameterize the model as in the OLS regression.
+- Use only observed items and scale scores. Do not define any latent variables.
+   
+```{r}
+pathMod <- '
+progress ~ 1 + lib2Con + success + disillusion + success:disillusion
+'
+```
+
+---
+
+### {#pathFit}
+
+**Estimate the path model on the outlook data.**
+
+```{r}
+library(lavaan)
+
+pathFit <- sem(pathMod, data = outlook)
+```
+
+---
+
+### 
+
+**Summarize the fitted path model and interpret the results.**
+
+- Do the results match the OLS regression results?
+
+```{r}
+summary(pathFit)
+```
+
+```{asis}
+Yes, the estimates and inferential conclusions are all the same as in the OLS 
+regression model.
+```
+
+---
+
+The [**semTools**][semTools] package contains some helpful routines for probing 
+interactions estimated via the `lavaan()` function (or one of it's wrappers). 
+Specifically, the `probe2WayMC()` and `plotProbe()` functions will estimate/test 
+simple slopes and plot the estimated simple slopes, respectively.
+
+---
+
+###
+
+**Probe the interaction from \@ref(pathFit) using *semTools* utilities.**
+
+- Use `probe2WayMC()` to estimate and test the simple slopes and intercepts.
+- Use `plotProbe()` to visualize the simple slopes.
+- Define the simple slopes with the same conditional values of *disillusion* 
+that you used in \@ref(ssOls). 
+- Which simple slopes are significant?
+- Do these results match the results from \@ref(ssOls)?
+
+```{r}
+library(semTools)
+  
+## Compute simple slopes and intercepts:
+ssOut <- probe2WayMC(pathFit, 
+                     nameX    = c("success", "disillusion", "success:disillusion"), 
+                     nameY    = "progress", 
+                     modVar   = "disillusion",
+                     valProbe = outlook %>% 
+                       summarise("m-sd" = mean(disillusion) - sd(disillusion),
+                                 mean = mean(disillusion),
+                                 "m+sd" = mean(disillusion) + sd(disillusion)
+                                 ) %>% 
+                       unlist()
+                     )
+
+## Check the results:
+ssOut
+
+## Visualize the simple slopes:
+plotProbe(ssOut,
+          xlim = range(outlook$success), 
+          xlab = "Ease of Personal Success", 
+          ylab = "Progress toward American Dream",
+          legendArgs = list(legend = rownames(ssOut[[1]]))
+          )
+```
+
+```{asis}
+- Each of the simple slopes is significant. As level of disillusionment increases, 
+the effect of *success* on *progress* also increases, and this effect is 
+significant for all levels of *disillusion* considered here.
+- Yes, these results match the simple slopes from the OLS regression analysis.
+```
+
+---
+
+## Double Mean Centering
+
+---
+
+In this section and the next, we will test the above moderation hypothesis using 
+latent variables and interactions therebetween. We will define these interaction
+factors using products of the observed indicators.
+
+In this section, we will create the interaction factor using the *Double Mean 
+Centering* method.
+
+---
+
+###
+
+**Define the model syntax for the CFA.**
+
+- Indicated the *success* factor from the four relevant scale items: 
+   - `s1:s4`
+- Indicated the *disillusionment* factor from the three relevant scale items:
+   - `d1:d3`
+- Do not include the interaction factor.
+
+```{r}
+cfaMod <- '
+success      =~ s1 + s2 + s3 + s4
+disillusion  =~ d1 + d2 + d3
+'
+```
+
+---
+
+###
+
+**Estimate the CFA model on the outlook data.**
+
+- Correlate the latent factors.
+- Estimate the mean structure.
+- Set the scale by standardizing the latent factors.
+
+```{r}
+library(dplyr)
+
+## Use a dplyr pipeline to remove scale scores before estimating the CFA:
+cfaFit <- outlook %>% 
+  select(-success, -disillusion) %>%
+  cfa(cfaMod, data = ., std.lv = TRUE, meanstructure = TRUE)
+```
+
+---
+
+### 
+
+**Summarize the fitted CFA and check the model fit.**
+
+- Do the parameter estimates look sensible?
+- Does the model fit the data well enough?
+
+```{r}
+summary(cfaFit)
+fitMeasures(cfaFit)
+```
+
+```{asis}
+This model looks good. All measurement model parameters seem reasonable, and the 
+model fits the data very well.
+```
+
+---
+
+###
+
+**Compute product indicators for the interaction construct.**
+
+- Use the Double Mean Centering method to create the product indicators.
+- Create all possible product terms (i.e., don't use the matched-pairs approach).
+
+*HINT*: The **semTools**::`indProd()` function can be a huge help here.
+
+```{r}
+outlook2 <- indProd(data      = outlook,
+                    var1      = paste0("s", 1:4),
+                    var2      = paste0("d", 1:3),
+                    match     = FALSE,
+                    meanC     = TRUE,
+                    doubleMC  = TRUE,
+                    residualC = FALSE)
+
+```
+
+---
+
+###
+
+**Define the model syntax for the structural model.**
+
+- Include the *progress* and *lib2Con* variables as single observed items.
+- Estimate the intercept of the latent regression model.
+- Don't forget to include the residual correlations for the product indicators.
+
+```{r}
+## Define only the new syntax pieces:
+semMod <- '
+## Define the interaction factor:
+interact =~ s1.d1 + s1.d2 + s1.d3
+interact =~ s2.d1 + s2.d2 + s2.d3
+interact =~ s3.d1 + s3.d2 + s3.d3
+interact =~ s4.d1 + s4.d2 + s4.d3
+
+## Correlated residuals for product terms involving the same item:
+s1.d1 ~~ s1.d2 + s1.d3 + s2.d1 + s3.d1 + s4.d1
+s2.d1 ~~ s2.d2 + s2.d3 + s3.d1 + s4.d1
+s3.d1 ~~ s3.d2 + s3.d3 + s4.d1
+s4.d1 ~~ s4.d2 + s4.d3
+
+s1.d2 ~~ s1.d3 + s2.d2 + s3.d2 + s4.d2
+s2.d2 ~~ s2.d3 + s3.d2 + s4.d2
+s3.d2 ~~ s3.d3 + s4.d2
+s4.d2 ~~ s4.d3
+
+s1.d3 ~~ s2.d3 + s3.d3 + s4.d3
+s2.d3 ~~ s3.d3 + s4.d3
+s3.d3 ~~ s4.d3
+
+## Define the structural relations:
+progress ~ 1 + lib2Con + success + disillusion + interact
+'
+
+## Paste the new syntax onto the CFA syntax:
+semMod <- paste(cfaMod, semMod, sep = '\n')
+```
+
+---
+
+###
+
+**Estimate the structural model.**
+
+```{r}
+semFit <- outlook2 %>%
+  select(-success, -disillusion) %>%
+  sem(semMod, data = ., std.lv = TRUE)
+```
+
+---
+
+###
+
+**Summarize and interpret the results.**
+
+- Is the moderation hypothesis supported?
+- Do the results differ from the path analysis version?
+
+```{r}
+summary(semFit)
+```
+
+```{r, include = FALSE}
+tmp <- parameterEstimates(semFit) %>% filter(op == "~" & rhs == "interact")
+
+b <- tmp$est %>% round(3)
+z <- tmp$z %>% round(2)
+p <- tmp$pvalue %>% round(3)
+```
+
+```{asis}
+- Yes, the moderation hypothesis is supported. The level of *disillusion* 
+significantly affects the *success* to *progress* effect (
+$\beta = `r b`$, $z = `r z`$, $p = `r p`$
+).
+- The inference is the same as in the path analysis, but the moderation effect 
+is more significant (i.e., has a smaller p-value) here.
+```
+
+---
+
+###
+
+**Probe the interaction.**
+
+- Use `probe2WayMC()` to estimate and test the simple slopes.
+- Use `plotProbe()` to visualize the simple slopes.
+
+```{r}
+ssOut <- probe2WayMC(semFit,
+                     nameX    = c("success", "disillusion", "interact"),
+                     nameY    = "progress",
+                     modVar   = "disillusion",
+                     valProbe = c(-1, 0, 1)
+                     )
+
+ssOut
+
+plotProbe(ssOut, 
+          xlim = c(-3, 3),   
+          xlab = "Ease of Personal Success", 
+          ylab = "Progress toward American Dream")
+```
+
+---
+
+## Residual Centering
+
+---
+
+Now, we will conduct the same analysis using the *Residual Centering* approach 
+to define the interaction factor.
+
+---
+
+###
+
+**Compute product indicators for the interaction construct.**
+
+- Use the Residual Centering method (a.k.a., Orthogonalization) to create the 
+product indicators.
+- Create all possible product terms (i.e., don't use the matched-pairs approach).
+
+```{r}
+outlook2 <- indProd(data      = outlook,
+                    var1      = paste0("s", 1:4),
+                    var2      = paste0("d", 1:3),
+                    match     = FALSE,
+                    meanC     = FALSE,
+                    doubleMC  = FALSE,
+                    residualC = TRUE)
+```
+
+---
+
+###
+
+**Define the model syntax for the structural model.**
+
+- Include the *progress* and *lib2Con* variables as single observed items.
+- Estimate the intercept of the latent regression model.
+
+```{r}
+## We only need to add commands to fix the covariance between the interaction
+## factor and its constituent factors.
+semMod <- paste(semMod,
+                'success     ~~ 0 * interact',
+                'disillusion ~~ 0 * interact',
+                sep = '\n')
+```
+
+---
+
+###
+
+**Estimate the structural model.**
+
+```{r}
+semFit <- outlook2 %>%
+  select(-success, -disillusion) %>%
+  sem(semMod, data = ., std.lv = TRUE)
+```
+
+---
+
+###
+
+**Summarize and interpret the results.**
+
+- Is the moderation hypothesis supported?
+- Do the results differ from the double mean centered version?
+
+```{r}
+summary(semFit)
+```
+
+```{r, include = FALSE}
+tmp <- parameterEstimates(semFit) %>% filter(op == "~" & rhs == "interact")
+
+b <- tmp$est %>% round(3)
+z <- tmp$z %>% round(2)
+p <- tmp$pvalue %>% round(3)
+```
+
+```{asis}
+- Yes, the moderation hypothesis is supported. The level of *disillusion* 
+significantly affects the *success* to *progress* effect (
+$\beta = `r b`$, $z = `r z`$, $p = `r p`$
+).
+- The inference is the same as in the double mean centered version, but the 
+moderation effect is slightly smaller and less significant (i.e., has a larger
+p-value) here.
+```
+
+---
+
+When we define the interaction construct using residual centering, we can use
+the `probe2WayRC()` function from **semTools** to conduct the simple slopes
+analysis. As before, we can subsequently visualize the simple slopes using the 
+`plotProbe()` function.
+
+---
+
+###
+
+**Probe the interaction.**
+
+- Use `probe2WayRC()` to estimate and test simple slopes and intercepts.
+- Use `plotProbe()` to visualize the simple slopes.
+
+```{r}
+ssOut <- probe2WayRC(semFit,
+                     nameX    = c("success", "disillusion", "interact"),
+                     nameY    = "progress",
+                     modVar   = "disillusion",
+                     valProbe = c(-1, 0, 1)
+                     )
+
+ssOut
+
+plotProbe(ssOut, 
+          xlim = c(-3, 3),   
+          xlab = "Ease of Personal Success", 
+          ylab = "Progress toward American Dream")
+```
+
+---
+
+## Latent Moderated Structural Equations
+
+---
+
+Finally, we will conduct the analysis one more time using the *LMS* approach 
+to define the interaction factor.
+
+---
+
+###
+
+**Define the model syntax for the structural model.**
+
+- Include the *progress* and *lib2Con* variables as single observed items.
+- Estimate the intercept of the latent regression model.
+
+```{r}
+## We'll just paste the latent regression syntax onto our existing CFA syntax:
+semMod <- paste(cfaMod,
+                'progress ~ success + disillusion + success:disillusion',
+                sep = '\n')
+semMod <- paste(cfaMod,
+                'progress ~ lib2Con + success + disillusion',
+                sep = '\n')
+```
+
+---
+
+###
+
+**Estimate the structural model.**
+
+- Use the `modsem::modsem()` function.
+- Other than the `method` argument, use all the default arguments.
+
+```{r}
+library(modsem)
+
+semFit <- outlook2 %>%
+  select(-success, -disillusion) %>%
+  modsem(semMod, data = ., method = "lms")
+
+tmp <- outlook %>%
+  select(-success, -disillusion)
+cat(semMod)
+semFit <- modsem(semMod, data = tmp, method = "lms")
+semFit <- sam(semMod, data = tmp)
+summary(semFit)
+?modsem_lms_qml
+
+modsem:::specifyModelLmsQml
+```
+
+---
+
+###
+
+**Summarize and interpret the results.**
+
+- Is the moderation hypothesis supported?
+- Do the results differ from the product indicator versions?
+
+```{r}
+summary(semFit)
+```
+
+```{r, include = FALSE}
+tmp <- parameterEstimates(semFit) %>% filter(op == "~" & rhs == "interact")
+
+b <- tmp$est %>% round(3)
+z <- tmp$z %>% round(2)
+p <- tmp$pvalue %>% round(3)
+```
+
+```{asis}
+- Yes, the moderation hypothesis is supported. The level of *disillusion* 
+significantly affects the *success* to *progress* effect (
+$\beta = `r b`$, $z = `r z`$, $p = `r p`$
+).
+- The inference is the same as in the double mean centered version, but the 
+moderation effect is slightly smaller and less significant (i.e., has a larger
+p-value) here.
+```
+
+---
+
+When we define the interaction construct using residual centering, we can use
+the `probe2WayRC()` function from **semTools** to conduct the simple slopes
+analysis. As before, we can subsequently visualize the simple slopes using the 
+`plotProbe()` function.
+
+---
+
+###
+
+**Probe the interaction.**
+
+- Use `probe2WayRC()` to estimate and test simple slopes and intercepts.
+- Use `plotProbe()` to visualize the simple slopes.
+
+```{r}
+ssOut <- probe2WayRC(semFit,
+                     nameX    = c("success", "disillusion", "interact"),
+                     nameY    = "progress",
+                     modVar   = "disillusion",
+                     valProbe = c(-1, 0, 1)
+                     )
+
+ssOut
+
+plotProbe(ssOut, 
+          xlim = c(-3, 3),   
+          xlab = "Ease of Personal Success", 
+          ylab = "Progress toward American Dream")
+```
+
+
+---
+
+# Categorical Moderators
+
+---
+
+Now, we will move on to consider categorical moderators. That is, situations 
+wherein we hypothesize different focal effects in the different groups define by 
+some discrete moderator variable.
+
+We will first evaluate such a hypothesis using OLS regression and path analysis 
+while treating the moderator as a dummy-coded predictor. Then, we will consider 
+ways of evaluating this hypothesis when the focal effect is defined by a latent 
+regression model and the moderation is modeled via multiple-group SEM. In the 
+context of multiple-group SEM, we will consider several different ways of 
+*testing* the moderation hypothesis, given the same SEM.
+
+---
+
+## Data
+
+---
+
+```{r, include = FALSE}
+dataDir <- "../data/"
+hs <- readRDS(paste0(dataDir, "holzinger_swineford.rds"))
+```
+
+To explore moderation analysis with categorical moderators, we will go back to 
+the classic Holzinger & Swineford (1939) educational testing data. You can access 
+the dataset as [*holzinger_swineford.rds*][hs_data]. 
+
+These data contain a number of educational test scores from 7th and 8th grade 
+students in two schools. This dataset comprises `r nrow(hs)` observations of the 
+following `r ncol(hs)` variables.
+
+- `id`: Numeric ID
+$\vb$
+- `age`: Student age in years
+$\vb$
+- `sex`: Biological sex of the student
+$\vb$
+- `grade`: Grade of the student
+$\vb$
+- `school`: School at which the student was tested
+$\vb$
+- `spatial1:spatial4`: Scores on four spatial reasoning tests
+$\vb$
+- `verbal1:verbal5`: Scores on five tests of verbal ability
+$\vb$
+- `speed1:speed4`: Scores on four tests of cognitive processing speed
+$\vb$
+- `memory1:memory6`: Scores on six memory tests
+$\vb$
+- `math1:math5`: Scores on five tests of mathematical ability
+
+You can access the original version of the data via the [**MBESS**][mbess] 
+package, and you can access the code used to process the data [here][hs_code].
+
+---
+
+###
+
+**Read in the *holzinger_swineford.rds* dataset.**
+
+```{r, eval = FALSE}
+dataDir <- "../data/"
+hs      <- readRDS(paste0(dataDir, "holzinger_swineford.rds"))
+```
+
+NOTES: 
+
+1. In the following, I will refer to these data as the *HS data*.
+1. You should have already summarized the HS data at the beginning of the last 
+lab, so we won't do so again here. That being said, if you don't remember what's 
+going on in there, it may be a good idea to rerun the summaries you conducted 
+for Lab 4.
+
+---
+
+###
+
+**Run the following code to create scale scores.**
+
+The following code will use the `scoreVeryFast()` function from the 
+[**psych**][psych] package to create scale scores for the *math*, *verbal*, and 
+*memory* constructs.
+
+```{r, include = TRUE, echo = TRUE}
+## Load the 'psych' package for scoring utilities:
+library(psych)
+
+## Define the subscale mappings:
+keys <- list(math   = paste0("math", 1:5),
+             verbal = paste0("verbal", 1:5),
+             memory = paste0("memory", 1:6)
+             )
+
+## Create scale scores (i.e., mean scores):
+scores <- scoreVeryFast(keys = keys, items = hs)
+
+## Create a new dataset:
+hs2 <- data.frame(scores, sex = hs$sex)
+```
+
+---
+
+## OLS Regression
+
+---
+
+We will consider a model wherein student's sex, *sex*, moderates two focal effects:
+
+1. The effect of verbal ability, *verbal*, on mathematical ability, *math*
+1. The effect of memory ability, *memory*, on *math*
+
+We may hypothesize such a model if we believe that verbal ability and memory 
+ability are both positively associated with mathematical ability but the 
+strengths of these effects differ for boys and girls.
+
+- E.g., perhaps the effect of *verbal* on *math* is stronger for girls because 
+girls are enculturated to process information using language pathways whereas 
+boys are enculturated to process information via visio-spatial.
+
+---
+
+###
+
+**Draw the conceptual path diagram for the model described above.**
+
+```{r, echo = FALSE, out.width = "85%"}
+knitr::include_graphics(paste0(figDir, "lab5_conceptual2.png"))
+```
+
+---
+
+###
+
+**Draw the analytic path diagram for the model described above.**
+
+```{r, echo = FALSE, out.width = "85%"}
+knitr::include_graphics(paste0(figDir, "lab5_analytic2.png"))
+```
+
+---
+
+###
+
+**Write out the regression equation necessary to evaluate the moderation 
+hypothesis described above.**
+
+```{asis}
+\[
+Y_{math} = \beta_0 + \beta_1 X_{verbal} + \beta_2 W_{memory} + \beta_3 Z_{sex} + \beta_4 XZ + \beta_5 WZ + \varepsilon
+\]
+```
+
+---
+
+### {#catOls}
+
+**Use `lm()` to estimate the moderated regression model described above.**
+
+```{r}
+olsFit <- lm(math ~ verbal * sex + memory * sex, data = hs2)
+```
+
+---
+
+###
+
+**Summarize the model from \@ref(catOls) and interpret the results.**
+
+- Does the student's sex moderate the effect of verbal ability on mathematical 
+ability?
+- Does the student's sex moderate the effect of memory ability on mathematical 
+ability?
+
+```{r}
+summary(olsFit)
+```
+
+```{r, include = FALSE}
+olsCoef <- summary(olsFit)$coef
+
+b1 <- olsCoef["verbal:sexMale", "Estimate"] %>% round(3)
+t1 <- olsCoef["verbal:sexMale", "t value"] %>% round(3)
+p1 <- olsCoef["verbal:sexMale", "Pr(>|t|)"] %>% round(3)
+
+b2 <- olsCoef["sexMale:memory", "Estimate"] %>% round(3)
+t2 <- olsCoef["sexMale:memory", "t value"] %>% round(3)
+p2 <- olsCoef["sexMale:memory", "Pr(>|t|)"] %>% round(3)
+
+df <- olsFit$df.residual
+```
+
+```{asis}
+- Yes, *sex* significantly moderates the relation between *verbal* and *math* (
+$\beta = `r b1`$, $t(`r df`) = `r t1`$, $p = `r p1`$
+), after controlling for *memory* and its interaction with *sex*. 
+The effect of *verbal* on *math* is significantly smaller for boys.
+- No, *sex* does not significantly moderate the relation between *memory* and 
+*math* (
+$\beta = `r b2`$, $t(`r df`) = `r t2`$, $p = `r p2`$
+), after controlling for *verbal* and its interaction with *sex*.
+```
+
+---
+
+## Path Analysis
+
+---
+
+### {#catPath}
+
+**Rerun the analysis from \@ref(catOls) using path analysis in *lavaan*.**
+
+```{r}
+## Define the syntax for the path model:
+pathMod <- '
+math ~ 1 + verbal + memory + male + verbal:male + memory:male
+'
+
+## Use a dplyr pipeline to dummy code 'sex' and estimate the model:
+pathFit <- hs2 %>%
+    mutate(male = as.numeric(sex == "Male")) %>%
+    sem(pathMod, data = .)
+```
+
+---
+
+###
+
+**Summarize the model from \@ref(catPath) and interpret the results.**
+
+- Do the results match the findings from the OLS regression analysis?
+
+```{r}
+summary(pathFit)
+```
+
+```{r, include = FALSE}
+tmp <- parameterEstimates(pathFit) %>% filter(op == "~" & grepl(":", rhs))
+
+b <- tmp[2, "est"] %>% round(3)
+z <- tmp[2, "z"] %>% round(2)
+p <- tmp[2, "pvalue"] %>% round(3)
+```
+
+```{asis}
+- Yes, the results are largely the same as those from the OLS regression model, 
+but *sex* now significantly---if only just---moderates the *memory* to *math* 
+effect (
+$\beta = `r b`$, $z = `r z`$, $p = `r p`$
+).
+   - This difference is attributable to slightly more precise estimates in the 
+   path model. As you can see in Table \@ref(tab:seTable), the point estimates 
+   are essentially identical, but the standard errors are a little smaller in 
+   the path model.
+```
+
+```{r seTable, echo = FALSE, results = "asis"}
+data.frame(Predictor = rep(c("verbal", "memory"), 2),
+           Method = rep(c("OLS", "PA"), each = 2),
+           Estimate = c(olsCoef[5:6, 1], tmp[ , "est"]),
+           SE = c(olsCoef[5:6, 2], tmp[ , "se"])
+           ) %>% 
+  arrange(Predictor) %>%
+  kable(caption = "OLS vs. PA Comparison")
+```
+
+---
+
+## Multiple Group SEM
+
+---
+
+Now, we will evaluate the moderation hypotheses considered above using multiple 
+group SEM. By defining the *math*, *verbal*, and *memory* constructs as latent 
+variables we gain two substantial advantages over the preceding path analysis:
+
+1. We will remove measurement error from the definition of the *math*, *verbal*, 
+and *memory* variables.
+1. We will have the ability to evaluate the equivalence of these constructs' 
+measurement structure in the boys' and girls' samples.
+
+---
+
+### {#mgCFA}
+
+**Define the model syntax for the CFA.**
+
+- Indicated the *mathematical ability* factor from the five observed math test 
+scores.
+   - `math1:math5`
+- Indicated the *verbal ability* factor from the five observed verbal test scores.
+   - `verbal1:verbal5`
+- Indicated the *memory ability* factor from the six observed memory test scores.
+   - `memory1:memory6`
+
+```{r}
+cfaMod <- '
+math   =~ math1   + math2   + math3   + math4   + math5
+verbal =~ verbal1 + verbal2 + verbal3 + verbal4 + verbal5
+memory =~ memory1 + memory2 + memory3 + memory4 + memory5 + memory6
+'
+```
+
+---
+
+### {#config}
+
+**Estimate the configurally invariant CFA model using the HS data.**
+
+- Define the groups via the *sex* factor.
+- Correlate all latent factors.
+- Estimate the mean structure.
+- Set the scale by standardizing the latent variables.
+
+```{r}
+configFit <- cfa(cfaMod, data = hs, std.lv = TRUE, group = "sex")
+```
+
+---
+
+###
+
+**Summarize the model from \@ref(config) and interpret the results.**
+
+- Does the model seem sensible?
+- Does the model fit the data well enough?
+- Is configural invariance supported?
+
+```{r}
+summary(configFit)
+fitMeasures(configFit)
+```
+
+```{asis}
+Yes, the model looks good. All parameter estimates look reasonable, and the 
+model fits well. Therefore, configural invariance is supported.
+```
+
+---
+
+### {#invariance}
+
+**Test weak and strong invariance for the CFA define in \@ref(mgCFA).**
+
+- Is weak invariance supported?
+- Is strong invariance supported?
+- Based on these findings, can we proceed to testing moderation by group?
+
+*HINT*: The **semTools** functions `measEq.syntax()` and `compareFit()` can be 
+very helpful here.
+
+```{r}
+## Define the syntax for the weakly invariant model:
+weakMod <- measEq.syntax(configFit, group.equal = "loadings") %>% as.character()
+
+## Estimate the weakly invariant model:
+weakFit <- cfa(weakMod, data = hs, std.lv = TRUE, group = "sex")
+
+## Summarize the fitted weakly invariant model:
+summary(weakFit)
+fitMeasures(weakFit)
+
+## Define the syntax for the strongly invariant model:
+strongMod <- 
+  measEq.syntax(configFit, group.equal = c("loadings", "intercepts")) %>% 
+  as.character()
+
+## Estimate the strongly invariant model:
+strongFit <- cfa(strongMod, data = hs, std.lv = TRUE, group = "sex")
+
+## Summarize the fitted strongly invariant model:
+summary(strongFit)
+fitMeasures(strongFit)
+
+## Compare model fits to test weak and strong invariance:
+compareFit(configFit, weakFit, strongFit) %>% summary()
+```
+
+```{r, include = FALSE}
+tmp  <- anova(configFit, weakFit)
+chi1 <- tmp[2, 5]
+df1  <- tmp[2, 6]
+p1   <- tmp[2, 7]
+
+tmp  <- anova(weakFit, strongFit)
+chi2 <- tmp[2, 5]
+df2  <- tmp[2, 6]
+p2   <- tmp[2, 7]
+
+tmp    <- fitMeasures(configFit) - fitMeasures(weakFit)
+cfi1   <- tmp["cfi"]
+rmsea1 <- tmp["rmsea"]
+
+tmp    <- fitMeasures(weakFit) - fitMeasures(strongFit)
+cfi2   <- tmp["cfi"]
+rmsea2 <- tmp["rmsea"]
+```
+
+```{asis}
+- Weak invariance holds ($\Delta \chi^2(`r df1`) = `r round(chi1, 2)`$, 
+$p = `r round(p1, 3)`$, $\Delta CFI = `r round(cfi1, 3)`$, 
+$\Delta RMSEA > 0$)
+- Strong invariance does not hold ($\Delta \chi^2(`r df2`) = `r round(chi2, 2)`$, 
+$p < 0.0001$, $\Delta CFI = `r round(cfi2, 3)`$, 
+$\Delta RMSEA = `r round(rmsea2, 3)`$)
+- Yes, we can still test moderation with this model (and data). Although we are 
+not able to establish strong invariance, tests of moderation only consider the 
+latent regression estimates, not the latent means, so we only require weak 
+invariance.
+   - We could not use this model to evaluate hypotheses of between-group mean 
+   differences, though.
+```
+
+---
+
+### {#mgSemSyntax}
+
+**Define the syntax for the structural model.**
+
+- Regress *math* onto *verbal* and *memory*.
+- Give the $\eta_{verbal} \rightarrow \eta_{math}$ effect a unique label in each 
+group.
+- Give the $\eta_{memory} \rightarrow \eta_{math}$ effect a unique label in each 
+group.
+- Only include the intercept if you were able to establish a sufficient level of 
+measurement invariance in \@ref(invariance).
+
+```{r}
+## Paste the new line of model syntax onto the syntax for the CFA model:
+## NOTE: We only established weak invariance, so we will not estimate an 
+##       intercept for this latent regression.
+semMod <- paste(cfaMod,
+                'math ~ c(b1m, b1f) * verbal + c(b2m, b2f) * memory',
+                  sep = '\n')
+```
+
+### {#mgSemFit}
+
+**Estimate the unrestricted, multiple group SEM.**
+
+- Covary the *verbal* and *memory* factors.
+- Enforce whatever level of invariance constraints were supported by the analysis
+in \@ref(invariance).
+- Only estimate the mean structure if you were able to establish a sufficient 
+level of measurement invariance in \@ref(invariance).
+- Set the scale by standardizing the latent variables.
+
+```{r}
+## NOTE: We only established weak invariance, so we will not equate the item 
+##       intercepts across groups nor estimate a mean structure.
+semFit <- sem(semMod, 
+              data        = hs, 
+              std.lv      = TRUE, 
+              group       = "sex", 
+              group.equal = "loadings")
+
+## Check the results:
+summary(semFit)
+```
+
+---
+
+## Testing for Moderation
+
+---
+
+The unrestricted SEM we fit in \@ref(mgSemFit) directly estimates unique focal
+effects in each group. In other words, this model allows *sex* to fully moderate 
+the $\eta_{verbal} \rightarrow \eta_{math}$ effect and the 
+$\eta_{memory} \rightarrow \eta_{math}$ effect and directly estimates all the 
+simple slopes for these two focal effects.
+
+We cannot directly test for moderation using only the unrestricted SEM, but we 
+have several different options for conducting such a test. In the next several 
+questions, we will explore three of these options.
+
+---
+
+One of the simplest ways to test the moderation hypotheses we're considering here
+is to define a new parameter that represents the difference between the simple 
+slopes (i.e., the group-specific focal effect estimates). Testing the null 
+hypothesis that this difference is zero is also a test of moderation. Rejecting 
+the null hypothesis implies significantly different focal effects between groups, 
+hence moderation by group.
+
+---
+
+### {#defParTest}
+
+**Test for moderation using defined parameters.**
+
+- Modify the model syntax from \@ref(mgSemSyntax) by including two defined 
+parameters.
+   1. The first defined parameter should quantify the moderating effect of *sex* 
+   on the $\eta_{verbal} \rightarrow \eta_{math}$ effect. 
+   1. The second defined parameter should quantify the moderating effect of *sex*
+   on the $\eta_{memory} \rightarrow \eta_{math}$ effect.
+- Evaluate these two moderation hypotheses via the normal-theory z-tests of the
+defined parameters.
+- Are the hypotheses supported?
+- Are we violating any of the assumptions of the above z-tests by using them to 
+test differences between two slopes? Are the inferences based on these tests 
+valid?
+
+```{r}
+## Add defined parameters to the SEM syntax:
+semMod2 <- paste(semMod,
+                 'verbalDiff := b1f - b1m',
+                 'memoryDiff := b2f - b2m',
+                 sep = '\n')
+
+## Estimate the model with the defined parameters:
+semFit2 <- sem(semMod2,
+               data        = hs,
+               std.lv      = TRUE,
+               group       = "sex",
+               group.equal = "loadings")
+
+## Summarize the fitted model:
+summary(semFit2)
+```
+
+```{r, include = FALSE}
+tmp <- parameterEstimates(semFit2) %>% 
+  filter(label %in% c("verbalDiff", "memoryDiff"))
+
+est1 <- tmp[1, "est"]
+est2 <- tmp[2, "est"]
+z1 <- tmp[1, "z"]
+z2 <- tmp[2, "z"]
+p1 <- tmp[1, "pvalue"]
+p2 <- tmp[2, "pvalue"]
+```
+
+```{asis}
+- Yes, *sex* significantly moderates the effect of *verbal* on *math* (
+$\Delta \beta = `r round(est1, 3)`$, $z = `r round(z1, 2)`$, $p = `r round(p1, 3)`$
+)
+- No, *sex* does not significantly moderate the effect of *memory* on *math* (
+$\Delta \beta = `r round(est2, 3)`$, $z = `r round(z2, 2)`$, $p = `r round(p2, 3)`$
+)
+- These results are valid; we are not violating any assumptions of the z-test.
+The simple slopes are normally distributed in each group, so their difference
+is also normally distributed.
+```
+
+---
+
+We can also test these types of moderation hypotheses using multivariate Wald
+tests to evaluate the relevant equality constraints. In **lavaan**, we can use 
+the `lavTestWald()` function to implement such tests directly on the fitted, 
+unrestricted SEM.
+
+---
+
+### {#waldTest}
+
+**Rerun the analysis from \@ref(defParTest) using the `lavTestWald()` function.**
+
+- Run the tests using the fitted model from \@ref(mgSemFit).
+- Test each moderation hypothesis independently.
+- Are the moderation hypotheses supported from these tests?
+
+```{r}
+(verbalWald <- lavTestWald(semFit, 'b1m == b1f'))
+(memoryWald <- lavTestWald(semFit, 'b2m == b2f'))
+```
+
+
+```{asis}
+- Yes, *sex* significantly moderates the effect of *verbal* on *math* (
+$z = `r round(verbalWald$stat, 2)`$, $p = `r round(verbalWald$p.value, 3)`$
+)
+- No, *sex* does not significantly moderate the effect of *memory* on *math* (
+$z = `r round(memoryWald$stat, 2)`$, $p = `r round(memoryWald$p.value, 3)`$
+)
+```
+
+---
+
+###
+
+**Compare the results from \@ref(defParTest) and \@ref(waldTest).**
+
+- Do the tests agree?
+- What do you notice about the estimates associated with each test (e.g., test 
+statistics, p-values)?
+
+```{r}
+## Compare p-values:
+parameterEstimates(semFit2) %>% 
+  filter(label %in% c("verbalDiff", "memoryDiff")) %>%
+  select(label, pvalue)
+
+verbalWald$p.value
+memoryWald$p.value
+
+## Compare test statistics:
+parameterEstimates(semFit2) %>% 
+  filter(label %in% c("verbalDiff", "memoryDiff")) %>%
+  select(label, z)
+
+verbalWald$stat %>% sqrt()
+memoryWald$stat %>% sqrt()
+```
+
+```{asis}
+Yes, both tests agree and produce identical p-values. Furthermore, the Wald 
+test statistics are equal to the square of the z-statistics for the defined 
+parameters.
+```
+
+---
+
+The final option we will consider is the likelihood ratio test (i.e., 
+$\Delta \chi^2$ test). Testing moderation via a likelihood ratio test involves 
+two steps:
+
+1. Estimate a restricted model wherein the relevant simple slopes are equated 
+across groups
+1. Evaluate the tenability of these constraints via a likelihood ratio test
+
+---
+
+###
+
+**Test the moderation hypotheses using likelihood ratio tests.**
+
+- Define restricted models by modifying the unrestricted SEM syntax from 
+\@ref(mgSemSyntax) to introduce the appropriate equality constraints.
+- Test each moderation hypothesis independently.
+- Are the moderation hypotheses supported from these tests?
+
+```{asis}
+**Option 1**
+```
+
+```{r}
+## Add equality constraints to the unrestricted SEM syntax:
+semMod3.1 <- paste(semMod, 'b1m == b1f', sep = '\n')
+semMod3.2 <- paste(semMod, 'b2m == b2f', sep = '\n')
+
+## Estimate the restricted models:
+semFit3.1 <- sem(semMod3.1,
+                 data        = hs,
+                 std.lv      = TRUE,
+                 group       = "sex",
+                 group.equal = "loadings")
+semFit3.2 <- sem(semMod3.2,
+                 data        = hs,
+                 std.lv      = TRUE,
+                 group       = "sex",
+                 group.equal = "loadings")
+
+## Check the results:
+summary(semFit3.1)
+summary(semFit3.2)
+
+## Test for moderation of the verbal effect via a LRT:
+anova(semFit, semFit3.1)
+
+## Test for moderation of the memory effect via a LRT:
+anova(semFit, semFit3.2)
+```
+
+```{asis}
+**Option 2**
+```
+
+```{r}
+## Constrain the parameters by assigning the same labels:
+semMod4.1 <- gsub("b1m|b1f", "b1", semMod)
+semMod4.2 <- gsub("b2m|b2f", "b2", semMod)
+  
+## Estimate the restricted models:
+semFit4.1 <- sem(semMod4.1,
+                 data        = hs,
+                 std.lv      = TRUE,
+                 group       = "sex",
+                 group.equal = "loadings")
+semFit4.2 <- sem(semMod4.2,
+                 data        = hs,
+                 std.lv      = TRUE,
+                 group       = "sex",
+                 group.equal = "loadings")
+
+## Check the results:
+summary(semFit4.1)
+summary(semFit4.2)
+
+## Test for moderation of the verbal effect via a LRT:
+(a1 <- anova(semFit, semFit4.1))
+
+## Test for moderation of the memory effect via a LRT:
+(a2 <- anova(semFit, semFit4.2))
+```
+
+```{asis}
+- Yes, *sex* significantly moderates the effect of *verbal* on *math* (
+$\Delta \chi^2(`r a1[2, 6]`) = `r round(a1[2, 5], 2)`$, $p = `r round(a1[2, 7], 3)`$
+)
+- No, *sex* does not significantly moderate the effect of *memory* on *math* (
+$\Delta \chi^2(`r a2[2, 6]`) = `r round(a2[2, 5], 2)`$, $p = `r round(a2[2, 7], 3)`$
+)
+```
+
+---
+
+## Simple Slopes
+
+---
+
+###
+
+**Conduct a simple slope analysis using the multiple-group SEM.**
+
+- How many meaningful simple slopes can we define based on the moderation 
+hypotheses considered in this section?
+- Which of these simple slopes are statistically significant?
+- Briefly interpret the patterns of simple slopes.
+
+```{asis}
+**Answers:**
+
+We can pull the simple slopes directly from the estimated, unrestricted SEM. 
+Each group-specific estimate of a focal effect is, by definition, a simple slope. 
+We have:
+
+- 2 focal effects (i.e., the effects of *verbal* and *memory* on *math*)
+- 2 groups defined by the moderator (i.e., boys and girls)
+
+So, we can define 4 meaningful simple slopes.
+```
+
+```{r ssTable, echo = FALSE, results = "asis"}
+tab <- parameterEstimates(semFit, ci = FALSE) %>% 
+  filter(label %in% c("b1f", "b1m", "b2f", "b2m")) %>%
+  select(-block, -label, -se) %>% 
+  mutate(group = case_when(group == 1 ~ "M", 
+                           group == 2 ~ "F")
+         )
+
+tmp <- tab[1:3] %>% apply(1, paste, collapse = " ")
+
+rownames(tab) <- paste(tmp, tab$group, sep = " | ")
+
+tab %>% 
+  rename(Estimate = est, Z = z, P = pvalue) %>% 
+  mutate(P = case_when(P < 0.001 ~ "< 0.001", 
+                       TRUE ~ as.character(P)
+                       )
+         ) %>%
+  select(-c(1:4)) %>% 
+  kable(digits = c(3, 2, 3),
+        align = "r",  
+        caption = "Simple Slopes")
+```
+
+```{asis}
+As shown in Table \@ref(tab:ssTable), all four simple slopes are statistically 
+significant and positive. So, verbal ability and memory ability are significant 
+predictors of math ability for both boys and girls. That being said, we can see 
+some differences in the influence of the focal predictors between the two groups.
+
+Verbal ability seems to be a substantially stronger predictor of mathematical 
+ability for girls than for boys. Since *sex* significantly moderated the effect 
+of *verbal* on *math*, we can infer a true, population-level difference in these 
+simple slopes.
+
+In terms of a qualitative comparison of the estimated simple slopes, we see the 
+opposite pattern for the effect of *memory* on *math*. That is, memory ability 
+seems to be a stronger predictor of mathematical ability for boys than for girls. 
+We should not make too much of this difference, though, because *sex* did not 
+significantly moderate the effect of *memory* on *math*.
+```
+
+---
+
+End of Lab 5
+
+---
+
+[lavaan]: https://cran.r-project.org/web/packages/lavaan/
+[outlook0]: https://doi.org/10.3886/ICPSR35348.v1
+[outlook1]: https://github.com/kylelang/lavaan-e-learning/raw/main/5_moderation/data/outlook.rds
+[access]: https://www.icpsr.umich.edu/web/pages/datamanagement/lifecycle/access.html
+[miceSyn]: https://doi.org/10.3390/psych3040045
+[outlook_code]: https://github.com/kylelang/lavaan-e-learning/blob/main/code/lab_prep/process_outlook_data.R
+[rockchalk]: https://cran.r-project.org/web/packages/rockchalk/index.html
+[jn]: http://www.worldcat.org/oclc/29082872
+[preacher_et_al_2006]: https://doi.org/10.3102%2F10769986031004437
+[semTools]: https://cran.r-project.org/web/packages/semTools/index.html
+[hs_data]: https://github.com/kylelang/lavaan-e-learning/raw/main/data/holzinger_swineford.rds
+[mbess]: https://cran.r-project.org/web/packages/MBESS/index.html
+[hs_code]: https://github.com/kylelang/lavaan-e-learning/blob/main/code/lab_prep/process_hs_data.R
+[psych]: https://cran.r-project.org/web/packages/psych/index.html
