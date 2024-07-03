@@ -894,13 +894,14 @@ model.path <- '
   # variances and covariances of predictors # *
   harsh + just ~~ harsh
   just ~~ just
-  # means of predictors # *
-  harsh + just ~ 1
   
   ## intercepts - if we would have mean value as input too
   ## or use meanstructure=TRUE in the lavaan function
   #maladj ~ 1
   #reject ~ 1 
+  #
+  # means of predictors # *
+  #harsh + just ~ 1
 '
 ```
 
@@ -1009,13 +1010,14 @@ model.path_check <- '
   # variances and covariances of predictors # *
   #harsh + just ~~ harsh
   #just ~~ just
-  # means of predictors # *
-  harsh + just ~ 1
   
   ## intercepts - if we would have mean value as input too
   ## or use meanstructure=TRUE in the lavaan function
   #maladj ~ 1
   #reject ~ 1 
+  #
+  # means of predictors # *
+  #harsh + just ~ 1
 '
 fit_path_check <- lavaan(model = model.path_check, 
                    sample.cov = CovMx, # Now, using a covariance matrix as input
