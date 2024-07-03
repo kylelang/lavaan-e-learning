@@ -261,7 +261,7 @@ From this one can see what type of scaling is used. Because of:
 ```{r, message=F, warning=F}
 lavInspect(fit_CFA)$lambda
 ```
-one can see that the first factor loading is not estimated, since it is fixed (to 1). Hence, the marker variable method is used.
+one can see that the first factor loading is not estimated ('Q77       0'), since it is fixed (from the estimates you can see that it is fixed to 1.000). Hence, the marker variable method is used.
 
 </details>
 
@@ -272,7 +272,7 @@ one can see that the first factor loading is not estimated, since it is fixed (t
 
 Adjust the model such that you scale in the other way. 
 
-That is, if part a) was scaled by fixing a factor loadings to 1 then free this factor loading and fix the factor variance to 1; If part a) was scaled by fixing the factor variance to 1, then free the factor variance and fix one of the factor loadings to 1.
+That is, if part a) was scaled by fixing a factor loadings to 1, then free this factor loading and fix the factor variance to 1; If part a) was scaled by fixing the factor variance to 1, then free the factor variance and fix one of the factor loadings to 1.
 
 
 <details><summary><b>Click to show answers</b></summary>
@@ -426,7 +426,7 @@ You can obtain these using the following code:
 #fitMeasures(fit_CFA) # many model fit measures
 
 #You can ask for specific model fit measures by using:
-fitMeasures(fit_CFA, c("chisq", "cfi", "tli", "rmsea","srmr")) 
+fitMeasures(fit_CFA, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea","srmr")) 
 ```
 
 Notes on Chi-square: 
@@ -445,7 +445,7 @@ Notes on Chi-square:
 
     - this means that if you have 12 parameters, you should have N=240.
 
-   Additonally, a sample size less than 100 is almost always untenable according to Kline.
+   Additionally, a sample size less than 100 is almost always untenable according to Kline.
 
 * The larger the Chi-square value, the larger the difference between the sample implied covariance matrix and the sample observed one; and the more likely you will reject your model. 
 
@@ -716,9 +716,9 @@ lavInspect(fit_1EFA)
 
 **Two-factor model**
 
-```{r, message=F, warning=F}
-# TO DO not same factor loadings as in Mplus - fit etc is the same
+<!-- # TO DO not same factor loadings as in Mplus - fit etc is the same -->
 
+```{r, message=F, warning=F}
 # Specify two-factor EFA model:
 model.2EFA <- "
  efa('block1')*F1  =~ c1 + c2 + c3 + o1 + o2 + o3
@@ -777,9 +777,10 @@ library(performance)
 compare_performance(fit_1EFA, fit_2EFA)
 ```
 
-There are more options, e.g., see the following link where fit measures are compared:
+<!-- There are more options, e.g., see the following link where fit measures are compared: -->
 
-https://solomonkurz.netlify.app/post/2021-05-11-yes-you-can-fit-an-exploratory-factor-analysis-with-lavaan/
+<!-- https://solomonkurz.netlify.app/post/2021-05-11-yes-you-can-fit-an-exploratory-factor-analysis-with-lavaan/ -->
+
 
 **Plot the results**
 
@@ -904,7 +905,7 @@ fitMeasures(fit_1CFA, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea","srmr"))
 fitMeasures(fit_2CFA, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea","srmr"))
 ```
 
-Fit measures are better for the 2-factor CFA model. Additionally, one can conclude that the 2-factor structure fits the data well: 
+The fit measures are better for the 2-factor CFA model. Additionally, one can conclude that the 2-factor structure fits the data well: 
 
 - Chi-Square Test of Model Fit is not significant, 
 
