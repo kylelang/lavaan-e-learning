@@ -393,11 +393,13 @@ mod.regr_DIY <- '
   y2 ~~ y2          # residual variance
   
   # Make it a habit to also specify:
-  #x1 + x2 ~ 1      # means predictors
+  x1 + x2 ~ 1       # means predictors - DO specify this!
   x1 + x2 ~~ x1     # (co)variance predictors 
   x2 ~~ x2          # variance x2
 '
 @
+
+Note: As opposed to what I say in the video, do specify the means for the predictors explicitly; otherwise they will be set to 0.
 
 \end{frame}
 %------------------------------------------------------------------------------%
@@ -610,7 +612,7 @@ Or: $\hat{Q77}_i = B_0 + B_1*Age_i$.
 \vspace{5mm}
 
 Regression equation (for person $i$):\\
-$Q77_i = 4.275 - 0.022*Age_i + e$, with $e \sim N(0, 1.184)$.
+$Q77_i = 4.275 - 0.022*Age_i + e_i$, with $e \sim N(0, 1.184)$.
 
 \end{frame}
 %------------------------------------------------------------------------------%
@@ -701,6 +703,8 @@ model.path <- '
   
   # variance of predictor
   Age ~~ Age
+  # mean of predictor
+  Age ~ 1
   
   ## intercepts 
   Q77  ~ 1
@@ -1188,7 +1192,7 @@ Variables (observed): Age, ReadAb, Q44, and Q63
 
 <<include=FALSE>>=
 model.sat <- '
-  # residual variances
+  # (residual) variances
   Age    ~~ Age
   ReadAb ~~ ReadAb
   Q44    ~~ Q44
@@ -1199,7 +1203,7 @@ model.sat <- '
            Q44 + Q63 ~~ ReadAb
            Q44       ~~ Q63
   
-  # intercepts and means 
+  # means and intercepts
   Age    ~ 1
   ReadAb ~ 1
   Q44    ~ 1
@@ -1273,13 +1277,13 @@ Variables: Age, ReadAb, Q44, and Q63
 
 <<include=FALSE>>=
 model.base4 <- '
-  # residual variances
+  # (residual) variances
   Age ~~ Age
   ReadAb ~~ ReadAb
   Q44 ~~ Q44
   Q63 ~~ Q63
   
-  ## intercepts 
+  ## means and intercepts
   Age ~ 1
   ReadAb ~ 1
   Q44 ~ 1
@@ -1445,14 +1449,14 @@ Variables: Age, ReadAb, Q44, Q63, and Q76.
 
 <<include=FALSE>>=
 model.base5 <- '
-  # residual variances
+  # (residual) variances
   Age ~~ Age
   ReadAb ~~ ReadAb
   Q44 ~~ Q44
   Q63 ~~ Q63
   Q76 ~~ Q76
   
-  ## intercepts 
+  ## means and intercepts
   Age ~ 1
   ReadAb ~ 1
   Q44 ~ 1
@@ -1497,12 +1501,12 @@ model.ex <- '
   # covariances
   Age ~~  ReadAb + Q44
   
-  # residual variances
+  # (residual) variances
   Age ~~ Age
   ReadAb ~~ ReadAb
   Q44 ~~ Q44
   
-  ## intercepts 
+  ## means and intercepts
   Age ~ 1
   ReadAb ~ 1
   Q44 ~ 1
@@ -1583,7 +1587,7 @@ parameterEstimates(fit.regr_fiml)[c(1,2,3),]
 %------------------------------------------------------------------------------%
 %
 \begin{frame}{Step 12}
-\Large Are you really really sure if everything went well?
+\Large Are you really really sure that everything went well?
 \end{frame}
 %------------------------------------------------------------------------------%
 %

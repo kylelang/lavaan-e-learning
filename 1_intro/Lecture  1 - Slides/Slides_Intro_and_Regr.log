@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.5.23)  6 JUL 2022 10:40
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.5.23)  2 JUL 2024 17:34
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1336,7 +1336,7 @@ File: figure/unnamed-chunk-17-1.pdf Graphic file (type pdf)
 Package pdftex.def Info: figure/unnamed-chunk-17-1.pdf  used on input line 16.
 (pdftex.def)             Requested size: 289.07999pt x 167.66272pt.
 )
-Overfull \vbox (76.00871pt too high) detected at line 698
+Overfull \vbox (76.00871pt too high) detected at line 700
  []
 
 [32
@@ -1403,7 +1403,7 @@ Overfull \hbox (7.70738pt too wide) in paragraph at lines 13--13
 <images//regression.png, id=5170, 324.558pt x 287.328pt>
 File: images//regression.png Graphic file (type png)
 <use images//regression.png>
-Package pdftex.def Info: images//regression.png  used on input line 761.
+Package pdftex.def Info: images//regression.png  used on input line 763.
 (pdftex.def)             Requested size: 192.8445pt x 170.71652pt.
  [35
 
@@ -1430,7 +1430,7 @@ Package pdftex.def Info: images//regression.png  used on input line 761.
 <images//path_model.png, id=5912, 307.64937pt x 91.84312pt>
 File: images//path_model.png Graphic file (type png)
 <use images//path_model.png>
-Package pdftex.def Info: images//path_model.png  used on input line 859.
+Package pdftex.def Info: images//path_model.png  used on input line 861.
 (pdftex.def)             Requested size: 190.62326pt x 56.9055pt.
  [40
 
@@ -1439,7 +1439,7 @@ Package pdftex.def Info: images//path_model.png  used on input line 859.
 
 
 (./Slides_Intro_and_Regr.vrb)
-Overfull \vbox (0.17935pt too high) detected at line 888
+Overfull \vbox (24.17935pt too high) detected at line 892
  []
 
 [41
@@ -1454,7 +1454,7 @@ File: figure/unnamed-chunk-26-1.pdf Graphic file (type pdf)
 Package pdftex.def Info: figure/unnamed-chunk-26-1.pdf  used on input line 15.
 (pdftex.def)             Requested size: 289.07999pt x 167.66272pt.
 )
-Overfull \vbox (60.28647pt too high) detected at line 907
+Overfull \vbox (60.28647pt too high) detected at line 911
  []
 
 [42
@@ -1462,73 +1462,20 @@ Overfull \vbox (60.28647pt too high) detected at line 907
  <./figure/unnamed-chunk-26-1.pdf>]
 \openout4 = `Slides_Intro_and_Regr.vrb'.
 
- (./Slides_Intro_and_Regr.vrb
-Overfull \hbox (2.45743pt too wide) in paragraph at lines 28--28
-[]\OT1/cmtt/m/n/10 ##    lhs op  rhs      est     se       z ci.lower ci.upper[
-] 
- []
-
-
-Overfull \hbox (2.45743pt too wide) in paragraph at lines 28--28
-[]\OT1/cmtt/m/n/10 ## 1  Q77  ~  Age   -0.021  0.001 -15.418   -0.024   -0.018[
-] 
- []
-
-
-Overfull \hbox (2.45743pt too wide) in paragraph at lines 28--28
-[]\OT1/cmtt/m/n/10 ## 2 Q196  ~  Q77    0.451  0.023  19.324    0.405    0.497[
-] 
- []
-
-
-Overfull \hbox (2.45743pt too wide) in paragraph at lines 28--28
-[]\OT1/cmtt/m/n/10 ## 3  Q77 ~~  Q77    1.179  0.067  17.479    1.047    1.312[
-] 
- []
-
-
-Overfull \hbox (2.45743pt too wide) in paragraph at lines 28--28
-[]\OT1/cmtt/m/n/10 ## 4 Q196 ~~ Q196    0.545  0.031  17.479    0.484    0.606[
-] 
- []
-
-
-Overfull \hbox (2.45743pt too wide) in paragraph at lines 28--28
-[]\OT1/cmtt/m/n/10 ## 5  Age ~~  Age 1045.794 59.833  17.479  928.523 1163.064[
-] 
- []
-
-
-Overfull \hbox (2.45743pt too wide) in paragraph at lines 28--28
-[]\OT1/cmtt/m/n/10 ## 6  Q77 ~1         4.248  0.044  96.700    4.162    4.335[
-] 
- []
-
-
-Overfull \hbox (2.45743pt too wide) in paragraph at lines 28--28
-[]\OT1/cmtt/m/n/10 ## 7 Q196 ~1         2.153  0.104  20.800    1.950    2.356[
-] 
- []
-
-
-Overfull \hbox (2.45743pt too wide) in paragraph at lines 28--28
-[]\OT1/cmtt/m/n/10 ## 8  Age ~1         0.000  0.000      NA    0.000    0.000[
-] 
- []
-
-) [43
+ (./Slides_Intro_and_Regr.vrb) [43
 
 ]
 \openout4 = `Slides_Intro_and_Regr.vrb'.
 
- (./Slides_Intro_and_Regr.vrb) [44
 
-] (./Slides_Intro_and_Regr.toc)
-[45
+(./Slides_Intro_and_Regr.vrb) [44
+
+] (./Slides_Intro_and_Regr.toc) [45
 
 ] [46
 
-] [47
+]
+[47
 
 ] [48
 
@@ -1550,16 +1497,17 @@ Overfull \hbox (2.45743pt too wide) in paragraph at lines 28--28
 <images//behind_the_scenes.png, id=8284, 379.03308pt x 544.33148pt>
 File: images//behind_the_scenes.png Graphic file (type png)
 <use images//behind_the_scenes.png>
-Package pdftex.def Info: images//behind_the_scenes.png  used on input line 1085
+Package pdftex.def Info: images//behind_the_scenes.png  used on input line 1089
 .
 (pdftex.def)             Requested size: 118.86974pt x 170.71652pt.
- [56
+
+[56
 
  <./images//behind_the_scenes.png>]
 <images//parental_advisory.png, id=8431, 723.46883pt x 545.86916pt>
 File: images//parental_advisory.png Graphic file (type png)
 <use images//parental_advisory.png>
-Package pdftex.def Info: images//parental_advisory.png  used on input line 1090
+Package pdftex.def Info: images//parental_advisory.png  used on input line 1094
 .
 (pdftex.def)             Requested size: 263.9701pt x 199.16928pt.
  [57
@@ -1567,20 +1515,21 @@ Package pdftex.def Info: images//parental_advisory.png  used on input line 1090
  <./images//parental_advisory.png>]
 \openout4 = `Slides_Intro_and_Regr.vrb'.
 
- (./Slides_Intro_and_Regr.vrb) [58
+
+(./Slides_Intro_and_Regr.vrb) [58
 
 ]
 \openout4 = `Slides_Intro_and_Regr.vrb'.
 
  (./Slides_Intro_and_Regr.vrb) [59
 
-]
-[60
+] [60
 
 ]
 \openout4 = `Slides_Intro_and_Regr.vrb'.
 
- (./Slides_Intro_and_Regr.vrb) [61
+
+(./Slides_Intro_and_Regr.vrb) [61
 
 ]
 \openout4 = `Slides_Intro_and_Regr.vrb'.
@@ -1628,13 +1577,13 @@ Package pdftex.def Info: images//parental_advisory.png  used on input line 1090
 
 ]
 LaTeX Font Info:    Font shape `OT1/cmss/b/n' in size <10> not available
-(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 1448
+(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 1452
 .
 LaTeX Font Info:    Font shape `OT1/cmss/b/n' in size <7> not available
-(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 1448
+(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 1452
 .
 LaTeX Font Info:    Font shape `OT1/cmss/b/n' in size <5> not available
-(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 1448
+(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 1452
 .
  [70
 
@@ -1642,14 +1591,14 @@ LaTeX Font Info:    Font shape `OT1/cmss/b/n' in size <5> not available
 <images//saturated4.png, id=10474, 627.873pt x 257.325pt>
 File: images//saturated4.png Graphic file (type png)
 <use images//saturated4.png>
-Package pdftex.def Info: images//saturated4.png  used on input line 1464.
+Package pdftex.def Info: images//saturated4.png  used on input line 1468.
 (pdftex.def)             Requested size: 173.56139pt x 71.13188pt.
  [71
 
  <./images//saturated4.png>]
 File: images//saturated4.png Graphic file (type png)
 <use images//saturated4.png>
-Package pdftex.def Info: images//saturated4.png  used on input line 1481.
+Package pdftex.def Info: images//saturated4.png  used on input line 1485.
 (pdftex.def)             Requested size: 173.56139pt x 71.13188pt.
 
 [72
@@ -1657,7 +1606,7 @@ Package pdftex.def Info: images//saturated4.png  used on input line 1481.
 ]
 File: images//saturated4.png Graphic file (type png)
 <use images//saturated4.png>
-Package pdftex.def Info: images//saturated4.png  used on input line 1502.
+Package pdftex.def Info: images//saturated4.png  used on input line 1506.
 (pdftex.def)             Requested size: 173.56139pt x 71.13188pt.
  [73
 
@@ -1668,7 +1617,7 @@ Package pdftex.def Info: images//saturated4.png  used on input line 1502.
 LaTeX Font Info:    Trying to load font information for OMS+cmtt on input line 
 15.
 
-(c:/Program Files/R/R-4.2.0/share/texmf/tex/latex/omscmtt.fd
+(c:/Program Files/R/R-4.3.0/share/texmf/tex/latex/omscmtt.fd
 File: omscmtt.fd 
 )
 LaTeX Font Info:    Font shape `OMS/cmtt/m/it' in size <8> not available
@@ -1768,7 +1717,7 @@ Overfull \hbox (81.20674pt too wide) in paragraph at lines 16--16
 <images//baseline5.png, id=11938, 290.613pt x 145.635pt>
 File: images//baseline5.png Graphic file (type png)
 <use images//baseline5.png>
-Package pdftex.def Info: images//baseline5.png  used on input line 1760.
+Package pdftex.def Info: images//baseline5.png  used on input line 1764.
 (pdftex.def)             Requested size: 113.55145pt x 56.9055pt.
  [81
 
@@ -1787,7 +1736,7 @@ Package pdftex.def Info: images//baseline5.png  used on input line 24.
 
 
 (./Slides_Intro_and_Regr.vrb)
-Overfull \vbox (8.51263pt too high) detected at line 1828
+Overfull \vbox (8.51263pt too high) detected at line 1832
  []
 
 [83
@@ -1848,11 +1797,7 @@ Overfull \hbox (28.7072pt too wide) in paragraph at lines 21--21
 gr_full,[] []data[] []= data_sapi,[][] 
  []
 
-)
-Overfull \vbox (20.18349pt too high) detected at line 1943
- []
-
-[89
+) [89
 
 ]
 \openout4 = `Slides_Intro_and_Regr.vrb'.
@@ -1919,15 +1864,15 @@ Overfull \hbox (7.70738pt too wide) in paragraph at lines 29--29
 <images//perfect_fit.png, id=14002, 433.839pt x 66.357pt>
 File: images//perfect_fit.png Graphic file (type png)
 <use images//perfect_fit.png>
-Package pdftex.def Info: images//perfect_fit.png  used on input line 2027.
+Package pdftex.def Info: images//perfect_fit.png  used on input line 2031.
 (pdftex.def)             Requested size: 186.02415pt x 28.45274pt.
 <images//worst_fit.png, id=14003, 415.224pt x 66.138pt>
 File: images//worst_fit.png Graphic file (type png)
 <use images//worst_fit.png>
-Package pdftex.def Info: images//worst_fit.png  used on input line 2027.
+Package pdftex.def Info: images//worst_fit.png  used on input line 2031.
 (pdftex.def)             Requested size: 178.63153pt x 28.45274pt.
 
-Overfull \hbox (13.60544pt too wide) in paragraph at lines 2027--2027
+Overfull \hbox (13.60544pt too wide) in paragraph at lines 2031--2031
 | [] 
  []
 
@@ -1937,35 +1882,35 @@ Overfull \hbox (13.60544pt too wide) in paragraph at lines 2027--2027
 <images//data_vs_model.png, id=14151, 664.884pt x 234.549pt>
 File: images//data_vs_model.png Graphic file (type png)
 <use images//data_vs_model.png>
-Package pdftex.def Info: images//data_vs_model.png  used on input line 2039.
+Package pdftex.def Info: images//data_vs_model.png  used on input line 2043.
 (pdftex.def)             Requested size: 241.9654pt x 85.35826pt.
  [96
 
  <./images//data_vs_model.png>]
 File: images//perfect_fit.png Graphic file (type png)
 <use images//perfect_fit.png>
-Package pdftex.def Info: images//perfect_fit.png  used on input line 2060.
+Package pdftex.def Info: images//perfect_fit.png  used on input line 2064.
 (pdftex.def)             Requested size: 186.02415pt x 28.45274pt.
  [97
 
 ]
 File: images//perfect_fit.png Graphic file (type png)
 <use images//perfect_fit.png>
-Package pdftex.def Info: images//perfect_fit.png  used on input line 2095.
+Package pdftex.def Info: images//perfect_fit.png  used on input line 2099.
 (pdftex.def)             Requested size: 186.02415pt x 28.45274pt.
  [98
 
 ]
 File: images//perfect_fit.png Graphic file (type png)
 <use images//perfect_fit.png>
-Package pdftex.def Info: images//perfect_fit.png  used on input line 2117.
+Package pdftex.def Info: images//perfect_fit.png  used on input line 2121.
 (pdftex.def)             Requested size: 186.02415pt x 28.45274pt.
  [99
 
 ]
 File: images//perfect_fit.png Graphic file (type png)
 <use images//perfect_fit.png>
-Package pdftex.def Info: images//perfect_fit.png  used on input line 2143.
+Package pdftex.def Info: images//perfect_fit.png  used on input line 2147.
 (pdftex.def)             Requested size: 186.02415pt x 28.45274pt.
  [100
 
@@ -1974,17 +1919,17 @@ Package pdftex.def Info: images//perfect_fit.png  used on input line 2143.
 File: images//independence_vs_model.png Graphic file (type png)
 <use images//independence_vs_model.png>
 Package pdftex.def Info: images//independence_vs_model.png  used on input line 
-2156.
+2160.
 (pdftex.def)             Requested size: 275.27751pt x 113.81102pt.
  [101
 
  <./images//independence_vs_model.png>]
 File: images//worst_fit.png Graphic file (type png)
 <use images//worst_fit.png>
-Package pdftex.def Info: images//worst_fit.png  used on input line 2188.
+Package pdftex.def Info: images//worst_fit.png  used on input line 2192.
 (pdftex.def)             Requested size: 178.63153pt x 28.45274pt.
 
-Overfull \hbox (13.60544pt too wide) in paragraph at lines 2188--2188
+Overfull \hbox (13.60544pt too wide) in paragraph at lines 2192--2192
 | [] 
  []
 
@@ -1994,7 +1939,7 @@ Overfull \hbox (13.60544pt too wide) in paragraph at lines 2188--2188
 <images//modelfit.png, id=15183, 673.425pt x 73.146pt>
 File: images//modelfit.png Graphic file (type png)
 <use images//modelfit.png>
-Package pdftex.def Info: images//modelfit.png  used on input line 2208.
+Package pdftex.def Info: images//modelfit.png  used on input line 2212.
 (pdftex.def)             Requested size: 261.9565pt x 28.45274pt.
  [103
 
@@ -2004,7 +1949,7 @@ Package pdftex.def Info: images//modelfit.png  used on input line 2208.
 <images//nesting1.png, id=15476, 655.686pt x 134.466pt>
 File: images//nesting1.png Graphic file (type png)
 <use images//nesting1.png>
-Package pdftex.def Info: images//nesting1.png  used on input line 2239.
+Package pdftex.def Info: images//nesting1.png  used on input line 2243.
 (pdftex.def)             Requested size: 277.47726pt x 56.9055pt.
  [105
 
@@ -2012,7 +1957,7 @@ Package pdftex.def Info: images//nesting1.png  used on input line 2239.
 <images//nesting2.png, id=15624, 655.686pt x 266.523pt>
 File: images//nesting2.png Graphic file (type png)
 <use images//nesting2.png>
-Package pdftex.def Info: images//nesting2.png  used on input line 2250.
+Package pdftex.def Info: images//nesting2.png  used on input line 2254.
 (pdftex.def)             Requested size: 279.99852pt x 113.81102pt.
 
 [106
@@ -2020,7 +1965,7 @@ Package pdftex.def Info: images//nesting2.png  used on input line 2250.
  <./images//nesting2.png>]
 File: images//nesting2.png Graphic file (type png)
 <use images//nesting2.png>
-Package pdftex.def Info: images//nesting2.png  used on input line 2261.
+Package pdftex.def Info: images//nesting2.png  used on input line 2265.
 (pdftex.def)             Requested size: 279.99852pt x 113.81102pt.
  [107
 
@@ -2084,7 +2029,7 @@ onts/type1/public/amsfonts/cm/cmsy9.pfb><c:/texlive/2022/texmf-dist/fonts/type1
 /public/amsfonts/cm/cmtt10.pfb><c:/texlive/2022/texmf-dist/fonts/type1/public/a
 msfonts/cm/cmtt8.pfb><c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm
 /cmtt9.pfb>
-Output written on Slides_Intro_and_Regr.pdf (112 pages, 3043240 bytes).
+Output written on Slides_Intro_and_Regr.pdf (112 pages, 3043570 bytes).
 PDF statistics:
  16817 PDF objects out of 18468 (max. 8388607)
  16314 compressed objects within 164 object streams

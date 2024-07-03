@@ -458,7 +458,10 @@ lavaan used listwise deletion and deleted 148 cases:
  -   3 cases because of missingness on the predictors.
 
 
-It is better to use, for instance, FIML, as will be discusses later in the course. Note that in this data set, the three missing predictor cases will then be used in the analyses. This small difference in sample size will most probably result in minor difference in the output.
+It is better to use, for instance, FIML, as will be discusses later in the course. 
+
+Note that in this data set, the three missing predictor cases will then be used in the analyses. This small difference in sample size will most probably result in minor difference in the output regarding the estimates. In contrast, the output regarding fit measures does change (also in case of a low amount of missing cases). For those who are interested, the reason for this is that the fit measures are now based on the joint distribution of the outcome and the predictors, while before it was based on the conditional distribution of the outcome given the predictors.
+
 
 The code to use FIML is:
 ```{r, warning = FALSE}
@@ -469,7 +472,10 @@ model.regression <- '
   #
   # (co)variances predictors # Needed for FIML
   overt + covert ~~ overt 
-  covert ~~ covert        
+  covert ~~ covert 
+  #
+  # means predictors # Needed for FIML
+  covert + overt ~ 1
 '
 fit_regr <- lavaan(model = model.regression, data = data_regr,
                        missing='fiml', fixed.x=F) # Specify FIML
@@ -479,6 +485,7 @@ Afterwards one can do the same as above. For example, to obtain output, use:
 ```{r}
 summary(fit_regr, fit.measures = TRUE, ci = TRUE, rsquare = TRUE)
 ```
+
 
 
 &nbsp;
@@ -887,6 +894,8 @@ model.path <- '
   # variances and covariances of predictors # *
   harsh + just ~~ harsh
   just ~~ just
+  # means of predictors # *
+  harsh + just ~ 1
   
   ## intercepts - if we would have mean value as input too
   ## or use meanstructure=TRUE in the lavaan function
@@ -1000,6 +1009,8 @@ model.path_check <- '
   # variances and covariances of predictors # *
   #harsh + just ~~ harsh
   #just ~~ just
+  # means of predictors # *
+  harsh + just ~ 1
   
   ## intercepts - if we would have mean value as input too
   ## or use meanstructure=TRUE in the lavaan function
