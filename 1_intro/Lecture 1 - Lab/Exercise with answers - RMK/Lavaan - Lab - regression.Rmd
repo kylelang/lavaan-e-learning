@@ -1074,7 +1074,19 @@ Note that
 
 - the variances are denoted without a ".", so just the variable name of the predictor / exogenous variable. Here: harsh and just
 
- 
+You may notice that the variances of the predictors (hars and just) differ from the sample variances (i.e., the ones in the input file); e.g., 4.514 vs 4.54. This is because of rescaling. If you want them to be the same, then use 'sample.cov.rescale = FALSE'; as is done in the code below. Notably, this does not effect the other output, like the regression estimates.
+
+```{r, message = FALSE}
+fit_path_x <- lavaan(model = model.path, 
+                         sample.cov = CovMx, 
+                         sample.cov.rescale = FALSE, # this says do not rescale
+                         sample.nobs = 175) 
+summary(fit_path_x, fit.measures = TRUE, ci = TRUE, rsquare = TRUE)
+```
+As you can see, the (residual) variances changed and the variances of the predictors now equal the ones from the sample. Additionally, the other output, like the regression parameters, did not change.  
+Next, I continue with the fitted model 'fit_path' (i.e., the model with rescaling).
+
+  
 *The chi-square statistic and its degrees of freedom:*
 
 `Model Test User Model:`

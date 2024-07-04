@@ -213,6 +213,15 @@ summary(fit_path_check, fit.measures = TRUE, ci = TRUE, rsquare = TRUE)
 lavInspect(fit_path_check)
 
 
+# TO DO Check op cov mx predictors
+#(bijv 4.514 vs 4.54).
+fit_path_x <- lavaan(model = model.path, 
+                         sample.cov = CovMx, # Now, using a covariance matrix as input
+                         sample.cov.rescale = FALSE,
+                         sample.nobs = 175) # In that case, the sample size is needed as well
+summary(fit_path_x, fit.measures = TRUE, ci = TRUE, rsquare = TRUE)
+# Now: 4.540!
+
 if (!require("lavaanPlot")) install.packages("lavaanPlot") 
 library(lavaanPlot)
 lavaanPlot(model = fit_path, 
