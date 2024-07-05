@@ -1554,16 +1554,24 @@ fit_1CFA_RefGr <- cfa(model.1CFA_RefGr, data=data_sapi,
                 missing='fiml', fixed.x=F)  # use FIML
 @ 
 
-\begin{itemize}
-    \item Factor variance constrained at \textcolor{orange}{1}:\\
-\begin{verbatim}
-Extraversion      1.000
-\end{verbatim}
-    \item Factor mean constrained at \textcolor{orange}{0}:\\
-\begin{verbatim}
-Extraversion      0.000
-\end{verbatim}
-\end{itemize} 
+Shortcut to fix the variances of (all the) latent variables to 1:
+
+<<>>=
+fit_1CFA_RefGr2 <- cfa(model.1CFA,    # ! 'original' model !
+                       std.lv = TRUE, # fix variances to 1
+                data=data_sapi, missing='fiml', fixed.x=F)  
+@
+
+% \begin{itemize}
+%     \item Factor variance constrained at \textcolor{orange}{1}:\\
+% \begin{verbatim}
+% Extraversion      1.000
+% \end{verbatim}
+%     \item Factor mean constrained at \textcolor{orange}{0}:\\
+% \begin{verbatim}
+% Extraversion      0.000
+% \end{verbatim}
+% \end{itemize} 
 
 \end{frame}
 %------------------------------------------------------------------------------%
@@ -1573,6 +1581,7 @@ Extraversion      0.000
 
 <<>>=
 parameterEstimates(fit_1CFA_RefGr)[1:4,-c(5,6,7)]
+#parameterEstimates(fit_1CFA_RefGr2)[1:4,-c(5,6,7)]
 @ 
 
 Advantage:\\ 

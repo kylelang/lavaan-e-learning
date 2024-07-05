@@ -670,7 +670,8 @@ data_sapi <- read.table("Sapi.txt", header = T)
 data_sapi[sapply(data_sapi, 
     function(x) as.character(x) %in% c("-999") )] <- NA
 
-data_sapi$Gender <- factor(data_sapi$Gender, labels = c("male", "female"))
+data_sapi$Gender <- factor(data_sapi$Gender, 
+                           labels = c("male", "female"))
 @
 
 <<>>=

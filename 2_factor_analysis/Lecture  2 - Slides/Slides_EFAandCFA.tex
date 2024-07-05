@@ -1794,16 +1794,28 @@ If reference category changed, other loadings also change.
 \end{kframe}
 \end{knitrout}
 
-\begin{itemize}
-    \item Factor variance constrained at \textcolor{orange}{1}:\\
-\begin{verbatim}
-Extraversion      1.000
-\end{verbatim}
-    \item Factor mean constrained at \textcolor{orange}{0}:\\
-\begin{verbatim}
-Extraversion      0.000
-\end{verbatim}
-\end{itemize} 
+Shortcut to fix the variances of (all the) latent variables to 1:
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hldef{fit_1CFA_RefGr2} \hlkwb{<-} \hlkwd{cfa}\hldef{(model.1CFA,}    \hlcom{# ! 'original' model !}
+                       \hlkwc{std.lv} \hldef{=} \hlnum{TRUE}\hldef{,} \hlcom{# fix variances to 1}
+                \hlkwc{data}\hldef{=data_sapi,} \hlkwc{missing}\hldef{=}\hlsng{'fiml'}\hldef{,} \hlkwc{fixed.x}\hldef{=F)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+% \begin{itemize}
+%     \item Factor variance constrained at \textcolor{orange}{1}:\\
+% \begin{verbatim}
+% Extraversion      1.000
+% \end{verbatim}
+%     \item Factor mean constrained at \textcolor{orange}{0}:\\
+% \begin{verbatim}
+% Extraversion      0.000
+% \end{verbatim}
+% \end{itemize} 
 
 \end{frame}
 %------------------------------------------------------------------------------%
@@ -1823,6 +1835,9 @@ Extraversion      0.000
 ## 3 Extraversion =~ Q170 0.473    0.404    0.543
 ## 4 Extraversion =~ Q196 0.619    0.559    0.680
 \end{verbatim}
+\begin{alltt}
+\hlcom{#parameterEstimates(fit_1CFA_RefGr2)[1:4,-c(5,6,7)]}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 

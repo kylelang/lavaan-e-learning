@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.5.23)  5 JUL 2024 09:39
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.5.23)  5 JUL 2024 15:48
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1520,7 +1520,17 @@ Package pdftex.def Info: images/slide60.png  used on input line 1769.
 \openout4 = `Slides_EFAandCFA.vrb'.
 
 
-(./Slides_EFAandCFA.vrb) [56
+(./Slides_EFAandCFA.vrb
+Overfull \hbox (9.4435pt too wide) in paragraph at lines 27--27
+[][]\OT1/cmtt/m/n/10 fit_1CFA_RefGr2[] []<-[] []cfa[][](model.1CFA,[]    []\OT1
+/cmtt/m/it/10 # ! ^^Moriginal^^M model ![][] 
+ []
+
+)
+Overfull \vbox (5.34602pt too high) detected at line 1820
+ []
+
+[56
 
 ]
 \openout4 = `Slides_EFAandCFA.vrb'.
@@ -1530,11 +1540,11 @@ Package pdftex.def Info: images/slide60.png  used on input line 1769.
 ]
 File: images/slide56.png Graphic file (type png)
 <use images/slide56.png>
-Package pdftex.def Info: images/slide56.png  used on input line 1862.
+Package pdftex.def Info: images/slide56.png  used on input line 1877.
 (pdftex.def)             Requested size: 100.3807pt x 142.26378pt.
 File: images/slide60.png Graphic file (type png)
 <use images/slide60.png>
-Package pdftex.def Info: images/slide60.png  used on input line 1862.
+Package pdftex.def Info: images/slide60.png  used on input line 1877.
 (pdftex.def)             Requested size: 102.4053pt x 123.76965pt.
  [58
 
@@ -1542,32 +1552,33 @@ Package pdftex.def Info: images/slide60.png  used on input line 1862.
 <images/slide66.png, id=6065, 138.5175pt x 163.61125pt>
 File: images/slide66.png Graphic file (type png)
 <use images/slide66.png>
-Package pdftex.def Info: images/slide66.png  used on input line 1900.
+Package pdftex.def Info: images/slide66.png  used on input line 1915.
 (pdftex.def)             Requested size: 104.47755pt x 123.40465pt.
  [59
 
  <./images/slide66.png>]
 File: images/slide66.png Graphic file (type png)
 <use images/slide66.png>
-Package pdftex.def Info: images/slide66.png  used on input line 1917.
+Package pdftex.def Info: images/slide66.png  used on input line 1932.
 (pdftex.def)             Requested size: 72.26622pt x 85.35826pt.
  [60
 
 ]
 \openout4 = `Slides_EFAandCFA.vrb'.
 
- (./Slides_EFAandCFA.vrb) [61
+
+(./Slides_EFAandCFA.vrb) [61
 
 ]
 \openout4 = `Slides_EFAandCFA.vrb'.
 
- (./Slides_EFAandCFA.vrb)
-[62
+ (./Slides_EFAandCFA.vrb) [62
 
 ]
 \openout4 = `Slides_EFAandCFA.vrb'.
 
- (./Slides_EFAandCFA.vrb) [63
+
+(./Slides_EFAandCFA.vrb) [63
 
 ] (./Slides_EFAandCFA.toc) [64
 
@@ -1584,10 +1595,10 @@ Package pdftex.def Info: images/slide66.png  used on input line 1917.
 <images/slide21.png, id=7098, 511.9125pt x 446.66875pt>
 File: images/slide21.png Graphic file (type png)
 <use images/slide21.png>
-Package pdftex.def Info: images/slide21.png  used on input line 2095.
+Package pdftex.def Info: images/slide21.png  used on input line 2110.
 (pdftex.def)             Requested size: 286.89557pt x 250.33044pt.
 
-Overfull \vbox (1.00455pt too high) detected at line 2095
+Overfull \vbox (1.00455pt too high) detected at line 2110
  []
 
 [69
@@ -1634,7 +1645,7 @@ live/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmssi8.pfb><c:/texlive/2022
 /texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/texlive/2022/texmf-di
 st/fonts/type1/public/amsfonts/cm/cmsy9.pfb><c:/texlive/2022/texmf-dist/fonts/t
 ype1/public/amsfonts/cm/cmtt10.pfb>
-Output written on Slides_EFAandCFA.pdf (71 pages, 1838685 bytes).
+Output written on Slides_EFAandCFA.pdf (71 pages, 1839810 bytes).
 PDF statistics:
  7500 PDF objects out of 8907 (max. 8388607)
  7214 compressed objects within 73 object streams
