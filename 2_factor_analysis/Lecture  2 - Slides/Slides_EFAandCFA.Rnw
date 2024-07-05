@@ -787,9 +787,9 @@ In factor analysis (EFA and CFA):
 <<>>=
 # two-factor EFA
 model.2EFA <- "
- efa('block1')*Having fun  =~ Q77 + Q84 + Q170 + Q196 + 
+ efa('block1')*Havingfun  =~ Q77 + Q84 + Q170 + Q196 + 
                               Q44 + Q63 + Q76  + Q98
- efa('block1')*Being liked =~ Q77 + Q84 + Q170 + Q196 + 
+ efa('block1')*Beingliked =~ Q77 + Q84 + Q170 + Q196 + 
                               Q44 + Q63 + Q76  + Q98
 "
 @
@@ -822,9 +822,9 @@ data_sapi[sapply(data_sapi,
 
 # Model: two-factor EFA
 model.2EFA <- "
- efa('block1')*Having fun  =~ Q77 + Q84 + Q170 + Q196 + 
+ efa('block1')*Havingfun  =~ Q77 + Q84 + Q170 + Q196 + 
                               Q44 + Q63 + Q76  + Q98
- efa('block1')*Being liked =~ Q77 + Q84 + Q170 + Q196 + 
+ efa('block1')*Beingliked =~ Q77 + Q84 + Q170 + Q196 + 
                               Q44 + Q63 + Q76  + Q98
 "
 
@@ -1007,8 +1007,8 @@ let manifest variables only appear in the equation of their factor.
 <<>>=
 # two-factor CFA
 model.2CFA <- "
- Having fun  =~ Q77 + Q84 + Q170 + Q196 
- Being liked =~ Q44 + Q63 + Q76  + Q98
+ Havingfun  =~ Q77 + Q84 + Q170 + Q196 
+ Beingliked =~ Q44 + Q63 + Q76  + Q98
 "
 @
 
@@ -1036,8 +1036,8 @@ data_sapi[sapply(data_sapi,
 
 # Model: two-factor CFA
 model.2CFA <- "
- Having fun  =~ Q77 + Q84 + Q170 + Q196 
- Being liked =~ Q44 + Q63 + Q76  + Q98
+ Havingfun  =~ Q77 + Q84 + Q170 + Q196 
+ Beingliked =~ Q44 + Q63 + Q76  + Q98
 "
 
 # Fit model
@@ -1214,8 +1214,8 @@ modindices(fit_2CFA, sort = TRUE)[1,]
 # Modified model: 
 # two-factor CFA + residual covariance Q170 and Q196
 model.2CFA_mod <- "
- Having fun  =~ Q77 + Q84 + Q170 + Q196 
- Being liked =~ Q44 + Q63 + Q76  + Q98
+ Havingfun  =~ Q77 + Q84 + Q170 + Q196 
+ Beingliked =~ Q44 + Q63 + Q76  + Q98
  Q170 ~~ Q196
 "
 
@@ -1504,7 +1504,7 @@ If reference category changed, other loadings also change.
     \textbf{Parameterization:}
         \begin{itemize}
             \item Factor variance constrained at \textcolor{orange}{1}.
-            \item Factor mean constrained at \textcolor{orange}{0}.
+            \item Factor mean constrained at \textcolor{orange}{0}.*
         \end{itemize} 
         \textbf{Defaults:}
         \begin{itemize}
@@ -1525,6 +1525,10 @@ If reference category changed, other loadings also change.
         \includegraphics[width=\linewidth,height=\textheight,keepaspectratio]{images/slide60.png}
     \end{column}%
     \end{columns}
+    
+    \vspace{5mm}
+    
+    * In a multi-group model (discussed in another lecture), the mean of the (by default) first group is set to 0 (hence, the name 'reference-group').
     
 \end{frame}
 %------------------------------------------------------------------------------%

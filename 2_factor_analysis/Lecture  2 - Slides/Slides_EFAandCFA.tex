@@ -14,10 +14,10 @@
 
 \definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
 \newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
-\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlsng}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
 \newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
 \newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
-\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hldef}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
 \newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
 \newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
 \newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
@@ -731,10 +731,10 @@ Borsboom, D., Mellenbergh, G.J., \& Van Heerden, J. (2003). The theoretical stat
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{data_sapi} \hlkwb{<-} \hlkwd{read.table}\hlstd{(}\hlstr{"Sapi.txt"}\hlstd{,} \hlkwc{header} \hlstd{= T)}
+\hldef{data_sapi} \hlkwb{<-} \hlkwd{read.table}\hldef{(}\hlsng{"Sapi.txt"}\hldef{,} \hlkwc{header} \hldef{= T)}
 
-\hlstd{data_sapi[}\hlkwd{sapply}\hlstd{(data_sapi,}
-    \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{)} \hlkwd{as.character}\hlstd{(x)} \hlopt{%in%} \hlkwd{c}\hlstd{(}\hlstr{"-999"}\hlstd{) )]} \hlkwb{<-} \hlnum{NA}
+\hldef{data_sapi[}\hlkwd{sapply}\hldef{(data_sapi,}
+    \hlkwa{function}\hldef{(}\hlkwc{x}\hldef{)} \hlkwd{as.character}\hldef{(x)} \hlopt{%in%} \hlkwd{c}\hldef{(}\hlsng{"-999"}\hldef{) )]} \hlkwb{<-} \hlnum{NA}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -806,16 +806,16 @@ In factor analysis (EFA and CFA):
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# 1-factor model}
-\hlstd{f1} \hlkwb{<-} \hlstr{'
+\hldef{f1} \hlkwb{<-} \hlsng{'
 efa("efa")*f1 =~ y1 + y2 + y3 + ...
 '}
 \hlcom{# 2-factor model}
-\hlstd{f2} \hlkwb{<-} \hlstr{'
+\hldef{f2} \hlkwb{<-} \hlsng{'
 efa("efa")*f1 +
 efa("efa")*f2 =~ y1 + y2 + y3 + ...
 '}
 \hlcom{# 3-factor model}
-\hlstd{f3} \hlkwb{<-} \hlstr{'
+\hldef{f3} \hlkwb{<-} \hlsng{'
 efa("efa")*f1 +
 efa("efa")*f2 +
 efa("efa")*f3 =~ y1 + y2 + y3 + ...
@@ -841,10 +841,10 @@ In factor analysis (EFA and CFA):
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# two-factor EFA}
-\hlstd{model.2EFA} \hlkwb{<-} \hlstr{"
- efa('block1')*Having fun  =~ Q77 + Q84 + Q170 + Q196 + 
+\hldef{model.2EFA} \hlkwb{<-} \hlsng{"
+ efa('block1')*Havingfun  =~ Q77 + Q84 + Q170 + Q196 + 
                               Q44 + Q63 + Q76  + Q98
- efa('block1')*Being liked =~ Q77 + Q84 + Q170 + Q196 + 
+ efa('block1')*Beingliked =~ Q77 + Q84 + Q170 + Q196 + 
                               Q44 + Q63 + Q76  + Q98
 "}
 \end{alltt}
@@ -861,8 +861,8 @@ Use the cfa() function in lavaan.
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{fit_2EFA} \hlkwb{<-} \hlkwd{cfa}\hlstd{(model.2EFA,} \hlkwc{data}\hlstd{=data_sapi,}
-                \hlkwc{missing}\hlstd{=}\hlstr{'fiml'}\hlstd{,} \hlkwc{fixed.x}\hlstd{=F)}  \hlcom{# use FIML}
+\hldef{fit_2EFA} \hlkwb{<-} \hlkwd{cfa}\hldef{(model.2EFA,} \hlkwc{data}\hldef{=data_sapi,}
+                \hlkwc{missing}\hldef{=}\hlsng{'fiml'}\hldef{,} \hlkwc{fixed.x}\hldef{=F)}  \hlcom{# use FIML}
 \hlcom{# Note: FIML will be discusses in the Missing Data lecture.}
 \end{alltt}
 \end{kframe}
@@ -879,21 +879,21 @@ Use the cfa() function in lavaan.
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# Data}
-\hlstd{data_sapi} \hlkwb{<-} \hlkwd{read.table}\hlstd{(}\hlstr{"Sapi.txt"}\hlstd{,} \hlkwc{header} \hlstd{= T)}
-\hlstd{data_sapi[}\hlkwd{sapply}\hlstd{(data_sapi,}
-    \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{)} \hlkwd{as.character}\hlstd{(x)} \hlopt{%in%} \hlkwd{c}\hlstd{(}\hlstr{"-999"}\hlstd{) )]} \hlkwb{<-} \hlnum{NA}
+\hldef{data_sapi} \hlkwb{<-} \hlkwd{read.table}\hldef{(}\hlsng{"Sapi.txt"}\hldef{,} \hlkwc{header} \hldef{= T)}
+\hldef{data_sapi[}\hlkwd{sapply}\hldef{(data_sapi,}
+    \hlkwa{function}\hldef{(}\hlkwc{x}\hldef{)} \hlkwd{as.character}\hldef{(x)} \hlopt{%in%} \hlkwd{c}\hldef{(}\hlsng{"-999"}\hldef{) )]} \hlkwb{<-} \hlnum{NA}
 
 \hlcom{# Model: two-factor EFA}
-\hlstd{model.2EFA} \hlkwb{<-} \hlstr{"
- efa('block1')*Having fun  =~ Q77 + Q84 + Q170 + Q196 + 
+\hldef{model.2EFA} \hlkwb{<-} \hlsng{"
+ efa('block1')*Havingfun  =~ Q77 + Q84 + Q170 + Q196 + 
                               Q44 + Q63 + Q76  + Q98
- efa('block1')*Being liked =~ Q77 + Q84 + Q170 + Q196 + 
+ efa('block1')*Beingliked =~ Q77 + Q84 + Q170 + Q196 + 
                               Q44 + Q63 + Q76  + Q98
 "}
 
 \hlcom{# Fit model}
-\hlstd{fit_2EFA} \hlkwb{<-} \hlkwd{cfa}\hlstd{(model.2EFA,} \hlkwc{data}\hlstd{=data_sapi,}
-                \hlkwc{missing}\hlstd{=}\hlstr{'fiml'}\hlstd{,} \hlkwc{fixed.x}\hlstd{=F)}  \hlcom{# use FIML }
+\hldef{fit_2EFA} \hlkwb{<-} \hlkwd{cfa}\hldef{(model.2EFA,} \hlkwc{data}\hldef{=data_sapi,}
+                \hlkwc{missing}\hldef{=}\hlsng{'fiml'}\hldef{,} \hlkwc{fixed.x}\hldef{=F)}  \hlcom{# use FIML }
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -905,21 +905,21 @@ Use the cfa() function in lavaan.
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwa{if} \hlstd{(}\hlopt{!}\hlkwd{require}\hlstd{(}\hlstr{"lavaanPlot"}\hlstd{))} \hlkwd{install.packages}\hlstd{(}\hlstr{"lavaanPlot"}\hlstd{)}
-\hlkwd{library}\hlstd{(lavaanPlot)}
+\hlkwa{if} \hldef{(}\hlopt{!}\hlkwd{require}\hldef{(}\hlsng{"lavaanPlot"}\hldef{))} \hlkwd{install.packages}\hldef{(}\hlsng{"lavaanPlot"}\hldef{)}
+\hlkwd{library}\hldef{(lavaanPlot)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{lavaanPlot}\hlstd{(}\hlkwc{model} \hlstd{= fit_2EFA,}
-           \hlkwc{node_options} \hlstd{=} \hlkwd{list}\hlstd{(}\hlkwc{shape} \hlstd{=} \hlstr{"box"}\hlstd{,}
-                               \hlkwc{fontname} \hlstd{=} \hlstr{"Helvetica"}\hlstd{),}
-           \hlkwc{edge_options} \hlstd{=} \hlkwd{list}\hlstd{(}\hlkwc{color} \hlstd{=} \hlstr{"grey"}\hlstd{),}
-           \hlkwc{coefs} \hlstd{= T,}
-           \hlkwc{stand} \hlstd{= T,} \hlcom{# standardized }
-           \hlkwc{covs} \hlstd{= T)}
+\hlkwd{lavaanPlot}\hldef{(}\hlkwc{model} \hldef{= fit_2EFA,}
+           \hlkwc{node_options} \hldef{=} \hlkwd{list}\hldef{(}\hlkwc{shape} \hldef{=} \hlsng{"box"}\hldef{,}
+                               \hlkwc{fontname} \hldef{=} \hlsng{"Helvetica"}\hldef{),}
+           \hlkwc{edge_options} \hldef{=} \hlkwd{list}\hldef{(}\hlkwc{color} \hldef{=} \hlsng{"grey"}\hldef{),}
+           \hlkwc{coefs} \hldef{= T,}
+           \hlkwc{stand} \hldef{= T,} \hlcom{# standardized }
+           \hlkwc{covs} \hldef{= T)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -931,11 +931,11 @@ Use the cfa() function in lavaan.
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{lavaanPlot}\hlstd{(}\hlkwc{model} \hlstd{= fit_2EFA,}
-           \hlkwc{node_options} \hlstd{=} \hlkwd{list}\hlstd{(}\hlkwc{shape} \hlstd{=} \hlstr{"box"}\hlstd{,}
-                               \hlkwc{fontname} \hlstd{=} \hlstr{"Helvetica"}\hlstd{),}
-           \hlkwc{edge_options} \hlstd{=} \hlkwd{list}\hlstd{(}\hlkwc{color} \hlstd{=} \hlstr{"grey"}\hlstd{),}
-           \hlkwc{coefs} \hlstd{= T,} \hlkwc{stand} \hlstd{= T,} \hlkwc{covs} \hlstd{= T)}
+\hlkwd{lavaanPlot}\hldef{(}\hlkwc{model} \hldef{= fit_2EFA,}
+           \hlkwc{node_options} \hldef{=} \hlkwd{list}\hldef{(}\hlkwc{shape} \hldef{=} \hlsng{"box"}\hldef{,}
+                               \hlkwc{fontname} \hldef{=} \hlsng{"Helvetica"}\hldef{),}
+           \hlkwc{edge_options} \hldef{=} \hlkwd{list}\hldef{(}\hlkwc{color} \hldef{=} \hlsng{"grey"}\hldef{),}
+           \hlkwc{coefs} \hldef{= T,} \hlkwc{stand} \hldef{= T,} \hlkwc{covs} \hldef{= T)}
 \end{alltt}
 \end{kframe}
 \includegraphics[width=\maxwidth]{figure/unnamed-chunk-8-1} 
@@ -969,13 +969,13 @@ Use the cfa() function in lavaan.
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{summary}\hlstd{(fit_2EFA)}
+\hlkwd{summary}\hldef{(fit_2EFA)}
 
-\hlkwd{parameterEstimates}\hlstd{(fit_2EFA)}
+\hlkwd{parameterEstimates}\hldef{(fit_2EFA)}
 
-\hlkwd{fitMeasures}\hlstd{(fit_2EFA,} \hlkwd{c}\hlstd{(}\hlstr{"chisq"}\hlstd{,} \hlstr{"df"}\hlstd{,} \hlstr{"pvalue"}\hlstd{,}
-                        \hlstr{"cfi"}\hlstd{,} \hlstr{"tli"}\hlstd{,}
-                        \hlstr{"rmsea"}\hlstd{,}\hlstr{"srmr"}\hlstd{))}
+\hlkwd{fitMeasures}\hldef{(fit_2EFA,} \hlkwd{c}\hldef{(}\hlsng{"chisq"}\hldef{,} \hlsng{"df"}\hldef{,} \hlsng{"pvalue"}\hldef{,}
+                        \hlsng{"cfi"}\hldef{,} \hlsng{"tli"}\hldef{,}
+                        \hlsng{"rmsea"}\hldef{,}\hlsng{"srmr"}\hldef{))}
 \hlcom{# As an example, there are more.}
 \end{alltt}
 \end{kframe}
@@ -989,7 +989,7 @@ Use the cfa() function in lavaan.
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{parameterEstimates}\hlstd{(fit_2EFA)[}\hlnum{1}\hlopt{:}\hlnum{16}\hlstd{,}\hlnum{1}\hlopt{:}\hlnum{5}\hlstd{][,}\hlopt{-}\hlnum{4}\hlstd{]}
+\hlkwd{parameterEstimates}\hldef{(fit_2EFA)[}\hlnum{1}\hlopt{:}\hlnum{16}\hldef{,}\hlnum{1}\hlopt{:}\hlnum{5}\hldef{][,}\hlopt{-}\hlnum{4}\hldef{]}
 \end{alltt}
 \begin{verbatim}
 ##           lhs op  rhs    est
@@ -1027,10 +1027,10 @@ Use the cfa() function in lavaan.
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{data_sapi} \hlkwb{<-} \hlkwd{read.table}\hlstd{(}\hlstr{"Sapi.txt"}\hlstd{,} \hlkwc{header} \hlstd{= T)}
+\hldef{data_sapi} \hlkwb{<-} \hlkwd{read.table}\hldef{(}\hlsng{"Sapi.txt"}\hldef{,} \hlkwc{header} \hldef{= T)}
 
-\hlstd{data_sapi[}\hlkwd{sapply}\hlstd{(data_sapi,}
-    \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{)} \hlkwd{as.character}\hlstd{(x)} \hlopt{%in%} \hlkwd{c}\hlstd{(}\hlstr{"-999"}\hlstd{) )]} \hlkwb{<-} \hlnum{NA}
+\hldef{data_sapi[}\hlkwd{sapply}\hldef{(data_sapi,}
+    \hlkwa{function}\hldef{(}\hlkwc{x}\hldef{)} \hlkwd{as.character}\hldef{(x)} \hlopt{%in%} \hlkwd{c}\hldef{(}\hlsng{"-999"}\hldef{) )]} \hlkwb{<-} \hlnum{NA}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -1090,7 +1090,7 @@ Use the cfa() function in lavaan.
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# k-factor model}
-\hlstd{model.kCFA} \hlkwb{<-} \hlstr{'
+\hldef{model.kCFA} \hlkwb{<-} \hlsng{'
 latent variable_1 =~ indicator11 + indicator12 + ...
 latent variable_2 =~ indicator21 + indicator22 + ...
 ...
@@ -1121,9 +1121,9 @@ let manifest variables only appear in the equation of their factor.
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# two-factor CFA}
-\hlstd{model.2CFA} \hlkwb{<-} \hlstr{"
- Having fun  =~ Q77 + Q84 + Q170 + Q196 
- Being liked =~ Q44 + Q63 + Q76  + Q98
+\hldef{model.2CFA} \hlkwb{<-} \hlsng{"
+ Havingfun  =~ Q77 + Q84 + Q170 + Q196 
+ Beingliked =~ Q44 + Q63 + Q76  + Q98
 "}
 \end{alltt}
 \end{kframe}
@@ -1139,8 +1139,8 @@ Use the cfa() function in lavaan.
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{fit_2CFA} \hlkwb{<-} \hlkwd{cfa}\hlstd{(model.2CFA,} \hlkwc{data}\hlstd{=data_sapi,}
-                \hlkwc{missing}\hlstd{=}\hlstr{'fiml'}\hlstd{,} \hlkwc{fixed.x}\hlstd{=F)}  \hlcom{# use FIML}
+\hldef{fit_2CFA} \hlkwb{<-} \hlkwd{cfa}\hldef{(model.2CFA,} \hlkwc{data}\hldef{=data_sapi,}
+                \hlkwc{missing}\hldef{=}\hlsng{'fiml'}\hldef{,} \hlkwc{fixed.x}\hldef{=F)}  \hlcom{# use FIML}
 \hlcom{# Note: FIML will be discusses in the Missing Data lecture.}
 \end{alltt}
 \end{kframe}
@@ -1153,19 +1153,19 @@ Use the cfa() function in lavaan.
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# Data}
-\hlstd{data_sapi} \hlkwb{<-} \hlkwd{read.table}\hlstd{(}\hlstr{"Sapi.txt"}\hlstd{,} \hlkwc{header} \hlstd{= T)}
-\hlstd{data_sapi[}\hlkwd{sapply}\hlstd{(data_sapi,}
-    \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{)} \hlkwd{as.character}\hlstd{(x)} \hlopt{%in%} \hlkwd{c}\hlstd{(}\hlstr{"-999"}\hlstd{) )]} \hlkwb{<-} \hlnum{NA}
+\hldef{data_sapi} \hlkwb{<-} \hlkwd{read.table}\hldef{(}\hlsng{"Sapi.txt"}\hldef{,} \hlkwc{header} \hldef{= T)}
+\hldef{data_sapi[}\hlkwd{sapply}\hldef{(data_sapi,}
+    \hlkwa{function}\hldef{(}\hlkwc{x}\hldef{)} \hlkwd{as.character}\hldef{(x)} \hlopt{%in%} \hlkwd{c}\hldef{(}\hlsng{"-999"}\hldef{) )]} \hlkwb{<-} \hlnum{NA}
 
 \hlcom{# Model: two-factor CFA}
-\hlstd{model.2CFA} \hlkwb{<-} \hlstr{"
- Having fun  =~ Q77 + Q84 + Q170 + Q196 
- Being liked =~ Q44 + Q63 + Q76  + Q98
+\hldef{model.2CFA} \hlkwb{<-} \hlsng{"
+ Havingfun  =~ Q77 + Q84 + Q170 + Q196 
+ Beingliked =~ Q44 + Q63 + Q76  + Q98
 "}
 
 \hlcom{# Fit model}
-\hlstd{fit_2CFA} \hlkwb{<-} \hlkwd{cfa}\hlstd{(model.2CFA,} \hlkwc{data}\hlstd{=data_sapi,}
-                \hlkwc{missing}\hlstd{=}\hlstr{'fiml'}\hlstd{,} \hlkwc{fixed.x}\hlstd{=F)}  \hlcom{# use FIML }
+\hldef{fit_2CFA} \hlkwb{<-} \hlkwd{cfa}\hldef{(model.2CFA,} \hlkwc{data}\hldef{=data_sapi,}
+                \hlkwc{missing}\hldef{=}\hlsng{'fiml'}\hldef{,} \hlkwc{fixed.x}\hldef{=F)}  \hlcom{# use FIML }
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -1177,21 +1177,21 @@ Use the cfa() function in lavaan.
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwa{if} \hlstd{(}\hlopt{!}\hlkwd{require}\hlstd{(}\hlstr{"lavaanPlot"}\hlstd{))} \hlkwd{install.packages}\hlstd{(}\hlstr{"lavaanPlot"}\hlstd{)}
-\hlkwd{library}\hlstd{(lavaanPlot)}
+\hlkwa{if} \hldef{(}\hlopt{!}\hlkwd{require}\hldef{(}\hlsng{"lavaanPlot"}\hldef{))} \hlkwd{install.packages}\hldef{(}\hlsng{"lavaanPlot"}\hldef{)}
+\hlkwd{library}\hldef{(lavaanPlot)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{lavaanPlot}\hlstd{(}\hlkwc{model} \hlstd{= fit_2CFA,}
-           \hlkwc{node_options} \hlstd{=} \hlkwd{list}\hlstd{(}\hlkwc{shape} \hlstd{=} \hlstr{"box"}\hlstd{,}
-                               \hlkwc{fontname} \hlstd{=} \hlstr{"Helvetica"}\hlstd{),}
-           \hlkwc{edge_options} \hlstd{=} \hlkwd{list}\hlstd{(}\hlkwc{color} \hlstd{=} \hlstr{"grey"}\hlstd{),}
-           \hlkwc{coefs} \hlstd{= T,}
-           \hlkwc{stand} \hlstd{= T,}
-           \hlkwc{covs} \hlstd{= T)}
+\hlkwd{lavaanPlot}\hldef{(}\hlkwc{model} \hldef{= fit_2CFA,}
+           \hlkwc{node_options} \hldef{=} \hlkwd{list}\hldef{(}\hlkwc{shape} \hldef{=} \hlsng{"box"}\hldef{,}
+                               \hlkwc{fontname} \hldef{=} \hlsng{"Helvetica"}\hldef{),}
+           \hlkwc{edge_options} \hldef{=} \hlkwd{list}\hldef{(}\hlkwc{color} \hldef{=} \hlsng{"grey"}\hldef{),}
+           \hlkwc{coefs} \hldef{= T,}
+           \hlkwc{stand} \hldef{= T,}
+           \hlkwc{covs} \hldef{= T)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -1203,11 +1203,11 @@ Use the cfa() function in lavaan.
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{lavaanPlot}\hlstd{(}\hlkwc{model} \hlstd{= fit_2CFA,}
-           \hlkwc{node_options} \hlstd{=} \hlkwd{list}\hlstd{(}\hlkwc{shape} \hlstd{=} \hlstr{"box"}\hlstd{,}
-                               \hlkwc{fontname} \hlstd{=} \hlstr{"Helvetica"}\hlstd{),}
-           \hlkwc{edge_options} \hlstd{=} \hlkwd{list}\hlstd{(}\hlkwc{color} \hlstd{=} \hlstr{"grey"}\hlstd{),} \hlkwc{coefs} \hlstd{= T,}
-           \hlkwc{stand} \hlstd{= T,} \hlkwc{covs} \hlstd{= T)}
+\hlkwd{lavaanPlot}\hldef{(}\hlkwc{model} \hldef{= fit_2CFA,}
+           \hlkwc{node_options} \hldef{=} \hlkwd{list}\hldef{(}\hlkwc{shape} \hldef{=} \hlsng{"box"}\hldef{,}
+                               \hlkwc{fontname} \hldef{=} \hlsng{"Helvetica"}\hldef{),}
+           \hlkwc{edge_options} \hldef{=} \hlkwd{list}\hldef{(}\hlkwc{color} \hldef{=} \hlsng{"grey"}\hldef{),} \hlkwc{coefs} \hldef{= T,}
+           \hlkwc{stand} \hldef{= T,} \hlkwc{covs} \hldef{= T)}
 \end{alltt}
 \end{kframe}
 \includegraphics[width=\maxwidth]{figure/unnamed-chunk-18-1} 
@@ -1246,13 +1246,13 @@ Use the cfa() function in lavaan.
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{summary}\hlstd{(fit_2CFA)}
+\hlkwd{summary}\hldef{(fit_2CFA)}
 
-\hlkwd{parameterEstimates}\hlstd{(fit_2CFA)}
+\hlkwd{parameterEstimates}\hldef{(fit_2CFA)}
 
-\hlkwd{fitMeasures}\hlstd{(fit_2CFA,} \hlkwd{c}\hlstd{(}\hlstr{"chisq"}\hlstd{,} \hlstr{"df"}\hlstd{,} \hlstr{"pvalue"}\hlstd{,}
-                        \hlstr{"cfi"}\hlstd{,} \hlstr{"tli"}\hlstd{,}
-                        \hlstr{"rmsea"}\hlstd{,}\hlstr{"srmr"}\hlstd{))}
+\hlkwd{fitMeasures}\hldef{(fit_2CFA,} \hlkwd{c}\hldef{(}\hlsng{"chisq"}\hldef{,} \hlsng{"df"}\hldef{,} \hlsng{"pvalue"}\hldef{,}
+                        \hlsng{"cfi"}\hldef{,} \hlsng{"tli"}\hldef{,}
+                        \hlsng{"rmsea"}\hldef{,}\hlsng{"srmr"}\hldef{))}
 \hlcom{# As an example, there are more.}
 \end{alltt}
 \end{kframe}
@@ -1262,7 +1262,7 @@ Use the cfa() function in lavaan.
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{#The factors scores for each subject can be required via:}
-\hlkwd{predict}\hlstd{(fit_2CFA)}
+\hlkwd{predict}\hldef{(fit_2CFA)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -1284,7 +1284,7 @@ In lavaan, modification indices can be requested
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{summary}\hlstd{(fit_2CFA,} \hlkwc{modindices} \hlstd{=} \hlnum{TRUE}\hlstd{)}
+\hlkwd{summary}\hldef{(fit_2CFA,} \hlkwc{modindices} \hldef{=} \hlnum{TRUE}\hldef{)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -1292,7 +1292,7 @@ In lavaan, modification indices can be requested
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{modindices}\hlstd{(fit_2CFA,} \hlkwc{sort} \hlstd{=} \hlnum{TRUE}\hlstd{)}
+\hlkwd{modindices}\hldef{(fit_2CFA,} \hlkwc{sort} \hldef{=} \hlnum{TRUE}\hldef{)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -1300,8 +1300,8 @@ In lavaan, modification indices can be requested
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{mi} \hlkwb{<-} \hlkwd{modindices}\hlstd{(fit)}
-\hlstd{mi[mi}\hlopt{$}\hlstd{op} \hlopt{==} \hlstr{"=~"}\hlstd{,]}
+\hldef{mi} \hlkwb{<-} \hlkwd{modindices}\hldef{(fit)}
+\hldef{mi[mi}\hlopt{$}\hldef{op} \hlopt{==} \hlsng{"=~"}\hldef{,]}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -1322,7 +1322,7 @@ Also, have a look at the lavTestScore() function.
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{#modindices(fit, sort = TRUE, maximum.number = 7) # or:}
-\hlkwd{modindices}\hlstd{(fit_2CFA,} \hlkwc{sort} \hlstd{=} \hlnum{TRUE}\hlstd{)[}\hlnum{1}\hlopt{:}\hlnum{7}\hlstd{,]} \hlcom{# first 7 rows}
+\hlkwd{modindices}\hldef{(fit_2CFA,} \hlkwc{sort} \hldef{=} \hlnum{TRUE}\hldef{)[}\hlnum{1}\hlopt{:}\hlnum{7}\hldef{,]} \hlcom{# first 7 rows}
 \end{alltt}
 \begin{verbatim}
 ##           lhs op  rhs     mi    epc sepc.lv sepc.all sepc.nox
@@ -1380,7 +1380,7 @@ Also, have a look at the lavTestScore() function.
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{modindices}\hlstd{(fit_2CFA,} \hlkwc{sort} \hlstd{=} \hlnum{TRUE}\hlstd{)[}\hlnum{1}\hlstd{,]}
+\hlkwd{modindices}\hldef{(fit_2CFA,} \hlkwc{sort} \hldef{=} \hlnum{TRUE}\hldef{)[}\hlnum{1}\hldef{,]}
 \end{alltt}
 \begin{verbatim}
 ##     lhs op  rhs     mi   epc sepc.lv sepc.all sepc.nox
@@ -1397,15 +1397,15 @@ Also, have a look at the lavTestScore() function.
 \begin{alltt}
 \hlcom{# Modified model: }
 \hlcom{# two-factor CFA + residual covariance Q170 and Q196}
-\hlstd{model.2CFA_mod} \hlkwb{<-} \hlstr{"
- Having fun  =~ Q77 + Q84 + Q170 + Q196 
- Being liked =~ Q44 + Q63 + Q76  + Q98
+\hldef{model.2CFA_mod} \hlkwb{<-} \hlsng{"
+ Havingfun  =~ Q77 + Q84 + Q170 + Q196 
+ Beingliked =~ Q44 + Q63 + Q76  + Q98
  Q170 ~~ Q196
 "}
 
 \hlcom{# Fit model}
-\hlstd{fit_2CFA_mod} \hlkwb{<-} \hlkwd{cfa}\hlstd{(model.2CFA_mod,} \hlkwc{data}\hlstd{=data_sapi,}
-                    \hlkwc{missing}\hlstd{=}\hlstr{'fiml'}\hlstd{,} \hlkwc{fixed.x}\hlstd{=F)}  \hlcom{# use FIML }
+\hldef{fit_2CFA_mod} \hlkwb{<-} \hlkwd{cfa}\hldef{(model.2CFA_mod,} \hlkwc{data}\hldef{=data_sapi,}
+                    \hlkwc{missing}\hldef{=}\hlsng{'fiml'}\hldef{,} \hlkwc{fixed.x}\hldef{=F)}  \hlcom{# use FIML }
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -1419,12 +1419,12 @@ Also, have a look at the lavTestScore() function.
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{anova}\hlstd{(fit_2CFA, fit_2CFA_mod)[,}\hlopt{-}\hlkwd{c}\hlstd{(}\hlnum{2}\hlstd{,}\hlnum{3}\hlstd{)]} \hlcom{# without AIC & BIC}
+\hlkwd{anova}\hldef{(fit_2CFA, fit_2CFA_mod)[,}\hlopt{-}\hlkwd{c}\hldef{(}\hlnum{2}\hldef{,}\hlnum{3}\hldef{)]} \hlcom{# without AIC & BIC}
 \end{alltt}
 \begin{verbatim}
-##              Df   Chisq Chisq diff Df diff Pr(>Chisq)    
-## fit_2CFA_mod 18  88.738                                  
-## fit_2CFA     19 124.170     35.432       1  2.641e-09 ***
+##              Df   Chisq Chisq diff   RMSEA Df diff Pr(>Chisq)    
+## fit_2CFA_mod 18  88.738                                          
+## fit_2CFA     19 124.170     35.432 0.18556       1  2.641e-09 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 \end{verbatim}
@@ -1434,7 +1434,7 @@ Also, have a look at the lavTestScore() function.
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{modindices}\hlstd{(fit_2CFA,} \hlkwc{sort} \hlstd{=} \hlnum{TRUE}\hlstd{)[}\hlnum{1}\hlstd{,]}
+\hlkwd{modindices}\hldef{(fit_2CFA,} \hlkwc{sort} \hldef{=} \hlnum{TRUE}\hldef{)[}\hlnum{1}\hldef{,]}
 \end{alltt}
 \begin{verbatim}
 ##     lhs op  rhs     mi   epc sepc.lv sepc.all sepc.nox
@@ -1452,7 +1452,7 @@ Also, have a look at the lavTestScore() function.
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{parameterEstimates}\hlstd{(fit_2CFA_mod)[}\hlnum{9}\hlstd{,}\hlopt{-}\hlkwd{c}\hlstd{(}\hlnum{5}\hlstd{,}\hlnum{6}\hlstd{,}\hlnum{7}\hlstd{)]} \hlcom{# no se, z, and p}
+\hlkwd{parameterEstimates}\hldef{(fit_2CFA_mod)[}\hlnum{9}\hldef{,}\hlopt{-}\hlkwd{c}\hldef{(}\hlnum{5}\hldef{,}\hlnum{6}\hldef{,}\hlnum{7}\hldef{)]} \hlcom{# no se, z, and p}
 \end{alltt}
 \begin{verbatim}
 ##    lhs op  rhs   est ci.lower ci.upper
@@ -1464,7 +1464,7 @@ Also, have a look at the lavTestScore() function.
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{modindices}\hlstd{(fit_2CFA,} \hlkwc{sort} \hlstd{=} \hlnum{TRUE}\hlstd{)[}\hlnum{1}\hlstd{,}\hlnum{1}\hlopt{:}\hlnum{5}\hlstd{]} \hlcom{# no sepc }
+\hlkwd{modindices}\hldef{(fit_2CFA,} \hlkwc{sort} \hldef{=} \hlnum{TRUE}\hldef{)[}\hlnum{1}\hldef{,}\hlnum{1}\hlopt{:}\hlnum{5}\hldef{]} \hlcom{# no sepc }
 \end{alltt}
 \begin{verbatim}
 ##     lhs op  rhs     mi   epc
@@ -1677,13 +1677,13 @@ Constrain the average of the loadings.
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# Model}
-\hlstd{model.1CFA} \hlkwb{<-} \hlstr{'
+\hldef{model.1CFA} \hlkwb{<-} \hlsng{'
  Extraversion =~ Q77 + Q84 + Q170 + Q196
 '}
 
 \hlcom{# Fit model}
-\hlstd{fit_1CFA} \hlkwb{<-} \hlkwd{cfa}\hlstd{(model.1CFA,} \hlkwc{data}\hlstd{=data_sapi,}
-                \hlkwc{missing}\hlstd{=}\hlstr{'fiml'}\hlstd{,} \hlkwc{fixed.x}\hlstd{=F)}  \hlcom{# use FIML}
+\hldef{fit_1CFA} \hlkwb{<-} \hlkwd{cfa}\hldef{(model.1CFA,} \hlkwc{data}\hldef{=data_sapi,}
+                \hlkwc{missing}\hldef{=}\hlsng{'fiml'}\hldef{,} \hlkwc{fixed.x}\hldef{=F)}  \hlcom{# use FIML}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -1709,7 +1709,7 @@ Extraversion      0.000
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{parameterEstimates}\hlstd{(fit_1CFA)[}\hlnum{1}\hlopt{:}\hlnum{4}\hlstd{,}\hlopt{-}\hlkwd{c}\hlstd{(}\hlnum{5}\hlstd{,}\hlnum{6}\hlstd{,}\hlnum{7}\hlstd{)]}
+\hlkwd{parameterEstimates}\hldef{(fit_1CFA)[}\hlnum{1}\hlopt{:}\hlnum{4}\hldef{,}\hlopt{-}\hlkwd{c}\hldef{(}\hlnum{5}\hldef{,}\hlnum{6}\hldef{,}\hlnum{7}\hldef{)]}
 \end{alltt}
 \begin{verbatim}
 ##            lhs op  rhs   est ci.lower ci.upper
@@ -1740,7 +1740,7 @@ If reference category changed, other loadings also change.
     \textbf{Parameterization:}
         \begin{itemize}
             \item Factor variance constrained at \textcolor{orange}{1}.
-            \item Factor mean constrained at \textcolor{orange}{0}.
+            \item Factor mean constrained at \textcolor{orange}{0}.*
         \end{itemize} 
         \textbf{Defaults:}
         \begin{itemize}
@@ -1762,6 +1762,10 @@ If reference category changed, other loadings also change.
     \end{column}%
     \end{columns}
     
+    \vspace{5mm}
+    
+    * In a multi-group model (discussed in another lecture), the mean of the (by default) first group is set to 0 (hence, the name 'reference-group').
+    
 \end{frame}
 %------------------------------------------------------------------------------%
 %
@@ -1775,7 +1779,7 @@ If reference category changed, other loadings also change.
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# Model}
-\hlstd{model.1CFA_RefGr} \hlkwb{<-} \hlstr{'
+\hldef{model.1CFA_RefGr} \hlkwb{<-} \hlsng{'
   # Free first factor loading, using: NA*
   Extraversion =~ NA*Q77 + Q84 + Q170 + Q196
   
@@ -1784,8 +1788,8 @@ If reference category changed, other loadings also change.
  '}
 
 \hlcom{# Fit model}
-\hlstd{fit_1CFA_RefGr} \hlkwb{<-} \hlkwd{cfa}\hlstd{(model.1CFA_RefGr,} \hlkwc{data}\hlstd{=data_sapi,}
-                \hlkwc{missing}\hlstd{=}\hlstr{'fiml'}\hlstd{,} \hlkwc{fixed.x}\hlstd{=F)}  \hlcom{# use FIML}
+\hldef{fit_1CFA_RefGr} \hlkwb{<-} \hlkwd{cfa}\hldef{(model.1CFA_RefGr,} \hlkwc{data}\hldef{=data_sapi,}
+                \hlkwc{missing}\hldef{=}\hlsng{'fiml'}\hldef{,} \hlkwc{fixed.x}\hldef{=F)}  \hlcom{# use FIML}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -1810,7 +1814,7 @@ Extraversion      0.000
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{parameterEstimates}\hlstd{(fit_1CFA_RefGr)[}\hlnum{1}\hlopt{:}\hlnum{4}\hlstd{,}\hlopt{-}\hlkwd{c}\hlstd{(}\hlnum{5}\hlstd{,}\hlnum{6}\hlstd{,}\hlnum{7}\hlstd{)]}
+\hlkwd{parameterEstimates}\hldef{(fit_1CFA_RefGr)[}\hlnum{1}\hlopt{:}\hlnum{4}\hldef{,}\hlopt{-}\hlkwd{c}\hldef{(}\hlnum{5}\hldef{,}\hlnum{6}\hldef{,}\hlnum{7}\hldef{)]}
 \end{alltt}
 \begin{verbatim}
 ##            lhs op  rhs   est ci.lower ci.upper
@@ -1920,7 +1924,7 @@ Interpretations can be intuitive:
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# Model}
-\hlstd{model.1CFA_EffC} \hlkwb{<-} \hlstr{'
+\hldef{model.1CFA_EffC} \hlkwb{<-} \hlsng{'
   # Label parameters, such that they can be constrained
   Extraversion =~ lambda1*Q77 + lambda2*Q84 + 
                   lambda3*Q170 + lambda4*Q196
@@ -1954,12 +1958,12 @@ Now, use the lavaan() function:
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# Fit model: Now, use the lavaan() function!}
-\hlstd{fit_1CFA_EffC} \hlkwb{<-} \hlkwd{lavaan}\hlstd{(model.1CFA_EffC,} \hlkwc{data}\hlstd{=data_sapi,}
-                      \hlkwc{missing}\hlstd{=}\hlstr{'fiml'}\hlstd{,} \hlkwc{fixed.x}\hlstd{=F,}
-                      \hlkwc{auto.var} \hlstd{=} \hlnum{TRUE}\hlstd{,}
-                      \hlkwc{auto.fix.first} \hlstd{=} \hlnum{FALSE}\hlstd{,}
-                      \hlkwc{auto.cov.lv.x} \hlstd{=} \hlnum{TRUE}\hlstd{,}
-                      \hlkwc{int.ov.free} \hlstd{=} \hlnum{TRUE}\hlstd{)}
+\hldef{fit_1CFA_EffC} \hlkwb{<-} \hlkwd{lavaan}\hldef{(model.1CFA_EffC,} \hlkwc{data}\hldef{=data_sapi,}
+                      \hlkwc{missing}\hldef{=}\hlsng{'fiml'}\hldef{,} \hlkwc{fixed.x}\hldef{=F,}
+                      \hlkwc{auto.var} \hldef{=} \hlnum{TRUE}\hldef{,}
+                      \hlkwc{auto.fix.first} \hldef{=} \hlnum{FALSE}\hldef{,}
+                      \hlkwc{auto.cov.lv.x} \hldef{=} \hlnum{TRUE}\hldef{,}
+                      \hlkwc{int.ov.free} \hldef{=} \hlnum{TRUE}\hldef{)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -1977,7 +1981,7 @@ Now, use the lavaan() function:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{parameterEstimates}\hlstd{(fit_1CFA_EffC)[}\hlnum{1}\hlopt{:}\hlnum{4}\hlstd{,}\hlnum{1}\hlopt{:}\hlnum{5}\hlstd{]}
+\hlkwd{parameterEstimates}\hldef{(fit_1CFA_EffC)[}\hlnum{1}\hlopt{:}\hlnum{4}\hldef{,}\hlnum{1}\hlopt{:}\hlnum{5}\hldef{]}
 \end{alltt}
 \begin{verbatim}
 ##            lhs op  rhs   label   est
@@ -1993,7 +1997,7 @@ Now, use the lavaan() function:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{parameterEstimates}\hlstd{(fit_1CFA_EffC)[}\hlnum{5}\hlopt{:}\hlnum{8}\hlstd{,}\hlnum{1}\hlopt{:}\hlnum{5}\hlstd{]}
+\hlkwd{parameterEstimates}\hldef{(fit_1CFA_EffC)[}\hlnum{5}\hlopt{:}\hlnum{8}\hldef{,}\hlnum{1}\hlopt{:}\hlnum{5}\hldef{]}
 \end{alltt}
 \begin{verbatim}
 ##    lhs op rhs label    est

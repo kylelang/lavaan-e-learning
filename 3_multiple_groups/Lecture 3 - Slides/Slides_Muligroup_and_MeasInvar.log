@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.5.23)  29 JUN 2022 16:20
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.5.23)  5 JUL 2024 10:43
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1207,7 +1207,7 @@ Overfull \hbox (30.44331pt too wide) in paragraph at lines 17--17
 LaTeX Font Info:    Trying to load font information for OMS+cmtt on input line 
 7.
 
-(c:/Program Files/R/R-4.2.0/share/texmf/tex/latex/omscmtt.fd
+(c:/Program Files/R/R-4.4.1/share/texmf/tex/latex/omscmtt.fd
 File: omscmtt.fd 
 )
 LaTeX Font Info:    Font shape `OMS/cmtt/m/it' in size <8> not available
@@ -1461,7 +1461,7 @@ pe1/public/amsfonts/cm/cmsy8.pfb><c:/texlive/2022/texmf-dist/fonts/type1/public
 /amsfonts/cm/cmsy9.pfb><c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/
 cm/cmtt10.pfb><c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.
 pfb>
-Output written on Slides_Muligroup_and_MeasInvar.pdf (48 pages, 1361733 bytes).
+Output written on Slides_Muligroup_and_MeasInvar.pdf (48 pages, 1361919 bytes).
 
 PDF statistics:
  3888 PDF objects out of 4296 (max. 8388607)
