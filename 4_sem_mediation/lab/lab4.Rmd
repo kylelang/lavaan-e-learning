@@ -429,19 +429,19 @@ the CI to support your conclusions.
 
 ```{r}
 ## Percentile CI:
-parameterEstimates(semFit1.2, boot.ci.type = "perc") %>% 
+parameterEstimates(semFit2, boot.ci.type = "perc") %>% 
   select(-(1:3)) %>%
   tail(1)
 
 ## BC CI:
-parameterEstimates(semFit1.2, boot.ci.type = "bca.simple") %>% 
+parameterEstimates(semFit2, boot.ci.type = "bca.simple") %>% 
   select(-(1:3)) %>%
   tail(1)
 ```
 
 ```{r, include = FALSE}
-out1 <- parameterEstimates(semFit1.2, boot.ci.type = "perc") %>% tail(1)
-out2 <- parameterEstimates(semFit1.2, boot.ci.type = "bca.simple") %>% tail(1)
+out1 <- parameterEstimates(semFit2, boot.ci.type = "perc") %>% tail(1)
+out2 <- parameterEstimates(semFit2, boot.ci.type = "bca.simple") %>% tail(1)
 ```
 
 ```{asis}
@@ -797,7 +797,7 @@ anx   ~ d * drive  + a2 * wsb
 drive ~ a1 * wsb
 
 ab1 := a1 * b1
-ab2 := a2 * a2
+ab2 := a2 * b2
 adb := a1 * d * b2
 ie  := ab1 + ab2 + adb
 '
@@ -861,11 +861,6 @@ $ab = `r round(out2$est, 3)`$,
 $95\%~CI_{BC} = [`r round(out2$ci.lower, 3)`; `r round(out2$ci.upper, 3)`]$
 ).
 
-   - The lower bound of the CI rounds down to zero. Although one could conclude 
-   a just barely significant effect from the CI alone, the small point estimate 
-   and the large p-value for the bootstrapped z-test both suggest against 
-   inferring a significant effect. 
-$\va$
 a. Yes, the full, three-step specific indirect effect is statistically 
 significant (
 $adb = `r round(out3$est, 3)`$, 
