@@ -14,10 +14,10 @@
 
 \definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
 \newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
-\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlsng}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
 \newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
 \newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
-\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hldef}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
 \newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
 \newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
 \newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
@@ -167,14 +167,14 @@ Regression example from lab meeting `Intro and regression':
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# Data}
-\hlstd{data_regr} \hlkwb{<-} \hlkwd{read.table}\hlstd{(}\hlstr{"popular_regr.txt"}\hlstd{,} \hlkwc{header} \hlstd{= T)}
-\hlstd{data_regr[}\hlkwd{sapply}\hlstd{(data_regr,} \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{)}
-          \hlkwd{as.character}\hlstd{(x)} \hlopt{%in%} \hlkwd{c}\hlstd{(}\hlstr{"-99"}\hlstd{,} \hlstr{"-999"}\hlstd{) )]} \hlkwb{<-} \hlnum{NA}
-\hlstd{data_regr}\hlopt{$}\hlstd{gender} \hlkwb{<-} \hlkwd{factor}\hlstd{(data_regr}\hlopt{$}\hlstd{gender,}
-                           \hlkwc{labels} \hlstd{=} \hlkwd{c}\hlstd{(}\hlstr{"male"}\hlstd{,} \hlstr{"female"}\hlstd{))}
+\hldef{data_regr} \hlkwb{<-} \hlkwd{read.table}\hldef{(}\hlsng{"popular_regr.txt"}\hldef{,} \hlkwc{header} \hldef{= T)}
+\hldef{data_regr[}\hlkwd{sapply}\hldef{(data_regr,} \hlkwa{function}\hldef{(}\hlkwc{x}\hldef{)}
+          \hlkwd{as.character}\hldef{(x)} \hlopt{%in%} \hlkwd{c}\hldef{(}\hlsng{"-99"}\hldef{,} \hlsng{"-999"}\hldef{) )]} \hlkwb{<-} \hlnum{NA}
+\hldef{data_regr}\hlopt{$}\hldef{gender} \hlkwb{<-} \hlkwd{factor}\hldef{(data_regr}\hlopt{$}\hldef{gender,}
+                           \hlkwc{labels} \hldef{=} \hlkwd{c}\hldef{(}\hlsng{"male"}\hldef{,} \hlsng{"female"}\hldef{))}
 
 \hlcom{# Model}
-\hlstd{model.MGregr} \hlkwb{<-} \hlstr{'
+\hldef{model.MGregr} \hlkwb{<-} \hlsng{'
   sw ~ overt + covert # regression
   sw ~~ sw            # residual variance
   sw ~ 1              # intercept
@@ -197,12 +197,12 @@ Use the `group' argument in lavaan:
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# Fit model}
-\hlstd{fit.MGregr} \hlkwb{<-} \hlkwd{lavaan}\hlstd{(model.MGregr,} \hlkwc{data} \hlstd{= data_regr,}
-              \hlkwc{group} \hlstd{=} \hlstr{"gender"}\hlstd{)} \hlcom{# multigroup specification}
+\hldef{fit.MGregr} \hlkwb{<-} \hlkwd{lavaan}\hldef{(model.MGregr,} \hlkwc{data} \hldef{= data_regr,}
+              \hlkwc{group} \hldef{=} \hlsng{"gender"}\hldef{)} \hlcom{# multigroup specification}
 \end{alltt}
 
 
-{\ttfamily\noindent\color{warningcolor}{\#\# Warning in lav\_data\_full(data = data, group = group, cluster = cluster, : lavaan WARNING: group variable 'gender' contains missing values}}\begin{alltt}
+{\ttfamily\noindent\color{warningcolor}{\#\# Warning: lavaan->lav\_data\_full(): \ \\\#\# \ \ \ group variable 'gender' contains missing values}}\begin{alltt}
 \hlcom{# Results}
 \hlcom{#summary(fit.MGregr) # or:}
 \hlcom{#summary(fit.MGregr, standardized = TRUE)}
@@ -256,7 +256,7 @@ Variances:
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# Model specification}
-\hlstd{model.MGregr_equal} \hlkwb{<-} \hlstr{'
+\hldef{model.MGregr_equal} \hlkwb{<-} \hlsng{'
   # model with labeled parameters
   sw ~ c(b1_m,b1_f)*overt + c(b2_m,b2_f)*covert 
   sw ~~ sw                                      
@@ -264,13 +264,13 @@ Variances:
 '}
 
 \hlcom{# Fit model}
-\hlstd{fit_MGregr_equal} \hlkwb{<-} \hlkwd{lavaan}\hlstd{(}\hlkwc{model} \hlstd{= model.MGregr_equal,}
-                    \hlkwc{data} \hlstd{= data_regr,}
-                    \hlkwc{group} \hlstd{=} \hlstr{"gender"}\hlstd{)} \hlcom{# multigroup specification }
+\hldef{fit_MGregr_equal} \hlkwb{<-} \hlkwd{lavaan}\hldef{(}\hlkwc{model} \hldef{= model.MGregr_equal,}
+                    \hlkwc{data} \hldef{= data_regr,}
+                    \hlkwc{group} \hldef{=} \hlsng{"gender"}\hldef{)} \hlcom{# multigroup specification }
 
 \hlcom{# Test equality of regression coefficients}
-\hlkwd{lavTestWald}\hlstd{(fit_MGregr_equal,}
-            \hlkwc{constraints} \hlstd{=} \hlstr{'b1_m == b1_f; b2_m == b2_f'}\hlstd{)}
+\hlkwd{lavTestWald}\hldef{(fit_MGregr_equal,}
+            \hlkwc{constraints} \hldef{=} \hlsng{'b1_m == b1_f; b2_m == b2_f'}\hldef{)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -351,18 +351,18 @@ Evidence that the coefficients differ across groups.
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# Test equality of regression coefficients \textbackslash{} Wald test}
-\hlkwd{lavTestWald}\hlstd{(fit_MGregr_equal,}
-            \hlkwc{constraints} \hlstd{=} \hlstr{'b1_m == b1_f; b2_m == b2_f'}\hlstd{)}
+\hlkwd{lavTestWald}\hldef{(fit_MGregr_equal,}
+            \hlkwc{constraints} \hldef{=} \hlsng{'b1_m == b1_f; b2_m == b2_f'}\hldef{)}
 \end{alltt}
 \begin{verbatim}
 ## $stat
-## [1] 1.035524
+## [1] 1.035523
 ## 
 ## $df
 ## [1] 2
 ## 
 ## $p.value
-## [1] 0.5958526
+## [1] 0.5958527
 ## 
 ## $se
 ## [1] "standard"
@@ -746,12 +746,12 @@ Note: Steps 3, 4, and 5, that is, testing for configural invariance, metric/weak
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# Data}
-\hlstd{data_sapi} \hlkwb{<-} \hlkwd{read.table}\hlstd{(}\hlstr{"Sapi.txt"}\hlstd{,} \hlkwc{header} \hlstd{= T)}
+\hldef{data_sapi} \hlkwb{<-} \hlkwd{read.table}\hldef{(}\hlsng{"Sapi.txt"}\hldef{,} \hlkwc{header} \hldef{= T)}
 
-\hlstd{data_sapi[}\hlkwd{sapply}\hlstd{(data_sapi,}
-    \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{)} \hlkwd{as.character}\hlstd{(x)} \hlopt{%in%} \hlkwd{c}\hlstd{(}\hlstr{"-999"}\hlstd{) )]} \hlkwb{<-} \hlnum{NA}
+\hldef{data_sapi[}\hlkwd{sapply}\hldef{(data_sapi,}
+    \hlkwa{function}\hldef{(}\hlkwc{x}\hldef{)} \hlkwd{as.character}\hldef{(x)} \hlopt{%in%} \hlkwd{c}\hldef{(}\hlsng{"-999"}\hldef{) )]} \hlkwb{<-} \hlnum{NA}
 
-\hlstd{data_sapi}\hlopt{$}\hlstd{Gender} \hlkwb{<-} \hlkwd{factor}\hlstd{(data_sapi}\hlopt{$}\hlstd{Gender,} \hlkwc{labels} \hlstd{=} \hlkwd{c}\hlstd{(}\hlstr{"male"}\hlstd{,} \hlstr{"female"}\hlstd{))}
+\hldef{data_sapi}\hlopt{$}\hldef{Gender} \hlkwb{<-} \hlkwd{factor}\hldef{(data_sapi}\hlopt{$}\hldef{Gender,} \hlkwc{labels} \hldef{=} \hlkwd{c}\hldef{(}\hlsng{"male"}\hldef{,} \hlsng{"female"}\hldef{))}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -760,9 +760,9 @@ Note: Steps 3, 4, and 5, that is, testing for configural invariance, metric/weak
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# multigroup two-factor CFA (MG2CFA) - group = 'Gender'}
-\hlstd{model.2CFA} \hlkwb{<-} \hlstr{'
- Having fun  =~ Q77 + Q84 + Q196 
- Being liked =~ Q44 + Q63 + Q98
+\hldef{model.2CFA} \hlkwb{<-} \hlsng{'
+ Havingfun  =~ Q77 + Q84 + Q196 
+ Beingliked =~ Q44 + Q63 + Q98
 '}
 \end{alltt}
 \end{kframe}
@@ -777,22 +777,22 @@ Note: Steps 3, 4, and 5, that is, testing for configural invariance, metric/weak
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# configural invariance}
-\hlstd{fit_MG2CFA_ci} \hlkwb{<-} \hlkwd{cfa}\hlstd{(model.2CFA,} \hlkwc{data}\hlstd{=data_sapi,}
-                     \hlkwc{group} \hlstd{=} \hlstr{'Gender'}\hlstd{,}
-                     \hlkwc{missing}\hlstd{=}\hlstr{'fiml'}\hlstd{,} \hlkwc{fixed.x}\hlstd{=F)}
+\hldef{fit_MG2CFA_ci} \hlkwb{<-} \hlkwd{cfa}\hldef{(model.2CFA,} \hlkwc{data}\hldef{=data_sapi,}
+                     \hlkwc{group} \hldef{=} \hlsng{'Gender'}\hldef{,}
+                     \hlkwc{missing}\hldef{=}\hlsng{'fiml'}\hldef{,} \hlkwc{fixed.x}\hldef{=F)}
 
 \hlcom{# metric/weak invariance}
-\hlstd{fit_MG2CFA_wi} \hlkwb{<-} \hlkwd{cfa}\hlstd{(model.2CFA,} \hlkwc{data}\hlstd{=data_sapi,}
-                     \hlkwc{group} \hlstd{=} \hlstr{'Gender'}\hlstd{,}
-                     \hlkwc{missing}\hlstd{=}\hlstr{'fiml'}\hlstd{,} \hlkwc{fixed.x}\hlstd{=F,}
-                     \hlkwc{group.equal} \hlstd{=} \hlstr{"loadings"}\hlstd{)}
+\hldef{fit_MG2CFA_wi} \hlkwb{<-} \hlkwd{cfa}\hldef{(model.2CFA,} \hlkwc{data}\hldef{=data_sapi,}
+                     \hlkwc{group} \hldef{=} \hlsng{'Gender'}\hldef{,}
+                     \hlkwc{missing}\hldef{=}\hlsng{'fiml'}\hldef{,} \hlkwc{fixed.x}\hldef{=F,}
+                     \hlkwc{group.equal} \hldef{=} \hlsng{"loadings"}\hldef{)}
 
 \hlcom{# scalar/strong invariance}
-\hlstd{fit_MG2CFA_si} \hlkwb{<-} \hlkwd{cfa}\hlstd{(model.2CFA,} \hlkwc{data}\hlstd{=data_sapi,}
-                     \hlkwc{group} \hlstd{=} \hlstr{'Gender'}\hlstd{,}
-                     \hlkwc{missing}\hlstd{=}\hlstr{'fiml'}\hlstd{,} \hlkwc{fixed.x}\hlstd{=F,}
-                     \hlkwc{group.equal} \hlstd{=} \hlkwd{c}\hlstd{(}\hlstr{"intercepts"}\hlstd{,}
-                                     \hlstr{"loadings"}\hlstd{))}
+\hldef{fit_MG2CFA_si} \hlkwb{<-} \hlkwd{cfa}\hldef{(model.2CFA,} \hlkwc{data}\hldef{=data_sapi,}
+                     \hlkwc{group} \hldef{=} \hlsng{'Gender'}\hldef{,}
+                     \hlkwc{missing}\hldef{=}\hlsng{'fiml'}\hldef{,} \hlkwc{fixed.x}\hldef{=F,}
+                     \hlkwc{group.equal} \hldef{=} \hlkwd{c}\hldef{(}\hlsng{"intercepts"}\hldef{,}
+                                     \hlsng{"loadings"}\hldef{))}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -807,14 +807,14 @@ Note: Steps 3, 4, and 5, that is, testing for configural invariance, metric/weak
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# model comparison tests: anova() or lavTestLRT()}
-\hlkwd{lavTestLRT}\hlstd{(fit_MG2CFA_ci, fit_MG2CFA_wi,}
-           \hlstd{fit_MG2CFA_si)[}\hlopt{-}\hlkwd{c}\hlstd{(}\hlnum{2}\hlstd{,}\hlnum{3}\hlstd{,}\hlnum{4}\hlstd{)]}
+\hlkwd{lavTestLRT}\hldef{(fit_MG2CFA_ci, fit_MG2CFA_wi,}
+           \hldef{fit_MG2CFA_si)[}\hlopt{-}\hlkwd{c}\hldef{(}\hlnum{2}\hldef{,}\hlnum{3}\hldef{,}\hlnum{4}\hldef{)]}
 \end{alltt}
 \begin{verbatim}
-##               Df Chisq diff Df diff Pr(>Chisq)
-## fit_MG2CFA_ci 16                              
-## fit_MG2CFA_wi 20     1.3992       4     0.8443
-## fit_MG2CFA_si 24     7.3791       4     0.1172
+##               Df Chisq diff  RMSEA Df diff Pr(>Chisq)
+## fit_MG2CFA_ci 16                                     
+## fit_MG2CFA_wi 20     1.3992 0.0000       4     0.8443
+## fit_MG2CFA_si 24     7.3791 0.0415       4     0.1172
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -847,8 +847,8 @@ Note: Steps 3, 4, and 5, that is, testing for configural invariance, metric/weak
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# model comparison tests: anova() or lavTestLRT()}
-\hlkwd{lavTestLRT}\hlstd{(fit_MG2CFA_ci, fit_MG2CFA_wi,}
-           \hlstd{fit_MG2CFA_si)[}\hlkwd{c}\hlstd{(}\hlnum{2}\hlstd{,}\hlnum{3}\hlstd{)]}
+\hlkwd{lavTestLRT}\hldef{(fit_MG2CFA_ci, fit_MG2CFA_wi,}
+           \hldef{fit_MG2CFA_si)[}\hlkwd{c}\hldef{(}\hlnum{2}\hldef{,}\hlnum{3}\hldef{)]}
 \end{alltt}
 \begin{verbatim}
 ##                 AIC   BIC
@@ -873,11 +873,11 @@ Note: Steps 3, 4, and 5, that is, testing for configural invariance, metric/weak
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# model comparison tests: anova() or lavTestLRT()}
-\hlstd{fitMI} \hlkwb{<-} \hlkwd{sapply}\hlstd{(}\hlkwd{list}\hlstd{(fit_MG2CFA_ci, fit_MG2CFA_wi,}
-                     \hlstd{fit_MG2CFA_si),}
-                \hlstd{fitMeasures,} \hlkwd{c}\hlstd{(}\hlstr{"cfi"}\hlstd{,} \hlstr{"rmsea"}\hlstd{))}
-\hlkwd{colnames}\hlstd{(fitMI)} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlstr{"config"}\hlstd{,} \hlstr{"weak"}\hlstd{,} \hlstr{"strong"}\hlstd{)}
-\hlstd{fitMI}
+\hldef{fitMI} \hlkwb{<-} \hlkwd{sapply}\hldef{(}\hlkwd{list}\hldef{(fit_MG2CFA_ci, fit_MG2CFA_wi,}
+                     \hldef{fit_MG2CFA_si),}
+                \hldef{fitMeasures,} \hlkwd{c}\hldef{(}\hlsng{"cfi"}\hldef{,} \hlsng{"rmsea"}\hldef{))}
+\hlkwd{colnames}\hldef{(fitMI)} \hlkwb{<-} \hlkwd{c}\hldef{(}\hlsng{"config"}\hldef{,} \hlsng{"weak"}\hldef{,} \hlsng{"strong"}\hldef{)}
+\hldef{fitMI}
 \end{alltt}
 \begin{verbatim}
 ##           config       weak     strong

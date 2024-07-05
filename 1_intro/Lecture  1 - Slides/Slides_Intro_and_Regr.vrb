@@ -18,10 +18,10 @@ To be discussed in the Model Selection lecture
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{library}\hlstd{(devtools)} \hlcom{# Make sure you have Rtools}
-\hlkwd{install_github}\hlstd{(}\hlstr{"rebeccakuiper/ICweights"}\hlstd{)}
-\hlkwd{library}\hlstd{(ICweights)}
-\hlopt{?}\hlstd{IC.weights}
+\hlkwd{library}\hldef{(devtools)} \hlcom{# Make sure you have Rtools}
+\hlkwd{install_github}\hldef{(}\hlsng{"rebeccakuiper/ICweights"}\hldef{)}
+\hlkwd{library}\hldef{(ICweights)}
+\hlopt{?}\hldef{IC.weights}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -29,8 +29,8 @@ To be discussed in the Model Selection lecture
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{library}\hlstd{(restriktor)}
-\hlkwd{library}\hlstd{(goric)}
+\hlkwd{library}\hldef{(restriktor)}
+\hlkwd{library}\hldef{(goric)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}

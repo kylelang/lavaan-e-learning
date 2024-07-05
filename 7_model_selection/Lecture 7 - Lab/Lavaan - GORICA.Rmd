@@ -245,10 +245,11 @@ results1 <- goric(fit1, hypotheses = list(H1.1 = H1.1),
 
 ```{r, message=F, warning=FALSE}
 # Note: This also includes the comparison of hypotheses
-summary(results1)
+#summary(results1)
+results1
 ```
 
-The order-restricted hypothesis ‘H1.1’ has 85.561 times more support than its complement.
+The order-restricted hypothesis ‘H1.1’ has 85.56 times more support than its complement.
 
 **Possible conclusion**
 
@@ -473,8 +474,9 @@ In our hypotheses (as in many hypotheses not addressing mean values), we need st
 ```{r, message=F, warning=FALSE}
 set.seed(100)
 results2 <- goric(fit2, hypotheses = list(H1.2 = H1.2, H2.2 = H2.2, H3.2 = H3.2), 
-                  type = "gorica", standardized = TRUE) 
-summary(results2) # Note: This also includes the comparison of hypotheses
+                  type = "gorica", standardized = TRUE)
+results2
+#summary(results2) # Note: This also includes the comparison of hypotheses
 ```
 
 Note: In case of equal log-likelihood (loglik) values (i.e., ratio of loglik weights of 1), the ratio of GORICA weights are solely based on the difference in penalty values. See the article (https://doi-org.proxy.library.uu.nl/10.1080/10705511.2020.1836967) or the guidelines ('Guidelines_output_GORIC.html' on https://github.com/rebeccakuiper/Tutorials) for more information.
@@ -498,10 +500,11 @@ set.seed(100)
 results2_c <- goric(fit2, hypotheses = list(H1.2 = H1.2), 
                     comparison = "complement", type = "gorica",
                     standardized = TRUE) 
-summary(results2_c) # Note: This also includes the comparison of hypotheses
+#summary(results2_c) # Note: This also includes the comparison of hypotheses
+results2_c
 ```
 
-The order-restricted hypothesis ‘H1.2’ has  6.967 times more support than its complement. This is convincing support for H1.2.
+The order-restricted hypothesis ‘H1.2’ has  6.97 times more support than its complement. This is convincing support for H1.2.
 
 </details>
 
@@ -689,7 +692,8 @@ results3 <- goric(fit3, hypotheses = list(H1.3 =  H1.3),
                   comparison = "complement", type = "gorica", 
                   standardized = T) 
 
-summary(results3) # Note: This also includes the comparison of hypotheses
+#summary(results3) # Note: This also includes the comparison of hypotheses
+results3
 ```
 
 
@@ -832,7 +836,8 @@ Now, use these when calculating the GORICA values and weights for H1.3 and its c
 set.seed(100)
 results3 <- goric(est_3, VCOV = vcov_3, hypotheses = list(H1.3 =  H1.3), 
                   comparison = "complement", type = "gorica") 
-summary(results3) # Note: This also includes the comparison of hypotheses
+#summary(results3) # Note: This also includes the comparison of hypotheses
+results3
 ```
 
 

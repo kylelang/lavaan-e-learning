@@ -676,8 +676,8 @@ data_sapi$Gender <- factor(data_sapi$Gender, labels = c("male", "female"))
 <<>>=
 # multigroup two-factor CFA (MG2CFA) - group = 'Gender'
 model.2CFA <- '
- Having fun  =~ Q77 + Q84 + Q196 
- Being liked =~ Q44 + Q63 + Q98
+ Havingfun  =~ Q77 + Q84 + Q196 
+ Beingliked =~ Q44 + Q63 + Q98
 '
 @ 
 

@@ -226,7 +226,7 @@ Next, we are going to test whether the differences between the regression coeffi
 
 Next, we want to test whether the regression coefficients for males and females are the same.
 
-Note: One should actually do this for comparable parameters, which often comes down to inspecting standardized parameters. Unfortunately, this is difficult when using lavaan (or Mplus for that metter). However, since we look at the same relationship for two different groups, the comparability of the estimates may not be a problem. Moreover, the variances of the predictors and dependent variable are about the same for both groups, so we can probably compare the unstandardized parameters as well. 
+Note: One should actually do this for comparable parameters, which often comes down to inspecting standardized parameters. Unfortunately, this is difficult when using lavaan (or Mplus for that matter). However, since we look at the same relationship for two different groups, the comparability of the estimates may not be a problem. Moreover, the variances of the predictors and dependent variable are about the same for both groups, so we can probably compare the unstandardized parameters as well. 
 
 Now, we want to constrain 'a single parameter' to be equal across two groups. Therefore, we need to label this parameter for both groups, so using 2 labels. This we need to do for both regression coefficient parameters.
 
@@ -255,7 +255,7 @@ Last, conduct a Wald test:
 lavTestWald(fit_MGregr_equal, constraints = 'b1_m == b1_f; b2_m == b2_f')
 ```
 
-The Wald test with df=1 is 1.036, with $p$ = 0.596. Thus, we do not reject the null that the two regression coefficients for both groups are equal. Hence, we conclude that there is no evidence for a difference between b1_m and b1_f and between b2_m and b2_f. Stated otherwise, we conclude that the estimates are the same for both groups.
+The Wald test with df=2 is 1.036, with $p$ = 0.596. Thus, we do not reject the null that the two regression coefficients for both groups are equal. Hence, we conclude that there is no evidence for a difference between b1_m and b1_f and between b2_m and b2_f. Stated otherwise, we conclude that the estimates are the same for both groups.
 
 In case one wants the model results for which the regression coefficients are the same:
 
@@ -318,7 +318,7 @@ Run a 1-factor multigroup CFA on the data, using: group = "Kin".
 
 ## Exercise 2c
 
-Test for configural, metric (weak) and scalar (strong) invariance:
+Test for configural, metric (weak), and scalar (strong) invariance:
 
 * Configural: this is the model run in 2b.
 * Weak: In the cfa function, one should add: group.equal = "loadings"
@@ -439,7 +439,7 @@ lavInspect(fit_MG1CFA)
 
 The number of observations per group are:
 
-* 190 in the partner group
+* 190 in the 'partner' group
 * 379 in the 'else' group
 
 &nbsp;

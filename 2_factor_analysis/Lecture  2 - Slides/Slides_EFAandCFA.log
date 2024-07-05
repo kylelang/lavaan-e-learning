@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.5.23)  8 JUL 2022 10:38
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.5.23)  5 JUL 2024 09:39
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1444,9 +1444,15 @@ Overfull \hbox (4.19354pt too wide) in paragraph at lines 6--6
  []
 
 
-Overfull \hbox (7.70738pt too wide) in paragraph at lines 14--14
-[]\OT1/cmtt/m/n/10 ## fit_2CFA     19 124.170     35.432       1  2.641e-09 ***
-[] 
+Overfull \hbox (28.7072pt too wide) in paragraph at lines 14--14
+[]\OT1/cmtt/m/n/10 ##              Df   Chisq Chisq diff   RMSEA Df diff Pr(>Ch
+isq)[] 
+ []
+
+
+Overfull \hbox (49.70702pt too wide) in paragraph at lines 14--14
+[]\OT1/cmtt/m/n/10 ## fit_2CFA     19 124.170     35.432 0.18556       1  2.641
+e-09 ***[] 
  []
 
 
@@ -1506,7 +1512,7 @@ Package pdftex.def Info: images/slide56.png  used on input line 1670.
 <images/slide60.png, id=5656, 139.52126pt x 168.63pt>
 File: images/slide60.png Graphic file (type png)
 <use images/slide60.png>
-Package pdftex.def Info: images/slide60.png  used on input line 1765.
+Package pdftex.def Info: images/slide60.png  used on input line 1769.
 (pdftex.def)             Requested size: 104.481pt x 126.27919pt.
  [55
 
@@ -1524,11 +1530,11 @@ Package pdftex.def Info: images/slide60.png  used on input line 1765.
 ]
 File: images/slide56.png Graphic file (type png)
 <use images/slide56.png>
-Package pdftex.def Info: images/slide56.png  used on input line 1858.
+Package pdftex.def Info: images/slide56.png  used on input line 1862.
 (pdftex.def)             Requested size: 100.3807pt x 142.26378pt.
 File: images/slide60.png Graphic file (type png)
 <use images/slide60.png>
-Package pdftex.def Info: images/slide60.png  used on input line 1858.
+Package pdftex.def Info: images/slide60.png  used on input line 1862.
 (pdftex.def)             Requested size: 102.4053pt x 123.76965pt.
  [58
 
@@ -1536,14 +1542,14 @@ Package pdftex.def Info: images/slide60.png  used on input line 1858.
 <images/slide66.png, id=6065, 138.5175pt x 163.61125pt>
 File: images/slide66.png Graphic file (type png)
 <use images/slide66.png>
-Package pdftex.def Info: images/slide66.png  used on input line 1896.
+Package pdftex.def Info: images/slide66.png  used on input line 1900.
 (pdftex.def)             Requested size: 104.47755pt x 123.40465pt.
  [59
 
  <./images/slide66.png>]
 File: images/slide66.png Graphic file (type png)
 <use images/slide66.png>
-Package pdftex.def Info: images/slide66.png  used on input line 1913.
+Package pdftex.def Info: images/slide66.png  used on input line 1917.
 (pdftex.def)             Requested size: 72.26622pt x 85.35826pt.
  [60
 
@@ -1578,10 +1584,10 @@ Package pdftex.def Info: images/slide66.png  used on input line 1913.
 <images/slide21.png, id=7098, 511.9125pt x 446.66875pt>
 File: images/slide21.png Graphic file (type png)
 <use images/slide21.png>
-Package pdftex.def Info: images/slide21.png  used on input line 2091.
+Package pdftex.def Info: images/slide21.png  used on input line 2095.
 (pdftex.def)             Requested size: 286.89557pt x 250.33044pt.
 
-Overfull \vbox (1.00455pt too high) detected at line 2091
+Overfull \vbox (1.00455pt too high) detected at line 2095
  []
 
 [69
@@ -1628,7 +1634,7 @@ live/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmssi8.pfb><c:/texlive/2022
 /texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/texlive/2022/texmf-di
 st/fonts/type1/public/amsfonts/cm/cmsy9.pfb><c:/texlive/2022/texmf-dist/fonts/t
 ype1/public/amsfonts/cm/cmtt10.pfb>
-Output written on Slides_EFAandCFA.pdf (71 pages, 1838114 bytes).
+Output written on Slides_EFAandCFA.pdf (71 pages, 1838685 bytes).
 PDF statistics:
  7500 PDF objects out of 8907 (max. 8388607)
  7214 compressed objects within 73 object streams

@@ -14,10 +14,10 @@
 
 \definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
 \newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
-\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlsng}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
 \newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
 \newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
-\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hldef}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
 \newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
 \newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
 \newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
@@ -312,10 +312,10 @@ For example, in case of a .txt file:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{data_sapi} \hlkwb{<-} \hlkwd{read.table}\hlstd{(}\hlstr{"Sapi.txt"}\hlstd{,} \hlkwc{header} \hlstd{= T)}
+\hldef{data_sapi} \hlkwb{<-} \hlkwd{read.table}\hldef{(}\hlsng{"Sapi.txt"}\hldef{,} \hlkwc{header} \hldef{= T)}
 
-\hlstd{data_sapi[}\hlkwd{sapply}\hlstd{(data_sapi,}
-    \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{)} \hlkwd{as.character}\hlstd{(x)} \hlopt{%in%} \hlkwd{c}\hlstd{(}\hlstr{"-999"}\hlstd{) )]} \hlkwb{<-} \hlnum{NA}
+\hldef{data_sapi[}\hlkwd{sapply}\hldef{(data_sapi,}
+    \hlkwa{function}\hldef{(}\hlkwc{x}\hldef{)} \hlkwd{as.character}\hldef{(x)} \hlopt{%in%} \hlkwd{c}\hldef{(}\hlsng{"-999"}\hldef{) )]} \hlkwb{<-} \hlnum{NA}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -366,7 +366,7 @@ For example, in case of a .txt file:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{mod.regr} \hlkwb{<-} \hlstr{'
+\hldef{mod.regr} \hlkwb{<-} \hlsng{'
   Q77 ~ Age  # regression
   Q77 ~~ Q77 # residual variance
   Q77 ~ 1    # intercept
@@ -422,7 +422,7 @@ dependent $\sim$ 1 + predictor1 + predictor2 + etc.
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{mod.regr_DIY} \hlkwb{<-} \hlstr{'
+\hldef{mod.regr_DIY} \hlkwb{<-} \hlsng{'
   y2 ~ 1 + x1 + x2  # intercept + regression
   y2 ~~ y2          # residual variance
   
@@ -447,18 +447,20 @@ dependent $\sim$ 1 + predictor1 + predictor2 + etc.
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{mod.regr_DIY} \hlkwb{<-} \hlstr{'
+\hldef{mod.regr_DIY} \hlkwb{<-} \hlsng{'
   y2 ~ 1 + x1 + x2  # intercept + regression
   y2 ~~ y2          # residual variance
   
   # Make it a habit to also specify:
-  #x1 + x2 ~ 1      # means predictors
+  x1 + x2 ~ 1       # means predictors - DO specify this!
   x1 + x2 ~~ x1     # (co)variance predictors 
   x2 ~~ x2          # variance x2
 '}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
+
+Note: As opposed to what I say in the video, do specify the means for the predictors explicitly; otherwise they will be set to 0.
 
 \end{frame}
 %------------------------------------------------------------------------------%
@@ -487,7 +489,7 @@ dependent $\sim$ 1 + predictor1 + predictor2 + etc.
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{fit.regr} \hlkwb{<-} \hlkwd{lavaan}\hlstd{(}\hlkwc{model} \hlstd{= mod.regr,} \hlkwc{data} \hlstd{= data_sapi)}
+\hldef{fit.regr} \hlkwb{<-} \hlkwd{lavaan}\hldef{(}\hlkwc{model} \hldef{= mod.regr,} \hlkwc{data} \hldef{= data_sapi)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -500,19 +502,19 @@ dependent $\sim$ 1 + predictor1 + predictor2 + etc.
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# Data}
-\hlstd{data_sapi} \hlkwb{<-} \hlkwd{read.table}\hlstd{(}\hlstr{"Sapi.txt"}\hlstd{,} \hlkwc{header} \hlstd{= T)}
-\hlstd{data_sapi[}\hlkwd{sapply}\hlstd{(data_sapi,}
-    \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{)} \hlkwd{as.character}\hlstd{(x)} \hlopt{%in%} \hlkwd{c}\hlstd{(}\hlstr{"-999"}\hlstd{) )]} \hlkwb{<-} \hlnum{NA}
+\hldef{data_sapi} \hlkwb{<-} \hlkwd{read.table}\hldef{(}\hlsng{"Sapi.txt"}\hldef{,} \hlkwc{header} \hldef{= T)}
+\hldef{data_sapi[}\hlkwd{sapply}\hldef{(data_sapi,}
+    \hlkwa{function}\hldef{(}\hlkwc{x}\hldef{)} \hlkwd{as.character}\hldef{(x)} \hlopt{%in%} \hlkwd{c}\hldef{(}\hlsng{"-999"}\hldef{) )]} \hlkwb{<-} \hlnum{NA}
 
 \hlcom{# Model}
-\hlstd{mod.regr} \hlkwb{<-} \hlstr{'
+\hldef{mod.regr} \hlkwb{<-} \hlsng{'
   Q77 ~ Age  # regression
   Q77 ~~ Q77 # residual variance
   Q77 ~ 1    # intercept
 '}
 
 \hlcom{# Fit model}
-\hlstd{fit.regr} \hlkwb{<-} \hlkwd{lavaan}\hlstd{(}\hlkwc{model} \hlstd{= mod.regr,} \hlkwc{data} \hlstd{= data_sapi)}
+\hldef{fit.regr} \hlkwb{<-} \hlkwd{lavaan}\hldef{(}\hlkwc{model} \hldef{= mod.regr,} \hlkwc{data} \hldef{= data_sapi)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -535,22 +537,22 @@ dependent $\sim$ 1 + predictor1 + predictor2 + etc.
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwa{if} \hlstd{(}\hlopt{!}\hlkwd{require}\hlstd{(}\hlstr{"lavaanPlot"}\hlstd{))} \hlkwd{install.packages}\hlstd{(}\hlstr{"lavaanPlot"}\hlstd{)}
-\hlkwd{library}\hlstd{(lavaanPlot)}
+\hlkwa{if} \hldef{(}\hlopt{!}\hlkwd{require}\hldef{(}\hlsng{"lavaanPlot"}\hldef{))} \hlkwd{install.packages}\hldef{(}\hlsng{"lavaanPlot"}\hldef{)}
+\hlkwd{library}\hldef{(lavaanPlot)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{lavaanPlot}\hlstd{(}\hlkwc{model} \hlstd{= fit.regr,}
-           \hlkwc{graph_options} \hlstd{=} \hlkwd{list}\hlstd{(}\hlkwc{overlap} \hlstd{=} \hlstr{"true"}\hlstd{,}
-                                \hlkwc{fontsize} \hlstd{=} \hlstr{"20"}\hlstd{),}
-           \hlkwc{node_options} \hlstd{=} \hlkwd{list}\hlstd{(}\hlkwc{shape} \hlstd{=} \hlstr{"box"}\hlstd{,}
-                               \hlkwc{fontname} \hlstd{=} \hlstr{"Helvetica"}\hlstd{),}
-           \hlkwc{edge_options} \hlstd{=} \hlkwd{list}\hlstd{(}\hlkwc{color} \hlstd{=} \hlstr{"grey"}\hlstd{),}
-           \hlkwc{coefs} \hlstd{= T,} \hlkwc{stand} \hlstd{= T,} \hlkwc{covs} \hlstd{= T,}
-           \hlstd{)}
+\hlkwd{lavaanPlot}\hldef{(}\hlkwc{model} \hldef{= fit.regr,}
+           \hlkwc{graph_options} \hldef{=} \hlkwd{list}\hldef{(}\hlkwc{overlap} \hldef{=} \hlsng{"true"}\hldef{,}
+                                \hlkwc{fontsize} \hldef{=} \hlsng{"20"}\hldef{),}
+           \hlkwc{node_options} \hldef{=} \hlkwd{list}\hldef{(}\hlkwc{shape} \hldef{=} \hlsng{"box"}\hldef{,}
+                               \hlkwc{fontname} \hldef{=} \hlsng{"Helvetica"}\hldef{),}
+           \hlkwc{edge_options} \hldef{=} \hlkwd{list}\hldef{(}\hlkwc{color} \hldef{=} \hlsng{"grey"}\hldef{),}
+           \hlkwc{coefs} \hldef{= T,} \hlkwc{stand} \hldef{= T,} \hlkwc{covs} \hldef{= T,}
+           \hldef{)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -562,15 +564,15 @@ dependent $\sim$ 1 + predictor1 + predictor2 + etc.
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{library}\hlstd{(tidySEM)}
-\hlkwa{if} \hlstd{(}\hlopt{!}\hlkwd{require}\hlstd{(}\hlstr{"tidySEM"}\hlstd{))} \hlkwd{install.packages}\hlstd{(}\hlstr{"tidySEM"}\hlstd{)}
+\hlkwd{library}\hldef{(tidySEM)}
+\hlkwa{if} \hldef{(}\hlopt{!}\hlkwd{require}\hldef{(}\hlsng{"tidySEM"}\hldef{))} \hlkwd{install.packages}\hldef{(}\hlsng{"tidySEM"}\hldef{)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{graph_sem}\hlstd{(fit.regr)}
+\hlkwd{graph_sem}\hldef{(fit.regr)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -582,16 +584,16 @@ dependent $\sim$ 1 + predictor1 + predictor2 + etc.
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwa{if} \hlstd{(}\hlopt{!}\hlkwd{require}\hlstd{(}\hlstr{"semPlot"}\hlstd{))} \hlkwd{install.packages}\hlstd{(}\hlstr{"semPlot"}\hlstd{)}
-\hlkwd{library}\hlstd{(semPlot)}
+\hlkwa{if} \hldef{(}\hlopt{!}\hlkwd{require}\hldef{(}\hlsng{"semPlot"}\hldef{))} \hlkwd{install.packages}\hldef{(}\hlsng{"semPlot"}\hldef{)}
+\hlkwd{library}\hldef{(semPlot)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{semPaths}\hlstd{(fit.regr,} \hlstr{"par"}\hlstd{,} \hlkwc{weighted} \hlstd{=} \hlnum{FALSE}\hlstd{,} \hlkwc{nCharNodes} \hlstd{=} \hlnum{7}\hlstd{,}
-         \hlkwc{shapeMan} \hlstd{=} \hlstr{"rectangle"}\hlstd{,} \hlkwc{sizeMan} \hlstd{=} \hlnum{8}\hlstd{,} \hlkwc{sizeMan2} \hlstd{=} \hlnum{5}\hlstd{)}
+\hlkwd{semPaths}\hldef{(fit.regr,} \hlsng{"par"}\hldef{,} \hlkwc{weighted} \hldef{=} \hlnum{FALSE}\hldef{,} \hlkwc{nCharNodes} \hldef{=} \hlnum{7}\hldef{,}
+         \hlkwc{shapeMan} \hldef{=} \hlsng{"rectangle"}\hldef{,} \hlkwc{sizeMan} \hldef{=} \hlnum{8}\hldef{,} \hlkwc{sizeMan2} \hldef{=} \hlnum{5}\hldef{)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -603,8 +605,8 @@ dependent $\sim$ 1 + predictor1 + predictor2 + etc.
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{summary}\hlstd{(fit.regr,} \hlkwc{fit.measures} \hlstd{=} \hlnum{TRUE}\hlstd{,}
-        \hlkwc{ci} \hlstd{=} \hlnum{TRUE}\hlstd{,} \hlkwc{rsquare} \hlstd{=} \hlnum{TRUE}\hlstd{)}
+\hlkwd{summary}\hldef{(fit.regr,} \hlkwc{fit.measures} \hldef{=} \hlnum{TRUE}\hldef{,}
+        \hlkwc{ci} \hldef{=} \hlnum{TRUE}\hldef{,} \hlkwc{rsquare} \hldef{=} \hlnum{TRUE}\hldef{)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -612,15 +614,15 @@ dependent $\sim$ 1 + predictor1 + predictor2 + etc.
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{parameterEstimates}\hlstd{(fit.regr)}
+\hlkwd{parameterEstimates}\hldef{(fit.regr)}
 
-\hlkwd{inspect}\hlstd{(fit.regr,} \hlstr{'r2'}\hlstd{)}
+\hlkwd{inspect}\hldef{(fit.regr,} \hlsng{'r2'}\hldef{)}
 \hlcom{# As an example, there are more.}
 
-\hlkwd{fitMeasures}\hlstd{(fit.regr,}
-            \hlkwd{c}\hlstd{(}\hlstr{"npar"}\hlstd{,} \hlstr{"logl"}\hlstd{,} \hlstr{"unrestricted.logl"}\hlstd{,}
-              \hlstr{"chisq"}\hlstd{,} \hlstr{"pvalue"}\hlstd{,}
-              \hlstr{"cfi"}\hlstd{,} \hlstr{"tli"}\hlstd{,} \hlstr{"rmsea"}\hlstd{))}
+\hlkwd{fitMeasures}\hldef{(fit.regr,}
+            \hlkwd{c}\hldef{(}\hlsng{"npar"}\hldef{,} \hlsng{"logl"}\hldef{,} \hlsng{"unrestricted.logl"}\hldef{,}
+              \hlsng{"chisq"}\hldef{,} \hlsng{"pvalue"}\hldef{,}
+              \hlsng{"cfi"}\hldef{,} \hlsng{"tli"}\hldef{,} \hlsng{"rmsea"}\hldef{))}
 \hlcom{# As an example, there are more.}
 \end{alltt}
 \end{kframe}
@@ -652,7 +654,7 @@ Variables:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{mod.regr} \hlkwb{<-} \hlstr{'
+\hldef{mod.regr} \hlkwb{<-} \hlsng{'
   Q77 ~  Age # regression
   Q77 ~~ Q77 # residual variance
   Q77 ~  1   # intercept
@@ -666,7 +668,7 @@ Variables:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{fit.regr} \hlkwb{<-} \hlkwd{lavaan}\hlstd{(}\hlkwc{model} \hlstd{= mod.regr,} \hlkwc{data} \hlstd{= data_sapi)}
+\hldef{fit.regr} \hlkwb{<-} \hlkwd{lavaan}\hldef{(}\hlkwc{model} \hldef{= mod.regr,} \hlkwc{data} \hldef{= data_sapi)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -678,14 +680,14 @@ Variables:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-  \hlkwd{lavaanPlot}\hlstd{(}\hlkwc{model} \hlstd{= fit.regr,}
-           \hlkwc{graph_options} \hlstd{=} \hlkwd{list}\hlstd{(}\hlkwc{overlap} \hlstd{=} \hlstr{"true"}\hlstd{,}
-                                \hlkwc{fontsize} \hlstd{=} \hlstr{"20"}\hlstd{),}
-           \hlkwc{node_options} \hlstd{=} \hlkwd{list}\hlstd{(}\hlkwc{shape} \hlstd{=} \hlstr{"box"}\hlstd{,}
-                               \hlkwc{fontname} \hlstd{=} \hlstr{"Helvetica"}\hlstd{),}
-           \hlkwc{edge_options} \hlstd{=} \hlkwd{list}\hlstd{(}\hlkwc{color} \hlstd{=} \hlstr{"grey"}\hlstd{),}
-           \hlkwc{coefs} \hlstd{= T,} \hlkwc{stand} \hlstd{= F,} \hlkwc{covs} \hlstd{= T,}
-           \hlstd{)}
+  \hlkwd{lavaanPlot}\hldef{(}\hlkwc{model} \hldef{= fit.regr,}
+           \hlkwc{graph_options} \hldef{=} \hlkwd{list}\hldef{(}\hlkwc{overlap} \hldef{=} \hlsng{"true"}\hldef{,}
+                                \hlkwc{fontsize} \hldef{=} \hlsng{"20"}\hldef{),}
+           \hlkwc{node_options} \hldef{=} \hlkwd{list}\hldef{(}\hlkwc{shape} \hldef{=} \hlsng{"box"}\hldef{,}
+                               \hlkwc{fontname} \hldef{=} \hlsng{"Helvetica"}\hldef{),}
+           \hlkwc{edge_options} \hldef{=} \hlkwd{list}\hldef{(}\hlkwc{color} \hldef{=} \hlsng{"grey"}\hldef{),}
+           \hlkwc{coefs} \hldef{= T,} \hlkwc{stand} \hldef{= F,} \hlkwc{covs} \hldef{= T,}
+           \hldef{)}
 \end{alltt}
 \end{kframe}
 \includegraphics[width=4in]{figure/unnamed-chunk-17-1} 
@@ -703,8 +705,8 @@ Variables:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{summary}\hlstd{(fit.regr,} \hlkwc{fit.measures} \hlstd{=} \hlnum{TRUE}\hlstd{,}
-        \hlkwc{ci} \hlstd{=} \hlnum{TRUE}\hlstd{,} \hlkwc{rsquare} \hlstd{=} \hlnum{TRUE}\hlstd{)}
+\hlkwd{summary}\hldef{(fit.regr,} \hlkwc{fit.measures} \hldef{=} \hlnum{TRUE}\hldef{,}
+        \hlkwc{ci} \hldef{=} \hlnum{TRUE}\hldef{,} \hlkwc{rsquare} \hldef{=} \hlnum{TRUE}\hldef{)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -715,7 +717,7 @@ Estimates:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{parameterEstimates}\hlstd{(fit.regr)[}\hlkwd{c}\hlstd{(}\hlnum{1}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{3}\hlstd{),]} \hlcom{# or ...[1:3,]}
+\hlkwd{parameterEstimates}\hldef{(fit.regr)[}\hlkwd{c}\hldef{(}\hlnum{1}\hldef{,}\hlnum{2}\hldef{,}\hlnum{3}\hldef{),]} \hlcom{# or ...[1:3,]}
 \end{alltt}
 \begin{verbatim}
 ##   lhs op rhs    est    se      z pvalue ci.lower ci.upper
@@ -733,7 +735,7 @@ Estimates:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{parameterEstimates}\hlstd{(fit.regr)[}\hlkwd{c}\hlstd{(}\hlnum{1}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{3}\hlstd{),]} \hlcom{# or ...[1:3,]}
+\hlkwd{parameterEstimates}\hldef{(fit.regr)[}\hlkwd{c}\hldef{(}\hlnum{1}\hldef{,}\hlnum{2}\hldef{,}\hlnum{3}\hldef{),]} \hlcom{# or ...[1:3,]}
 \end{alltt}
 \begin{verbatim}
 ##   lhs op rhs    est    se      z pvalue ci.lower ci.upper
@@ -751,7 +753,7 @@ Or: $\hat{Q77}_i = B_0 + B_1*Age_i$.
 \vspace{5mm}
 
 Regression equation (for person $i$):\\
-$Q77_i = 4.275 - 0.022*Age_i + e$, with $e \sim N(0, 1.184)$.
+$Q77_i = 4.275 - 0.022*Age_i + e_i$, with $e \sim N(0, 1.184)$.
 
 \end{frame}
 %------------------------------------------------------------------------------%
@@ -766,7 +768,7 @@ $R^2$ = R-squared = proportion of shared/explained variance:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{inspect}\hlstd{(fit.regr,} \hlstr{'r2'}\hlstd{)}
+\hlkwd{inspect}\hldef{(fit.regr,} \hlsng{'r2'}\hldef{)}
 \end{alltt}
 \begin{verbatim}
 ##   Q77 
@@ -781,10 +783,10 @@ $R^2$ = R-squared = proportion of shared/explained variance:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{corr} \hlkwb{<-} \hlkwd{cor}\hlstd{(data_sapi[,} \hlnum{2}\hlstd{], data_sapi[,} \hlnum{9}\hlstd{],}
-          \hlkwc{use} \hlstd{=} \hlstr{"complete.obs"}\hlstd{)}
+\hldef{corr} \hlkwb{<-} \hlkwd{cor}\hldef{(data_sapi[,} \hlnum{2}\hldef{], data_sapi[,} \hlnum{9}\hldef{],}
+          \hlkwc{use} \hldef{=} \hlsng{"complete.obs"}\hldef{)}
 
-\hlkwd{round}\hlstd{(corr,} \hlnum{3}\hlstd{)}   \hlcom{# = correlation between Age and Q77}
+\hlkwd{round}\hldef{(corr,} \hlnum{3}\hldef{)}   \hlcom{# = correlation between Age and Q77}
 \end{alltt}
 \begin{verbatim}
 ## [1] -0.208
@@ -795,7 +797,7 @@ $R^2$ = R-squared = proportion of shared/explained variance:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{round}\hlstd{(corr}\hlopt{^}\hlnum{2}\hlstd{,} \hlnum{3}\hlstd{)} \hlcom{# = R^2}
+\hlkwd{round}\hldef{(corr}\hlopt{^}\hlnum{2}\hldef{,} \hlnum{3}\hldef{)} \hlcom{# = R^2}
 \end{alltt}
 \begin{verbatim}
 ## [1] 0.043
@@ -818,14 +820,14 @@ I would not use lavaan for correlations, but you can:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{mod.corr} \hlkwb{<-} \hlstr{'
+\hldef{mod.corr} \hlkwb{<-} \hlsng{'
   Q77 ~~ Q77
   Age ~~ Age
   Q77 ~~ Age # covariance
   # If standardized, then correlation
 '}
-\hlstd{fit.corr} \hlkwb{<-} \hlkwd{lavaan}\hlstd{(}\hlkwc{model} \hlstd{= mod.corr,} \hlkwc{data} \hlstd{= data_sapi)}
-\hlkwd{parameterEstimates}\hlstd{(fit.corr,} \hlkwc{stand}\hlstd{=T)[}\hlnum{3}\hlstd{,}\hlstr{'std.all'}\hlstd{]}
+\hldef{fit.corr} \hlkwb{<-} \hlkwd{lavaan}\hldef{(}\hlkwc{model} \hldef{= mod.corr,} \hlkwc{data} \hldef{= data_sapi)}
+\hlkwd{parameterEstimates}\hldef{(fit.corr,} \hlkwc{stand}\hldef{=T)[}\hlnum{3}\hldef{,}\hlsng{'std.all'}\hldef{]}
 \end{alltt}
 \begin{verbatim}
 ## [1] -0.2080665
@@ -864,7 +866,7 @@ Variables:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{model.path} \hlkwb{<-} \hlstr{'
+\hldef{model.path} \hlkwb{<-} \hlsng{'
   # regressions
   Q77  ~ Age 
   Q196 ~ Q77 
@@ -875,12 +877,14 @@ Variables:
   
   # variance of predictor
   Age ~~ Age
+  # mean of predictor
+  Age ~ 1
   
   ## intercepts 
   Q77  ~ 1
   Q196 ~ 1
 '}
-\hlstd{fit_path} \hlkwb{<-} \hlkwd{lavaan}\hlstd{(}\hlkwc{model} \hlstd{= model.path,} \hlkwc{data} \hlstd{= data_sapi)}
+\hldef{fit_path} \hlkwb{<-} \hlkwd{lavaan}\hldef{(}\hlkwc{model} \hldef{= model.path,} \hlkwc{data} \hldef{= data_sapi)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -892,14 +896,14 @@ Variables:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-  \hlkwd{lavaanPlot}\hlstd{(}\hlkwc{model} \hlstd{= fit_path,}
-           \hlkwc{graph_options} \hlstd{=} \hlkwd{list}\hlstd{(}\hlkwc{overlap} \hlstd{=} \hlstr{"true"}\hlstd{,}
-                                \hlkwc{fontsize} \hlstd{=} \hlstr{"20"}\hlstd{),}
-           \hlkwc{node_options} \hlstd{=} \hlkwd{list}\hlstd{(}\hlkwc{shape} \hlstd{=} \hlstr{"box"}\hlstd{,}
-                               \hlkwc{fontname} \hlstd{=} \hlstr{"Helvetica"}\hlstd{),}
-           \hlkwc{edge_options} \hlstd{=} \hlkwd{list}\hlstd{(}\hlkwc{color} \hlstd{=} \hlstr{"grey"}\hlstd{),}
-           \hlkwc{coefs} \hlstd{= T,} \hlkwc{stand} \hlstd{= F,} \hlkwc{covs} \hlstd{= T,}
-           \hlstd{)} \hlcom{# Note: stand = F}
+  \hlkwd{lavaanPlot}\hldef{(}\hlkwc{model} \hldef{= fit_path,}
+           \hlkwc{graph_options} \hldef{=} \hlkwd{list}\hldef{(}\hlkwc{overlap} \hldef{=} \hlsng{"true"}\hldef{,}
+                                \hlkwc{fontsize} \hldef{=} \hlsng{"20"}\hldef{),}
+           \hlkwc{node_options} \hldef{=} \hlkwd{list}\hldef{(}\hlkwc{shape} \hldef{=} \hlsng{"box"}\hldef{,}
+                               \hlkwc{fontname} \hldef{=} \hlsng{"Helvetica"}\hldef{),}
+           \hlkwc{edge_options} \hldef{=} \hlkwd{list}\hldef{(}\hlkwc{color} \hldef{=} \hlsng{"grey"}\hldef{),}
+           \hlkwc{coefs} \hldef{= T,} \hlkwc{stand} \hldef{= F,} \hlkwc{covs} \hldef{= T,}
+           \hldef{)} \hlcom{# Note: stand = F}
 \end{alltt}
 \end{kframe}
 \includegraphics[width=4in]{figure/unnamed-chunk-26-1} 
@@ -912,8 +916,8 @@ Variables:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{summary}\hlstd{(fit_path,} \hlkwc{fit.measures} \hlstd{=} \hlnum{TRUE}\hlstd{,}
-        \hlkwc{ci} \hlstd{=} \hlnum{TRUE}\hlstd{,} \hlkwc{rsquare} \hlstd{=} \hlnum{TRUE}\hlstd{)}
+\hlkwd{summary}\hldef{(fit_path,} \hlkwc{fit.measures} \hldef{=} \hlnum{TRUE}\hldef{,}
+        \hlkwc{ci} \hldef{=} \hlnum{TRUE}\hldef{,} \hlkwc{rsquare} \hldef{=} \hlnum{TRUE}\hldef{)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -922,18 +926,18 @@ Estimates
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{parameterEstimates}\hlstd{(fit_path)[,}\hlopt{-}\hlnum{7}\hlstd{]} \hlcom{# i.e., without p-value}
+\hlkwd{parameterEstimates}\hldef{(fit_path)[,}\hlopt{-}\hlnum{7}\hldef{]} \hlcom{# i.e., without p-value}
 \end{alltt}
 \begin{verbatim}
-##    lhs op  rhs      est     se       z ci.lower ci.upper
-## 1  Q77  ~  Age   -0.021  0.001 -15.418   -0.024   -0.018
-## 2 Q196  ~  Q77    0.451  0.023  19.324    0.405    0.497
-## 3  Q77 ~~  Q77    1.179  0.067  17.479    1.047    1.312
-## 4 Q196 ~~ Q196    0.545  0.031  17.479    0.484    0.606
-## 5  Age ~~  Age 1045.794 59.833  17.479  928.523 1163.064
-## 6  Q77 ~1         4.248  0.044  96.700    4.162    4.335
-## 7 Q196 ~1         2.153  0.104  20.800    1.950    2.356
-## 8  Age ~1         0.000  0.000      NA    0.000    0.000
+##    lhs op  rhs     est    se      z ci.lower ci.upper
+## 1  Q77  ~  Age  -0.021 0.004 -4.971   -0.029   -0.013
+## 2 Q196  ~  Q77   0.451 0.027 16.724    0.398    0.504
+## 3  Q77 ~~  Q77   1.179 0.067 17.479    1.047    1.312
+## 4 Q196 ~~ Q196   0.545 0.031 17.479    0.484    0.606
+## 5  Age ~~  Age 108.692 6.219 17.479   96.504  120.881
+## 6  Age ~1       30.612 0.422 72.580   29.785   31.439
+## 7  Q77 ~1        4.248 0.136 31.175    3.981    4.516
+## 8 Q196 ~1        2.153 0.102 21.167    1.954    2.352
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -955,11 +959,11 @@ $R^2$ = R-squared = proportion of shared/explained variance:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{inspect}\hlstd{(fit_path,} \hlstr{'r2'}\hlstd{)}
+\hlkwd{inspect}\hldef{(fit_path,} \hlsng{'r2'}\hldef{)}
 \end{alltt}
 \begin{verbatim}
 ##   Q77  Q196 
-## 0.280 0.379
+## 0.039 0.314
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -1131,7 +1135,7 @@ Number of model parameters (unknowns):
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{fitMeasures}\hlstd{(fit.regr,} \hlstr{"npar"}\hlstd{)}
+\hlkwd{fitMeasures}\hldef{(fit.regr,} \hlsng{"npar"}\hldef{)}
 \end{alltt}
 \begin{verbatim}
 ## npar 
@@ -1146,7 +1150,7 @@ Which ones can be inspected in the technical output:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{lavInspect}\hlstd{(fit.regr)}
+\hlkwd{lavInspect}\hldef{(fit.regr)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -1207,7 +1211,7 @@ BUT:\\
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{fitMeasures}\hlstd{(fit.regr,} \hlstr{"df"}\hlstd{)} \hlcom{# df = 0}
+\hlkwd{fitMeasures}\hldef{(fit.regr,} \hlsng{"df"}\hldef{)} \hlcom{# df = 0}
 \end{alltt}
 \begin{verbatim}
 ## df 
@@ -1224,7 +1228,7 @@ BUT:\\
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{parameterEstimates}\hlstd{(fit.regr)[,}\hlnum{1}\hlopt{:}\hlnum{7}\hlstd{]} \hlcom{# without ci}
+\hlkwd{parameterEstimates}\hldef{(fit.regr)[,}\hlnum{1}\hlopt{:}\hlnum{7}\hldef{]} \hlcom{# without ci}
 \end{alltt}
 \begin{verbatim}
 ##   lhs op rhs     est    se      z pvalue
@@ -1252,7 +1256,7 @@ as does Mplus.
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{mod.regr_full} \hlkwb{<-} \hlstr{'
+\hldef{mod.regr_full} \hlkwb{<-} \hlsng{'
   Q77 ~  Age # regression
   Q77 ~~ Q77 # residual variance
   Q77 ~  1   # intercept
@@ -1265,8 +1269,8 @@ as does Mplus.
   # but now also part of lavInspect()
   
 '}
-\hlstd{fit.regr_full} \hlkwb{<-} \hlkwd{lavaan}\hlstd{(}\hlkwc{model} \hlstd{= mod.regr_full,}
-                         \hlkwc{data} \hlstd{= data_sapi)}
+\hldef{fit.regr_full} \hlkwb{<-} \hlkwd{lavaan}\hldef{(}\hlkwc{model} \hldef{= mod.regr_full,}
+                         \hlkwc{data} \hldef{= data_sapi)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -1279,7 +1283,7 @@ as does Mplus.
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{parameterEstimates}\hlstd{(fit.regr)[,}\hlnum{1}\hlopt{:}\hlnum{7}\hlstd{]}
+\hlkwd{parameterEstimates}\hldef{(fit.regr)[,}\hlnum{1}\hlopt{:}\hlnum{7}\hldef{]}
 \end{alltt}
 \begin{verbatim}
 ##   lhs op rhs     est    se      z pvalue
@@ -1295,7 +1299,7 @@ as does Mplus.
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{parameterEstimates}\hlstd{(fit.regr_full)[,}\hlnum{1}\hlopt{:}\hlnum{7}\hlstd{]}
+\hlkwd{parameterEstimates}\hldef{(fit.regr_full)[,}\hlnum{1}\hlopt{:}\hlnum{7}\hldef{]}
 \end{alltt}
 \begin{verbatim}
 ##   lhs op rhs     est    se      z pvalue
@@ -1316,7 +1320,7 @@ Now, number of model parameters: 5, see
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{fitMeasures}\hlstd{(fit.regr_full,} \hlstr{"npar"}\hlstd{)}
+\hlkwd{fitMeasures}\hldef{(fit.regr_full,} \hlsng{"npar"}\hldef{)}
 \end{alltt}
 \begin{verbatim}
 ## npar 
@@ -1347,7 +1351,7 @@ Which model parameters are estimated can be inspected in the technical output:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{lavInspect}\hlstd{(fit.regr_full)}
+\hlkwd{lavInspect}\hldef{(fit.regr_full)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -1359,7 +1363,7 @@ Which model parameters are estimated can be inspected in the technical output:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{lavInspect}\hlstd{(fit.regr_full)[}\hlnum{1}\hlopt{:}\hlnum{3}\hlstd{]}
+\hlkwd{lavInspect}\hldef{(fit.regr_full)[}\hlnum{1}\hlopt{:}\hlnum{3}\hldef{]}
 \end{alltt}
 \begin{verbatim}
 ## $lambda
@@ -1369,13 +1373,13 @@ Which model parameters are estimated can be inspected in the technical output:
 ## 
 ## $theta
 ##     Q77 Age
-## Q77 0      
-## Age 0   0  
+## Q77   0    
+## Age   0   0
 ## 
 ## $psi
 ##     Q77 Age
-## Q77 2      
-## Age 0   4
+## Q77   2    
+## Age   0   4
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -1386,7 +1390,7 @@ Which model parameters are estimated can be inspected in the technical output:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{lavInspect}\hlstd{(fit.regr_full)[}\hlnum{4}\hlopt{:}\hlnum{6}\hlstd{]}
+\hlkwd{lavInspect}\hldef{(fit.regr_full)[}\hlnum{4}\hlopt{:}\hlnum{6}\hldef{]}
 \end{alltt}
 \begin{verbatim}
 ## $beta
@@ -1517,14 +1521,14 @@ Variables (observed): Age, ReadAb, Q44, and Q63
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# Variances \textbackslash{}& Covariances for residuals of observed variables}
-\hlkwd{lavInspect}\hlstd{(fit_sat)}\hlopt{$}\hlstd{theta}
+\hlkwd{lavInspect}\hldef{(fit_sat)}\hlopt{$}\hldef{theta}
 \end{alltt}
 \begin{verbatim}
 ##        Age ReadAb Q44 Q63
-## Age     1                
-## ReadAb  5   2            
-## Q44     6   8      3     
-## Q63     7   9     10   4
+## Age      1               
+## ReadAb   5      2        
+## Q44      6      8   3    
+## Q63      7      9  10   4
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -1533,7 +1537,7 @@ Variables (observed): Age, ReadAb, Q44, and Q63
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# Means / Intercepts of observed variables}
-\hlkwd{lavInspect}\hlstd{(fit_sat)}\hlopt{$}\hlstd{nu}
+\hlkwd{lavInspect}\hldef{(fit_sat)}\hlopt{$}\hldef{nu}
 \end{alltt}
 \begin{verbatim}
 ##        intrcp
@@ -1553,10 +1557,10 @@ Variables (observed): Age, ReadAb, Q44, and Q63
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{fitMeasures}\hlstd{(fit_sat,}
-            \hlkwd{c}\hlstd{(}\hlstr{"npar"}\hlstd{,} \hlstr{"logl"}\hlstd{,} \hlstr{"unrestricted.logl"}\hlstd{,}
-              \hlstr{"chisq"}\hlstd{,} \hlstr{"pvalue"}\hlstd{,}
-              \hlstr{"cfi"}\hlstd{,} \hlstr{"tli"}\hlstd{,} \hlstr{"rmsea"}\hlstd{))}
+\hlkwd{fitMeasures}\hldef{(fit_sat,}
+            \hlkwd{c}\hldef{(}\hlsng{"npar"}\hldef{,} \hlsng{"logl"}\hldef{,} \hlsng{"unrestricted.logl"}\hldef{,}
+              \hlsng{"chisq"}\hldef{,} \hlsng{"pvalue"}\hldef{,}
+              \hlsng{"cfi"}\hldef{,} \hlsng{"tli"}\hldef{,} \hlsng{"rmsea"}\hldef{))}
 \end{alltt}
 \begin{verbatim}
 ##              npar              logl unrestricted.logl             chisq 
@@ -1608,14 +1612,14 @@ Variables: Age, ReadAb, Q44, and Q63
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{lavInspect}\hlstd{(fit_base4)}\hlopt{$}\hlstd{theta}
+\hlkwd{lavInspect}\hldef{(fit_base4)}\hlopt{$}\hldef{theta}
 \end{alltt}
 \begin{verbatim}
 ##        Age ReadAb Q44 Q63
-## Age    1                 
-## ReadAb 0   2             
-## Q44    0   0      3      
-## Q63    0   0      0   4
+## Age      1               
+## ReadAb   0      2        
+## Q44      0      0   3    
+## Q63      0      0   0   4
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -1623,7 +1627,7 @@ Variables: Age, ReadAb, Q44, and Q63
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{lavInspect}\hlstd{(fit_base4)}\hlopt{$}\hlstd{nu}
+\hlkwd{lavInspect}\hldef{(fit_base4)}\hlopt{$}\hldef{nu}
 \end{alltt}
 \begin{verbatim}
 ##        intrcp
@@ -1642,10 +1646,10 @@ Variables: Age, ReadAb, Q44, and Q63
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{fitMeasures}\hlstd{(fit_base4,}
-            \hlkwd{c}\hlstd{(}\hlstr{"npar"}\hlstd{,} \hlstr{"logl"}\hlstd{,} \hlstr{"unrestricted.logl"}\hlstd{,}
-              \hlstr{"chisq"}\hlstd{,} \hlstr{"pvalue"}\hlstd{,}
-              \hlstr{"cfi"}\hlstd{,} \hlstr{"tli"}\hlstd{,} \hlstr{"rmsea"}\hlstd{))}
+\hlkwd{fitMeasures}\hldef{(fit_base4,}
+            \hlkwd{c}\hldef{(}\hlsng{"npar"}\hldef{,} \hlsng{"logl"}\hldef{,} \hlsng{"unrestricted.logl"}\hldef{,}
+              \hlsng{"chisq"}\hldef{,} \hlsng{"pvalue"}\hldef{,}
+              \hlsng{"cfi"}\hldef{,} \hlsng{"tli"}\hldef{,} \hlsng{"rmsea"}\hldef{))}
 \end{alltt}
 \begin{verbatim}
 ##              npar              logl unrestricted.logl             chisq 
@@ -1797,15 +1801,15 @@ Variables: Age, ReadAb, Q44, Q63, and Q76.
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{lavInspect}\hlstd{(fit_base5)}\hlopt{$}\hlstd{theta}
+\hlkwd{lavInspect}\hldef{(fit_base5)}\hlopt{$}\hldef{theta}
 \end{alltt}
 \begin{verbatim}
 ##        Age ReadAb Q44 Q63 Q76
-## Age    1                     
-## ReadAb 0   2                 
-## Q44    0   0      3          
-## Q63    0   0      0   4      
-## Q76    0   0      0   0   5
+## Age      1                   
+## ReadAb   0      2            
+## Q44      0      0   3        
+## Q63      0      0   0   4    
+## Q76      0      0   0   0   5
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -1813,7 +1817,7 @@ Variables: Age, ReadAb, Q44, Q63, and Q76.
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{lavInspect}\hlstd{(fit_base5)}\hlopt{$}\hlstd{nu}
+\hlkwd{lavInspect}\hldef{(fit_base5)}\hlopt{$}\hldef{nu}
 \end{alltt}
 \begin{verbatim}
 ##        intrcp
@@ -1833,10 +1837,10 @@ Variables: Age, ReadAb, Q44, Q63, and Q76.
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{fitMeasures}\hlstd{(fit_base5,}
-            \hlkwd{c}\hlstd{(}\hlstr{"npar"}\hlstd{,} \hlstr{"logl"}\hlstd{,} \hlstr{"unrestricted.logl"}\hlstd{,}
-              \hlstr{"chisq"}\hlstd{,} \hlstr{"pvalue"}\hlstd{,}
-              \hlstr{"cfi"}\hlstd{,} \hlstr{"tli"}\hlstd{,} \hlstr{"rmsea"}\hlstd{))}
+\hlkwd{fitMeasures}\hldef{(fit_base5,}
+            \hlkwd{c}\hldef{(}\hlsng{"npar"}\hldef{,} \hlsng{"logl"}\hldef{,} \hlsng{"unrestricted.logl"}\hldef{,}
+              \hlsng{"chisq"}\hldef{,} \hlsng{"pvalue"}\hldef{,}
+              \hlsng{"cfi"}\hldef{,} \hlsng{"tli"}\hldef{,} \hlsng{"rmsea"}\hldef{))}
 \end{alltt}
 \begin{verbatim}
 ##              npar              logl unrestricted.logl             chisq 
@@ -1863,13 +1867,13 @@ Note: At the end, more details about model fit.
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{lavInspect}\hlstd{(fit_example)}\hlopt{$}\hlstd{theta}
+\hlkwd{lavInspect}\hldef{(fit_example)}\hlopt{$}\hldef{theta}
 \end{alltt}
 \begin{verbatim}
 ##        Age ReadAb Q44
-## Age    3             
-## ReadAb 1   4         
-## Q44    2   0      5
+## Age      3           
+## ReadAb   1      4    
+## Q44      2      0   5
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -1877,7 +1881,7 @@ Note: At the end, more details about model fit.
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{lavInspect}\hlstd{(fit_example)}\hlopt{$}\hlstd{nu}
+\hlkwd{lavInspect}\hldef{(fit_example)}\hlopt{$}\hldef{nu}
 \end{alltt}
 \begin{verbatim}
 ##        intrcp
@@ -1924,7 +1928,7 @@ Model needs to be fully specified (elsewise error):
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{mod.regr_full} \hlkwb{<-} \hlstr{'
+\hldef{mod.regr_full} \hlkwb{<-} \hlsng{'
   Q77 ~  Age # regression
   Q77 ~~ Q77 # residual variance
   Q77 ~  1   # intercept
@@ -1933,12 +1937,12 @@ Model needs to be fully specified (elsewise error):
   Age ~~ Age # variance predictor
   Age ~ 1    # mean predictor
 '}
-\hlstd{fit.regr_fiml} \hlkwb{<-} \hlkwd{lavaan}\hlstd{(}\hlkwc{model} \hlstd{= mod.regr_full,} \hlkwc{data} \hlstd{= data_sapi,}
-                       \hlkwc{missing}\hlstd{=}\hlstr{'fiml'}\hlstd{,} \hlkwc{fixed.x}\hlstd{=}\hlnum{FALSE}\hlstd{)}
+\hldef{fit.regr_fiml} \hlkwb{<-} \hlkwd{lavaan}\hldef{(}\hlkwc{model} \hldef{= mod.regr_full,} \hlkwc{data} \hldef{= data_sapi,}
+                       \hlkwc{missing}\hldef{=}\hlsng{'fiml'}\hldef{,} \hlkwc{fixed.x}\hldef{=}\hlnum{FALSE}\hldef{)}
 \end{alltt}
 
 
-{\ttfamily\noindent\color{warningcolor}{\#\# Warning in lav\_data\_full(data = data, group = group, cluster = cluster, : lavaan WARNING: some cases are empty and will be ignored:\\\#\# \ \ 453 535}}\end{kframe}
+{\ttfamily\noindent\color{warningcolor}{\#\# Warning: lavaan->lav\_data\_full(): \ \\\#\# \ \ \ some cases are empty and will be ignored: 453 535.}}\end{kframe}
 \end{knitrout}
 \end{frame}
 %------------------------------------------------------------------------------%
@@ -1949,7 +1953,7 @@ Previous estimates
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{parameterEstimates}\hlstd{(fit.regr)[}\hlkwd{c}\hlstd{(}\hlnum{1}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{3}\hlstd{),]}
+\hlkwd{parameterEstimates}\hldef{(fit.regr)[}\hlkwd{c}\hldef{(}\hlnum{1}\hldef{,}\hlnum{2}\hldef{,}\hlnum{3}\hldef{),]}
 \end{alltt}
 \begin{verbatim}
 ##   lhs op rhs    est    se      z pvalue ci.lower ci.upper
@@ -1964,7 +1968,7 @@ FIML estimates
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{parameterEstimates}\hlstd{(fit.regr_fiml)[}\hlkwd{c}\hlstd{(}\hlnum{1}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{3}\hlstd{),]}
+\hlkwd{parameterEstimates}\hldef{(fit.regr_fiml)[}\hlkwd{c}\hldef{(}\hlnum{1}\hldef{,}\hlnum{2}\hldef{,}\hlnum{3}\hldef{),]}
 \end{alltt}
 \begin{verbatim}
 ##   lhs op rhs    est    se      z pvalue ci.lower ci.upper
@@ -1979,7 +1983,7 @@ FIML estimates
 %------------------------------------------------------------------------------%
 %
 \begin{frame}{Step 12}
-\Large Are you really really sure if everything went well?
+\Large Are you really really sure that everything went well?
 \end{frame}
 %------------------------------------------------------------------------------%
 %
@@ -2086,7 +2090,7 @@ Absolute index:
   \item {Index of discrepancy between model and data}
     \begin{itemize}
     \item {\textcolor{green}{+} sensitive to model complexity, namely:\\
-    \ \ \ bias correction by '$-df$' (in '$\chi^2 - df$' in formula above))}
+    \ \ \ bias correction by '$-df$' (in '$\chi^2 - df$', in formula above))}
     \item {\ \textcolor{red}{-} less suitable with small sample size (with low df)}
     \end{itemize}
   \item{Rule of thumb: $<$.08 (mediocre), $<$.05 (close / good)}
@@ -2303,10 +2307,10 @@ To be discussed in the Model Selection lecture
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{library}\hlstd{(devtools)} \hlcom{# Make sure you have Rtools}
-\hlkwd{install_github}\hlstd{(}\hlstr{"rebeccakuiper/ICweights"}\hlstd{)}
-\hlkwd{library}\hlstd{(ICweights)}
-\hlopt{?}\hlstd{IC.weights}
+\hlkwd{library}\hldef{(devtools)} \hlcom{# Make sure you have Rtools}
+\hlkwd{install_github}\hldef{(}\hlsng{"rebeccakuiper/ICweights"}\hldef{)}
+\hlkwd{library}\hldef{(ICweights)}
+\hlopt{?}\hldef{IC.weights}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -2314,8 +2318,8 @@ To be discussed in the Model Selection lecture
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{library}\hlstd{(restriktor)}
-\hlkwd{library}\hlstd{(goric)}
+\hlkwd{library}\hldef{(restriktor)}
+\hlkwd{library}\hldef{(goric)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}

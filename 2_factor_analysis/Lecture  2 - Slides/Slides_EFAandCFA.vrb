@@ -6,7 +6,7 @@
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{parameterEstimates}\hlstd{(fit_1CFA_EffC)[}\hlnum{1}\hlopt{:}\hlnum{4}\hlstd{,}\hlnum{1}\hlopt{:}\hlnum{5}\hlstd{]}
+\hlkwd{parameterEstimates}\hldef{(fit_1CFA_EffC)[}\hlnum{1}\hlopt{:}\hlnum{4}\hldef{,}\hlnum{1}\hlopt{:}\hlnum{5}\hldef{]}
 \end{alltt}
 \begin{verbatim}
 ##            lhs op  rhs   label   est
@@ -22,7 +22,7 @@
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{parameterEstimates}\hlstd{(fit_1CFA_EffC)[}\hlnum{5}\hlopt{:}\hlnum{8}\hlstd{,}\hlnum{1}\hlopt{:}\hlnum{5}\hlstd{]}
+\hlkwd{parameterEstimates}\hldef{(fit_1CFA_EffC)[}\hlnum{5}\hlopt{:}\hlnum{8}\hldef{,}\hlnum{1}\hlopt{:}\hlnum{5}\hldef{]}
 \end{alltt}
 \begin{verbatim}
 ##    lhs op rhs label    est

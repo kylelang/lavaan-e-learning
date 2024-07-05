@@ -1,0 +1,2 @@
+
+Ik zeg ws bij ws marker method mean 1 (en ... 0?) en dat moet dan mean 0 zijn oid.
