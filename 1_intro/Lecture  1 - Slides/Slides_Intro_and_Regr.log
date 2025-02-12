@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.5.23)  5 JUL 2024 09:25
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.5.23)  11 FEB 2025 13:17
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1617,7 +1617,7 @@ Package pdftex.def Info: images//saturated4.png  used on input line 1506.
 LaTeX Font Info:    Trying to load font information for OMS+cmtt on input line 
 15.
 
-(c:/Program Files/R/R-4.4.1/share/texmf/tex/latex/omscmtt.fd
+(c:/Program Files/R/R-4.4.2/share/texmf/tex/latex/omscmtt.fd
 File: omscmtt.fd 
 )
 LaTeX Font Info:    Font shape `OMS/cmtt/m/it' in size <8> not available
@@ -2029,7 +2029,7 @@ onts/type1/public/amsfonts/cm/cmsy9.pfb><c:/texlive/2022/texmf-dist/fonts/type1
 /public/amsfonts/cm/cmtt10.pfb><c:/texlive/2022/texmf-dist/fonts/type1/public/a
 msfonts/cm/cmtt8.pfb><c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm
 /cmtt9.pfb>
-Output written on Slides_Intro_and_Regr.pdf (112 pages, 3043601 bytes).
+Output written on Slides_Intro_and_Regr.pdf (112 pages, 3043883 bytes).
 PDF statistics:
  16817 PDF objects out of 18468 (max. 8388607)
  16314 compressed objects within 164 object streams

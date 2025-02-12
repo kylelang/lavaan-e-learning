@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.5.23)  30 JUN 2023 11:32
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.5.23)  12 FEB 2025 16:09
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1159,7 +1159,7 @@ LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <10> not available
 ] [13
 
 ]
-<images//Model-Unc.png, id=1192, 373.395pt x 167.097pt>
+<images//Model-Unc.png, id=1220, 373.395pt x 167.097pt>
 File: images//Model-Unc.png Graphic file (type png)
 <use images//Model-Unc.png>
 Package pdftex.def Info: images//Model-Unc.png  used on input line 386.
@@ -1172,7 +1172,7 @@ Package pdftex.def Info: images//Model-Unc.png  used on input line 386.
 [16
 
 ]
-<images//ORICvsAIC_n10.png, id=1446, 616.55344pt x 317.68687pt>
+<images//ORICvsAIC_n10.png, id=1481, 616.55344pt x 317.68687pt>
 File: images//ORICvsAIC_n10.png Graphic file (type png)
 <use images//ORICvsAIC_n10.png>
 Package pdftex.def Info: images//ORICvsAIC_n10.png  used on input line 456.
@@ -1194,7 +1194,7 @@ LaTeX Font Info:    Font shape `OT1/cmss/b/n' in size <7> not available
 [17
 
  <./images//ORICvsAIC_n10.png>]
-<images//ORICvsAIC_n100.png, id=1533, 617.30624pt x 318.43968pt>
+<images//ORICvsAIC_n100.png, id=1570, 617.30624pt x 318.43968pt>
 File: images//ORICvsAIC_n100.png Graphic file (type png)
 <use images//ORICvsAIC_n100.png>
 Package pdftex.def Info: images//ORICvsAIC_n100.png  used on input line 467.
@@ -1294,17 +1294,17 @@ ghts.vs.Equal[]
 
  (./Slides_Model_selection.vrb) [33
 
-] [34
-
-] [35
-
-]
-(./Slides_Model_selection.toc) [36
-
 ]
 \openout4 = `Slides_Model_selection.vrb'.
 
- (./Slides_Model_selection.vrb) [37
+ (./Slides_Model_selection.vrb)
+[34
+
+] [35
+
+] [36
+
+] (./Slides_Model_selection.toc) [37
 
 ]
 \openout4 = `Slides_Model_selection.vrb'.
@@ -1315,7 +1315,13 @@ ghts.vs.Equal[]
 ]
 \openout4 = `Slides_Model_selection.vrb'.
 
- (./Slides_Model_selection.vrb
+ (./Slides_Model_selection.vrb) [39
+
+]
+\openout4 = `Slides_Model_selection.vrb'.
+
+
+(./Slides_Model_selection.vrb
 Overfull \hbox (4.19354pt too wide) in paragraph at lines 13--13
 [][]\OT1/cmtt/m/it/10 #On unstandardized estimates, as done by default in lavaa
 n:[][] 
@@ -1334,74 +1340,74 @@ Overfull \hbox (18.20729pt too wide) in paragraph at lines 32--32
  []
 
 )
-Overfull \vbox (3.75807pt too high) detected at line 939
+Overfull \vbox (3.75807pt too high) detected at line 976
  []
 
-[39
+[40
 
 ]
 \openout4 = `Slides_Model_selection.vrb'.
 
- (./Slides_Model_selection.vrb) [40
+ (./Slides_Model_selection.vrb) [41
 
 ]
 \openout4 = `Slides_Model_selection.vrb'.
 
  (./Slides_Model_selection.vrb)
-[41
+[42
 
-] (./Slides_Model_selection.toc) [42
+] (./Slides_Model_selection.toc) [43
 
 ]
-<images//MaxWeigth.png, id=3671, 582.72443pt x 541.64464pt>
+<images//MaxWeigth.png, id=3845, 582.72443pt x 541.64464pt>
 File: images//MaxWeigth.png Graphic file (type png)
 <use images//MaxWeigth.png>
-Package pdftex.def Info: images//MaxWeigth.png  used on input line 1010.
+Package pdftex.def Info: images//MaxWeigth.png  used on input line 1048.
 (pdftex.def)             Requested size: 116.54282pt x 108.327pt.
- [43
+ [44
 
  <./images//MaxWeigth.png>]
-[44
+[45
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 1050--1050
+Underfull \hbox (badness 10000) in paragraph at lines 1088--1088
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1050--1050
+Underfull \hbox (badness 10000) in paragraph at lines 1088--1088
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1050--1050
+Underfull \hbox (badness 10000) in paragraph at lines 1088--1088
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1050--1050
+Underfull \hbox (badness 10000) in paragraph at lines 1088--1088
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1050--1050
+Underfull \hbox (badness 10000) in paragraph at lines 1088--1088
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1050--1050
+Underfull \hbox (badness 10000) in paragraph at lines 1088--1088
 
  []
 
-<images//Weigth_Compl_and_Hu.png, id=3844, 514.2581pt x 541.64464pt>
+<images//Weigth_Compl_and_Hu.png, id=4021, 514.2581pt x 541.64464pt>
 File: images//Weigth_Compl_and_Hu.png Graphic file (type png)
 <use images//Weigth_Compl_and_Hu.png>
 Package pdftex.def Info: images//Weigth_Compl_and_Hu.png  used on input line 10
-50.
+88.
 (pdftex.def)             Requested size: 179.99303pt x 189.57846pt.
-[45
+[46
 
- <./images//Weigth_Compl_and_Hu.png>] [46
+ <./images//Weigth_Compl_and_Hu.png>] [47
 
 ]
 \openout4 = `Slides_Model_selection.vrb'.
@@ -1412,34 +1418,33 @@ Overfull \hbox (9.4435pt too wide) in paragraph at lines 11--11
 ide[][] 
  []
 
-) [47
+) [48
 
-]
-\openout4 = `Slides_Model_selection.vrb'.
-
- (./Slides_Model_selection.vrb) [48
-
-] (./Slides_Model_selection.toc)
-[49
+] [49
 
 ] [50
 
-]
-LaTeX Font Info:    Font shape `OT1/cmss/b/n' in size <8> not available
-(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 1156
-.
-LaTeX Font Info:    Font shape `OT1/cmss/b/n' in size <6> not available
-(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 1156
-.
- [51
+] (./Slides_Model_selection.toc) [51
 
 ] [52
 
-] (./Slides_Model_selection.toc) [53
+]
+LaTeX Font Info:    Font shape `OT1/cmss/b/n' in size <8> not available
+(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 1228
+.
+LaTeX Font Info:    Font shape `OT1/cmss/b/n' in size <6> not available
+(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 1228
+.
+ [53
 
 ] [54
 
-] [55
+]
+(./Slides_Model_selection.toc) [55
+
+] [56
+
+] [57
 
 ]
 \tf@nav=\write6
@@ -1451,17 +1456,16 @@ LaTeX Font Info:    Font shape `OT1/cmss/b/n' in size <6> not available
 \tf@snm=\write8
 \openout8 = `Slides_Model_selection.snm'.
 
-
-(./Slides_Model_selection.aux)
+ (./Slides_Model_selection.aux)
 Package rerunfilecheck Info: File `Slides_Model_selection.out' has not changed.
 
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 30370 strings out of 478300
- 628567 string characters out of 5849123
- 963752 words of memory out of 5000000
- 47749 multiletter control sequences out of 15000+600000
+ 30378 strings out of 478300
+ 628641 string characters out of 5849123
+ 966564 words of memory out of 5000000
+ 47753 multiletter control sequences out of 15000+600000
  485266 words of font info for 85 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  128i,19n,122p,498b,782s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -1483,10 +1487,10 @@ sfonts/cm/cmsy5.pfb><c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/
 cmsy7.pfb><c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb>
 <c:/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb><c:/texli
 ve/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.pfb>
-Output written on Slides_Model_selection.pdf (55 pages, 622262 bytes).
+Output written on Slides_Model_selection.pdf (57 pages, 634961 bytes).
 PDF statistics:
- 4911 PDF objects out of 5155 (max. 8388607)
- 4688 compressed objects within 47 object streams
- 118 named destinations out of 1000 (max. 500000)
+ 5197 PDF objects out of 6186 (max. 8388607)
+ 4967 compressed objects within 50 object streams
+ 122 named destinations out of 1000 (max. 500000)
  74 words of extra memory for PDF output out of 10000 (max. 10000000)
 

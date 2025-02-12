@@ -1,0 +1,602 @@
+---
+title: "Lab: Multigroup Models and Measurement Invariance"
+output:
+  html_document: 
+    toc: true
+    toc_float: true
+    number_sections: true
+    toc_depth: 2
+  pdf_document: default
+editor_options:
+  chunk_output_type: console
+---
+
+
+<style>
+body {
+  width: 100%;
+  margin: 0 auto;
+}
+</style>
+
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(tidy.opts = list(width.cutoff = 80), tidy = TRUE)
+knitr::opts_chunk$set(comment = NA, warning = FALSE)
+options(width = 1200) # width console output
+```
+
+
+Today’s lab meeting consists of two exercises.
+
+
+Practical information:
+
+- All the data files for these exercises can be found at the course platform (i.e., UU learning platform). Make sure to download and unzip the .zip file. The folder containing the data files will probably be your working directory.
+
+
+Short description of exercises:
+
+- Exercise 1 addresses multigroup regression and 
+
+- Exercise 2 addresses measurement invariance.
+
+
+
+# Exercise 1: Multigroup Regression
+
+In this exercise, we extend the regression analysis of Day 1 to a multi-group analysis, like also done in today's lecture. 
+Thus, use the data file **popular_regr.txt** again and remember that -99 and -999 denote missings. 
+
+In the multigroup analysis, you want to predict levels of socially desirable answering patterns of adolescents (sw) by overt (overt) and covert antisocial behaviour (covert), for males and females (gender).
+
+
+## Exercise 1a 
+
+Create lavaan code for a multigroup comparison between males and females to answer the question whether there are differences in the regression coefficients between sw and overt and between sw and covert.
+You will now obtain results for males and females separately. 
+
+*Are there differences between males and females?*
+
+*What do the confidence intervals indicate?*
+
+Bear in mind that  
+
+ * Gender is a grouping variable consisting of two levels. By making it a factor, one can easily assign labels (e.g., ‘males’ and ‘females’) to it.
+
+ * To run a multigroup analysis (for gender), the lavaan function needs the argument: group = "gender".
+
+ * To also obtain the confidence intervals use: ci = TRUE.
+ 
+ * We did not use FIML in the regression analysis of Day 1. Therefore, we will also not do that here.
+  
+ 
+## Exercise 1b 
+
+Compute a significance test (Wald test) to test whether the regression coefficients for males and females are the same or not.
+
+For a lavaan object (with label names!), one can do this with lavTestWald(fit, constraints = "\<insert equality restriction\>"). 
+
+Now, there is only one equation for both groups, so one needs to assign two labels (say, b1_m and b1_f) to the ‘single’ parameter, by using 'c(b1_m,b1_f)*'. This needs to be done for both regression parameters of interest.
+
+*What do you conclude about the equality of regression parameters?*
+
+
+## Answers Exercise 1
+
+<details><summary><b>Click to show answers</b></summary>
+
+&nbsp;
+
+**Installing and loading Lavaan**
+
+```{r, message=F, warning=F, eval=FALSE}
+if (!require("lavaan")) install.packages("lavaan", dependencies = TRUE)
+```
+
+```{r}
+library(lavaan) 
+```
+
+**Read in data**
+
+```{r, message=F, warning=F}
+data_regr <- read.table("popular_regr.txt", header = T)
+
+#If data without header, then: 
+colnames(data_regr) <- c("respnr", "Dutch", "gender", "sw", "covert", "overt")
+```
+
+
+**Denote missing values**
+
+Missing values are labelled -99 and -999, so set this to NA:
+
+```{r, message=F, warning=F}
+data_regr[sapply(data_regr, function(x) as.character(x) %in% c("-99", "-999") )] <- NA 
+```
+
+If you forget to tell R that -99 and -999 are used to denote missing data, these values will be treated as being observed. 
+
+**Recoding variables**
+
+Besides sw, overt, and covert, we now also use the variable gender. Since we read in a text file, there is no information about measurement level. Thus, we want to denote that the variable 'gender' is a factor, although it is not necessary in case of two levels. It is, however, helpful in assigning names to the levels.
+
+```{r, message=F, warning=F}
+data_regr$gender <- factor(data_regr$gender, labels = c("male", "female"))
+
+#summary(data_regr$gender)
+```
+
+**Specify the multigroup regression model**
+
+Now, let us run a multigroup regression model predicting levels of socially desirable answering patterns of adolescents (sw) using the predictors overt (overt) and covert antisocial behaviour (covert), for both males and females.
+
+To run a multigroup regression with lavaan, we need to add: group = "gender" to the lavaan function. It does not affect the model specification:
+
+```{r, message=F, warning=F}
+model.regression <- '
+  sw ~ overt + covert # regression
+  sw ~~ sw            # residual variance
+  sw ~ 1              # intercept
+'
+```
+
+**Fit the multigroup regression model using the lavaan function**
+
+To run a multigroup regression, we use the lavaan function and, as mentioned before, we need to add 'group = "gender"' to this function:
+
+```{r, message=F, warning=F}
+fit_MGregr <- lavaan(model = model.regression, data = data_regr,
+                     group = "gender") # multigroup specification
+```
+
+**Summary of the model**
+
+```{r, message=F, warning=F}
+summary(fit_MGregr, standardized=TRUE, fit.measures = TRUE, rsquare = TRUE, ci = TRUE)
+```
+
+**Parameter estimates**
+
+You can ask for the parameter estimates in a few different ways, as outlined below. 
+
+```{r, message=F, warning=F}
+coef(fit_MGregr)                 # unstandardized regression parameters
+
+parameterEstimates(fit_MGregr)   # all unstandardized parameters - with extra information
+
+standardizedSolution(fit_MGregr) # all standardized parameters - with extra information
+```
+
+**Model fit measures**
+
+You can ask for the model fit measures in a few different ways, as outlined below. 
+
+```{r, message=F, warning=F}
+fitMeasures(fit_MGregr)   # many model fit measures
+
+fitMeasures(fit_MGregr, c("cfi", "tli", "rmsea","srmr")) # ask for specific model fit measures
+                        
+
+inspect(fit_MGregr, 'r2') # R-square (for sw)
+
+# Technical output
+lavInspect(fit_MGregr) # Comparable to TECH1 in Mplus
+```
+
+**Plot the results**
+
+```{r, message=F, warning=F}
+if (!require("lavaanPlot")) install.packages("lavaanPlot") # install this package first (once)
+library(lavaanPlot)
+lavaanPlot(model = fit_MGregr, node_options = list(shape = "box", fontname = "Helvetica"), 
+           edge_options = list(color = "grey"), coefs = T, stand = T, covs = T) # plot
+
+# Alternative
+if (!require("tidySEM")) install.packages("tidySEM") # install this package first (once)
+library(tidySEM)
+graph_sem(fit_MGregr) # plot
+
+# Another alternative
+if (!require("semPlot")) install.packages("semPlot") # install this package first (once)
+library(semPlot)
+semPaths(fit_MGregr, "par", weighted = FALSE, nCharNodes = 7, shapeMan = "rectangle",
+         sizeMan = 8, sizeMan2 = 5) # plot
+```
+
+
+**Possible conclusions**
+
+* The standardized effect of covert on sw appears to be stronger for females (-0.478) than males (-0.438) and reverse for the effect of overt (-0.161 for males compared to -0.112 for females). 
+
+* However, the confidence intervals for sw on covert and overt show a large overlap for males and females. 
+
+  The regression coefficients for the males are included in the confidence intervals for the females and vice versa. 
+
+Next, we are going to test whether the differences between the regression coefficients for males and females are statistically significant. 
+
+
+**Test equality of the regression coefficients**
+
+<!-- # TO DO -->
+<!-- Je zou eigenlijk op gestand. est. moeten doen -->
+<!-- > Ik kan zelf al niet tot gestand komen vanuit ongestand: -0.497/(sqrt(0.361)/sqrt(0.336)) = -0.4794821 en niet -0.438 -->
+<!-- > Zie evt https://groups.google.com/g/lavaan/c/Z4v2whX8TS4 hoe je het zou kunnen doen -->
+
+Next, we want to test whether the regression coefficients for males and females are the same.
+
+Note: One should actually do this for comparable parameters, which often comes down to inspecting standardized parameters. Unfortunately, this is difficult when using lavaan (or Mplus for that matter). However, since we look at the same relationship for two different groups, the comparability of the estimates may not be a problem. Moreover, the variances of the predictors and dependent variable are about the same for both groups, so we can probably compare the unstandardized parameters as well. 
+
+Now, we want to constrain 'a single parameter' to be equal across two groups. Therefore, we need to label this parameter for both groups, so using 2 labels. This we need to do for both regression coefficient parameters.
+
+First, specify the model:
+
+```{r, message=F, warning=F}
+model.regression_equal <- '
+  # model with labeled parameters
+  sw ~ c(b1_m,b1_f)*overt + c(b2_m,b2_f)*covert # regression
+  sw ~~ sw                                      # residual variance
+  sw ~ 1                                        # intercept
+'
+```
+
+Next, fit the model:
+
+```{r, message=F, warning=F}
+# Fit model
+fit_MGregr_equal <- lavaan(model = model.regression_equal, data = data_regr,
+                     group = "gender") # multigroup specification
+```
+
+Last, conduct a Wald test:
+
+```{r, message=F, warning=F}
+lavTestWald(fit_MGregr_equal, constraints = 'b1_m == b1_f; b2_m == b2_f')
+```
+
+The Wald test with df=2 is 1.036, with $p$ = 0.596. Thus, we do not reject the null that the two regression coefficients for both groups are equal. Hence, we conclude that there is no evidence for a difference between b1_m and b1_f and between b2_m and b2_f. Stated otherwise, we conclude that the estimates are the same for both groups.
+
+In case one wants the model results for which the regression coefficients are the same:
+
+```{r, message=F, warning=F}
+# Model specification
+model.regression_equal <- '
+  # model with labeled parameters
+  sw ~ c(b1_m,b1_f)*overt + c(b2_m,b2_f)*covert # regression
+  sw ~~ sw                                      # residual variance
+  sw ~ 1                                        # intercept
+  #
+  # constraints
+  b1_m == b1_f; b2_m == b2_f
+'
+
+# Fit the model
+fit_MGregr_equal <- lavaan(model = model.regression_equal, data = data_regr,
+                           group = "gender") # multigroup specification 
+
+# Model summary
+summary(fit_MGregr_equal, standardized=TRUE, fit.measures=TRUE)
+fitMeasures(fit_MGregr_equal, c("cfi", "tli", "rmsea","srmr")) # alternative for specific fit measures
+```
+
+</details>
+
+&nbsp;
+
+
+# Exercise 2: Measurement Invariance
+
+In this exercise, you will do measurement invariance analyses. You will use data regarding Prolonged Grief Disorder, contained in **PGDdata2.txt**, where missing data is denoted by -999. The data set consists of the grouping variable Kin2 (with two levels: partner and else) and 5 items taken from the Inventory of Complicated Grief: 
+
+1. Yearning
+2. Part of self died
+3. Difficulty accepting the loss
+4. Avoiding reminders of deceased
+5. Bitterness about the loss 
+
+For more information, you are referred to the pdf of Boelen et al. (2010) in your (unzipped) Data files folder.
+
+
+## Exercise 2a
+
+Run a 1-factor CFA on the data set ignoring the multigroup structure, using the default parameterization in the cfa() function.
+
+*How many subjects are there?*
+
+*How about the fit of the model?*
+
+*Which item has the weakest contribution to the latent factor (in terms of standardized factor loading and explained variance)?*
+
+
+## Exercise 2b
+
+Run a 1-factor multigroup CFA on the data, using: group = "Kin".
+
+*How many subjects are there per group?*
+
+
+## Exercise 2c
+
+Test for configural, metric (weak), and scalar (strong) invariance:
+
+* Configural: this is the model run in 2b.
+* Weak: In the cfa function, one should add: group.equal = "loadings"
+* Strong: In the cfa function, one should add: group.equal = c("intercepts", "loadings")
+
+One can compare these models with: *lavTestLRT()* or *anova()*, both give the same results.
+
+*What is the model fit in the configural, metric (weak) and scalar (strong) invariant model? *
+
+*Which model do you prefer?*
+
+
+## Exercise 2d
+
+Add constraints such that also the residual variances are constrained to be the same for both groups. 
+<details><summary><b>Click to show a hint</b></summary>
+In the cfa function, in the group.equal argument, one should add "residuals".
+</details>
+<br>
+Check for AIC and BIC differences and use the Chi-square difference test, by using the lavTestLRT() or anova() function.
+
+*Did the model get significantly worse? *
+
+
+## Answers Exercise 2
+
+<details><summary><b>Click to show answers</b></summary>
+
+&nbsp;
+
+**Read in data**
+```{r, message=F, warning=F}
+data_PGD <- read.table("PGDdata2.txt", header = T)
+```
+
+**Denote missing values and categorical variables**
+```{r, message=F, warning=F}
+data_PGD[sapply(data_PGD, function(x) as.character(x) %in% c("-999") )] <- NA 
+
+data_PGD$Kin2 <- factor(data_PGD$Kin2, labels = c("partner", "else"))
+
+#summary(data_PGD$Kin2)
+```
+
+
+**Data screening: Item correlations**
+
+The correlations for the items of interest (i.e., b1pss1, b2pss2, b3pss3, b4pss4, and b5pss5) are:
+
+```{r, message=F, warning=F}
+if (!require("Hmisc")) install.packages("Hmisc", dependencies = TRUE)
+library(Hmisc)
+
+res <- rcorr(as.matrix(data_PGD[,2:6])) # rcorr() accepts matrices only
+round(res$r, 3) # Correlation matrix (rounded to 3 decimals)
+```
+
+&nbsp;
+
+
+**One-Factor CFA**
+
+Specify and fit the model, then obtain the summary and fit measures:
+
+```{r, message=F, warning=F}
+# Specify:
+model.1CFA <- "
+ F  =~ b1pss1 + b2pss2 + b3pss3 + b4pss4 + b5pss5
+"
+
+# Fit:
+fit_1CFA <- cfa(model.1CFA, data=data_PGD,
+                missing='fiml', fixed.x=F) # Specify FIML 
+
+# Summary:
+summary(fit_1CFA, standardized = T)
+
+# Fit statistics:
+fitMeasures(fit_1CFA, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea","srmr")) 
+
+# Technical output
+lavInspect(fit_1CFA) 
+```
+
+The number of observations is 571. Thus, there are 571 subjects/persons.
+
+Using the rules of thumb, we can conclude that the fit of the model is acceptable. Namely, CFI/TLI > .95, RMSEA < .06, and SRMR < .08. 
+
+Item 2 has the weakest contribution to the factor. Its standardized factor loading (Std.all) is 0.494. Hence, the item explains $100\%*0.494^2 \approx 24.4\%$ of the factor its variance.
+
+&nbsp;
+
+
+**One-factor Multigroup CFA**
+
+Specify and fit the model, then obtain the summary and fit measures:
+
+```{r, message=F, warning=F}
+# Specify:
+model.1CFA <- "
+ F  =~ b1pss1 + b2pss2 + b3pss3 + b4pss4 + b5pss5
+"
+
+# Fit:
+fit_MG1CFA <- cfa(model.1CFA, data=data_PGD,
+                group = 'Kin2',
+                missing='fiml', fixed.x=F) # Specify FIML 
+
+# Summary:
+summary(fit_MG1CFA, standardized = T)
+
+# Fit statistics:
+fitMeasures(fit_MG1CFA, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea","srmr")) 
+
+# Technical output
+lavInspect(fit_MG1CFA) 
+```
+
+The number of observations per group are:
+
+* 190 in the 'partner' group
+* 379 in the 'else' group
+
+&nbsp;
+
+
+**Measurement invariance testing**
+
+Before one compares parameters across multiple groups in CFA, one first needs to establish measurement invariance. When data is continuous, testing for measurement invariance involves a fixed sequence of model comparison tests. A typical sequence involves three models:
+
+Model 1: configural invariance. 
+
+* The same factor structure is imposed on all groups:
+
+```{r, message=F, warning=F}
+# configural invariance - the same as fit_MG1CFA
+fit_MG1CFA_ci <- cfa(model.1CFA, data=data_PGD,
+                  group = 'Kin2',
+                  missing='fiml', fixed.x=F)
+```
+
+Model 2: metric/weak invariance. 
+
+* The factor loadings are constrained to be equal across groups:
+
+```{r, message=F, warning=F}
+# metric/weak invariance
+fit_MG1CFA_wi <- cfa(model.1CFA, data=data_PGD,
+                     group = 'Kin2',
+                     missing='fiml', fixed.x=F,
+                      group.equal = "loadings") 
+```
+
+Model 3: scalar/strong invariance. 
+
+* The factor loadings and intercepts are constrained to be equal across groups:
+
+```{r, message=F, warning=F}
+# scalar/strong invariance
+fit_MG1CFA_si <- cfa(model.1CFA, data=data_PGD,
+                     group = 'Kin2',
+                     missing='fiml', fixed.x=F,
+                      group.equal = c("intercepts", "loadings"))
+```
+
+To compare the models the following code can be run:
+
+```{r, message=F, warning=F}
+lavTestLRT(fit_MG1CFA_ci, fit_MG1CFA_wi, fit_MG1CFA_si) 
+# or:
+#anova(fit_MG1CFA_ci, fit_MG1CFA_wi, fit_MG1CFA_si)
+```
+
+Because we provided three model fits, it produces two tests: 
+
+1. the first model versus the second model. 
+2. the second model versus the third model. 
+
+
+**Possible conclusions**
+
+0. The configural model fits the data ($\chi^2(10) = 11.329, \ p = .33$):
+
+  ```{r, message=F, warning=F}
+  fitMeasures(fit_MG1CFA_ci, c("chisq", "df", "pvalue"))
+  ```
+  From there on, we evaluate whether the more constrained model does not fit the data worse than the less constrained model.
+
+1. Because the first p-value is non-significant ($p = 0.088 > .05$), we conclude that:
+
+  * Weak invariance (equal factor loadings) is supported in this dataset.
+  * Stated otherwise: The metric invariance model does not fit worse than the configural model.
+
+2. Because the second p-value is also non-significant ($p = 0.300 > .05$), we conclude that strong invariance (equal intercepts and factor loadings) is also supported:
+
+  * In SEM, one always prefer parsimony: the model with the most df. Thus, we prefer the scalar invariance model, where both factor loadings and intercepts are constrained (to be equal). 
+  * Since the latent variable in the scalar model means the same thing across the two groups, we can compare values on the latent variable.
+
+
+*Remark:* Let us say that the second p-value is significant:
+
+* Then, strong invariance is not supported. 
+* Then, it is unwise to directly compare parameters across the two groups.
+
+
+Alternatively or additionally, one could look at the AIC and/or BIC values. Since the AIC and BIC are the lowest for 'MG1CFA_si', we also conclude from this that there is strong invariance. We could even quantify the relative support:
+```{r, message=F, warning=F}
+# In case you want to quantify the relative support (so, how much better).
+# Based on the AIC:
+fit_AIC <- lavTestLRT(fit_MG1CFA_ci, fit_MG1CFA_wi, fit_MG1CFA_si)$AIC
+# or:
+#fit_AIC <- anova(fit_MG1CFA_ci, fit_MG1CFA_wi, fit_MG1CFA_si)$AIC
+#names(fit_AIC) <- c("ci", "wi", "si") # not needed
+#fit_AIC
+#if (!require("restriktor")) install.packages("restriktor", dependencies = TRUE)
+library(restriktor) # ?calc_ICweights 
+AIC_weights <- calc_ICweights(fit_AIC, hypo_names = c("ci", "wi", "si"))
+#AIC_weights
+AIC_weights$IC_weights # 'si' (3rd model) is best
+AIC_weights$ratio_IC_weights[3,1:2]
+# Note: More information in IC weights can be found in the Model Selection lecture.
+```
+<!-- The weak invariance (equal factor loadings) model is about -->
+<!-- `r round(as.numeric(AIC_weights$ratio_IC_weights[2,1]), 2)` -->
+<!-- times more supported than the configural model. -->
+<!-- Additionally, the  -->
+The strong invariance model is about
+`r round(as.numeric(AIC_weights$ratio_IC_weights[3,1]), 2)`
+times more supported than the configural model, and about
+`r round(as.numeric(AIC_weights$ratio_IC_weights[3,2]), 2)`
+times more than the weak invariance (equal factor loadings) model.
+
+  
+
+**Plot**
+
+A path diagram of the strong invariance model can be obtained via:
+
+```{r, message=F, warning=F}
+if (!require("tidySEM")) install.packages("tidySEM") # install this package first (once)
+library(tidySEM)
+
+graph_sem(fit_MG1CFA_si) # plot
+```
+
+&nbsp;
+
+**Adding constraints**
+
+Add constraints such that also the residual variances are constrained to be the same for both groups: 
+
+```{r, message=F, warning=F}
+# Fit model:
+fit_MG1CFA_si_res <- cfa(model.1CFA, data=data_PGD,
+                     group = 'Kin2',
+                     missing='fiml', fixed.x=F,
+                     group.equal = c("intercepts", "loadings", "residuals")) # constraints
+
+# Fit measures
+fitMeasures(fit_MG1CFA_si_res, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea","srmr"))
+
+# Technical output
+lavInspect(fit_MG1CFA_si_res) 
+```
+
+Compare this model (fit_MG1CFA_si_res) to one without (fit_MG1CFA_si):
+
+```{r, message=F, warning=F}
+lavTestLRT(fit_MG1CFA_si_res, fit_MG1CFA_si) # or:
+#anova(fit_MG1CFA_si_res, fit_MG1CFA_si)
+```
+
+**Possible conclusion**
+
+Since $\Delta \chi^2(5) = 10.268, \ p= 0.068$, the equal-residual-variances model is not significantly worse. That is, the residual variances are also equal. 
+
+Bear in mind that, when we compare two models, we always prefer a more parsimonious model (= more df, that is, less parameters to be estimated). 
+
+</details>
+
+&nbsp;

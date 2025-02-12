@@ -20,8 +20,9 @@ To be discussed in the Model Selection lecture
 \begin{alltt}
 \hlkwd{library}\hldef{(devtools)} \hlcom{# Make sure you have Rtools}
 \hlkwd{install_github}\hldef{(}\hlsng{"rebeccakuiper/ICweights"}\hldef{)}
-\hlkwd{library}\hldef{(ICweights)}
-\hlopt{?}\hldef{IC.weights}
+\hlkwd{library}\hldef{(ICweights)} \hlcom{# ?IC.weights}
+\hlcom{# Or:}
+\hlkwd{library}\hldef{(restriktor)} \hlcom{# ?calc_ICweights}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -29,8 +30,7 @@ To be discussed in the Model Selection lecture
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{library}\hldef{(restriktor)}
-\hlkwd{library}\hldef{(goric)}
+\hlkwd{library}\hldef{(restriktor)} \hlcom{# ?goric}
 \end{alltt}
 \end{kframe}
 \end{knitrout}

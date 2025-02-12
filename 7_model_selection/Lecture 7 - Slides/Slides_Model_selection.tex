@@ -14,10 +14,10 @@
 
 \definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
 \newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
-\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlsng}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
 \newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
 \newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
-\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hldef}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
 \newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
 \newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
 \newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
@@ -129,10 +129,11 @@ To be discussed in the Model Selection lecture
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{library}\hlstd{(devtools)} \hlcom{# Make sure you have Rtools}
-\hlkwd{install_github}\hlstd{(}\hlstr{"rebeccakuiper/ICweights"}\hlstd{)}
-\hlkwd{library}\hlstd{(ICweights)}
-\hlopt{?}\hlstd{IC.weights}
+\hlkwd{library}\hldef{(devtools)} \hlcom{# Make sure you have Rtools}
+\hlkwd{install_github}\hldef{(}\hlsng{"rebeccakuiper/ICweights"}\hldef{)}
+\hlkwd{library}\hldef{(ICweights)} \hlcom{# ?IC.weights}
+\hlcom{# Or:}
+\hlkwd{library}\hldef{(restriktor)} \hlcom{# ?calc_ICweights}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -140,8 +141,7 @@ To be discussed in the Model Selection lecture
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{library}\hlstd{(restriktor)}
-\hlkwd{library}\hlstd{(goric)}
+\hlkwd{library}\hldef{(restriktor)} \hlcom{# ?goric}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -296,7 +296,7 @@ H_1: \mu_1 > \mu_2 > \mu_3
 contains 1 ordering of three means, 1-2-3. \\
 Thus, not complex (i.e., parsimonious).
 \begin{displaymath}
-H_2: \mu_1 > \mu_2, \mu_3
+H_2: \mu_1 > (\mu_2, \mu_3)
 \end{displaymath}
 contains 2 orderings of three means: 1-2-3 and 1-3-2. \\
 Thus, more complex (less parsimonious).
@@ -502,13 +502,13 @@ Regression example from lab meeting `Intro and regression' and `Multigroup analy
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# Data}
-\hlstd{data_regr} \hlkwb{<-} \hlkwd{read.table}\hlstd{(}\hlstr{"popular_regr.txt"}\hlstd{,} \hlkwc{header} \hlstd{= T)}
+\hldef{data_regr} \hlkwb{<-} \hlkwd{read.table}\hldef{(}\hlsng{"popular_regr.txt"}\hldef{,} \hlkwc{header} \hldef{= T)}
 
-\hlstd{data_regr[}\hlkwd{sapply}\hlstd{(data_regr,} \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{)}
-          \hlkwd{as.character}\hlstd{(x)} \hlopt{%in%} \hlkwd{c}\hlstd{(}\hlstr{"-99"}\hlstd{,} \hlstr{"-999"}\hlstd{) )]} \hlkwb{<-} \hlnum{NA}
+\hldef{data_regr[}\hlkwd{sapply}\hldef{(data_regr,} \hlkwa{function}\hldef{(}\hlkwc{x}\hldef{)}
+          \hlkwd{as.character}\hldef{(x)} \hlopt{%in%} \hlkwd{c}\hldef{(}\hlsng{"-99"}\hldef{,} \hlsng{"-999"}\hldef{) )]} \hlkwb{<-} \hlnum{NA}
 
-\hlstd{data_regr}\hlopt{$}\hlstd{gender} \hlkwb{<-} \hlkwd{factor}\hlstd{(data_regr}\hlopt{$}\hlstd{gender,}
-                           \hlkwc{labels} \hlstd{=} \hlkwd{c}\hlstd{(}\hlstr{"male"}\hlstd{,} \hlstr{"female"}\hlstd{))}
+\hldef{data_regr}\hlopt{$}\hldef{gender} \hlkwb{<-} \hlkwd{factor}\hldef{(data_regr}\hlopt{$}\hldef{gender,}
+                           \hlkwc{labels} \hldef{=} \hlkwd{c}\hldef{(}\hlsng{"male"}\hldef{,} \hlsng{"female"}\hldef{))}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -524,14 +524,14 @@ Regression example from lab meeting `Intro and regression' and `Multigroup analy
 \hlcom{# Model specification}
 
 \hlcom{# Model 1}
-\hlstd{model.MGregr} \hlkwb{<-} \hlstr{'
+\hldef{model.MGregr} \hlkwb{<-} \hlsng{'
   sw ~ overt + covert # regression
   sw ~~ sw            # residual variance
   sw ~ 1              # intercept
 '}
 
 \hlcom{# Model 2}
-\hlstd{model.MGregr_equal} \hlkwb{<-} \hlstr{'
+\hldef{model.MGregr_equal} \hlkwb{<-} \hlsng{'
   # model with labeled parameters
   sw ~ c(b1,b1)*overt + c(b2,b2)*covert 
   sw ~~ sw                                      
@@ -552,14 +552,14 @@ Regression example from lab meeting `Intro and regression' and `Multigroup analy
 \hlcom{# Fit model}
 
 \hlcom{# Model 1}
-\hlstd{fit_MGregr} \hlkwb{<-} \hlkwd{lavaan}\hlstd{(}\hlkwc{model} \hlstd{= model.MGregr,}
-                    \hlkwc{data} \hlstd{= data_regr,}
-                    \hlkwc{group} \hlstd{=} \hlstr{"gender"}\hlstd{)} \hlcom{# multigroup}
+\hldef{fit_MGregr} \hlkwb{<-} \hlkwd{lavaan}\hldef{(}\hlkwc{model} \hldef{= model.MGregr,}
+                    \hlkwc{data} \hldef{= data_regr,}
+                    \hlkwc{group} \hldef{=} \hlsng{"gender"}\hldef{)} \hlcom{# multigroup}
 
 \hlcom{# Model 2}
-\hlstd{fit_MGregr_equal} \hlkwb{<-} \hlkwd{lavaan}\hlstd{(}\hlkwc{model} \hlstd{= model.MGregr_equal,}
-                    \hlkwc{data} \hlstd{= data_regr,}
-                    \hlkwc{group} \hlstd{=} \hlstr{"gender"}\hlstd{)} \hlcom{# multigroup}
+\hldef{fit_MGregr_equal} \hlkwb{<-} \hlkwd{lavaan}\hldef{(}\hlkwc{model} \hldef{= model.MGregr_equal,}
+                    \hlkwc{data} \hldef{= data_regr,}
+                    \hlkwc{group} \hldef{=} \hlsng{"gender"}\hldef{)} \hlcom{# multigroup}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -572,7 +572,7 @@ Regression example from lab meeting `Intro and regression' and `Multigroup analy
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{model.MGregr_unequal} \hlkwb{<-} \hlstr{'
+\hldef{model.MGregr_unequal} \hlkwb{<-} \hlsng{'
   # model with labeled parameters
   sw ~ c(b1_m,b1_f)*overt + c(b2_m,b2_f)*covert 
   sw ~~ sw                                      
@@ -580,16 +580,16 @@ Regression example from lab meeting `Intro and regression' and `Multigroup analy
 '}
 
 \hlcom{# Model 1}
-\hlstd{fit_MGregr} \hlkwb{<-} \hlkwd{lavaan}\hlstd{(}\hlkwc{model} \hlstd{= model.MGregr_unequal,}
-                    \hlkwc{data} \hlstd{= data_regr,}
-                    \hlkwc{group} \hlstd{=} \hlstr{"gender"}\hlstd{)} \hlcom{# multigroup}
+\hldef{fit_MGregr} \hlkwb{<-} \hlkwd{lavaan}\hldef{(}\hlkwc{model} \hldef{= model.MGregr_unequal,}
+                    \hlkwc{data} \hldef{= data_regr,}
+                    \hlkwc{group} \hldef{=} \hlsng{"gender"}\hldef{)} \hlcom{# multigroup}
 
 \hlcom{# Model 2}
-\hlstd{fit_MGregr_equal} \hlkwb{<-} \hlkwd{lavaan}\hlstd{(}\hlkwc{model} \hlstd{= model.MGregr_unequal,}
-                    \hlkwc{data} \hlstd{= data_regr,}
-                    \hlkwc{group} \hlstd{=} \hlstr{"gender"}\hlstd{,} \hlcom{# multigroup}
-                    \hlkwc{constraints} \hlstd{=} \hlkwd{c}\hlstd{(}\hlstr{"b1_m == b1_f; 
-                                    b2_m == b2_f"}\hlstd{))}
+\hldef{fit_MGregr_equal} \hlkwb{<-} \hlkwd{lavaan}\hldef{(}\hlkwc{model} \hldef{= model.MGregr_unequal,}
+                    \hlkwc{data} \hldef{= data_regr,}
+                    \hlkwc{group} \hldef{=} \hlsng{"gender"}\hldef{,} \hlcom{# multigroup}
+                    \hlkwc{constraints} \hldef{=} \hlkwd{c}\hldef{(}\hlsng{"b1_m == b1_f; 
+                                    b2_m == b2_f"}\hldef{))}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -608,7 +608,7 @@ Regression example from lab meeting `Intro and regression' and `Multigroup analy
 
 \hlcom{#anova(fit_MGregr, fit_MGregr_equal)[1:2] }
 \hlcom{# or}
-\hlkwd{AIC}\hlstd{(fit_MGregr, fit_MGregr_equal)}
+\hlkwd{AIC}\hldef{(fit_MGregr, fit_MGregr_equal)}
 \end{alltt}
 \begin{verbatim}
 ##                  df      AIC
@@ -635,7 +635,7 @@ AIC for n = 100 vs n = 1491: % dim(data_regr)[1]
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{round}\hlstd{(AIC_n,} \hlnum{3}\hlstd{)}
+\hlkwd{round}\hldef{(AIC_n,} \hlnum{3}\hldef{)}
 \end{alltt}
 \begin{verbatim}
 ##                  AIC_n100 AIC_n1491
@@ -736,10 +736,10 @@ But how much?
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{library}\hlstd{(devtools)} \hlcom{# Make sure you have Rtools}
-\hlkwd{install_github}\hlstd{(}\hlstr{"rebeccakuiper/ICweights"}\hlstd{)}
+\hlkwd{library}\hldef{(devtools)} \hlcom{# Make sure you have Rtools}
+\hlkwd{install_github}\hldef{(}\hlsng{"rebeccakuiper/ICweights"}\hldef{)}
 \hlcom{#}
-\hlkwd{library}\hlstd{(ICweights)}
+\hlkwd{library}\hldef{(ICweights)}
 \hlcom{#?IC.weights}
 \end{alltt}
 \end{kframe}
@@ -750,10 +750,10 @@ But how much?
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# AIC weights}
-\hlstd{AICvalues} \hlkwb{<-} \hlkwd{AIC}\hlstd{(fit_MGregr, fit_MGregr_equal)}\hlopt{$}\hlstd{AIC}
-\hlstd{Hypo.names} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlstr{"Unc"}\hlstd{,} \hlstr{"Equal"}\hlstd{)}
+\hldef{AICvalues} \hlkwb{<-} \hlkwd{AIC}\hldef{(fit_MGregr, fit_MGregr_equal)}\hlopt{$}\hldef{AIC}
+\hldef{Hypo.names} \hlkwb{<-} \hlkwd{c}\hldef{(}\hlsng{"Unc"}\hldef{,} \hlsng{"Equal"}\hldef{)}
 \hlcom{#summary(IC.weights(AICvalues, Hypo.names))}
-\hlkwd{IC.weights}\hlstd{(AICvalues, Hypo.names)}
+\hlkwd{IC.weights}\hldef{(AICvalues, Hypo.names)}
 \end{alltt}
 \begin{verbatim}
 ## 
@@ -776,14 +776,14 @@ But how much?
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# AIC weights}
-\hlkwd{IC.weights}\hlstd{(AICvalues, Hypo.names)}\hlopt{$}\hlstd{IC.weights}
+\hlkwd{IC.weights}\hldef{(AICvalues, Hypo.names)}\hlopt{$}\hldef{IC.weights}
 \end{alltt}
 \begin{verbatim}
 ##       Unc     Equal 
 ## 0.1850568 0.8149432
 \end{verbatim}
 \begin{alltt}
-\hlkwd{IC.weights}\hlstd{(AICvalues, Hypo.names)}\hlopt{$}\hlstd{ratio.IC.weights}
+\hlkwd{IC.weights}\hldef{(AICvalues, Hypo.names)}\hlopt{$}\hldef{ratio.IC.weights}
 \end{alltt}
 \begin{verbatim}
 ##         vs Unc  vs Equal
@@ -795,6 +795,43 @@ But how much?
 	
 $H_{Equal}$ is $.815/.185 \approx 4.4 > 1$ times more supported than $H_{Unc}$.\\
 Thus, there is quite some evidence that $H_{Equal}$ is the best of this set.
+
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+\begin{frame}[fragile]{IC weights: Alternative in R}
+
+The ICweights function is now also part of the restriktor package:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwa{if} \hldef{(}\hlopt{!}\hlkwd{require}\hldef{(}\hlsng{"restriktor"}\hldef{))} \hlkwd{install.packages}\hldef{(}\hlsng{"restriktor"}\hldef{)}
+\hlkwd{library}\hldef{(restriktor)}
+\hlcom{#?calc_ICweights}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+\footnotesize{
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# AIC weights}
+\hldef{AICvalues} \hlkwb{<-} \hlkwd{AIC}\hldef{(fit_MGregr, fit_MGregr_equal)}\hlopt{$}\hldef{AIC}
+\hldef{Hypo.names} \hlkwb{<-} \hlkwd{c}\hldef{(}\hlsng{"Unc"}\hldef{,} \hlsng{"Equal"}\hldef{)}
+\hlkwd{calc_ICweights}\hldef{(AICvalues, Hypo.names)}
+\end{alltt}
+\begin{verbatim}
+##              IC    IC_weights  ratio_IC_weights.vs_Unc
+## Unc    2319.833  1.850568e-01             1.000000e+00
+## Equal  2316.868  8.149432e-01             4.403746e+00
+##        ratio_IC_weights.vs_Equal
+## Unc                 2.270794e-01
+## Equal               1.000000e+00
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+}
 
 \end{frame}
 %------------------------------------------------------------------------------%
@@ -850,8 +887,8 @@ Thus, there is quite some evidence that $H_{Equal}$ is the best of this set.
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# Option 1 - used in this course}
-\hlkwa{if} \hlstd{(}\hlopt{!}\hlkwd{require}\hlstd{(}\hlstr{"restriktor"}\hlstd{))} \hlkwd{install.packages}\hlstd{(}\hlstr{"restriktor"}\hlstd{)}
-\hlkwd{library}\hlstd{(restriktor)}
+\hlkwa{if} \hldef{(}\hlopt{!}\hlkwd{require}\hldef{(}\hlsng{"restriktor"}\hldef{))} \hlkwd{install.packages}\hldef{(}\hlsng{"restriktor"}\hldef{)}
+\hlkwd{library}\hldef{(restriktor)}
 \hlcom{#}
 \hlcom{#goric(fitted.lavaan.model, }
 \hlcom{#      hypotheses = list(H_1, H_2, ..., H_M),}
@@ -861,8 +898,8 @@ Thus, there is quite some evidence that $H_{Equal}$ is the best of this set.
 \hlcom{#comparison = "complement" # will be discussed later}
 
 \hlcom{# Option 2}
-\hlkwa{if} \hlstd{(}\hlopt{!}\hlkwd{require}\hlstd{(}\hlstr{"gorica"}\hlstd{))} \hlkwd{install.packages}\hlstd{(}\hlstr{"gorica"}\hlstd{)}
-\hlkwd{library}\hlstd{(gorica)}
+\hlkwa{if} \hldef{(}\hlopt{!}\hlkwd{require}\hldef{(}\hlsng{"gorica"}\hldef{))} \hlkwd{install.packages}\hldef{(}\hlsng{"gorica"}\hldef{)}
+\hlkwd{library}\hldef{(gorica)}
 \hlcom{#?gorica}
 \end{alltt}
 \end{kframe}
@@ -877,7 +914,7 @@ Thus, there is quite some evidence that $H_{Equal}$ is the best of this set.
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# Model specification: Unconstrained model}
-\hlstd{model.MGregr_unequal} \hlkwb{<-} \hlstr{'
+\hldef{model.MGregr_unequal} \hlkwb{<-} \hlsng{'
   # model with labeled parameters
   sw ~ c(b1_m,b1_f)*overt + c(b2_m,b2_f)*covert 
   sw ~~ sw                                      
@@ -885,9 +922,9 @@ Thus, there is quite some evidence that $H_{Equal}$ is the best of this set.
 '}
 
 \hlcom{# Fit model: Unconstrained model}
-\hlstd{fit_MGregr} \hlkwb{<-} \hlkwd{lavaan}\hlstd{(}\hlkwc{model} \hlstd{= model.MGregr_unequal,}
-                    \hlkwc{data} \hlstd{= data_regr,}
-                    \hlkwc{group} \hlstd{=} \hlstr{"gender"}\hlstd{)} \hlcom{# multigroup}
+\hldef{fit_MGregr} \hlkwb{<-} \hlkwd{lavaan}\hldef{(}\hlkwc{model} \hldef{= model.MGregr_unequal,}
+                    \hlkwc{data} \hldef{= data_regr,}
+                    \hlkwc{group} \hldef{=} \hlsng{"gender"}\hldef{)} \hlcom{# multigroup}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -899,7 +936,7 @@ Thus, there is quite some evidence that $H_{Equal}$ is the best of this set.
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{H_AIC} \hlkwb{<-} \hlstr{"abs(b1_m) = abs(b1_f);  abs(b2_m) = abs(b2_f)"}
+\hldef{H_AIC} \hlkwb{<-} \hlsng{"abs(b1_m) = abs(b1_f);  abs(b2_m) = abs(b2_f)"}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -908,9 +945,9 @@ Thus, there is quite some evidence that $H_{Equal}$ is the best of this set.
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{#On unstandardized estimates, as done by default in lavaan:}
-\hlkwd{set.seed}\hlstd{(}\hlnum{100}\hlstd{)}
-\hlstd{AIC_Unstand} \hlkwb{<-} \hlkwd{goric}\hlstd{(fit_MGregr,} \hlkwc{hypotheses} \hlstd{=} \hlkwd{list}\hlstd{(}\hlkwc{H_AIC}\hlstd{=H_AIC))}
-\hlstd{AIC_Unstand}\hlopt{$}\hlstd{result}\hlopt{$}\hlstd{gorica.weights}
+\hlkwd{set.seed}\hldef{(}\hlnum{100}\hldef{)}
+\hldef{AIC_Unstand} \hlkwb{<-} \hlkwd{goric}\hldef{(fit_MGregr,} \hlkwc{hypotheses} \hldef{=} \hlkwd{list}\hldef{(}\hlkwc{H_AIC}\hldef{=H_AIC))}
+\hldef{AIC_Unstand}\hlopt{$}\hldef{result}\hlopt{$}\hldef{gorica.weights}
 \end{alltt}
 \begin{verbatim}
 ## [1] 0.8149104 0.1850896
@@ -925,10 +962,10 @@ Thus, there is quite some evidence that $H_{Equal}$ is the best of this set.
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{#On standardized estimates}
-\hlkwd{set.seed}\hlstd{(}\hlnum{100}\hlstd{)}
-\hlstd{AIC_Stand} \hlkwb{<-} \hlkwd{goric}\hlstd{(fit_MGregr,} \hlkwc{hypotheses} \hlstd{=} \hlkwd{list}\hlstd{(}\hlkwc{H_AIC}\hlstd{=H_AIC),}
-                   \hlkwc{standardized} \hlstd{= T)}
-\hlstd{AIC_Stand}\hlopt{$}\hlstd{result}\hlopt{$}\hlstd{gorica.weights}
+\hlkwd{set.seed}\hldef{(}\hlnum{100}\hldef{)}
+\hldef{AIC_Stand} \hlkwb{<-} \hlkwd{goric}\hldef{(fit_MGregr,} \hlkwc{hypotheses} \hldef{=} \hlkwd{list}\hldef{(}\hlkwc{H_AIC}\hldef{=H_AIC),}
+                   \hlkwc{standardized} \hldef{= T)}
+\hldef{AIC_Stand}\hlopt{$}\hldef{result}\hlopt{$}\hldef{gorica.weights}
 \end{alltt}
 \begin{verbatim}
 ## [1] 0.8102574 0.1897426
@@ -949,7 +986,7 @@ Thus, there is quite some evidence that $H_{Equal}$ is the best of this set.
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{H1} \hlkwb{<-} \hlstr{"abs(b1_m) > abs(b1_f);  abs(b2_m) < abs(b2_f)"}
+\hldef{H1} \hlkwb{<-} \hlsng{"abs(b1_m) > abs(b1_f);  abs(b2_m) < abs(b2_f)"}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -960,21 +997,22 @@ Remark: I assume we want to compare the absolute strength.
 %------------------------------------------------------------------------------%
 %
 \begin{frame}[fragile]{Example: Multigroup regression - model comparison}
-
+\vspace{-\baselineskip}
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{set.seed}\hlstd{(}\hlnum{100}\hlstd{)}
-\hlstd{results_MGregr} \hlkwb{<-} \hlkwd{goric}\hlstd{(fit_MGregr,} \hlkwc{hypotheses} \hlstd{=} \hlkwd{list}\hlstd{(H1),}
-                        \hlkwc{standardized} \hlstd{= T)}
+\hlkwd{set.seed}\hldef{(}\hlnum{100}\hldef{)}
+\hldef{results_MGregr} \hlkwb{<-} \hlkwd{goric}\hldef{(fit_MGregr,} \hlkwc{hypotheses} \hldef{=} \hlkwd{list}\hldef{(H1),}
+                        \hlkwc{comparison} \hldef{=} \hlsng{"unconstrained"}\hldef{,}
+                        \hlkwc{standardized} \hldef{= T)}
 \hlcom{#results_MGregr$result # Output too long for the slide}
-\hlstd{results_MGregr}\hlopt{$}\hlstd{result}\hlopt{$}\hlstd{gorica.weights}
+\hldef{results_MGregr}\hlopt{$}\hldef{result}\hlopt{$}\hldef{gorica.weights}
 \end{alltt}
 \begin{verbatim}
 ## [1] 0.6908713 0.3091287
 \end{verbatim}
 \begin{alltt}
-\hlstd{results_MGregr}\hlopt{$}\hlstd{ratio.gw}
+\hldef{results_MGregr}\hlopt{$}\hldef{ratio.gw}
 \end{alltt}
 \begin{verbatim}
 ##                  vs. H1 vs. unconstrained
@@ -1073,19 +1111,19 @@ Note that the unconstrained always includes the true hypothesis... % So, the sup
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{set.seed}\hlstd{(}\hlnum{100}\hlstd{)}
-\hlstd{results_MGregr_compl} \hlkwb{<-} \hlkwd{goric}\hlstd{(fit_MGregr,}
-                              \hlkwc{hypotheses} \hlstd{=} \hlkwd{list}\hlstd{(H1),}
-                              \hlkwc{comparison} \hlstd{=} \hlstr{"complement"}\hlstd{,}
-                              \hlkwc{standardized} \hlstd{= T)}
+\hlkwd{set.seed}\hldef{(}\hlnum{100}\hldef{)}
+\hldef{results_MGregr_compl} \hlkwb{<-} \hlkwd{goric}\hldef{(fit_MGregr,}
+                              \hlkwc{hypotheses} \hldef{=} \hlkwd{list}\hldef{(H1),}
+                              \hlcom{#comparison = "complement", }
+                              \hlkwc{standardized} \hldef{= T)}
 \hlcom{#results_MGregr_compl$result # Output too long for the slide}
-\hlstd{results_MGregr_compl}\hlopt{$}\hlstd{result}\hlopt{$}\hlstd{gorica.weights}
+\hldef{results_MGregr_compl}\hlopt{$}\hldef{result}\hlopt{$}\hldef{gorica.weights}
 \end{alltt}
 \begin{verbatim}
 ## [1] 0.6219892 0.3780108
 \end{verbatim}
 \begin{alltt}
-\hlstd{results_MGregr_compl}\hlopt{$}\hlstd{ratio.gw[}\hlnum{1}\hlstd{,}\hlnum{2}\hlstd{]}
+\hldef{results_MGregr_compl}\hlopt{$}\hldef{ratio.gw[}\hlnum{1}\hldef{,}\hlnum{2}\hldef{]}
 \end{alltt}
 \begin{verbatim}
 ## [1] 1.645427
@@ -1100,19 +1138,53 @@ I would now explore for a competing hypothesis for next research...
 \end{frame}
 %------------------------------------------------------------------------------%
 %
-\begin{frame}[fragile]{Use of unconstrained and complement}
+% \begin{frame}[fragile]{Use of unconstrained and complement}
+% 
+% In case of 1 hypothesis of interest:\\
+% Use the complement.\\
+% It acts as another competing (non-overlapping) hypothesis.\\
+% ~\\
+% In case of 2 or more hypotheses of interest:\\
+% Use the complement of the set, but this is not yet possible in the software.\\
+% So, use the unconstrained as failsafe.\\
+% This is used to check whether at least one of the hypothesis is not weak.\\
+% Then, the non-weak hypotheses can be compared to all other.
+% 
+% \end{frame}
 
-In case of 1 hypothesis of interest:\\
-Use the complement.\\
-It acts as another competing (non-overlapping) hypothesis.\\
-~\\
-In case of 2 or more hypotheses of interest:\\
-Use the complement of the set, but this is not yet possible in the software.\\
-So, use the unconstrained as failsafe.\\
-This is used to check whether at least one of the hypothesis is not weak.\\
-Then, the non-weak hypotheses can be compared to all other.
+\begin{frame}{Note on use of safeguard hypotheses (1/2)}
 
-\end{frame}
+\begin{itemize}
+		\item Unconstrained ($H_u$) is failsafe.\\
+		If $\geq 1$ hypothesis ($H_m$) not weak (i.e., better than $H_u$),\\
+		then compare that with the competing hypotheses ($H_{m'}$).\\
+		Note: Do not compare $H_m$ with $H_u$ (support is bounded).\\
+		~\\
+		\item Complement ($H_c$) acts as competing hypothesis.\\
+		Note 1: Relative support $H_m$ vs $H_{m'}$ same as in case above.\\
+		Note 2: Can compare $H_m$ with $H_c$.
+	\end{itemize}
+	
+	%\vspace{\baselineskip}
+
+\end{frame}	
+
+
+\begin{frame}{Note on use of safeguard hypotheses (2/2)}
+	
+	My advise and default in goric function:\\
+	~\\
+	\begin{itemize}
+		\item If multiple informative, theory-based hypotheses: \\
+		Goal: Comparison of informative, theory-based hypotheses.\\
+		Safeguard: Unconstrained.\\
+		~\\
+		\item If one informative, theory-based hypothesis ($H_m$): \\
+		Goal: Compare $H_m$ with all other possibilities / theories.\\
+		Safeguard: Its complement.
+	\end{itemize}
+	
+\end{frame}	
 %------------------------------------------------------------------------------%
 %
 %------------------------------------------------------------------------------%

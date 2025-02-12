@@ -751,6 +751,8 @@ lavTestLRT(fit_MG2CFA_ci, fit_MG2CFA_wi,
 
 \begin{itemize}
     \item Scalar/Strong invariance model fits best (lowest IC).
+    \item Note: You can also quantify the support for this model versus the other two, using so-called IC weights; \\
+    see the lab and/or Model Selection lecture.
 \end{itemize}
 
 \end{frame}

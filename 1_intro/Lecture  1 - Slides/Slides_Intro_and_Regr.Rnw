@@ -399,7 +399,7 @@ mod.regr_DIY <- '
 '
 @
 
-Note: As opposed to what I say in the video, do specify the means for the predictors explicitly; otherwise they will be set to 0.
+\textcolor{red}{Note:} As opposed to what I say in the video, do specify the means for the predictors explicitly; otherwise they will be set to 0.
 
 \end{frame}
 %------------------------------------------------------------------------------%
@@ -1911,13 +1911,13 @@ To be discussed in the Model Selection lecture
     <<eval=FALSE>>=
     library(devtools) # Make sure you have Rtools
     install_github("rebeccakuiper/ICweights")
-    library(ICweights)
-    ?IC.weights
+    library(ICweights) # ?IC.weights
+    # Or:
+    library(restriktor) # ?calc_ICweights
     @
   \item Extension AIC for order-restricted hypotheses \\ (GORIC and GORICA).\\
     <<eval=FALSE>>=
-    library(restriktor) 
-    library(goric)
+    library(restriktor) # ?goric
     @
 \end{itemize}
 

@@ -1,0 +1,1091 @@
+
+\documentclass[10pt]{beamer}
+
+\usepackage{xcolor}
+\usepackage{mathtools}
+\usepackage{graphicx} 
+\usepackage{amsmath}
+\usepackage{listings}
+
+\usepackage{color}
+\newcommand{\vet}[1]{{\ensuremath{\mbox{\boldmath $#1$}}}}
+\definecolor{groen}{rgb}{0.0,0.9,0.0}
+
+\lstnewenvironment{rc}[1][]{\lstset{language=R}}{}
+
+\graphicspath{{images/}}
+\usepackage{tikz} 
+\usetikzlibrary{arrows,calc,patterns,positioning,shapes,decorations.markings} 
+\usetikzlibrary{decorations.pathmorphing} 
+
+%\usetheme{default}
+\mode<presentation>
+{
+	\usetheme{Singapore}
+	\usecolortheme{crane}
+	% or ...
+	
+	\setbeamercovered{transparent}
+	% or whatever (possibly just delete it)
+}
+
+\title{Introduction to Structural Equation Modeling using lavaan}
+\subtitle{Model Selection}
+\author{R. M. Kuiper}
+\institute{Department of Methodology \& Statistics \\ Utrecht University}
+\date{}
+
+%------------------------------------------------------------------------------%
+%\hypersetup{bookmarksopen=false}
+\hypersetup{bookmarksdepth=-2}
+\AtBeginSection[]
+{
+    \begin{frame}
+        \frametitle{Table of Contents}
+        \tableofcontents[currentsection] %subsectionstyle=hide] %, hidesubsections]
+    \end{frame}
+}
+
+\begin{document}
+%\SweaveOpts{concordance=TRUE}
+
+<<setup, include = FALSE, cache = FALSE>>=
+library(tidySEM)
+library(lavaan)
+library(psych)
+library(Hmisc)
+library(lavaanPlot)
+library(restriktor)
+@
+%------------------------------------------------------------------------------%
+
+\begin{frame}[t, plain]
+  \titlepage
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+%------------------------------------------------------------------------------%
+%
+\begin{frame}[fragile]{\textit{Previously:} Model Comparisons: AIC / BIC}
+
+Suitable for comparing
+\begin{itemize}
+  \item both nested and non-nested models/hypotheses.
+  \item more than two models/hypotheses.
+\end{itemize}
+
+\vspace*{5mm}
+
+Choose the model/hypothesis with the \textcolor{red}{lowest} AIC and/or BIC.
+
+\vspace*{5mm}
+
+To be discussed in the Model Selection lecture
+\begin{itemize}
+  \item Quantify relative support via IC weights.\\
+    <<eval=FALSE>>=
+    library(devtools) # Make sure you have Rtools
+    install_github("rebeccakuiper/ICweights")
+    library(ICweights)
+    ?IC.weights
+    @
+  \item Extension AIC for order-restricted hypotheses \\ (GORIC and GORICA).\\
+    <<eval=FALSE>>=
+    library(restriktor) 
+    library(goric)
+    @
+\end{itemize}
+
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+\begin{frame}{Outline of this lecture}
+\tableofcontents[hidesubsections]
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+%------------------------------------------------------------------------------%
+\section{IC}
+%------------------------------------------------------------------------------%
+%
+%------------------------------------------------------------------------------%
+%
+\begin{frame}
+	\frametitle{Why information criteria?}
+	Why do we need information criteria?
+	\begin{itemize}
+		\item to compare \textbf{non-nested} models/hypotheses.
+		%\pause
+		\item to compare \textbf{more than two} models at the time.
+		%\pause
+		\item because there are \textbf{different ideas} about what poses a good model.
+	\end{itemize}
+	
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+\begin{frame}
+	\frametitle{Model selection using information criteria}
+	
+	Describe data as good as possible (fit) \\
+  with fewest number of parameters (simplicity / non-complexity).
+	
+	\bigskip
+	
+	\begin{block}{General form of information criteria:}
+		\bigskip
+		{\centerline{
+				\textbf{model misfit + model complexity}}
+		}
+	\end{block}
+
+	\bigskip
+	Model/Hypothesis with the \textbf{smallest value} is considered the best model.
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+\begin{frame}
+	\frametitle{AIC}
+	
+	\centerline{	IC = \textbf{{\color{orange}{model misfit}} + {\color{purple}{model complexity}}}}
+	\vspace{.5 cm}
+	
+	{\textbf{AIC}: minimize the \textbf{Kullback-Leibler distance}}
+
+	\vspace{1cm}
+	\centerline{{\textbf{AIC} ={\color{orange}{ $\;-2\log f(y|\hat{\theta}_y)$}} + \color{purple}{$2 p$}}}
+	
+	\vspace{.5 cm}
+	where $\hat{\theta}_y$ is the maximum likelihood estimate.
+	
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+\begin{frame}
+	\frametitle{Intermezzo: Kullback-Leibler (K-L) distance}
+
+		The K-L distance quantifies the distance between
+		\begin{itemize}
+			\item the \textbf{truth}: $p(\cdot)$
+			\item the \textbf{model under consideration}: $f(\cdot|\theta)$\\
+		\end{itemize}
+		
+		\vspace{.5 cm}
+		
+		Extra:\\
+		\centerline{ K-L = {$\mathrm{E}_{p(y)}\Bigl[\log p(y) -
+		\log f(y|\theta)\Bigr]$}}
+    \bigskip
+			
+		% \begin{block}{Remarks}
+		% 	\begin{itemize}
+		% 		\item minimize K-L. 
+		% 		\item Between models, $p(y)$ is constant and can be ignored.
+		% 		\item Since $\log f(y|\theta) \geq 0$, maximize $\mathrm{E}[\log f(y|\theta)]$.
+		% 		\item AIC: use $\hat{\theta}_y$ as an estimate for $\theta$.
+		% 		\item Overfitting: since $y$ is used both to evaluate $f(y|\cdot)$ and compute $\hat{\theta}_y$.
+		% 		\\ In the limit, $p$ corrects for overfitting.
+		% 	\end{itemize}
+		% \end{block}
+				
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+\begin{frame}
+	\frametitle{Alternative to AIC: BIC}
+	
+	\centerline{	IC = \textbf{{\color{orange}{model misfit}} + {\color{purple}{model complexity}}}}
+	
+	\vspace{1 cm}
+	{\textbf{BIC}:
+		maximize the \textbf{marginal model probability} (cf. Bayes Factor)}
+	
+	\vspace{.5 cm}
+	\centerline{{\textbf{BIC} ={\color{orange}{$\;-2\log f(y|\hat{\theta}_y)$}} + \color{purple}{$\log(n) p $}}}
+	
+	\vspace{.5 cm}
+	where $\hat{\theta}_y$ is the maximum likelihood estimate.
+	
+	\vspace{.5 cm}
+	\begin{block}{Note:}
+		Difference in penalty AIC vs BIC: $2 p$ vs $\log(n) p$.\\
+		(due to different derivation)
+	\end{block}
+	 
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+\begin{frame}
+	\frametitle{Order-restricted generalization of AIC: GORIC}
+	
+	\centerline{	IC = \textbf{{\color{orange}{model misfit}} + {\color{purple}{model complexity}}}}
+	\vspace{.5 cm}
+	
+	{\textbf{GORIC}: minimize the \textbf{K-L distance}}
+	
+	\vspace{1cm}
+	\centerline{{\textbf{GORIC} ={\color{orange}{ $\;-2\log f(y|\tilde{\theta}_y)$}} + \color{purple}{$2 PT$}}}
+	
+	\vspace{.5 cm}
+	where $\tilde{\theta}_y$ is the order-restricted maximum likelihood estimate and\\
+	$PT$ can be seen as the expected number of distinct parameters.
+	
+	\vspace{.5 cm}
+	\footnotesize{
+	Kuiper, R.M., Hoijtink, H. and Silvapulle, M.J. (2011). An Akaike type information criterion for model selection under inequality constraints. \emph{Biometrika, 98}, 495-501.
+	}
+	
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+\begin{frame}{Intermezzo: Idea penalty (PT)}{loose interpretation}
+\begin{displaymath}
+H_1: \mu_1 > \mu_2 > \mu_3
+\end{displaymath}
+contains 1 ordering of three means, 1-2-3. \\
+Thus, not complex (i.e., parsimonious).
+\begin{displaymath}
+H_2: \mu_1 > \mu_2, \mu_3
+\end{displaymath}
+contains 2 orderings of three means: 1-2-3 and 1-3-2. \\
+Thus, more complex (less parsimonious).
+\begin{displaymath}
+H_u: \mu_1 , \mu_2 , \mu_3
+\end{displaymath}
+contains all six possible orderings of three means. \\
+Thus, is most complex one (not parsimonious).
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+\begin{frame}
+	\frametitle{GORIC Approximation: GORICA}
+	
+	\centerline{	IC = \textbf{{\color{orange}{model misfit}} + {\color{purple}{model complexity}}}}
+	\vspace{.5 cm}
+	
+	{\textbf{GORICA}: Approximate GORIC, thus minimize the \textbf{K-L distance}}
+	
+	\vspace{0.5cm}
+	\centerline{{\textbf{GORICA} ={\color{orange}{ $\;-2\log f(\hat{\theta}, \hat{\Sigma}_{\theta}|\tilde{\theta})$}} + \color{purple}{$2 PT$}}}
+	
+	\vspace{.5 cm}
+	
+	where 
+	\begin{itemize}
+			\item $\hat{\theta}$ are the parameters of the unconstrained model,
+			\item $\hat{\Sigma}_{\theta}$ is the variance matrix of $\hat{\theta}$,
+			%\item $\hat{\theta}, \hat{\Sigma}_{\theta}$ summarize the data (cf. $y$ in the GORIC),
+			\item $\tilde{\theta}$ is the order-restricted maximum likelihood estimate, and
+			\item $PT$ can be seen as the expected number of distinct parameters. %(same as in GORIC).
+		\end{itemize}
+		
+\vspace{.5 cm}
+
+	\footnotesize{
+	Alt{\i}n{\i}\c{s}{\i}k, Y., Van Lissa, C. J., Hoijtink, H., Oldehinkel, A. J., and Kuiper, R. M. (2021). Evaluation of inequality constrained hypotheses using a generalization of the AIC. \emph{Psychological Methods}, 26(5), 599-621. %\url{https://doi.org/10.1037/met0000406}
+	}
+	
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+\begin{frame}
+	\frametitle{GORICA vs GORIC}
+	
+	Similarities with GORIC:
+		\begin{itemize}
+			\item Form: $-2 \ fit + 2 \ complexity$.
+			\item Broad type of restrictions.
+		\end{itemize}
+		
+		\vspace{.5 cm}
+	
+	Differences compared to GORIC:
+		\begin{itemize}
+			\item Uses asymptotic expression of the likelihood (is a normal): \\
+			can therefore be easily applied to all types of statistical models. \\
+			Disadvantage: might work less well in case of small samples.
+			\item Does not need data set, but
+			mle's and their covariance matrix.
+			\item Can leave out nuisance parameters (i.e., not part of hypotheses).
+		\end{itemize}
+	
+	\vspace{.5 cm}
+	
+	Note:\\
+		In case of normal linear models and/or not too small samples: \\
+		GORICA weights = GORIC weights.
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+\begin{frame}
+	\frametitle{Why GORIC and GORICA?}
+
+Most researchers have a-priori ``order-restricted'' / ``informative'' / ``theory-based'' hypotheses, e.g.:
+
+\vspace{.5 cm}
+
+$H_{1}:  \mu_1 > \mu_2 > \mu_3$ (in an ANOVA model) or \\
+$H_{1}:  \beta_1 > \beta_2 > \beta_3 > \beta_4$ (in a regression/SEM model). 
+%since they are expert in their research field.
+
+\vspace{2\baselineskip}
+\includegraphics[width = 0.6\linewidth]{Model-Unc.png}
+%\vspace{\baselineskip}
+
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+\begin{frame}
+	\frametitle{Note on comparable estimates}
+	
+	\begin{block}{Continuous predictors}
+		If compare relative strength/importance of parameters (e.g., $\beta_1 > \beta_2$), \\ 
+		then make sure comparable: \\
+		e.g., standardize continuous predictors.
+	\end{block}
+	~\\
+	
+	\begin{block}{Multiple outcomes}
+		If compare parameters across outcomes, \\ 
+		then (also) standardize outcomes.
+	\end{block}
+	
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+\begin{frame}{Note on including ``unconstrained'' hypothesis}%{Highest fit but also most complex, thus failsafe}
+If set of hypotheses does not contain a reasonable/good one:\\
+Select the best of set of weak hypotheses.
+% Aarde is plat
+% Aarde is pyramide
+% Kiezen dan laatste, nl 2e is beter dan 1e, maar wil je niet.
+% Als ook Hunc (is no structure), then you will choose that one!
+
+\vspace{-0.5\baselineskip}
+\begin{block}{}
+Prevent choosing a weak hypothesis \\
+by including unconstrained hypothesis $H_u$ (or $H_a$):
+\begin{eqnarray}
+\nonumber H_0: && \mu_1 = \mu_2 = \mu_3,\\
+\nonumber H_1: && \mu_1 > \mu_2 > \mu_3,\\
+\nonumber H_u: && \mu_1, \mu_2, \mu_3, \\
+\nonumber && \mbox{(i.e., \textit{no restrictions})}.
+\end{eqnarray}
+$H_u$ highest fit but also most complex, thus failsafe.
+\end{block}
+
+\vspace{0.5\baselineskip}
+Note: GORIC for $H_0$ and $H_u$ equals AIC value.	
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+\begin{frame}
+\frametitle{Confirmation more power: 1 data set. GORIC values for $3$ groups, effect size $ES$, and $\mathbf{n=10}$ observations per group}
+%%In Figure~\ref{GORICvsAIC}, the GORIC values are given for these three hypotheses (for $n = 10$ and $n = 100$).
+%The GORIC reduces to the Akaike information criterion (AIC) when there are no order restrictions, that is, for hypotheses $H_0$ and $H_a$.
+%%The GORIC values for $H_0$ increase with $ES$, because the differences between the sample means
+%%$\overline{y}_i$ and the restricted means $\hat{\mu}_{0i} = \overline{\mu}_0$ (for $i = 1, \ldots, k$) increase with increasing effect size.
+%%This leads to a decrease in the log likelihood (see (\ref{LogLik})) and, consequently, an increase in GORIC value (see (\ref{GORIC})).
+%%The GORIC values for $H_1$ and $H_a$ do not depend on effect size, since the sample means are in accordance with $H_1$ and, logically, $H_a$.
+%%So, the difference between
+%%$\overline{y}_i$ and $\hat{\mu}_{mi}$ (for $i = 1, \ldots, k$) is zero for both $H_1$ and $H_a$ for each effect size.
+%%This implies that the likelihood values for $H_1$ and $H_a$ are equal, therefore, the difference in GORIC values equals two times the difference in the penalty terms, that is,
+%%$2 (PT_2 - PT_1) = 2 (4 - 2 \frac{5}{6}) = 2 \frac{1}{3}$.
+%When the sample means are in accordance with $H_1$, $H_1$ is always preferred over $H_a$, because of lower 'penalty'.
+%
+%Compared to $H_a$, $H_1$ will be preferred over $H_0$ for smaller effect sizes.
+%This implies that the probability of choosing the correct/best hypothesis is higher if $H_0$ is compared to $H_1$ than if $H_0$ is compared to $H_a$ (when $H_1$ is true).
+%
+\begin{figure}
+    \centering
+  \includegraphics[scale = 0.54]{ORICvsAIC_n10.png}\\
+%  \caption{GORIC values for one generated data set with $3$ groups, effect size $ES$, and $n$ observations per group}
+\end{figure}
+
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+\begin{frame}
+\frametitle{Confirmation more power: 1 data set. GORIC values for $3$ groups, effect size $ES$, and $\mathbf{n=100}$ observations per group}
+\begin{figure}
+    \centering
+  \includegraphics[scale = 0.54]{ORICvsAIC_n100.png}\\
+%  \caption{GORIC values for one generated data set with $3$ groups, effect size $ES$, and $n$ observations per group}
+\end{figure}
+
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+\begin{frame}{Note on hypotheses}
+	\begin{enumerate}
+		\item Only include hypotheses with sound theoretical and/or empirical basis.\\
+		Note: Often a null hypothesis is not of interest.
+		\item Keep the number of hypotheses included as small as possible.
+		\item This is indeed a subjective endeavor, aim for inter-peer / inter-subjective agreement.
+	\end{enumerate}
+\end{frame}
+
+%------------------------------------------------------------------------------%
+%
+%------------------------------------------------------------------------------%
+\section{AIC in R}
+%------------------------------------------------------------------------------%
+%
+%------------------------------------------------------------------------------%
+%
+\begin{frame}{Example: Multigroup regression}
+
+Regression example from lab meeting `Intro and regression' and `Multigroup analysis' lecture:
+\begin{itemize}
+  \item{Outcome: sw}
+  \item{Predictors: overt and covert}
+  \item{Group: gender (males and females)}
+\end{itemize}
+          
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+\begin{frame}[fragile]{Example: Multigroup regression - data}
+
+<<>>=
+# Data
+data_regr <- read.table("popular_regr.txt", header = T)
+    
+data_regr[sapply(data_regr, function(x) 
+          as.character(x) %in% c("-99", "-999") )] <- NA
+
+data_regr$gender <- factor(data_regr$gender, 
+                           labels = c("male", "female"))
+@ 
+          
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+\begin{frame}[fragile]{Example: Multigroup regression - model specification}
+
+<<>>=
+# Model specification
+
+# Model 1
+model.MGregr <- '
+  sw ~ overt + covert # regression
+  sw ~~ sw            # residual variance
+  sw ~ 1              # intercept
+'
+
+# Model 2
+model.MGregr_equal <- '
+  # model with labeled parameters
+  sw ~ c(b1,b1)*overt + c(b2,b2)*covert 
+  sw ~~ sw                                      
+  sw ~ 1                                        
+'
+@ 
+          
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+\begin{frame}[fragile]{Example: Multigroup regression - fitting model}
+
+<<results='hide', warning=FALSE>>=
+# Fit model
+
+# Model 1
+fit_MGregr <- lavaan(model = model.MGregr, 
+                    data = data_regr,
+                    group = "gender") # multigroup
+
+# Model 2
+fit_MGregr_equal <- lavaan(model = model.MGregr_equal, 
+                    data = data_regr,
+                    group = "gender") # multigroup
+@ 
+          
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+\begin{frame}[fragile]{Example: Multigroup regression - Alternative specification}
+
+<<results='hide', warning=FALSE>>=
+model.MGregr_unequal <- '
+  # model with labeled parameters
+  sw ~ c(b1_m,b1_f)*overt + c(b2_m,b2_f)*covert 
+  sw ~~ sw                                      
+  sw ~ 1                                        
+'
+
+# Model 1
+fit_MGregr <- lavaan(model = model.MGregr_unequal, 
+                    data = data_regr,
+                    group = "gender") # multigroup
+
+# Model 2
+fit_MGregr_equal <- lavaan(model = model.MGregr_unequal,
+                    data = data_regr,
+                    group = "gender", # multigroup
+                    constraints = c("b1_m == b1_f; 
+                                    b2_m == b2_f"))
+@ 
+          
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+\begin{frame}[fragile]{Example: Multigroup regression - model comparison}
+
+<<>>=
+# Compare models, 
+# i.e., evaluate equality of regression coefficients,
+# using AIC
+
+#anova(fit_MGregr, fit_MGregr_equal)[1:2] 
+# or
+AIC(fit_MGregr, fit_MGregr_equal)
+@ 
+
+Model with equality constraints has lowest AIC, so is preferred.\\
+But how much?
+
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+%------------------------------------------------------------------------------%
+%
+\begin{frame}[fragile]{Example: Multigroup regression - model comparison}
+
+AIC for n = 100 vs n = 1491: % dim(data_regr)[1]
+
+<<include = FALSE>>=
+# Model 1
+fit_MGregr_100 <- lavaan(model = model.MGregr_unequal, 
+                    data = data_regr[1:100,],
+                    group = "gender") # multigroup
+
+# Model 2
+fit_MGregr_equal_100 <- lavaan(model = model.MGregr_unequal,
+                    data = data_regr[1:100,],
+                    group = "gender", # multigroup
+                    constraints = c("b1_m == b1_f; 
+                                    b2_m == b2_f"))
+
+AIC_n100 <- AIC(fit_MGregr_100, fit_MGregr_equal_100)[,2]
+AIC_n1491 <- AIC(fit_MGregr, fit_MGregr_equal)[,2]
+AIC_n <- cbind(AIC_n100, AIC_n1491)
+#rownames(AIC_n) <- c("fit_MGregr", "fit_MGregr_equal")
+#
+diff_AIC_n100 <- AIC(fit_MGregr_100, fit_MGregr_equal_100)[1,2] - AIC(fit_MGregr_100, fit_MGregr_equal_100)[2,2]
+diff_AIC_n1491 <- AIC(fit_MGregr, fit_MGregr_equal)[1,2] - AIC(fit_MGregr, fit_MGregr_equal)[2,2]
+#
+AIC_n <- rbind(AIC_n, c(diff_AIC_n100, diff_AIC_n1491))
+rownames(AIC_n) <- c("fit_MGregr", "fit_MGregr_equal", "abs. diff.")
+@ 
+
+<<>>=
+round(AIC_n, 3)
+@ 
+
+AIC increases with sample size.\\
+Absolute difference in AIC values also increases.\\
+
+\vspace{\baselineskip}
+
+Model with equality constraints has lowest AIC, so is preferred.\\
+But how much?
+
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+%------------------------------------------------------------------------------%
+\section{IC weights}
+%------------------------------------------------------------------------------%
+%
+%------------------------------------------------------------------------------%
+%
+\begin{frame}[fragile]{IC vs IC weights}
+	
+	IC values:\\ 
+	Cannot be interpreted, only compared: smallest is best.
+	
+	\vspace{\baselineskip}
+	
+	IC weights ($\mathit{w_{m}}$): \\
+	$-$ $\mathit{w_{m}}$: quantifies how much more $H_m$ is supported than others in set.\\ 
+	$-$ $\mathit{w_{m}}$/$\mathit{w_{m'}}$: quantifies relative support of $H_m$ vs $H_{m'}$.\\
+	Note: The bigger, the better.
+	
+	\vspace{\baselineskip}
+	
+	Extra:\\
+		$\mathit{w_{m}} = \frac{exp(-0.5~IC_m)}{\sum_{m'=1}^{M}exp(-0.5~IC_{m'})}$.
+	
+	\vspace{\baselineskip}
+	
+	\footnotesize{
+		Reference:\\
+		Kuiper, R.M., Hoijtink, H. and Silvapulle, M.J. (2012). Generalization of the order restricted information criterion for multivariate normal linear models. \emph{Journal of Statistical Planning and Inference, 142}, 2454-2463.
+	}
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+\begin{frame}[fragile]{IC weights: Interpretation}
+	
+	Say, $\mathit{w_{m}}$/$\mathit{w_{m'}}$ $= .8 / .2 = 4$.\\
+	~\\
+	Possible interpretation:
+	\begin{itemize}
+	  \item $H_m$ is 4 times more likely than $H_{m'}$. 
+	  \item $H_m$ is 4 times more supported than $H_{m'}$.
+	\end{itemize}
+	
+	~\\
+	
+	If $H_{m'}$ is complement of $H_m$ (i.e., denoting all other possibilities):\\
+	There is $\mathit{w_{m'}}*100$\% = 20\% that $H_m$ is not the best.
+	
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+\begin{frame}
+	\frametitle{GORIC weights vs BF and PMPs}
+	
+	For those familiar with or interested in Bayesian model selection:
+	
+	\vspace{\baselineskip}
+	
+		%$\mathit{w_{m}}$/$\mathit{w_{m'}}$ is said to be the relative weights, which is comparable to an Bayes factor.\\
+		%The weights are comparable to posterior model probabilities.\\
+		%`1 - weight' can be seen as an error probability.
+		$\mathit{w_{m}}$/$\mathit{w_{m'}}$ = relative weight $\sim$ Bayes factor ($BF_{mm'}$).
+		
+		\vspace{\baselineskip}
+		
+		$\mathit{w_{m}}$ $\sim$ posterior model probability (PMP). 
+		
+		
+		%\vspace{\baselineskip}
+		%1 - $\mathit{w_{m}}$ = conditional error probability. \\ 
+		%Note: $w_m$ depends on set of hypotheses.
+	
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+\begin{frame}[fragile]{IC weights: Illustration in R}
+	
+<<results='hide', warning=FALSE, message=FALSE>>=
+library(devtools) # Make sure you have Rtools
+install_github("rebeccakuiper/ICweights")
+#
+library(ICweights)
+#?IC.weights
+@ 
+
+\footnotesize{
+<<warning=FALSE, message=FALSE>>=
+# AIC weights
+AICvalues <- AIC(fit_MGregr, fit_MGregr_equal)$AIC
+Hypo.names <- c("Unc", "Equal")
+#summary(IC.weights(AICvalues, Hypo.names))
+IC.weights(AICvalues, Hypo.names)
+@ 
+}
+
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+\begin{frame}[fragile]{IC weights: Illustration in R Ctd.}
+	
+<<>>=
+# AIC weights
+IC.weights(AICvalues, Hypo.names)$IC.weights
+IC.weights(AICvalues, Hypo.names)$ratio.IC.weights
+@ 
+	
+$H_{Equal}$ is $.815/.185 \approx 4.4 > 1$ times more supported than $H_{Unc}$.\\
+Thus, there is quite some evidence that $H_{Equal}$ is the best of this set.
+
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+\begin{frame}
+	\frametitle{\textit{Repetition:} Note on comparable estimates}
+	
+	\begin{block}{Continuous predictors}
+		If compare relative strength/importance of parameters (e.g., $\beta_1 > \beta_2$), \\ 
+		then make sure comparable: \\
+		e.g., standardize continuous predictors.
+	\end{block}
+	~\\
+	
+	\begin{block}{Multiple outcomes}
+		If compare parameters across outcomes, \\ 
+		then (also) standardize outcomes.
+	\end{block}
+	
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+\begin{frame}
+	\frametitle{Note on comparable estimates in lavaan}
+	
+	\begin{block}{Default lavaan (and Mplus)}
+    \textbf{Un}standardized estimates.
+	\end{block}
+	
+	\begin{block}{Standardized estimates}
+    Can obtain them, e.g.: summary(fit, standardized = TRUE)\\
+    but cannot do tests or model selection on them.
+	\end{block}
+	
+	\begin{block}{Solutions}
+    $-$ Standardize your data first.\\
+    $-$ Use GORICA weights.
+	\end{block}
+
+	
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+%------------------------------------------------------------------------------%
+\section{GORICA in R}
+%------------------------------------------------------------------------------%
+%
+%------------------------------------------------------------------------------%
+%
+\begin{frame}[fragile]{GORICA in R}
+
+<<results='hide', warning=FALSE, message=FALSE>>=
+# Option 1 - used in this course
+if (!require("restriktor")) install.packages("restriktor") 
+library(restriktor)
+#
+#goric(fitted.lavaan.model, 
+#      hypotheses = list(H_1, H_2, ..., H_M),
+#      standardized = TRUE)
+#
+#type = "gorica" # default in case of fitted lavaan model
+#comparison = "complement" # will be discussed later
+
+# Option 2
+if (!require("gorica")) install.packages("gorica")
+library(gorica)
+#?gorica
+@ 
+          
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+\begin{frame}[fragile]{Example: Multigroup regression - model}
+
+<<warning=F>>=
+# Model specification: Unconstrained model
+model.MGregr_unequal <- '
+  # model with labeled parameters
+  sw ~ c(b1_m,b1_f)*overt + c(b2_m,b2_f)*covert 
+  sw ~~ sw                                      
+  sw ~ 1                                        
+'
+
+# Fit model: Unconstrained model
+fit_MGregr <- lavaan(model = model.MGregr_unequal, 
+                    data = data_regr,
+                    group = "gender") # multigroup
+@ 
+          
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+\begin{frame}[fragile]{Extra: GORICA as AIC proxy}
+<<results='hide', warning=FALSE>>=
+H_AIC <- "abs(b1_m) = abs(b1_f);  abs(b2_m) = abs(b2_f)"
+@ 
+   
+<<>>=
+#On unstandardized estimates, as done by default in lavaan:
+set.seed(100)
+AIC_Unstand <- goric(fit_MGregr, hypotheses = list(H_AIC=H_AIC)) 
+AIC_Unstand$result$gorica.weights
+# Same as for AIC obtained via lavaan
+@ 
+
+<<>>=
+#On standardized estimates
+set.seed(100)
+AIC_Stand <- goric(fit_MGregr, hypotheses = list(H_AIC=H_AIC), 
+                   standardized = T) 
+AIC_Stand$result$gorica.weights
+@ 
+
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+\begin{frame}[fragile]{Example: Multigroup regression - hypothesis}
+
+%In this example, we investigate whether overt and covert antisocial behaviour predicts the levels of socially desirable answering patterns (sw), and, moreover, whether these predictions/relationships differ for males and females.
+% Note that “overt” antisocial behavior is confrontational, such as “aggression, excessive quarreling, disobedience and fighting”, while “covert” antisocial behavior is enacted mostly in a concealed manner, and includes “lying, stealing, conning, truancy, drug use, and vandalism”.
+% I am not an expert in this field, but I can imagine that boys are more than girls sensitive to more confrontational antisocial behaviour, and girls more sensitive to more concealed antisocial behaviour.
+% I then hypothesize that the predictive relationship between overt and sw is stronger, in absolute sense, for boys than for girls and that the predictive relationship between covert and sw is stronger, in absolute sense, for girls than for boys.
+
+<<results='hide', warning=FALSE>>=
+H1 <- "abs(b1_m) > abs(b1_f);  abs(b2_m) < abs(b2_f)"
+@ 
+~\\
+Remark: I assume we want to compare the absolute strength.
+        
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+\begin{frame}[fragile]{Example: Multigroup regression - model comparison}
+
+<<>>=
+set.seed(100)
+results_MGregr <- goric(fit_MGregr, hypotheses = list(H1), 
+                        standardized = T) 
+#results_MGregr$result # Output too long for the slide
+results_MGregr$result$gorica.weights
+results_MGregr$ratio.gw
+@ 
+
+$H_1$ is $.691/.309 \approx 2.235 > 1$ times more supported than the unc.\\
+Thus, there is some evidence that $H_1$ is the best of this set.\\
+Note that the unconstrained always includes the true hypothesis... % So, the support is somewhat divided over the hypotheses.
+
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+%------------------------------------------------------------------------------%
+\section{Complement}
+%------------------------------------------------------------------------------%
+%
+%------------------------------------------------------------------------------%
+%
+\begin{frame}{Alternative safeguard: Complement of $H_m$}%{using GORIC}
+	\begin{block}{Until now}
+		Prevent choosing weak hypothesis, include unconstrained hypothesis ($H_u$).
+	\end{block}
+	
+	\begin{figure}
+		\centering
+		\includegraphics[scale = 0.2]{MaxWeigth.png}\\
+		\caption{IC weights can have an upper bound, when informative hypothesis has maximum fit (i.e., is fully in agreement with the data).}
+	\end{figure}
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+\begin{frame}{Alternative safeguard: Complement of $H_m$}%{using GORIC}
+	
+	\begin{block}{Alternatively (in case of one hypothesis of interest)}
+		Evaluate hypothesis of interest against its complement.\\
+		\vspace{\baselineskip}
+		More powerful than against the unconstrained \\
+		if $H_m$ has maximum fit (which can lead to an upper bound for the GORIC weights).
+	\end{block}
+	
+	\vspace{\baselineskip}
+	
+	\footnotesize{
+		Reference:\\
+		Vanbrabant, L., Van Loey, N., \& Kuiper, R. M. (2020). Evaluating a Theory-Based Hypothesis Against Its Complement Using an AIC-Type Information Criterion With an Application to Facial Burn Injury. Psychological Methods, 25(2), 129-142. https://doi.org/10.1037/met0000238
+	}
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+\begin{frame}{Alternative safeguard: Complement of $H_m$}%{using GORIC}
+	%\begin{figure}
+	%    \centering
+	%  \includegraphics[scale = 0.35]{Weigth_Compl_and_Hu.png}\\
+	%  %\caption{IC weights for H1 vs its complement is more powerful when informative hypothesis has maximum fit (i.e., is fully in agreement with the data).}
+	%\end{figure}
+	\parbox[h]{0.31\textwidth}{
+		vs complement\\
+		\\
+		\\
+		\\
+		\\
+		\\
+		\\
+		vs unconstrained
+	}
+	\parbox[h]{0.68\textwidth}{
+		\includegraphics[scale = 0.35]{Weigth_Compl_and_Hu.png}
+	}
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+\begin{frame}
+	\frametitle{Note: complement not always higher weight}
+	
+	In case $H_m$ is almost true, but not true:
+	\begin{enumerate}
+		\item $H_m$ does not have maximum fit (but much lower penalty).
+		\item Support for $H_m$ is less when evaluating it against its complement (than $H_u$).
+	\end{enumerate}
+	This is of course a good thing, since $H_m$ is not true.
+	
+	\vspace{\baselineskip}
+	
+	Explanation:\\
+	Penalty of $H_c$ is smaller than that of $H_u$.\\
+	Against $H_u$, you choose $H_m$ 'sooner` because of low penalty for $H_m$.
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+\begin{frame}[fragile]{Example: Multigroup regression - model comparison}
+
+<<>>=
+set.seed(100)
+results_MGregr_compl <- goric(fit_MGregr, 
+                              hypotheses = list(H1), 
+                              comparison = "complement", 
+                              standardized = T) 
+#results_MGregr_compl$result # Output too long for the slide
+results_MGregr_compl$result$gorica.weights
+results_MGregr_compl$ratio.gw[1,2]
+@ 
+
+$H_1$ is $.622/.378 \approx 1.645$ times more supported than its complement.\\
+Thus, there is only little evidence that $H_1$ is the best of this set.\\
+I would now explore for a competing hypothesis for next research...
+
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+\begin{frame}[fragile]{Use of unconstrained and complement}
+
+In case of 1 hypothesis of interest:\\
+Use the complement.\\
+It acts as another competing (non-overlapping) hypothesis.\\
+~\\
+In case of 2 or more hypotheses of interest:\\
+Use the complement of the set, but this is not yet possible in the software.\\
+So, use the unconstrained as failsafe.\\
+This is used to check whether at least one of the hypothesis is not weak.\\
+Then, the non-weak hypotheses can be compared to all other.
+
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+%------------------------------------------------------------------------------%
+\section{Extra} 
+%------------------------------------------------------------------------------%
+%
+%------------------------------------------------------------------------------%
+%
+\begin{frame}{Contact}
+
+\begin{block}{Websites}
+\url{https://github.com/rebeccakuiper/Tutorials}
+\url{www.uu.nl/staff/RMKuiper/Software}\\
+\url{www.uu.nl/staff/RMKuiper/Websites\%20\%2F\%20Shiny\%20apps}\\
+\url{informative-hypotheses.sites.uu.nl/software/goric/}
+\end{block}
+
+\begin{block}{E-mail}
+r.m.kuiper@uu.nl
+%\usepackage{hyperref}
+%\href{mailto:exmaple@example.com}{exmaple@example.com}
+\end{block}
+%\textcolor{gray}{}
+
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+\begin{frame}
+	\frametitle{Confirmatory methods - some of my references}
+	
+	\footnotesize{
+		\begin{itemize}
+			%\item Anraku, K. (1999). An information criterion for parameters under a simple order restriction. \emph{Biometrika, 86}, 141--152. (ORIC)\\
+			\item Kuiper, R. M., and Hoijtink, H. (2010). Comparisons of Means Using Exploratory and Confirmatory Approaches. \emph{Psychological Methods, 15(1)}, 69--86.\\
+			\item Kuiper, R. M., Klugkist, I., and Hoijtink, H. (2010). A Fortran 90 Program for Confirmatory Analysis of Variance. \emph{Journal of Statistical Software, 34(8)}, 1--31.\\
+			\item Kuiper, R.M., Hoijtink, H. and Silvapulle, M.J. (2011). An Akaike type information criterion for model selection under inequality constraints. \emph{Biometrika, 98}, 495-501. (GORIC)\\
+			\item Kuiper, R.M., Nederhof, T., and Klugkist, I. (2015). Properties of hypothesis testing techniques and (Bayesian) model selection for exploration-based and theory-based (order-restricted) hypotheses. \emph{British Journal of Mathematical and Statistical Psychology, 68(2)}, 220 -- 245. \\
+			\item 	Alt{\i}n{\i}\c{s}{\i}k, Y., Van Lissa, C. J., Hoijtink, H., Oldehinkel, A. J., and Kuiper, R. M. (2021). Evaluation of inequality constrained hypotheses using a generalization of the AIC. Psychological Methods, 26(5), 599-621. \url{https://doi.org/10.1037/met0000406} (GORICA)
+		\end{itemize}
+	}
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+\begin{frame}
+	\frametitle{Note on possibilities multiple studies}
+	
+	\begin{itemize}
+		%\item Update GORIC(A) and GORIC(A) weights.\\
+		%More data collected: one can (re-)calculate the GORIC(A) weights.
+		\item Update hypotheses. \\
+		First data set (or a part of it) generates one or more hypotheses.\\
+		Then, other(s) used to determine evidence for that/those.
+		\item Aggregate evidence for hypotheses.\\
+		Aggregate the support for theories (diverse designs allowed).\\
+		Note: Meta-analysis aggregates parameter estimates or effect sizes which need to be comparable. 
+	\end{itemize}
+	
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+%------------------------------------------------------------------------------%
+\section{The end}
+%------------------------------------------------------------------------------%
+%
+%------------------------------------------------------------------------------%
+%
+\begin{frame}{Summary}
+
+  \begin{itemize}
+      \item IC
+      \item AIC in R
+      \item IC weights
+      \item GORICA in R
+      \item Complement
+  \end{itemize}
+  
+  \vspace*{5mm}
+  
+  Exploratory vs confirmatory.
+
+\end{frame}
+% %------------------------------------------------------------------------------%
+% %
+% \begin{frame}{Take home message}
+% \begin{itemize}
+% \item{} 
+%   \begin{itemize}
+%   \item{}
+%   \item{}
+%   \end{itemize}
+% \item{}
+% \end{itemize}
+% \end{frame}
+%------------------------------------------------------------------------------%
+%
+\begin{frame}{Thanks \& How to proceed}
+
+Thanks for listening!
+
+\vspace*{5mm}
+
+Are there any questions?\\
+\begin{itemize}
+  \item Ask fellow participant on course platform.
+  \item Ask teacher during Q\&A (or via course platform).
+  \item See if making the lab exercises help.
+  \item Check a GORICA article or a GORICA tutorial: e.g., \url{https://github.com/rebeccakuiper/Tutorials}.
+\end{itemize}
+
+\vspace*{5mm}
+
+You can start working on the lab exercises. % to evaluate theory-based hypotheses using the GORICA
+
+\end{frame}
+%------------------------------------------------------------------------------%
+%
+%------------------------------------------------------------------------------%
+%
+\end{document}
+
+
+
+
+
+
+
+
+

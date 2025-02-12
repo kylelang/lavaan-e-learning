@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.5.23)  5 JUL 2024 15:48
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.5.23)  11 FEB 2025 13:56
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1115,7 +1115,7 @@ dCFA.toc) [2
 ] (./Slides_EFAandCFA.toc) [3
 
 ]
-<images//SAPI.png, id=407, 470.25688pt x 312.66812pt>
+<images//SAPI.png, id=423, 470.25688pt x 312.66812pt>
 File: images//SAPI.png Graphic file (type png)
 <use images//SAPI.png>
 Package pdftex.def Info: images//SAPI.png  used on input line 121.
@@ -1154,7 +1154,7 @@ thkerncmss.
 ] (./Slides_EFAandCFA.toc) [6
 
 ]
-<images//FormAndReflModel.png, id=724, 354.57469pt x 170.13562pt>
+<images//FormAndReflModel.png, id=752, 354.57469pt x 170.13562pt>
 File: images//FormAndReflModel.png Graphic file (type png)
 <use images//FormAndReflModel.png>
 Package pdftex.def Info: images//FormAndReflModel.png  used on input line 177.
@@ -1244,7 +1244,7 @@ e.[][]
 
 
 (./Slides_EFAandCFA.vrb
-<figure/unnamed-chunk-8-1.pdf, id=2665, 1003.75pt x 582.175pt>
+<figure/unnamed-chunk-8-1.pdf, id=2770, 1003.75pt x 582.175pt>
 File: figure/unnamed-chunk-8-1.pdf Graphic file (type pdf)
 <use figure/unnamed-chunk-8-1.pdf>
 Package pdftex.def Info: figure/unnamed-chunk-8-1.pdf  used on input line 13.
@@ -1320,7 +1320,7 @@ e.[][]
 
 
 (./Slides_EFAandCFA.vrb
-<figure/unnamed-chunk-18-1.pdf, id=3801, 1003.75pt x 582.175pt>
+<figure/unnamed-chunk-18-1.pdf, id=3951, 1003.75pt x 582.175pt>
 File: figure/unnamed-chunk-18-1.pdf Graphic file (type pdf)
 <use figure/unnamed-chunk-18-1.pdf>
 Package pdftex.def Info: figure/unnamed-chunk-18-1.pdf  used on input line 13.
@@ -1396,7 +1396,7 @@ Overfull \hbox (28.7072pt too wide) in paragraph at lines 20--20
 ) [40
 
 ]
-<images/slide49.png, id=4223, 430.60875pt x 189.70876pt>
+<images/slide49.png, id=4389, 430.60875pt x 189.70876pt>
 File: images/slide49.png Graphic file (type png)
 <use images/slide49.png>
 Package pdftex.def Info: images/slide49.png  used on input line 1355.
@@ -1404,7 +1404,7 @@ Package pdftex.def Info: images/slide49.png  used on input line 1355.
  [41
 
  <./images/slide49.png>]
-<images/slide48.png, id=4326, 433.62pt x 188.705pt>
+<images/slide48.png, id=4496, 433.62pt x 188.705pt>
 File: images/slide48.png Graphic file (type png)
 <use images/slide48.png>
 Package pdftex.def Info: images/slide48.png  used on input line 1365.
@@ -1412,7 +1412,7 @@ Package pdftex.def Info: images/slide48.png  used on input line 1365.
  [42
 
  <./images/slide48.png>]
-<images/CapOnChanceMI.png, id=4429, 530.199pt x 542.025pt>
+<images/CapOnChanceMI.png, id=4603, 530.199pt x 542.025pt>
 File: images/CapOnChanceMI.png Graphic file (type png)
 <use images/CapOnChanceMI.png>
 Package pdftex.def Info: images/CapOnChanceMI.png  used on input line 1374.
@@ -1490,7 +1490,7 @@ Overfull \hbox (25.19336pt too wide) in paragraph at lines 6--6
 ] [51
 
 ]
-<images/slide56.png, id=5350, 139.52126pt x 197.73875pt>
+<images/slide56.png, id=5560, 139.52126pt x 197.73875pt>
 File: images/slide56.png Graphic file (type png)
 <use images/slide56.png>
 Package pdftex.def Info: images/slide56.png  used on input line 1670.
@@ -1509,7 +1509,7 @@ Package pdftex.def Info: images/slide56.png  used on input line 1670.
 (./Slides_EFAandCFA.vrb) [54
 
 ]
-<images/slide60.png, id=5656, 139.52126pt x 168.63pt>
+<images/slide60.png, id=5879, 139.52126pt x 168.63pt>
 File: images/slide60.png Graphic file (type png)
 <use images/slide60.png>
 Package pdftex.def Info: images/slide60.png  used on input line 1769.
@@ -1549,7 +1549,7 @@ Package pdftex.def Info: images/slide60.png  used on input line 1877.
  [58
 
 ]
-<images/slide66.png, id=6065, 138.5175pt x 163.61125pt>
+<images/slide66.png, id=6303, 138.5175pt x 163.61125pt>
 File: images/slide66.png Graphic file (type png)
 <use images/slide66.png>
 Package pdftex.def Info: images/slide66.png  used on input line 1915.
@@ -1591,21 +1591,29 @@ Package pdftex.def Info: images/slide66.png  used on input line 1932.
 
 ] [68
 
-]
-<images/slide21.png, id=7098, 511.9125pt x 446.66875pt>
-File: images/slide21.png Graphic file (type png)
-<use images/slide21.png>
-Package pdftex.def Info: images/slide21.png  used on input line 2110.
-(pdftex.def)             Requested size: 286.89557pt x 250.33044pt.
+] [69
 
-Overfull \vbox (1.00455pt too high) detected at line 2110
- []
-
-[69
-
- <./images/slide21.png>] [70
+] [70
 
 ] [71
+
+] [72
+
+]
+<images/slide21.png, id=7797, 511.9125pt x 446.66875pt>
+File: images/slide21.png Graphic file (type png)
+<use images/slide21.png>
+Package pdftex.def Info: images/slide21.png  used on input line 2167.
+(pdftex.def)             Requested size: 286.89557pt x 250.33044pt.
+
+Overfull \vbox (1.00455pt too high) detected at line 2167
+ []
+
+[73
+
+ <./images/slide21.png>] [74
+
+] [75
 
 ]
 \tf@nav=\write6
@@ -1625,10 +1633,10 @@ Package rerunfilecheck Info: File `Slides_EFAandCFA.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 30721 strings out of 478300
- 633831 string characters out of 5849123
- 996744 words of memory out of 5000000
- 48034 multiletter control sequences out of 15000+600000
+ 30737 strings out of 478300
+ 633979 string characters out of 5849123
+ 1002004 words of memory out of 5000000
+ 48042 multiletter control sequences out of 15000+600000
  479163 words of font info for 64 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  128i,19n,122p,492b,855s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -1645,10 +1653,10 @@ live/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmssi8.pfb><c:/texlive/2022
 /texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/texlive/2022/texmf-di
 st/fonts/type1/public/amsfonts/cm/cmsy9.pfb><c:/texlive/2022/texmf-dist/fonts/t
 ype1/public/amsfonts/cm/cmtt10.pfb>
-Output written on Slides_EFAandCFA.pdf (71 pages, 1839810 bytes).
+Output written on Slides_EFAandCFA.pdf (75 pages, 1866364 bytes).
 PDF statistics:
- 7500 PDF objects out of 8907 (max. 8388607)
- 7214 compressed objects within 73 object streams
- 154 named destinations out of 1000 (max. 500000)
+ 8214 PDF objects out of 8907 (max. 8388607)
+ 7913 compressed objects within 80 object streams
+ 162 named destinations out of 1000 (max. 500000)
  104 words of extra memory for PDF output out of 10000 (max. 10000000)
 

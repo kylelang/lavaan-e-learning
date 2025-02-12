@@ -86,13 +86,13 @@ To be discussed in the Model Selection lecture
     <<eval=FALSE>>=
     library(devtools) # Make sure you have Rtools
     install_github("rebeccakuiper/ICweights")
-    library(ICweights)
-    ?IC.weights
+    library(ICweights) # ?IC.weights
+    # Or:
+    library(restriktor) # ?calc_ICweights
     @
   \item Extension AIC for order-restricted hypotheses \\ (GORIC and GORICA).\\
     <<eval=FALSE>>=
-    library(restriktor) 
-    library(goric)
+    library(restriktor) # ?goric
     @
 \end{itemize}
 
@@ -245,7 +245,7 @@ H_1: \mu_1 > \mu_2 > \mu_3
 contains 1 ordering of three means, 1-2-3. \\
 Thus, not complex (i.e., parsimonious).
 \begin{displaymath}
-H_2: \mu_1 > \mu_2, \mu_3
+H_2: \mu_1 > (\mu_2, \mu_3)
 \end{displaymath}
 contains 2 orderings of three means: 1-2-3 and 1-3-2. \\
 Thus, more complex (less parsimonious).
@@ -705,6 +705,27 @@ Thus, there is quite some evidence that $H_{Equal}$ is the best of this set.
 \end{frame}
 %------------------------------------------------------------------------------%
 %
+\begin{frame}[fragile]{IC weights: Alternative in R}
+
+The ICweights function is now also part of the restriktor package:
+<<results='hide', warning=FALSE, message=FALSE>>=
+if (!require("restriktor")) install.packages("restriktor")
+library(restriktor)
+#?calc_ICweights
+@ 
+
+\footnotesize{
+<<warning=FALSE, message=FALSE>>=
+# AIC weights
+AICvalues <- AIC(fit_MGregr, fit_MGregr_equal)$AIC
+Hypo.names <- c("Unc", "Equal")
+calc_ICweights(AICvalues, Hypo.names)
+@ 
+}
+
+\end{frame}
+%------------------------------------------------------------------------------%
+%
 \begin{frame}
 	\frametitle{\textit{Repetition:} Note on comparable estimates}
 	
@@ -798,7 +819,7 @@ fit_MGregr <- lavaan(model = model.MGregr_unequal,
 H_AIC <- "abs(b1_m) = abs(b1_f);  abs(b2_m) = abs(b2_f)"
 @ 
    
-<<>>=
+<<message=F>>=
 #On unstandardized estimates, as done by default in lavaan:
 set.seed(100)
 AIC_Unstand <- goric(fit_MGregr, hypotheses = list(H_AIC=H_AIC)) 
@@ -806,7 +827,7 @@ AIC_Unstand$result$gorica.weights
 # Same as for AIC obtained via lavaan
 @ 
 
-<<>>=
+<<message=F>>=
 #On standardized estimates
 set.seed(100)
 AIC_Stand <- goric(fit_MGregr, hypotheses = list(H_AIC=H_AIC), 
@@ -834,10 +855,11 @@ Remark: I assume we want to compare the absolute strength.
 %------------------------------------------------------------------------------%
 %
 \begin{frame}[fragile]{Example: Multigroup regression - model comparison}
-
+\vspace{-\baselineskip}
 <<>>=
 set.seed(100)
 results_MGregr <- goric(fit_MGregr, hypotheses = list(H1), 
+                        comparison = "unconstrained",
                         standardized = T) 
 #results_MGregr$result # Output too long for the slide
 results_MGregr$result$gorica.weights
@@ -934,7 +956,7 @@ Note that the unconstrained always includes the true hypothesis... % So, the sup
 set.seed(100)
 results_MGregr_compl <- goric(fit_MGregr, 
                               hypotheses = list(H1), 
-                              comparison = "complement", 
+                              #comparison = "complement", 
                               standardized = T) 
 #results_MGregr_compl$result # Output too long for the slide
 results_MGregr_compl$result$gorica.weights
@@ -948,19 +970,53 @@ I would now explore for a competing hypothesis for next research...
 \end{frame}
 %------------------------------------------------------------------------------%
 %
-\begin{frame}[fragile]{Use of unconstrained and complement}
+% \begin{frame}[fragile]{Use of unconstrained and complement}
+% 
+% In case of 1 hypothesis of interest:\\
+% Use the complement.\\
+% It acts as another competing (non-overlapping) hypothesis.\\
+% ~\\
+% In case of 2 or more hypotheses of interest:\\
+% Use the complement of the set, but this is not yet possible in the software.\\
+% So, use the unconstrained as failsafe.\\
+% This is used to check whether at least one of the hypothesis is not weak.\\
+% Then, the non-weak hypotheses can be compared to all other.
+% 
+% \end{frame}
 
-In case of 1 hypothesis of interest:\\
-Use the complement.\\
-It acts as another competing (non-overlapping) hypothesis.\\
-~\\
-In case of 2 or more hypotheses of interest:\\
-Use the complement of the set, but this is not yet possible in the software.\\
-So, use the unconstrained as failsafe.\\
-This is used to check whether at least one of the hypothesis is not weak.\\
-Then, the non-weak hypotheses can be compared to all other.
+\begin{frame}{Note on use of safeguard hypotheses (1/2)}
 
-\end{frame}
+\begin{itemize}
+		\item Unconstrained ($H_u$) is failsafe.\\
+		If $\geq 1$ hypothesis ($H_m$) not weak (i.e., better than $H_u$),\\
+		then compare that with the competing hypotheses ($H_{m'}$).\\
+		Note: Do not compare $H_m$ with $H_u$ (support is bounded).\\
+		~\\
+		\item Complement ($H_c$) acts as competing hypothesis.\\
+		Note 1: Relative support $H_m$ vs $H_{m'}$ same as in case above.\\
+		Note 2: Can compare $H_m$ with $H_c$.
+	\end{itemize}
+	
+	%\vspace{\baselineskip}
+
+\end{frame}	
+
+
+\begin{frame}{Note on use of safeguard hypotheses (2/2)}
+	
+	My advise and default in goric function:\\
+	~\\
+	\begin{itemize}
+		\item If multiple informative, theory-based hypotheses: \\
+		Goal: Comparison of informative, theory-based hypotheses.\\
+		Safeguard: Unconstrained.\\
+		~\\
+		\item If one informative, theory-based hypothesis ($H_m$): \\
+		Goal: Compare $H_m$ with all other possibilities / theories.\\
+		Safeguard: Its complement.
+	\end{itemize}
+	
+\end{frame}	
 %------------------------------------------------------------------------------%
 %
 %------------------------------------------------------------------------------%
