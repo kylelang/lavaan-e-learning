@@ -11,7 +11,7 @@
 
 <meta name="author" content="Rebecca M. Kuiper" />
 
-<meta name="date" content="2025-02-14" />
+<meta name="date" content="2025-03-26" />
 
 <title>Lab: Model Selection in SEM using the GORICA</title>
 
@@ -2716,7 +2716,7 @@ border-radius: 0px;
 <h1 class="title toc-ignore">Lab: Model Selection in SEM using the
 GORICA</h1>
 <h4 class="author">Rebecca M. Kuiper</h4>
-<h4 class="date">14 February 2025</h4>
+<h4 class="date">26 March 2025</h4>
 
 </div>
 
@@ -2738,7 +2738,7 @@ illustrates the evaluation of theory-based hypotheses in a SEM model
 <p>The exercises are based on the following article:</p>
 <p>Kuiper, R. M. (2022). AIC-type Theory-Based Model Selection for
 Structural Equation Models, Structural Equation Modeling: A
-Multidisciplinary Journal, 29:1, 151-158 [<a href="https://doi-org.proxy.library.uu.nl/10.1080/10705511.2020.1836967" class="uri">https://doi-org.proxy.library.uu.nl/10.1080/10705511.2020.1836967</a>].<br />
+Multidisciplinary Journal, 29:1, 151-158 [<a href="https://doi.org/10.1080/10705511.2020.1836967" class="uri">https://doi.org/10.1080/10705511.2020.1836967</a>].<br />
 Note that the code in this article is based on an older version of
 restriktor.</p>
 <p>You can find tutorials on <a href="https://github.com/rebeccakuiper/Tutorials" class="uri">https://github.com/rebeccakuiper/Tutorials</a>. The
@@ -2812,9 +2812,8 @@ yourself. Draw the model.</p>
 <b>Click to show answers</b>
 </summary>
 <p> </p>
-<p>You can compare your path diagram to Figure 1 in the article: <a href="https://doi-org.proxy.library.uu.nl/10.1080/10705511.2020.1836967" class="uri">https://doi-org.proxy.library.uu.nl/10.1080/10705511.2020.1836967</a>;
-or compare it to one created based on the fitted object in Exercise
-1d.</p>
+<p>You can compare your path diagram to Figure 1 in the article: <a href="https://doi.org/10.1080/10705511.2020.1836967" class="uri">https://doi.org/10.1080/10705511.2020.1836967</a>; or
+compare it to one created based on the fitted object in Exercise 1d.</p>
 </details>
 <p> </p>
 </div>
@@ -2913,8 +2912,8 @@ library(lavaanPlot)
 # plot the model
 lavaanPlot(model = fit1, node_options = list(shape = &quot;box&quot;, fontname = &quot;Helvetica&quot;), 
            edge_options = list(color = &quot;grey&quot;), coefs = T, stand = T, covs = T)</code></pre>
-<div class="grViz html-widget html-fill-item" id="htmlwidget-6c892035a6d36f0738d5" style="width:672px;height:480px;"></div>
-<script type="application/json" data-for="htmlwidget-6c892035a6d36f0738d5">{"x":{"diagram":" digraph plot { \n graph [ overlap = true, fontsize = 10 ] \n node [ shape = box, fontname = Helvetica ] \n node [shape = box] \n Ab; Al; Af; An; Ar; Ac; Bb; Bl; Bf; Bn; Br; Bc \n node [shape = oval] \n A; B \n \n edge [ color = grey ] \n  A->Ab [label = \"0.71\"] A->Al [label = \"0.81\"] A->Af [label = \"0.84\"] A->An [label = \"0.91\"] A->Ar [label = \"0.7\"] A->Ac [label = \"0.87\"] B->Bb [label = \"0.77\"] B->Bl [label = \"0.65\"] B->Bf [label = \"0.81\"] B->Bn [label = \"0.89\"] B->Br [label = \"0.72\"] B->Bc [label = \"0.83\"] B -> A [label = \"0.79\", dir = \"both\"]\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-0c8f048227a8407ac124" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-0c8f048227a8407ac124">{"x":{"diagram":" digraph plot { \n graph [ overlap = true, fontsize = 10 ] \n node [ shape = box, fontname = Helvetica ] \n node [shape = box] \n Ab; Al; Af; An; Ar; Ac; Bb; Bl; Bf; Bn; Br; Bc \n node [shape = oval] \n A; B \n \n edge [ color = grey ] \n  A->Ab [label = \"0.71\"] A->Al [label = \"0.81\"] A->Af [label = \"0.84\"] A->An [label = \"0.91\"] A->Ar [label = \"0.7\"] A->Ac [label = \"0.87\"] B->Bb [label = \"0.77\"] B->Bl [label = \"0.65\"] B->Bf [label = \"0.81\"] B->Bn [label = \"0.89\"] B->Br [label = \"0.72\"] B->Bc [label = \"0.83\"] B -> A [label = \"0.79\", dir = \"both\"]\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </details>
 <p> </p>
 </div>
@@ -3028,9 +3027,9 @@ multicollinearity.</p>
 <b>Click to show answers</b>
 </summary>
 <p> </p>
-<p>You can compare your path diagram to Figure 2 in the article: <a href="https://doi-org.proxy.library.uu.nl/10.1080/10705511.2020.1836967" class="uri">https://doi-org.proxy.library.uu.nl/10.1080/10705511.2020.1836967</a>;
-or compare it to one created based on the fitted object in Exercise
-2d.</p>
+<p>You can compare your path diagram to
+<!-- Figure 2 in the article: https://doi.org/10.1080/10705511.2020.1836967; or compare it to  -->
+the one created based on the fitted object in Exercise 2d.</p>
 </details>
 <p> </p>
 </div>
@@ -3088,8 +3087,8 @@ which in turn is positive.</p></li>
 </ul>
 <p>Notably, only in case all these hypotheses are of interest, these
 should all be included in the set; especially if there is overlap like
-here (see the article: <a href="https://doi-org.proxy.library.uu.nl/10.1080/10705511.2020.1836967" class="uri">https://doi-org.proxy.library.uu.nl/10.1080/10705511.2020.1836967</a>
-and/or ‘Guidelines_output_GORIC.html’ on <a href="https://github.com/rebeccakuiper/Tutorials" class="uri">https://github.com/rebeccakuiper/Tutorials</a> for more
+here (see the article: <a href="https://doi.org/10.1080/10705511.2020.1836967" class="uri">https://doi.org/10.1080/10705511.2020.1836967</a> and/or
+‘Guidelines_output_GORIC.html’ on <a href="https://github.com/rebeccakuiper/Tutorials" class="uri">https://github.com/rebeccakuiper/Tutorials</a> for more
 information).</p>
 </details>
 <p> </p>
@@ -3125,8 +3124,8 @@ library(lavaanPlot)
 # plot
 lavaanPlot(model = fit2, node_options = list(shape = &quot;box&quot;, fontname = &quot;Helvetica&quot;), 
            edge_options = list(color = &quot;grey&quot;), coefs = T, stand = T, covs = T)</code></pre>
-<div class="grViz html-widget html-fill-item" id="htmlwidget-a34664fb5fd11c7a44e7" style="width:672px;height:480px;"></div>
-<script type="application/json" data-for="htmlwidget-a34664fb5fd11c7a44e7">{"x":{"diagram":" digraph plot { \n graph [ overlap = true, fontsize = 10 ] \n node [ shape = box, fontname = Helvetica ] \n node [shape = box] \n age; peabody; Ab; Al; Af; An; Ar; Ac; Bb; Bl; Bf; Bn; Br; Bc \n node [shape = oval] \n A; B \n \n edge [ color = grey ] \n B->A [label = \"0.79\"] age->A [label = \"0\"] peabody->A [label = \"-0.02\"] A->Ab [label = \"0.71\"] A->Al [label = \"0.81\"] A->Af [label = \"0.84\"] A->An [label = \"0.91\"] A->Ar [label = \"0.7\"] A->Ac [label = \"0.87\"] B->Bb [label = \"0.77\"] B->Bl [label = \"0.65\"] B->Bf [label = \"0.81\"] B->Bn [label = \"0.89\"] B->Br [label = \"0.72\"] B->Bc [label = \"0.83\"] peabody -> age [label = \"0.24\", dir = \"both\"]\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-83d3bd3d5c6c2745b03c" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-83d3bd3d5c6c2745b03c">{"x":{"diagram":" digraph plot { \n graph [ overlap = true, fontsize = 10 ] \n node [ shape = box, fontname = Helvetica ] \n node [shape = box] \n age; peabody; Ab; Al; Af; An; Ar; Ac; Bb; Bl; Bf; Bn; Br; Bc \n node [shape = oval] \n A; B \n \n edge [ color = grey ] \n B->A [label = \"0.79\"] age->A [label = \"0\"] peabody->A [label = \"-0.02\"] A->Ab [label = \"0.71\"] A->Al [label = \"0.81\"] A->Af [label = \"0.84\"] A->An [label = \"0.91\"] A->Ar [label = \"0.7\"] A->Ac [label = \"0.87\"] B->Bb [label = \"0.77\"] B->Bl [label = \"0.65\"] B->Bf [label = \"0.81\"] B->Bn [label = \"0.89\"] B->Br [label = \"0.72\"] B->Bc [label = \"0.83\"] peabody -> age [label = \"0.24\", dir = \"both\"]\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 <pre class="r"><code># Alternative
 # install this package first (once)
 if (!require(&quot;tidySEM&quot;)) install.packages(&quot;tidySEM&quot;) 
@@ -3186,8 +3185,8 @@ Conclusion:
 <pre class="r"><code>#summary(results2)</code></pre>
 <p>Note: In case of equal log-likelihood (loglik) values (i.e., ratio of
 loglik weights of 1), the ratio of GORICA weights are solely based on
-the difference in penalty values. See the article (<a href="https://doi-org.proxy.library.uu.nl/10.1080/10705511.2020.1836967" class="uri">https://doi-org.proxy.library.uu.nl/10.1080/10705511.2020.1836967</a>)
-or the guidelines (‘Guidelines_output_GORIC.html’ on <a href="https://github.com/rebeccakuiper/Tutorials" class="uri">https://github.com/rebeccakuiper/Tutorials</a>) for more
+the difference in penalty values. See the article (<a href="https://doi.org/10.1080/10705511.2020.1836967" class="uri">https://doi.org/10.1080/10705511.2020.1836967</a>) or the
+guidelines (‘Guidelines_output_GORIC.html’ on <a href="https://github.com/rebeccakuiper/Tutorials" class="uri">https://github.com/rebeccakuiper/Tutorials</a>) for more
 information.</p>
 <p> </p>
 <p><strong>Possible conclusions</strong></p>
@@ -3384,8 +3383,8 @@ lavaan:</p>
 # plot
 lavaanPlot(model = fit3, node_options = list(shape = &quot;box&quot;, fontname = &quot;Helvetica&quot;),
            edge_options = list(color = &quot;grey&quot;), coefs = T, stand = T, covs = T)</code></pre>
-<div class="grViz html-widget html-fill-item" id="htmlwidget-ff998a9337558bdb4c55" style="width:672px;height:480px;"></div>
-<script type="application/json" data-for="htmlwidget-ff998a9337558bdb4c55">{"x":{"diagram":" digraph plot { \n graph [ overlap = true, fontsize = 10 ] \n node [ shape = box, fontname = Helvetica ] \n node [shape = box] \n prenumb; postnumb \n node [shape = oval] \n  \n \n edge [ color = grey ] \n prenumb->postnumb [label = \"0.68\"] prenumb->postnumb [label = \"0.67\"]  \n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-415451319a3eaf29efd7" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-415451319a3eaf29efd7">{"x":{"diagram":" digraph plot { \n graph [ overlap = true, fontsize = 10 ] \n node [ shape = box, fontname = Helvetica ] \n node [shape = box] \n prenumb; postnumb \n node [shape = oval] \n  \n \n edge [ color = grey ] \n prenumb->postnumb [label = \"0.68\"] prenumb->postnumb [label = \"0.67\"]  \n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </details>
 <p> </p>
 </div>
@@ -3428,9 +3427,8 @@ preferred hypothesis, that is, H0: Pre_b = Pre_g.</li>
 interest and its complement, indicating that the relationship between
 postnumb and prenumb is equally high for girls and boys.</li>
 </ul>
-<p>See <a href="https://doi-org.proxy.library.uu.nl/10.1080/10705511.2020.1836967" class="uri">https://doi-org.proxy.library.uu.nl/10.1080/10705511.2020.1836967</a>,
-for more information. See the guidelines (‘Guidelines_output_GORIC.html’
-on <a href="https://github.com/rebeccakuiper/Tutorials" class="uri">https://github.com/rebeccakuiper/Tutorials</a>), for more
+<p>See <a href="https://doi.org/10.1080/10705511.2020.1836967" class="uri">https://doi.org/10.1080/10705511.2020.1836967</a>, for more
+information. See the guidelines (‘Guidelines_output_GORIC.html’ on <a href="https://github.com/rebeccakuiper/Tutorials" class="uri">https://github.com/rebeccakuiper/Tutorials</a>), for more
 details on evaluating (about-)equality restrictions.</p>
 <p><strong>Alternative</strong></p>
 <pre class="r"><code>set.seed(100)
@@ -3528,8 +3526,8 @@ library(lavaanPlot)
 
 #plot 
 lavaanPlot(model = fit3, node_options = list(shape = &quot;box&quot;, fontname = &quot;Helvetica&quot;), edge_options = list(color = &quot;grey&quot;), coefs = T, stand = T, covs = T)</code></pre>
-<div class="grViz html-widget html-fill-item" id="htmlwidget-d124d53233274d8a0ac8" style="width:672px;height:480px;"></div>
-<script type="application/json" data-for="htmlwidget-d124d53233274d8a0ac8">{"x":{"diagram":" digraph plot { \n graph [ overlap = true, fontsize = 10 ] \n node [ shape = box, fontname = Helvetica ] \n node [shape = box] \n prenumb; postnumb \n node [shape = oval] \n  \n \n edge [ color = grey ] \n prenumb->postnumb [label = \"0.68\"] prenumb->postnumb [label = \"0.67\"]  \n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-1c860babfcfb0cde0c85" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-1c860babfcfb0cde0c85">{"x":{"diagram":" digraph plot { \n graph [ overlap = true, fontsize = 10 ] \n node [ shape = box, fontname = Helvetica ] \n node [shape = box] \n prenumb; postnumb \n node [shape = oval] \n  \n \n edge [ color = grey ] \n prenumb->postnumb [label = \"0.68\"] prenumb->postnumb [label = \"0.67\"]  \n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 <p><strong>GORICA</strong></p>
 <p>Now, we will extract the estimates from the lavaan object ourselves
 and use that.</p>
@@ -3570,9 +3568,8 @@ preferred hypothesis, that is, H0: Pre_boy = Pre_girl.</li>
 interest and its complement, indicating that the relationship between
 postnumb and prenumb is equally high for girls and boys.</li>
 </ul>
-<p>See <a href="https://doi-org.proxy.library.uu.nl/10.1080/10705511.2020.1836967" class="uri">https://doi-org.proxy.library.uu.nl/10.1080/10705511.2020.1836967</a>,
-for more information. See the guidelines (‘Guidelines_output_GORIC.html’
-on <a href="https://github.com/rebeccakuiper/Tutorials" class="uri">https://github.com/rebeccakuiper/Tutorials</a>), for more
+<p>See <a href="https://doi.org/10.1080/10705511.2020.1836967" class="uri">https://doi.org/10.1080/10705511.2020.1836967</a>, for more
+information. See the guidelines (‘Guidelines_output_GORIC.html’ on <a href="https://github.com/rebeccakuiper/Tutorials" class="uri">https://github.com/rebeccakuiper/Tutorials</a>), for more
 details on evaluating (about-)equality restrictions.</p>
 <p><strong>Alternative</strong></p>
 <pre class="r"><code>set.seed(100)
@@ -3619,6 +3616,22 @@ goric(est_3, VCOV = vcov_3,
 </details>
 <p> </p>
 </div>
+</div>
+<div id="exercise-4-optional-the-sky-is-the-limit" class="section level1" number="5">
+<h1><span class="header-section-number">5</span> Exercise 4 (Optional):
+The sky is the limit</h1>
+<p>You can try out evaluating informative, theory-based hypotheses using
+other data sets; for example, one or more from the subfolder ‘data’ on
+the github repository <a href="https://github.com/rebeccakuiper/Tutorials" class="uri">https://github.com/rebeccakuiper/Tutorials</a> or perhaps
+from <a href="https://openpsychometrics.org" class="uri">https://openpsychometrics.org</a>.</p>
+<p>You can also look into <!-- applying the GORIC(A) and/or bain on  -->
+other types of models or specific SEM models (e.g., a (RI-)CLPM or a
+mediation model).<br />
+Examples files for the GORIC(A) can be found on <a href="https://github.com/rebeccakuiper/Tutorials" class="uri">https://github.com/rebeccakuiper/Tutorials</a>. In
+’_README.md’, you can find an overview of the (example and tutorial)
+files.</p>
+<p>You can of course, when available, also use your own data.</p>
+<p> </p>
 </div>
 
 

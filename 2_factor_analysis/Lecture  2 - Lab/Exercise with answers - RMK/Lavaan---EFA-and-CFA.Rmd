@@ -469,24 +469,26 @@ Overall, the model does not seem to fit well.
 
 You can plot the results of a fit object using `lavaanPlot()`, `tidySEM()`, or `semPlot()`. 
 
-```{r, message=F, warning=F, results='hide'}
+```{r, message=F, warning=F} 
 # Install this package first (once):
 if (!require("lavaanPlot")) install.packages("lavaanPlot") 
 library(lavaanPlot)
 
 # Plot:
 lavaanPlot(model = fit_CFA, node_options = list(shape = "box", fontname = "Helvetica"), 
-           edge_options = list(color = "grey"), coefs = T, stand = T, covs = T)
+           edge_options = list(color = "grey"), coefs = T, 
+           #stand = T, # if you want standardized estimates
+           covs = T)
 ```
 
-```{r, message=F, warning=F, results='hide'}
+```{r, message=F, warning=F}
 # Alternative:
 if (!require("tidySEM")) install.packages("tidySEM") # install this package first (once)
 library(tidySEM)
 graph_sem(fit_CFA)
 ```
 
-```{r, message=F, warning=F, results='hide'}
+```{r, message=F, warning=F}
 # Another alternative:
 if (!require("semPlot")) install.packages("semPlot") # install this package first (once)
 library(semPlot)

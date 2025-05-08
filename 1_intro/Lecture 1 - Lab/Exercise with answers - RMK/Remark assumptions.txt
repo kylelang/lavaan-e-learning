@@ -1,0 +1,13 @@
+
+This is indeed what you should do. We do not cover this in the course, but it is important to do.
+
+I guess you want to check out, for example:
+https://stats.stackexchange.com/questions/164261/sem-structural-equation-modelling-assumptions
+https://www.regorz-statistik.de/blog/lavaan_linearity.html
+
+Wrt residuals of laten scores: they do not exist, because there is not a single solution (we do not know the individual scores of the latent variables, only the relationships between the latents variables).
+ 
+Wrt multicollinearity, you could of course inspect the correlations between the predictors and see whether they correlate highly (above .8 or so - subjective choice  of coure).
+
+Wrt outliers: If you think there are outliers (I guess based on some plots or so), then you could look into robust estimation. But first you want to check whether the outliers are not typo's or so. Or you do the analysis once with and once without outliers and see if they lead to the same conclusion.
+

@@ -192,6 +192,7 @@ if (!require("lavaanPlot")) install.packages("lavaanPlot") # install this packag
 library(lavaanPlot)
 lavaanPlot(model = fit_MGregr, node_options = list(shape = "box", fontname = "Helvetica"), 
            edge_options = list(color = "grey"), coefs = T, stand = T, covs = T) # plot
+# Note: I ask here for the standardized estimates
 
 # Alternative
 if (!require("tidySEM")) install.packages("tidySEM") # install this package first (once)
@@ -239,6 +240,24 @@ model.regression_equal <- '
   sw ~~ sw                                      # residual variance
   sw ~ 1                                        # intercept
 '
+# or
+# model.regression <- '
+# # regression model
+# sw ~ c(b1_m,b1_f)*overt + c(b2_m,b2_f)*covert
+# 
+# # add intercept
+# sw ~ 1
+# 
+# # residual variance
+# sw ~~ sw
+# 
+# # means and (co)variances of the predictors
+# overt ~ 1
+# covert ~ 1
+# overt ~~ overt
+# covert ~~ covert
+# covert ~~ overt
+# '
 ```
 
 Next, fit the model:
@@ -458,7 +477,9 @@ Model 1: configural invariance.
 fit_MG1CFA_ci <- cfa(model.1CFA, data=data_PGD,
                   group = 'Kin2',
                   missing='fiml', fixed.x=F)
+#lavInspect(fit_MG1CFA_ci) # npar = 30 & 0 equality restrictions
 ```
+
 
 Model 2: metric/weak invariance. 
 
@@ -470,8 +491,28 @@ fit_MG1CFA_wi <- cfa(model.1CFA, data=data_PGD,
                      group = 'Kin2',
                      missing='fiml', fixed.x=F,
                       group.equal = "loadings") 
+#lavInspect(fit_MG1CFA_wi) # npar = 30 & 4 equality restrictions: on the 4 free factor loadings  ('lambda')
 ```
+*Note on constraints in output:*  
+At the top of of the output, lavaan tells you with "1 == 16" that it restricts the 1st and 16th to-be-estimated parameters to be the same; and likewise for the other parameters.  
+If you look at the output, you see that 1 (so, the 1st parameter of the to-be-estimated parameters) is the factor loading (lambda) of item b2pss2 of the group 'partners':
+````{verbatim}
+$partner
+$partner$lambda
+       F
+b2pss2 1
+````
+Likewise, you find that 16 (so, the 16th parameter of the to-be-estimated parameters) is the factor loading (lambda) of item b2pss2 of the group 'else':
+````{verbatim}
+$`else`
+$`else`$lambda
+        F
+b2pss2 16
+````
+So, lavaan restricts the factor loading (lambda) of item b2pss2 of the group 'partners' to be equal to the factor loading (lambda) of b2pss2 of the 'else' group.  
 
+
+*Continue with the analysis:*  
 Model 3: scalar/strong invariance. 
 
 * The factor loadings and intercepts are constrained to be equal across groups:
@@ -482,8 +523,17 @@ fit_MG1CFA_si <- cfa(model.1CFA, data=data_PGD,
                      group = 'Kin2',
                      missing='fiml', fixed.x=F,
                       group.equal = c("intercepts", "loadings"))
+#lavInspect(fit_MG1CFA_si) # npar = 30+1=31 (now, also estimating alpha of the second group) & 9 equality restrictions: on the 4 free factor loadings ('lambda') and on the 5 intercepts ('nu')
 ```
+*Note on number of parameters:*  
+In each group, 5 intercepts ('nu') are estimated: if we would constrain these, we would be saying that the means across the two groups are equal.
+However, what we want to say is that the differences in observed means are completely explained by mean differences on the latent variables.
+Therefore, we constrain the intercepts across the groups ('nu'), and free the latent mean(s) in one of the groups ('alpha'): these represent the latent mean differences. Notably, when you have multiple groups, the latent mean(s) are freed (or you should free them) for all-but-one groups.  
+Hence, the total number of parameters to be estimated here is 31. 
+<!-- Notably, at the same time 9 parameters are restricted, so there are actually 31-9=22 unique parameters estimated. # TO DO dit verward ms alleen meer ivm de Df die niet 22 is! -->
 
+
+*Continue with the analysis:*  
 To compare the models the following code can be run:
 
 ```{r, message=F, warning=F}
@@ -491,6 +541,9 @@ lavTestLRT(fit_MG1CFA_ci, fit_MG1CFA_wi, fit_MG1CFA_si)
 # or:
 #anova(fit_MG1CFA_ci, fit_MG1CFA_wi, fit_MG1CFA_si)
 ```
+<!-- Note on Df diff:  -->
+<!-- ci vs wi: 4 because of restricting the 4 free factor loadings. -->
+<!-- wi vs si: 4 because of (additionally) restricting the 5 intercepts ('nu') but also freeing the latent mean ('alpha'), so 5-1=4. -->
 
 Because we provided three model fits, it produces two tests: 
 
@@ -582,14 +635,39 @@ fitMeasures(fit_MG1CFA_si_res, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea",
 
 # Technical output
 lavInspect(fit_MG1CFA_si_res) 
+# npar = 31 (now, also estimating alpha of the second group, see note above) & 14 equality restrictions: on the 4 free factor loadings ('lambda'), on the 5 intercepts ('nu'), and on the 5 residual variances ('theta')
 ```
+<!-- Note on Df diff:  -->
+<!-- si vs si_res: 5 because of (additionally) restricting the 5 residual variances. -->
 
+<!-- *Note on contraints in output:*   -->
+<!-- At the top of of the output, lavaan tells you with "1 == 16" that it restricts the 1st and 16th to-be-estimated parameters to be the same; and likewise for the other parameters.   -->
+<!-- If you look at the output, you see that 1 (so, the 1st parameter of the to-be-estimated parameters) is the factor loading (lambda) of item b2pss2 of the group 'partners': -->
+<!-- ````{verbatim} -->
+<!-- $partner -->
+<!-- $partner$lambda -->
+<!--        F -->
+<!-- b2pss2 1 -->
+<!-- ```` -->
+<!-- Likewise, you find that 16 (so, the 16th parameter of the to-be-estimated parameters) is the factor loading (lambda) of item b2pss2 of the group 'else': -->
+<!-- ````{verbatim} -->
+<!-- $`else` -->
+<!-- $`else`$lambda -->
+<!--         F -->
+<!-- b2pss2 16 -->
+<!-- ```` -->
+<!-- So, lavaan restricts the factor loading (lambda) of item b2pss2 of the group 'partners' to be equal to the factor loading (lambda) of b2pss2 of the 'else' group.   -->
+
+
+<!-- *Continue with the analysis:*   -->
 Compare this model (fit_MG1CFA_si_res) to one without (fit_MG1CFA_si):
 
 ```{r, message=F, warning=F}
 lavTestLRT(fit_MG1CFA_si_res, fit_MG1CFA_si) # or:
 #anova(fit_MG1CFA_si_res, fit_MG1CFA_si)
 ```
+
+
 
 **Possible conclusion**
 
@@ -600,3 +678,37 @@ Bear in mind that, when we compare two models, we always prefer a more parsimoni
 </details>
 
 &nbsp;
+
+
+
+
+<!-- C:\WERK\Ow - S65 - e-learning lavaan\0 - Materiaal andere cursussen\SEM Ellen -->
+
+<!-- Lecture 2 slides: mn slide 26 -->
+
+<!-- Model 2: Equal factor loadings -->
+
+<!-- not significant: -->
+<!-- Hence, we do not have to reject the null model (Model 2 with equal factor loadings) in favor of the alternative model (Model 1 without constraints). -->
+<!-- Put differently: We can assume there are equal factor loadings. -->
+
+<!-- Model 3: Equal intercepts and factor loadings -->
+<!-- In each group, 12 intercepts were estimated: if we would constrain these, we would be saying that the means across the two groups are equal. -->
+<!-- However, what we want to say is that the differences in observed means are completely explained by mean differences on the latent variables. -->
+<!-- Therefore, we constrain the intercepts across the groups, and free the latent means in one of the groups: these represent the latent mean differences. -->
+<!-- Hence we have: 12 – 4 = 8 parameters less in Model 3 compared to Model 2. -->
+
+<!-- Model 3: Strong Factorial Invariance -->
+
+<!-- Nesting of model 2 and model 3 -->
+<!-- At first it may be confusing that in model 3 we constrain the intercepts AND free latent means in the second group: How does this lead to nested models? -->
+<!-- It helps to write down the modeled mean differences between the two groups in each model. -->
+<!-- In model 2 we have: -->
+<!-- This requires 12 additional parameters (in addition to the 12 mean parameters in group 1). -->
+<!-- In model 3 we have: -->
+<!-- This requires only 4 additional parameters (in addition to the 12 mean parameters in group 1). -->
+
+<!-- significant: -->
+<!-- Hence, we cannot impose the constraint of equal intercepts. -->
+<!-- There is no strong factorial invariance! -->
+<!-- To detect sources of bias, we look at the modification indices: they indicate how much the model would improve if we free this parameter. -->
