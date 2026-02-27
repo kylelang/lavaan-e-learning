@@ -1,25 +1,25 @@
 # -*- Makefile -*-
 
-### Assumptions:
-### 1. If you run `make all`, you want to compile every RNW file in the current
-###    directory
-### 2. After compilation, you want to move every PDF file to the parent
-###    directory
+TARGET = sem_mediation
 
-## Find all RNW files beginning:
-RNWS := $(wildcard *.Rnw)
-
-## Strip the file extension off the located RNW files:
-NAMES := $(RNWS:%.Rnw=%)
-
-all: ${NAMES}
+all: ${TARGET}
 
 %: %.tex
-	latexmk -pdf -f $@.tex
+	latexmk -pdf $@.tex
 
 %.tex: %.Rnw
 	Rscript -e "library(knitr); knit('$^')"
 
+tidy: clean
+	cp ${TARGET}.pdf ../
+
+nuke: uncache clean
+	rm -f ${TARGET}.pdf ${TARGET}.tex
+
 clean:
-	mv *.pdf ../
-	rm -f *.tex *.aux *.log *.out *.nav *.snm *.toc *.vrb *.bbl *.blg *.fdb_latexmk *.fls
+	find ./${TARGET}* -maxdepth 1 -type f | grep -vE "\.pdf|\.Rnw|\.tex|\.bib" | xargs rm -f
+
+uncache:
+	rm -f cache/* figure/*
+
+.PHONY: tidy clean nuke uncache

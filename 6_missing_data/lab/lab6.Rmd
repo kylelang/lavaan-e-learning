@@ -38,6 +38,7 @@ knit_engines$set(asis = function(options) {
 opts_chunk$set(include = params$answers, 
                echo = params$answers, 
                eval = params$answers,
+               error = TRUE,
                message = FALSE,
                warning = FALSE,
                fig.align = "center",
@@ -521,13 +522,14 @@ should show no trend.
 imputed variable.
 - Do these plots suggest convergence?
 
-```{r trace_plots, animation.hook = "gifski", cache = TRUE}
+ <!-- , animation.hook = "gifski", cache = TRUE} -->
+
+```{r trace_plots}
 ## Get the names of the imputed variables:
 targets <- which(miceOut$method != "") %>% names()
 
 ## Create traceplots of the imputed means and variances:
-for(v in targets)
-    plot_trace(miceOut, v) %>% print()
+plot_trace(miceOut, "all")
 ```
 
 ```{asis}
@@ -618,10 +620,23 @@ be the same unless the data are MCAR.
 
 Assuming our imputations pass the above checks, it's time to move into the 
 analysis phase of the process. In practice, we will lean heavily on routines 
-from the **semTools** package to implement both the analysis and pooling phases.
+from the **lavaan.mi** package to implement both the analysis and pooling phases.
 
-- To begin with, we'll use **semTools**::`lavaan.mi()` to fit our models to the 
-list of multiply imputed datasets from \@ref(fillMissing).
+---
+
+The **lavaan.mi** package contains most of the MI-related functionality that was
+orginally part of **semTools**. At this point (2024-07-12), **lavaan.mi** isn't
+available on CRAN, so we'll need to install the development version from GitHub.
+
+Run the following code to install **lavaan.mi**. You will need to have the
+**remotes** package installed to run this code.
+
+```{r install_lavaan_mi, eval = FALSE}
+remotes::install_github("TDJorgensen/lavaan.mi")
+```
+
+Now, we can use **lavaan.mi**::`cfa.mi()` to fit our models to the list of
+multiply imputed datasets from \@ref(fillMissing).
 
 ---
 
@@ -637,10 +652,11 @@ list of multiply imputed datasets from \@ref(fillMissing).
 - Set the scale by standardizing the latent factors.
 - Estimate the mean structure.
 
-*HINT*: The **semTools**::`cfa.mi()` function can be a big help here.
+*HINT*: The **lavaan.mi**::`cfa.mi()` function can be a big help here.
 
 ```{r cfa_mi1, cache = TRUE}
-miCfa <- cfa.mi(cfaMod, data = eaImp, std.lv = TRUE, meanstructure = TRUE)
+library(lavaan.mi)
+miCfa <- lavaan.mi::cfa.mi(cfaMod, data = eaImp, std.lv = TRUE, meanstructure = TRUE)
 ```
 
 ---
@@ -702,7 +718,7 @@ semMod <- paste(cfaMod,
 - Covary the latent factors.
 - Set the scale by standardizing the latent variables.
 
-*HINT*: The **semTools**::`sem.mi()` function can be a big help here.
+*HINT*: The **lavaan.mi**::`sem.mi()` function can be a big help here.
 
 ```{r sem_mi1, cache = TRUE}
 miSem1 <- sem.mi(semMod, data = eaImp, std.lv = TRUE)
