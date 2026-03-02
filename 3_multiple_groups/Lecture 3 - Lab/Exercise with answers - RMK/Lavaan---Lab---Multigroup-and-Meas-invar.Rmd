@@ -456,6 +456,49 @@ fitMeasures(fit_MG1CFA, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea","srmr")
 lavInspect(fit_MG1CFA) 
 ```
 
+<!-- # Reference-group scaling -->
+<!-- • Factor variance constrained at 1. -->
+<!-- • Factor mean constrained at 0.* -->
+<!-- * In a multi-group model (discussed in another lecture), the mean of the -->
+<!-- (by default) first group is set to 0 (hence, the name ’reference-group’). -->
+
+<!-- model.1CFA <- " -->
+<!-- # Free first factor loading (for both groups), using: NA* -->
+<!-- F =~ NA*b1pss1 + b2pss2 + b3pss3 + b4pss4 + b5pss5 -->
+<!-- # Set factor variance of first group to 1 -->
+<!-- F ~~ c(1, NA)*F -->
+<!-- " -->
+<!-- # Fit: -->
+<!-- fit_MG1CFA <- cfa(model.1CFA, data=data_PGD, -->
+<!--                 group = 'Kin2', -->
+<!--                 missing='fiml', fixed.x=F) # Specify FIML  -->
+<!-- # Summary: -->
+<!-- summary(fit_MG1CFA, standardized = T) -->
+<!-- # Fit statistics: -->
+<!-- fitMeasures(fit_MG1CFA, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea","srmr"))  -->
+
+<!-- # Marker-variable method (default) -->
+<!-- # - First factor loading constrained at 1. -->
+<!-- # - Factor mean constrained at 0. -->
+<!-- model.1CFA <- " -->
+<!-- # Free first factor loading of second group, using: NA* -->
+<!-- F =~ c(1, NA)*b1pss1 + b2pss2 + b3pss3 + b4pss4 + b5pss5 -->
+<!-- # Use freely estimated factor variances -->
+<!-- #F ~~ NA*F -->
+<!-- " -->
+<!-- # NOTE: nu alleen 1e factor een lading van 1!!! In Default lavaan in alle factoren.... -->
+<!-- # Dat default model dan vergelijken met beide latent variable varianties gelijk aan 1 zetten?? -->
+<!-- # Fit: -->
+<!-- fit_MG1CFA <- cfa(model.1CFA, data=data_PGD, -->
+<!--                 group = 'Kin2', -->
+<!--                 missing='fiml', fixed.x=F) # Specify FIML  -->
+<!-- # Summary: -->
+<!-- summary(fit_MG1CFA, standardized = T) -->
+<!-- # Fit statistics: -->
+<!-- fitMeasures(fit_MG1CFA, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea","srmr"))  -->
+
+
+
 The number of observations per group are:
 
 * 190 in the 'partner' group
@@ -674,6 +717,15 @@ lavTestLRT(fit_MG1CFA_si_res, fit_MG1CFA_si) # or:
 Since $\Delta \chi^2(5) = 10.268, \ p= 0.068$, the equal-residual-variances model is not significantly worse. That is, the residual variances are also equal. 
 
 Bear in mind that, when we compare two models, we always prefer a more parsimonious model (= more df, that is, less parameters to be estimated). 
+
+
+*Remark:*   
+Strict invariance is often very difficult to establish in practice. 
+Van de Schoot et al. (2012) note that with the lack of strict invariance, groups can still be compared on the latent construct(s).  
+Reference: Van de Schoot, R., Lugtig, P., & Hox, J. (2012). A checklist for testing measurement invariance. European Journal of Developmental Psychology, 9(4), 486–492.
+
+
+
 
 </details>
 

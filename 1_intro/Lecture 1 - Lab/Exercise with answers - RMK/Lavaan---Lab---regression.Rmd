@@ -201,15 +201,18 @@ res <- rcorr(as.matrix(data_regr[, 4:6])) # rcorr() accepts matrices only
 
 Correlation matrix (rounded to 3 decimals):
 ```{r}
+# the matrix of correlations
 round(res$r, 3)
 ```
 P-values (rounded to 3 decimals):
 ```{r}
+# the asymptotic p-values (for the off-diagonals)
 round(res$P, 3) 
 ```
 
 Sample size:
 ```{r}
+# the matrix of number of observations used in analyzing each pair of variables
 res$n 
 ```
 
@@ -578,15 +581,17 @@ res <- rcorr(as.matrix(data_multivar[, 1:5])) # rcorr() accepts matrices only
 
 Correlation matrix (rounded to 3 decimals):
 ```{r}
+# the matrix of correlations
 round(res$r, 3)
 ```
 P-values (rounded to 3 decimals):
 ```{r}
+# the asymptotic p-values (for the off-diagonals)
 round(res$P, 3) 
 ```
-
 Sample size:
 ```{r}
+# the matrix of number of observations used in analyzing each pair of variables
 res$n 
 ```
 

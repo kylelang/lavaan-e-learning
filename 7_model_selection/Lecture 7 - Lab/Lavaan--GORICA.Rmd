@@ -84,10 +84,14 @@ Short description of exercises:
 
 The exercises below will all be applied to the same data set: A simulated data set based on the Sesame Street data (Stevens, 1996), which is included as the dataset ‘sesamsim’ in the gorica package. Thus, when you install and load the gorica package, the object sesamsim exists, which contains all the data:
 ```{r, warning=F, message=F}
-# Install and load the gorica library because it contains the data 'sesamesim'
-if (!require("gorica")) install.packages("gorica") # install this package first (once)
-library(gorica)
-# 
+## Install and load the gorica library because it contains the data 'sesamesim'
+#if (!require("gorica")) install.packages("gorica") # install this package first (once)
+#library(gorica)
+#
+# Install and load the bain library because it contains the data 'sesamesim'
+if (!require("bain")) install.packages("bain") # install this package first (once)
+library(bain)
+
 # If you want to peak at the top of the data set
 #head(sesamesim)
 ```
@@ -130,7 +134,7 @@ Specify the two-factor CFA model (such that it can be used in the lavaan functio
 
 For ease of specifying the hypotheses (which is done next), label the parameters; e.g. use for the factor Ab: A1*Ab
 
-*Make sure* to install and load all the packages needed (i.e., lavaan, restriktor, and gorica).
+*Make sure* to install and load all the packages needed (i.e., lavaan, restriktor, and gorica/bain).
 
 
 <details><summary><b>Click to show answers</b></summary>
@@ -148,9 +152,13 @@ if (!require("lavaan")) install.packages("lavaan")
 library(restriktor)
 library(lavaan)
 
-# Also install and load the gorica library because it contains the data 'sesamesim'
-if (!require("gorica")) install.packages("gorica") # install this package first (once)
-library(gorica)
+## Also install and load the gorica library because it contains the data 'sesamesim'
+#if (!require("gorica")) install.packages("gorica") # install this package first (once)
+#library(gorica)
+#
+# Also install and load the bain library because it contains the data 'sesamesim'
+if (!require("bain")) install.packages("bain") # install this package first (once)
+library(bain)
 ```
 
 **Specify the CFA model**
@@ -374,9 +382,13 @@ if (!require("lavaan")) install.packages("lavaan")
 library(restriktor)
 library(lavaan)
 
-# Also install and load the gorica library because it contains the data 'sesamesim'
-if (!require("gorica")) install.packages("gorica") # install this package first (once)
-library(gorica)
+## Also install and load the gorica library because it contains the data 'sesamesim'
+#if (!require("gorica")) install.packages("gorica") # install this package first (once)
+#library(gorica)
+#
+# Also install and load the bain library because it contains the data 'sesamesim'
+if (!require("bain")) install.packages("bain") # install this package first (once)
+library(bain)
 ```
 
 
@@ -631,10 +643,15 @@ if (!require("lavaan")) install.packages("lavaan")
 library(restriktor)
 library(lavaan)
 
-# Also load the gorica library because it contains the data 'sesamesim'
+## Also load the gorica library because it contains the data 'sesamesim'
+## install this package first (once)
+#if (!require("gorica")) install.packages("gorica") 
+#library(gorica)
+#
+# Also load the bain library because it contains the data 'sesamesim'
 # install this package first (once)
-if (!require("gorica")) install.packages("gorica") 
-library(gorica)
+if (!require("bain")) install.packages("bain") # install this package first (once)
+library(bain)
 ```
 
 **Data**
@@ -825,10 +842,15 @@ if (!require("lavaan")) install.packages("lavaan")
 library(restriktor)
 library(lavaan)
 
-# Also load the gorica library because it contains the data 'sesamesim'
+## Also load the gorica library because it contains the data 'sesamesim'
+## install this package first (once)
+#if (!require("gorica")) install.packages("gorica") 
+#library(gorica)
+#
+# Also load the bain library because it contains the data 'sesamesim'
 # install this package first (once)
-if (!require("gorica")) install.packages("gorica") 
-library(gorica)
+if (!require("bain")) install.packages("bain") 
+library(bain)
 ```
 
 **Data**
