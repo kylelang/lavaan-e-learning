@@ -1,7 +1,7 @@
 %%% Title:    Lavaan E-Learning: Moderation
 %%% Author:   Kyle M. Lang
 %%% Created:  2016-XX-XX
-%%% Modified: 2026-02-27
+%%% Modified: 2026-03-11
 
 \documentclass[10pt]{beamer}
 \usetheme{Utrecht}
@@ -1566,7 +1566,7 @@ plot_interaction(model = lmsOut,
 \end{frame}
 
 %----------------------------------------------------------------------------------------------------------------------%
-
+\comment{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{SAM in R}
 
   As of 2025, \pkg{lavaan}'s SAM implementation is a viable method of testing latent variable interactions.
@@ -1673,7 +1673,6 @@ plot_interaction(model = samOut,
 
 %----------------------------------------------------------------------------------------------------------------------%
 
-\comment{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[fragile]{BSEM Example}
 
 <<eval = FALSE>>=
