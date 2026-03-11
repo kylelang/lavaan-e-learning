@@ -19,7 +19,7 @@
 \newcommand{\rmsc}[1]{\textrm{\textsc{#1}}}
 
 \title{Moderation}
-\subtitle{Introduction to SEM in R using Lavaan}
+\subtitle{SEM in R using Lavaan}
 \author{Kyle M. Lang}
 \institute{Department of Methodology \& Statistics\\Utrecht University}
 \date{}
