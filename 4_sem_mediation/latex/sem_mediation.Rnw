@@ -1,7 +1,7 @@
 %%% Title:    Lavaan E-Learning: SEM & Mediation
 %%% Author:   Kyle M. Lang
 %%% Created:  2016-XX-XX
-%%% Modified: 2022-06-27
+%%% Modified: 2026-02-27
 
 \documentclass[10pt]{beamer}
 \usetheme{Utrecht}
@@ -29,7 +29,7 @@
 <<setup, include = FALSE, cache = FALSE>>=
 set.seed(235711)
 
-dataDir <- "../data/"
+dataDir <- "data"
 
 library(knitr)
 library(ggplot2)
@@ -37,46 +37,47 @@ library(MASS)
 library(DAAG)
 library(xtable)
 library(MLmetrics)
-library(dplyr)
 library(mvtnorm)
-library(lavaan, lib.loc = "~/R/manual_installs/")
+library(lavaan)
 
-source("../../code/supportFunctions.R")
+source(here::here("code", "supportFunctions.R"))
 
 options(width = 80)
 opts_chunk$set(size = "footnotesize",
                fig.align = "center",
                fig.path = "figure/sem-",
                message = FALSE,
-               comment = "")
+               comment = "",
+               root.dir = here::here("./")
+               )
 knit_theme$set('edit-kwrite')
 @
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[t,plain]
   \titlepage
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Outline}
   \tableofcontents
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \section{Structural Equation Modeling}
 
-\watermarkoff %%%------------------------------------------------------------%%%
+\watermarkoff
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Full SEM}
 
 A full structural equation model (SEM) simply combines path analysis and CFA.
 \vb
 \begin{itemize}
-\item SEM allows us to model complicated structural relations among latent
-variables.
+\item SEM allows us to model complicated structural relations among latent variables.
 \end{itemize}
 \vb
 Let's consider a simple, three-factor CFA model.
@@ -87,15 +88,14 @@ Let's consider a simple, three-factor CFA model.
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{CFA $\rightarrow$ SEM}
 
 We first evaluate the validity of the measurement model via CFA.
 \vb
 \begin{itemize}
-\item We then convert the CFA to an SEM by converting some covariances to latent
-regression paths.
+\item We then convert the CFA to an SEM by converting some covariances to latent regression paths.
 \end{itemize}
 
  \begin{figure}
@@ -104,7 +104,7 @@ regression paths.
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{CFA Example}
   
@@ -131,7 +131,7 @@ fitMeasures(cfaOut,
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{CFA Example}
   
@@ -141,7 +141,7 @@ partSummary(cfaOut, 7)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{CFA Example}
   
@@ -151,7 +151,7 @@ partSummary(cfaOut, 8)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{CFA Example}
   
@@ -161,7 +161,7 @@ partSummary(cfaOut, 9)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{CFA Example}
   
@@ -171,7 +171,7 @@ partSummary(cfaOut, 10)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{SEM Example}
   
@@ -196,7 +196,7 @@ fitMeasures(semOut,
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{SEM Example}
   
@@ -206,7 +206,7 @@ partSummary(semOut, 7)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{SEM Example}
   
@@ -216,7 +216,7 @@ partSummary(semOut, 8:9)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{SEM Example}
   
@@ -226,7 +226,7 @@ partSummary(semOut, 10)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{SEM Example}
 
@@ -236,41 +236,39 @@ partSummary(semOut, 11)
 
 \end{frame}
 
-\watermarkon %%%-------------------------------------------------------------%%%
+\watermarkon
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Why SEM?}
 
-The beauty of SEM is that we get to model the types of complex relations we can
-specify via path models while leveraging all the strengths of latent variables.
+The beauty of SEM is that we get to model the types of complex relations we can specify via path models while leveraging
+  all the strengths of latent variables.
 \vb
 \begin{itemize}
 \item Multiple-group SEM models moderation by group.
 \vc
 \begin{itemize}
-\item The latent variables give us the ability to evaluate measurement
-invariance across groups.
+\item The latent variables give us the ability to evaluate measurement invariance across groups.
 \vc
 \item We'll see more of these ideas in the next lecture.
 \end{itemize}
 \vc
-\item Path analysis and SEM lend themselves especially well to mediation
-analysis and conditional process analysis.
+\item Path analysis and SEM lend themselves especially well to mediation analysis and conditional process analysis.
 \end{itemize}
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \sectionslide{Mediation}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Mediation vs. Moderation}
 
   What do we mean by \emph{mediation} and \emph{moderation}?\\
   \va
-  Mediation and moderation are types of hypotheses, not statistical methods or
-models.
+  Mediation and moderation are types of hypotheses, not statistical methods or models.
   \begin{itemize}
   \item Mediation tells us \emph{how} one variable influences another.
     \vb
@@ -279,7 +277,7 @@ models.
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Contextualizing Example}
 
@@ -297,32 +295,30 @@ models.
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Focal Effect Only}
 
-  The $healthConcerns \rightarrow exerciseAmount$ relation is our \emph{focal
-  effect}
+  The $healthConcerns \rightarrow exerciseAmount$ relation is our \emph{focal effect}
   
   \begin{figure}
     \includegraphics[width=\textwidth]{figures/focalEffectDiagram.pdf}
   \end{figure}
   
   \begin{itemize}
-  \item Mediation, moderation, and conditional process analysis all attempt to
-    describe the focal effect in more detail.
+  \item Mediation, moderation, and conditional process analysis all attempt to describe the focal effect in more detail.
     \vb
   \item We always begin by hypothesizing a focal effect.
   \end{itemize}
   
 \end{frame}
 
-\watermarkoff %%%------------------------------------------------------------%%%
+\watermarkoff
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{The Mediation Hypothesis}
 
-  A mediation analysis will attempt to describe how health concerns affect
-amount of exercise.
+  A mediation analysis will attempt to describe how health concerns affect amount of exercise.
   \va
   \begin{itemize}
   \item The \emph{how} is operationalized in terms of intermediary variables.
@@ -338,19 +334,17 @@ amount of exercise.
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Moderation Hypothesis}
 
-  A moderation hypothesis will attempt to describe when health concerns affect
-amount of exercise.
+  A moderation hypothesis will attempt to describe when health concerns affect amount of exercise.
   \va
   \begin{itemize}
-    \item The \emph{when} is operationalized in terms of interactions between
-the focal predictor and contextualizing variables
+    \item The \emph{when} is operationalized in terms of interactions between the focal predictor and contextualizing
+      variables
       \va
-    \item Moderator: Sense of personal agency relating to physical health
-(\emph{agency}).
+    \item Moderator: Sense of personal agency relating to physical health (\emph{agency}).
   \end{itemize}
 
   \vx{-18}
@@ -361,171 +355,101 @@ the focal predictor and contextualizing variables
 
 \end{frame}
 
-\watermarkon %%%-------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Conditional Process Analysis}
   
-  Conditional process analysis combines the mediation and moderation hypotheses
-  into models of moderated mediation.
+  Conditional process analysis combines the mediation and moderation hypotheses into models of moderated mediation.
   \va
   \begin{itemize}
-  \item Given a mediation model describing \emph{how} health concerns affect
-    exercise amount, what other variables may modulate the indirect effect.
+  \item Given a mediation model describing \emph{how} health concerns affect exercise amount, what other variables may
+    modulate the indirect effect.
   \end{itemize}
   
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
-\comment{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Excellent Resource}
-
-Plug Hayes' book
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}{A Wee Bit o' Regression}
-
-\begin{align}
-Y &= \alpha_1 + \beta + e_1\\
-Y &= \alpha_2 + \beta_1X + \beta_2Z + e_2
-\end{align}
-
-\begin{figure}
-  \includegraphics[width=0.8\textwidth]{figures/mlrPathDiagram.pdf}
-\end{figure}
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}[fragile]{Example}
-
-<<echo = FALSE>>=
-sigma <- matrix(0.3, 3, 3)
-diag(sigma) <- 1.0
-dat1 <- data.frame(rmvnorm(500, c(0, 0, 0), sigma))
-colnames(dat1) <- c("x", "y", "z")
-@
-
-<<>>=
-## Fit model 1:
-fit1 <- lm(y ~ x, data = dat1)
-
-## Fit model 2:
-fit2 <- lm(y ~ x + z, data = dat1)
-
-## Look at the results:
-summary(fit1)
-summary(fit2)
-
-## Get the coefficients:
-coef(fit1)
-coef(fit2)
-
-## Get the standard errors:
-sqrt(diag(vcov(fit1)))
-sqrt(diag(vcov(fit2)))
-@
-
-\end{frame}
-}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \subsection{Simple Mediation}
 
-\watermarkoff %%%------------------------------------------------------------%%%
+\watermarkoff
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Path Diagrams}
 
-\begin{figure}
-\includegraphics[width=\textwidth]{figures/simpleMediationPathDiagram.pdf}
-\end{figure}
+  \begin{figure}
+    \includegraphics[width=\textwidth]{figures/simpleMediationPathDiagram.pdf}
+  \end{figure}
 
 \end{frame}
 
-\watermarkon %%%-------------------------------------------------------------%%%
+\watermarkon
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Necessary Equations}
 
-  To get all the pieces of the preceding diagram using OLS regression, we'll
-  need to fit three seperate models.
+  To get all the pieces of the preceding diagram using OLS regression, we'll need to fit three separate models.
 
-\begin{align}
-Y &= i_1 + cX + e_1 \label{eq1}\\
-Y &= i_2 + c'X + bM + e_2 \label{eq2}\\
-M &= i_3 + aX + e_3 \label{eq3}
-\end{align}
+  \begin{align}
+    Y &= i_1 + cX + e_1 \label{eq1}\\
+    Y &= i_2 + c'X + bM + e_2 \label{eq2}\\
+    M &= i_3 + aX + e_3 \label{eq3}
+  \end{align}
 
-\begin{itemize}
-\item Equation \ref{eq1} gives us the total effect ($c$).
-  \vb
-\item Equation \ref{eq2} gives us the direct effect ($c'$) and the partialled
-  effect of the mediator on the outcome ($b$).
-  \vb
-\item Equation \ref{eq3} gives us the effect of the input on the outcome ($a$).
-\end{itemize}
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-\comment{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{More Complex Path Diagram}
-
-\begin{figure}
-\includegraphics[width=\textwidth]{figures/complexMediationPathDiagram.pdf}
-\end{figure}
+  \begin{itemize}
+    \item Equation \ref{eq1} gives us the total effect ($c$).
+      \vb
+    \item Equation \ref{eq2} gives us the direct effect ($c'$) and the partialled effect of the mediator on the outcome
+      ($b$).
+      \vb
+    \item Equation \ref{eq3} gives us the effect of the input on the outcome ($a$).
+  \end{itemize}
 
 \end{frame}
-}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%--------------------------------------------------------------------------%%%
+
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Two Measures of Indirect Effect}
 
-Indirect effects can be quantified in two different ways:
-\begin{align}
-IE_{diff} &= c - c'\\
-IE_{prod} &= a \cdot b
-\end{align}
-$IE_{diff}$ and $IE_{prod}$ are equivalent in simple mediation.
-\va
-\begin{itemize}
-\item Both give us information about the proportion of the total
-  effect that is transmitted through the intermediary variable.
-  \vb
-\item $IE_{prod}$ provides a more direct representation of the
-  actual pathway we're interested in testing.
-  \vb
-\item $IE_{diff}$ gets at our desired hypothesis indirectly.
-\end{itemize}
+  Indirect effects can be quantified in two different ways:
+  \begin{align}
+    IE_{diff} &= c - c'\\
+    IE_{prod} &= a \cdot b
+  \end{align}
+  $IE_{diff}$ and $IE_{prod}$ are equivalent in simple mediation.
+  \va
+  \begin{itemize}
+    \item Both give us information about the proportion of the total effect that is transmitted through the intermediary
+      variable.
+      \vb
+    \item $IE_{prod}$ provides a more direct representation of the actual pathway we're interested in testing.
+      \vb
+    \item $IE_{diff}$ gets at our desired hypothesis indirectly.
+  \end{itemize}
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{The Causal Steps Approach}
 
-  \citet[][p. 1176]{baronKenny:1986} describe three/four conditions
-  as being sufficient to demonstrate statistical ``mediation.''
+  \citet[][p. 1176]{baronKenny:1986} describe three/four conditions as being sufficient to demonstrate statistical
+  ``mediation.''
   \va
   \begin{enumerate}
-  \item Variations in levels of the independent variable significantly
-    account for variations in the presumed mediator (i.e., Path
-    \emph{a}).
+  \item Variations in levels of the independent variable significantly account for variations in the presumed mediator
+    (i.e., Path \emph{a}).
     \begin{itemize}
       \item Need a significant $a$ path.
     \end{itemize}
     \vb
-  \item Variations in the mediator significantly account for variations
-    in the dependent variable (i.e., Path \emph{b}).
+  \item Variations in the mediator significantly account for variations in the dependent variable (i.e., Path \emph{b}).
     \begin{itemize}
     \item Need a significant $b$ path.
     \end{itemize}
     \vb
-  \item When Paths \emph{a} and \emph{b} are controlled, a previously
-    significant relation between the independent and dependent
-    variables is no longer significant.
+  \item When Paths \emph{a} and \emph{b} are controlled, a previously significant relation between the independent and
+    dependent variables is no longer significant.
     \begin{itemize}
     \item Need a significant total effect
     \item The direct effect must be ``less'' than the total effect
@@ -534,7 +458,8 @@ $IE_{diff}$ and $IE_{prod}$ are equivalent in simple mediation.
 
 \end{frame}
 
-\watermarkoff %%%------------------------------------------------------------%%%
+\watermarkoff
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Example Process Model}
 
@@ -546,13 +471,13 @@ $IE_{diff}$ and $IE_{prod}$ are equivalent in simple mediation.
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Causal Steps Example}
 
 <<>>=
 ## Load some data:
-dat1 <- readRDS("../data/adamsKlpsScaleScore.rds")
+dat1 <- readRDS(here::here("data", "adamsKlpsScaleScore.rds"))
 
 ## Check pre-conditions:
 mod1 <- lm(policy ~ polAffil, data = dat1)
@@ -565,7 +490,7 @@ mod4 <- lm(policy ~ sysRac + polAffil, data = dat1)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Causal Steps Example}
 
@@ -575,7 +500,7 @@ summary(mod1)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Causal Steps Example}
 
@@ -585,7 +510,7 @@ summary(mod2)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Causal Steps Example}
 
@@ -595,7 +520,7 @@ summary(mod3)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Causal Steps Example}
 
@@ -605,7 +530,7 @@ summary(mod4)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Causal Steps Example}
 
@@ -626,18 +551,19 @@ ieProd
 
 \end{frame}
 
-\watermarkon %%%-------------------------------------------------------------%%%
+\watermarkon
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Sobel's Z}
 
   In the previous example, do we have a \emph{significant} indirect effect?
   \va
   \begin{itemize}
-  \item The direct effect is ``substantially'' smaller than the total effect,
-    but is the difference statistically significant?
+  \item The direct effect is ``substantially'' smaller than the total effect, but is the difference statistically
+    significant?
     \vb
-  \item \citet{sobel:1982} developed an asymptotic standard error for $IE_{prod}$
-    that we can use to assess this hypothesis.
+  \item \citet{sobel:1982} developed an asymptotic standard error for $IE_{prod}$ that we can use to assess this
+    hypothesis.
   \end{itemize}
   \begin{align}
     SE_{sobel} &= \sqrt{a^2 \cdot SE_b^2 + b^2 \cdot SE_a^2}\\
@@ -647,16 +573,17 @@ ieProd
 
 \end{frame}
 
-\watermarkoff %%%------------------------------------------------------------%%%
+\watermarkoff
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Sobel Example}
 
 <<>>=
 ## SE:
-seA <- (mod3 %>% vcov() %>% diag() %>% sqrt())["polAffil"]
-seB <- (mod4 %>% vcov() %>% diag() %>% sqrt())["sysRac"]
+seA <- (mod3 |> vcov() |> diag() |> sqrt())["polAffil"]
+seB <- (mod4 |> vcov() |> diag() |> sqrt())["sysRac"]
 
-se <- sqrt(b^2 * seA^2 + a^2 * seB^2) %>% unname()
+se <- sqrt(b^2 * seA^2 + a^2 * seB^2) |> unname()
 
 ## z-score:
 (z <- ieProd / se)
@@ -670,42 +597,18 @@ c(ieProd - 1.96 * se, ieProd + 1.96 * se)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Recall our Basic Path Diagram}
 
-\begin{figure}
-\includegraphics[width=\textwidth]{figures/simpleMediationPathDiagram.pdf}
-\end{figure}
+  \begin{figure}
+    \includegraphics[width=\textwidth]{figures/simpleMediationPathDiagram.pdf}
+  \end{figure}
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
-\comment{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{The Basic OLS Equations}
-
-  To get all the pieces of the preceding diagram using OLS regression,
-  we're forced fit three equations.
-
-\begin{align}
-Y &= i_1 + cX + e_1 \label{eq1}\\
-Y &= i_2 + c'X + bM + e_2 \label{eq2}\\
-M &= i_3 + aX + e_3 \label{eq3}
-\end{align}
-
-\begin{itemize}
-\item Equation \ref{eq1} gives us the total effect ($c$).
-  \vb
-\item Equation \ref{eq2} gives us the direct effect ($c'$) and the
-  partialled effect of the mediator on the outcome ($b$).
-  \vb
-\item Equation \ref{eq3} gives us the effect of the input on the
-  outcome ($a$).
-\end{itemize}
-
-\end{frame}
-}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\watermarkon %%%-------------------------------------------------------------%%%
+\watermarkon
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Two Measures of Indirect Effect}
 
@@ -723,11 +626,9 @@ M &= i_3 + aX + e_3 \label{eq3}
     \vb
   \item $IE_{diff}$ is only an indirect indication of $IE_{prod}$.
   %  \vb
-  %\item A significant indirect effect can exist without a significant
-  %  total effect.
+  %\item A significant indirect effect can exist without a significant total effect.
     \vb
-  \item If we only care about the indirect effect, then we don't need to worry
-    about the total effect.
+  \item If we only care about the indirect effect, then we don't need to worry about the total effect.
   \end{itemize}
   \pause
   \vb
@@ -739,12 +640,12 @@ M &= i_3 + aX + e_3 \label{eq3}
 
 \end{frame}
 
-\watermarkoff %%%--------------------------------------------------------------------------%%%
+\watermarkoff
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Simplifying our Path Diagram}
 
-  \rmsc{Question:} If we don't care about directly estimating $c$, how can we
-  simplify this diagram?
+  \rmsc{Question:} If we don't care about directly estimating $c$, how can we simplify this diagram?
 
   \begin{figure}
     \includegraphics[width=0.8\textwidth]{figures/simpleMediationPathDiagram.pdf}
@@ -752,7 +653,7 @@ M &= i_3 + aX + e_3 \label{eq3}
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Simplifying our Path Diagram}
 
@@ -764,7 +665,7 @@ M &= i_3 + aX + e_3 \label{eq3}
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Why Path Analysis?}
 
@@ -774,7 +675,7 @@ M &= i_3 + aX + e_3 \label{eq3}
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Example}
 
@@ -786,7 +687,7 @@ M &= i_3 + aX + e_3 \label{eq3}
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -806,7 +707,7 @@ out1 <- sem(mod1, data = dat1)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -817,7 +718,7 @@ partSummary(out1, 7:9)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -836,7 +737,7 @@ out2 <- sem(mod2, data = dat1)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -847,7 +748,7 @@ partSummary(out2, 7:8)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -857,7 +758,7 @@ partSummary(out2, 9:10)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -868,7 +769,7 @@ parameterEstimates(out2, zstat = FALSE, pvalue = FALSE, ci = TRUE)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Results}
 
@@ -880,70 +781,65 @@ parameterEstimates(out2, zstat = FALSE, pvalue = FALSE, ci = TRUE)
 
 \end{frame}
 
-\watermarkon %%%-------------------------------------------------------------%%%
+\watermarkon
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{We're not there yet...}
 
-  Path analysis allows us to directly model complex (and simple) relations, but
-  the preceding example still suffers from a considerable limitation.
+  Path analysis allows us to directly model complex (and simple) relations, but the preceding example still suffers from
+  a considerable limitation.
   \vb
   \begin{itemize}
-  \item The significance test for the indirect effect is still conducted with
-    the Sobel Z approach.
+  \item The significance test for the indirect effect is still conducted with the Sobel Z approach.
   \end{itemize}
   \va
-  Path analysis (or full SEM) doesn't magically get around distributional
-  problems associated with Sobel's Z test.\\
+  Path analysis (or full SEM) doesn't magically get around distributional problems associated with Sobel's Z test.\\
   \vb
   \begin{itemize}
-  \item To get a robust significance test of the indirect effect, we need to use
-    \emph{bootstrapping}.
+  \item To get a robust significance test of the indirect effect, we need to use \emph{bootstrapping}.
   \end{itemize}
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \subsection{Bootstrapping}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Bootstrapping}
 
-  Bootstrapping was introduced by \citet{efron:1979} as a tool for
-  non-parametric inference.
+  Bootstrapping was introduced by \citet{efron:1979} as a tool for non-parametric inference.
   \vb
   \begin{itemize}
-    \item Traditional inference requires that we assume a parametric sampling
-      distribution for our focal parameter.
+    \item Traditional inference requires that we assume a parametric sampling distribution for our focal parameter.
       \vb
-    \item We need to make such an assumption to compute the standard errors we
-      require for inferences.
+    \item We need to make such an assumption to compute the standard errors we require for inferences.
       \vb
     \item If we cannot safely make these assumptions, we can use bootstrapping.
   \end{itemize}
 
 \end{frame}
 
-%%% --------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Bootstrapping}
 
   Assume our observed data $Data_0$ represent the population and:
   \vb
   \begin{enumerate}
-    \item Sample rows of $Data_0$, with replacement, to create $B$ new samples
-      $\{Data_b\}$.
+    \item Sample rows of $Data_0$, with replacement, to create $B$ new samples $\{Data_b\}$.
       \vb
     \item Calculate our focal statistic on each of the $B$ bootstrap samples. \label{calcStatsStep}
       \vb
-    \item Make inferences based on the empirical distribution of the $B$
-      estimates calculated in Step \ref{calcStatsStep}
+    \item Make inferences based on the empirical distribution of the $B$ estimates calculated in Step
+      \ref{calcStatsStep}
   \end{enumerate}
 
 \end{frame}
 
-\watermarkoff %%%------------------------------------------------------------%%%
+\watermarkoff
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Bootstrapping}
 
@@ -955,47 +851,28 @@ parameterEstimates(out2, zstat = FALSE, pvalue = FALSE, ci = TRUE)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
-\comment{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Bootstrapping}
-
-  It's important to recognize that the following are legal bootstrap samples:
-
-  \vspace{-12pt}
-
-  \begin{figure}
-    \begin{center}
-      \includegraphics[width=\textwidth]{figures/perverseBootstrappingDiagram.pdf}
-    \end{center}
-  \end{figure}
-
-\end{frame}
-}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\watermarkon %%%-------------------------------------------------------------%%%
+\watermarkon
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[allowframebreaks]{Example}
 
-  Suppose I'm on the lookout for a retirement location. Since I want to relax in
-  my old-age, I'm concerned with ensuring a low probability of dragon attacks,
-  so I have a few salient considerations:
+  Suppose I'm on the lookout for a retirement location. Since I want to relax in my old-age, I'm concerned with ensuring
+  a low probability of dragon attacks, so I have a few salient considerations:
   \vb
   \begin{itemize}
-    \item Shooting for a location with no dragons, whatsoever, is a fools errand
-      (since dragons are, obviously, ubiquitous).
+    \item Shooting for a location with no dragons, whatsoever, is a fools errand (since dragons are, obviously,
+      ubiquitous).
       \vb
-    \item I merely require a location that has at least two times as many
-      dragon-free days as other kinds.
+    \item I merely require a location that has at least two times as many dragon-free days as other kinds.
   \end{itemize}
 
   \pagebreak
 
-  I've been watching several candidate locales over the course of my (long and
-  illustrious) career, and I'm particularly hopeful about one quiet hamlet in
-  the Patagonian highlands.
+  I've been watching several candidate locales over the course of my (long and illustrious) career, and I'm particularly
+  hopeful about one quiet hamlet in the Patagonian highlands.
   \vb
   \begin{itemize}
-  \item To ensure that my required degree of dragon-freeness is met, I'll use
-    the \emph{Dragon Risk Index} (DRI):
+  \item To ensure that my required degree of dragon-freeness is met, I'll use the \emph{Dragon Risk Index} (DRI):
     \begin{align*}
       DRI = \textit{Median}\left( \frac{\text{Dragon-Free Days}}{\text{Dragonned Days}} \right)
     \end{align*}
@@ -1003,13 +880,14 @@ parameterEstimates(out2, zstat = FALSE, pvalue = FALSE, ci = TRUE)
 
 \end{frame}
 
-\watermarkoff %%%------------------------------------------------------------%%%
+\watermarkoff
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
 <<boot1, cache = TRUE>>=
 ## Read in the observed data:
-rawData <- readRDS("../data/daysData.rds")
+rawData <- readRDS(here::here("data", "daysData.rds"))
 
 ## Compute the observed test statistic:
 obsDRI <- median(rawData$goodDays / rawData$badDays)
@@ -1027,13 +905,13 @@ for(b in 1:nSams) {
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
 <<echo = FALSE, out.width = "65%">>=
 gg0(x = bootDRI, points = FALSE) +
-    geom_histogram(aes(y = ..density..), fill = "lightgray", color = "black") +
+    geom_histogram(aes(y = after_stat(density)), fill = "lightgray", color = "black") +
     geom_density(color = "red") +
     xlab("Dragon Risk Index") +
     ylab("Density") +
@@ -1042,13 +920,12 @@ gg0(x = bootDRI, points = FALSE) +
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
-To see if I can be confident in the dragon-freeness of my potential home, I'll
-summarize the preceding distribution with a (one-tailed) percentile confidence
-interval:
+To see if I can be confident in the dragon-freeness of my potential home, I'll summarize the preceding distribution with
+  a (one-tailed) percentile confidence interval:
 
 \va
 
@@ -1062,28 +939,27 @@ c(bootLB, bootUB)
 
 \end{frame}
 
-\watermarkon %%%-------------------------------------------------------------%%%
+\watermarkon
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Bootstrapped Inference for Indirect Effects}
 
   We can apply the same procedure to testing the indirect effect.
   \vb
   \begin{itemize}
-  \item The problem with Sobel's Z is exactly the type of issue for which
-    bootstrapping was designed
-    \vc
-    \begin{itemize}
-    \item We don't know a reasonable finite-sample sampling distribution for the
-      $ab$ parameter.
-    \end{itemize}
-    \vb
-  \item Bootstrapping will allow us to construct an empirical sampling
-    distribution for $ab$ and construct confidence intervals for inference.
+    \item The problem with Sobel's Z is exactly the type of issue for which bootstrapping was designed
+      \vc
+      \begin{itemize}
+        \item We don't know a reasonable finite-sample sampling distribution for the $ab$ parameter.
+      \end{itemize}
+      \vb
+    \item Bootstrapping will allow us to construct an empirical sampling distribution for $ab$ and construct confidence
+      intervals for inference.
   \end{itemize}
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Bootstrapped Inference for Indirect Effects}
 
@@ -1101,7 +977,8 @@ c(bootLB, bootUB)
 
 \end{frame}
 
-\watermarkoff %%%------------------------------------------------------------%%%
+\watermarkoff
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -1115,19 +992,19 @@ for(i in 1:nSams) {
     bootOut <- sem(mod2, data = bootSam)
 
     ## Store the estimated indirect effect:
-    abVec[i] <- coef(bootOut)[c("a", "b")] %>% prod()
+    abVec[i] <- coef(bootOut)[c("a", "b")] |> prod()
 }
 @
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
 <<echo = FALSE, out.width = "65%">>=
 gg0(x = abVec, points = FALSE) +
-    geom_histogram(aes(y = ..density..), fill = "lightgray", color = "black") +
+    geom_histogram(aes(y = after_stat(density)), fill = "lightgray", color = "black") +
     geom_density(color = "red") +
     ggtitle("Empirical Sampling Distribution of a*b") +
     xlab("a*b")
@@ -1135,7 +1012,7 @@ gg0(x = abVec, points = FALSE) +
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -1148,7 +1025,7 @@ c(lb, ub)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -1161,182 +1038,31 @@ parameterEstimates(bootOut2, zstat = FALSE, pvalue = FALSE)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
-\comment{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}[shrink = 5]{Monte Carlo Method/Parametric Bootstrap}
-
-  We can also use a \emph{parametric bootstrap} of the individual
-  parameters $a$ and $b$ to get a somewhat robust test of the indirect
-  effect.
-  \vb
-  \begin{itemize}
-  \item Assuming normal sampling distributions for $a$ and $b$ is
-    not, generally, problematic
-    \vb
-  \item We can save ourselves a lot of computational effort by
-    assuming normality for $a$ and $b$, then:
-    \vb
-    \begin{enumerate}
-    \item Fit the hypothesized path model to the raw data
-      \vb
-    \item Extract $a$, $b$, and $\textit{ACOV}(\{a, b\})$ from the fitted
-      path model
-      \vb
-    \item Parameterize a bivariate normal distribution $\text{N}(a, b
-      |\mu, \Sigma)$ with $\mu = \{a, b\}$ and $\Sigma =
-      \textit{ACOV}(\{a, b\})$
-      \vb
-    \item Draw simulated values $\{\tilde{a}, \tilde{b}\}$ from
-      $\text{N}(a, b | \mu, \Sigma)$
-      \vb
-    \item Compute the simulated indirect effect
-      $\widetilde{ab} = \tilde{a} \cdot \tilde{b}$ and store it
-      \vb
-    \item Summarize the empirical distribution of $\widetilde{ab}$
-      for inference.
-    \end{enumerate}
-  \end{itemize}
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}[fragile, allowframebreaks]{Example}
-
-<<>>=
-## Load package to draw the Monte Carlo samples
-library(mvtnorm)
-
-## Specify the model (note the parameter labels):
-mod3 <- "
-policy ~ polAffil + b*sysRac
-sysRac ~ a*polAffil
-"
-
-## Fit the model:
-out4 <- sem(mod3, data = dat1)
-
-## Extract the important estimates:
-a <- coef(out4)["a"]
-b <- coef(out4)["b"]
-acov <- vcov(out4)[c("a", "b"), c("a", "b")]
-@
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}[fragile, allowframebreaks]{Aside Regarding Asymptotic Covariances}
-
-  The \emph{asymptotic covariance matrix} (ACOV) is (-1 times) the
-  inverse of the Fisher information matrix of the model parameters.
-  \vb
-  \begin{itemize}
-  \item The $ACOV$ contains the expected covariance among the ML
-    estimates of the model parameters.
-    \vb
-  \item The diagonal elements of the matrix (i.e., the asymptotic
-    variances) are the square of the usual ML SE estimates.
-  \end{itemize}
-  \va
-<<>>=
-round(vcov(out4), 4)
-@
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}[fragile, allowframebreaks]{Back to the Example}
-
-<<>>=
-## Look at ACOV(a,b):
-round(acov, 4)
-
-## Draw the Monte Carlo samples:
-samMat <- rmvnorm(nSams, c(a, b), acov)
-abVec <- samMat[ , "a"] * samMat[ , "b"]
-@
-
-\pagebreak
-
-<<echo = FALSE>>=
-par(family = "serif")
-
-## Plot the empirical sampling distribution of a*b:
-hist(abVec,
-     freq = FALSE,
-     main = "Monte Carlo Distribution of a*b",
-     xlab = "a*b")
-lines(density(abVec), col = "red")
-@
-
-\pagebreak
-
-<<>>=
-## Calculate the percentile CI:
-lb <- sort(abVec)[0.025 * nSams]
-ub <- sort(abVec)[0.975 * nSams]
-c(lb, ub)
-@
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}{Kris Preacher's Website}
-
-  If you don't want to program the Monte Carlo approach yourself
-  (although each of you easily can), you should consider the very
-  handy Web App on Professor Kris Preacher's website
-  \url{http://www.quantpsy.org}.
-  \va
-  \begin{itemize}
-    \item Kris' website has a vast array of hugely helpful resources
-      for anyone doing mediation or moderation analysis.
-      \vb
-    \item You should definitely check it out!
-  \end{itemize}
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}{Simple Mediation}
-
-\begin{figure}
-\includegraphics[width=\textwidth]{figures/simpleMediationPathDiagram.pdf}
-\end{figure}
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \subsection{Multiple Mediation}
 
-\watermarkon %%%-------------------------------------------------------------%%%
+\watermarkon
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Simple Mediation is Too Simple}
 
-  We can justify multiple mediator models by asking: ``What mediates
-  the effects in a simple mediation model?''
+  We can justify multiple mediator models by asking: ``What mediates the effects in a simple mediation model?''
   \va
   \begin{itemize}
-    \item Mediation of the direct effect leads to \emph{parallel
-      multiple mediator models}.
+    \item Mediation of the direct effect leads to \emph{parallel multiple mediator models}.
       \vb
-    \item Mediation of the $a$ or $b$ paths produces \emph{serial
-      multiple mediator models}.
+    \item mediation of the $a$ or $b$ paths produces \emph{serial multiple mediator models}.
   \end{itemize}
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \subsubsection{Parallel Mediators}
 
-\watermarkoff %%%------------------------------------------------------------%%%
+\watermarkoff
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Parallel Multiple Mediation}
 
@@ -1346,12 +1072,12 @@ c(lb, ub)
 
 \end{frame}
 
-\watermarkon %%%-------------------------------------------------------------%%%
+\watermarkon
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Parallel Multiple Mediation}
 
-  To get all of the information in the preceding diagram, we need to estimate
-  four equations:
+  To get all of the information in the preceding diagram, we need to estimate four equations:
   \begin{align*}
     Y &= i_Y + b_1 M_1 + b_2 M_2 + b_3 M_3 + c' X + e_Y\\
     M_1 &= i_{M1} + a_1 X + e_{M1}\\
@@ -1359,20 +1085,19 @@ c(lb, ub)
     M_3 &= i_{M3} + a_3 X + e_{M3}\\
   \end{align*}
   %\va
-  In general, a parallel mediator model with $K$ mediator
-  variables will required $K + 1$ separate equations.
+  In general, a parallel mediator model with $K$ mediator variables will required $K + 1$ separate equations.
   \\
   \va
   Path modeling can make this task much simpler.
   \vb
   \begin{itemize}
-  \item Also allows us to explicitly estimate the correlations
-    between parallel mediators.
+  \item Also allows us to explicitly estimate the correlations between parallel mediators.
   \end{itemize}
 
 \end{frame}
 
-\watermarkoff %%%------------------------------------------------------------%%%
+\watermarkoff
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Parallel Multiple Mediation}
 
@@ -1390,7 +1115,7 @@ c(lb, ub)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Parallel Multiple Mediation}
 
@@ -1402,7 +1127,8 @@ c(lb, ub)
 
 \end{frame}
 
-\watermarkon %%%-------------------------------------------------------------%%%
+\watermarkon
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{A Quick Note on Inference}
 
@@ -1418,33 +1144,33 @@ c(lb, ub)
   In parallel multiple mediation:
   \vc
   \begin{itemize}
-  \item We have $K$ \emph{specific indirect effects}, where $K$ is the
-    number of mediators: $a_1b_1, a_2b_2, \ldots, a_Kb_K$.
-    \vc
-  \item The \emph{Total Indirect Effect} is equal to the sum of all
-    the specific indirect effects: $IE_{tot} = \sum_{k = 1}^K a_kb_k$.
-    \vc
-  \item The \emph{Total Effect} is equal to the direct effect plus the
-    total indirect effect: $c = c' + IE_{tot}$
+    \item We have $K$ \emph{specific indirect effects}, where $K$ is the number of mediators: $a_1b_1, a_2b_2, \ldots,
+      a_Kb_K$.
+      \vc
+    \item The \emph{Total Indirect Effect} is equal to the sum of all the specific indirect effects: $IE_{tot} = \sum_{k =
+      1}^K a_kb_k$.
+      \vc
+    \item The \emph{Total Effect} is equal to the direct effect plus the total indirect effect: $c = c' + IE_{tot}$
   \end{itemize}
-\vb
-Inference for the specific indirect effects is basically the same
-as it is for the sole indirect effect in simple mediation.
-\vc
-\begin{itemize}
-  \item \rmsc{Caveat:} Each specific indirect effect must be
-    interpreted as conditional on all other mediators in the model.
-\end{itemize}
+  \vb
+  Inference for the specific indirect effects is basically the same as it is for the sole indirect effect in simple
+  mediation.
+  \vc
+  \begin{itemize}
+    \item \rmsc{Caveat:} Each specific indirect effect must be interpreted as conditional on all other mediators in the
+      model.
+  \end{itemize}
 
 \end{frame}
 
-\watermarkoff %%%------------------------------------------------------------%%%
+\watermarkoff
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
 <<boot4, cache = TRUE>>=
 ## Read in the data
-dat1 <- readRDS("../data/adamsKlpsScaleScore.rds")
+dat1 <- readRDS(here::here("data", "adamsKlpsScaleScore.rds"))
 
 ## Parallel Multiple Mediator Model:
 mod1.1 <- '
@@ -1463,12 +1189,12 @@ totalIE := ab1 + ab2 + ab3
 '
 
 ## Fit the model:
-out1.1 <- sem(mod1.1, data = dat1, se = "boot", bootstrap = 5000)
+out1.1 <- sem(mod1.1, data = dat1, se = "boot", bootstrap = nSams)
 @ 
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -1479,7 +1205,7 @@ partSummary(out1.1, 7)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -1489,7 +1215,7 @@ partSummary(out1.1, 9)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -1499,7 +1225,7 @@ partSummary(out1.1, c(10, 8))
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -1509,27 +1235,29 @@ partSummary(out1.1, 11)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
 <<>>=
-parameterEstimates(out1.1, boot.ci.type = "bca.simple") %>% 
-    select(c("label", "est", "ci.lower", "ci.upper")) %>% 
+library(dplyr)
+
+parameterEstimates(out1.1, boot.ci.type = "bca.simple") |> 
+    select(c("label", "est", "ci.lower", "ci.upper")) |> 
     tail(4)
 @
 
 \end{frame}
 
-\watermarkon %%%-------------------------------------------------------------%%%
+\watermarkon
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Comparing Specific Indirect Effects}
 
-  When we have multiple specific indirect effects in a single model, we can test 
-  if they are statistically different from one another.\\
+  When we have multiple specific indirect effects in a single model, we can test if they are statistically different
+  from one another.\\
   \va
-  \rmsc{Question:} How might we go about doing such a test (assuming we're 
-  using path modeling)?\\
+  \rmsc{Question:} How might we go about doing such a test (assuming we're using path modeling)?\\
   \pause
   \va
   \rmsc{Answer:} There are, at least, two reasonable methods:
@@ -1542,7 +1270,8 @@ parameterEstimates(out1.1, boot.ci.type = "bca.simple") %>%
 
 \end{frame}
 
-\watermarkoff %%%------------------------------------------------------------%%%
+\watermarkoff
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -1570,7 +1299,7 @@ out1.2 <- sem(mod1.2, data = dat1)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -1581,7 +1310,7 @@ partSummary(out1.2, 7)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -1591,7 +1320,7 @@ partSummary(out1.2, 9)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -1601,7 +1330,7 @@ partSummary(out1.2, c(10, 8))
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -1611,7 +1340,7 @@ partSummary(out1.2, 11)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -1625,7 +1354,7 @@ pchisq(chiDiff, dfDiff, lower = FALSE)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -1648,12 +1377,12 @@ totalIE := ab1 + ab2 + ab3
 test1 := ab2 - ab1
 '
 
-out1.3 <- sem(mod1.3, data = dat1, se = "boot", bootstrap = 5000)
+out1.3 <- sem(mod1.3, data = dat1, se = "boot", bootstrap = nSams)
 @
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -1664,7 +1393,7 @@ partSummary(out1.3, 7)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -1674,7 +1403,7 @@ partSummary(out1.3, 9)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -1684,7 +1413,7 @@ partSummary(out1.3, c(10, 8))
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -1694,23 +1423,23 @@ partSummary(out1.3, 11)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
 <<>>=
-parameterEstimates(out1.3, boot.ci.type = "bca.simple") %>% 
-    select(c("label", "est", "ci.lower", "ci.upper")) %>% 
+parameterEstimates(out1.3, boot.ci.type = "bca.simple") |> 
+    select(c("label", "est", "ci.lower", "ci.upper")) |> 
     tail(5)
 @
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \subsubsection{Serial Mediators}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Serial Multiple Mediation}
 
@@ -1720,19 +1449,19 @@ parameterEstimates(out1.3, boot.ci.type = "bca.simple") %>%
 
 \end{frame}
 
-\watermarkon %%%-------------------------------------------------------------%%%
+\watermarkon
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Serial Multiple Mediation}
 
-  To get all of the information in the preceding diagram, we need to estimate 
-  three equations:
+  To get all of the information in the preceding diagram, we need to estimate three equations:
   \begin{align*}
     Y &= i_Y + b_1 M_1 + b_2 M_2 + c' X + e_Y\\
     M_2 &= i_{M2} + d_{21} M_1 + a_2 X + e_{M2}\\
     M_1 &= i_{M1} + a_1 X + e_{M1}
   \end{align*}
-  As with parallel mediator models, a serial mediator model with $K$ mediator 
-  variables will required $K + 1$ separate equations.\\
+  As with parallel mediator models, a serial mediator model with $K$ mediator variables will required $K + 1$ separate
+  equations.\\
   \va
   Again, path modeling can make this task much simpler.
   \vb
@@ -1742,7 +1471,8 @@ parameterEstimates(out1.3, boot.ci.type = "bca.simple") %>%
 
 \end{frame}
 
-\watermarkoff %%%------------------------------------------------------------%%%
+\watermarkoff
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Serial Multiple Mediation}
 
@@ -1756,7 +1486,7 @@ parameterEstimates(out1.3, boot.ci.type = "bca.simple") %>%
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Serial Multiple Mediation}
 
@@ -1768,12 +1498,12 @@ parameterEstimates(out1.3, boot.ci.type = "bca.simple") %>%
 
 \end{frame}
 
-\watermarkon %%%-------------------------------------------------------------%%%
+\watermarkon
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{A Quick Note on Inference}
 
-  Parallel multiple mediation operates much like a number of combined simple 
-  mediation models.
+  Parallel multiple mediation operates much like a number of combined simple mediation models.
   \vc
   \begin{itemize}
   \item Serial multiple mediation is not so straight-forward.
@@ -1782,45 +1512,40 @@ parameterEstimates(out1.3, boot.ci.type = "bca.simple") %>%
   In serial multiple mediation:
   \vc
   \begin{itemize}
-  \item Every possible path from $X$ to $Y$ that passes through, at least, one
-    mediator is a specific indirect effect.
+  \item Every possible path from $X$ to $Y$ that passes through, at least, one mediator is a specific indirect effect.
     \vc
     \begin{itemize}
-      \item With the saturated two-mediator model shown above, we have: 
-        $IE_{spec} = \{a_1b_1, a_2b_2, a_1d_{21}b_2\}$
+      \item With the saturated two-mediator model shown above, we have: $IE_{spec} = \{a_1b_1, a_2b_2, a_1d_{21}b_2\}$
     \end{itemize}
     \vc
-  \item The \emph{Total Indirect Effect} is, again, equal to the sum of all the 
-    specific indirect effects: $IE_{tot} = \sum_{k = 1}^{|\{IE_{spec}\}|} 
-    IE_{spec,k}$.
+  \item The \emph{Total Indirect Effect} is, again, equal to the sum of all the specific indirect effects:
+    $IE_{tot} = \sum_{k = 1}^{|\{IE_{spec}\}|} IE_{spec,k}$.
     \vc
-  \item The \emph{Total Effect} is equal to the direct effect plus the total 
-    indirect effect: $c = c' + IE_{tot}$
+  \item The \emph{Total Effect} is equal to the direct effect plus the total indirect effect: $c = c' + IE_{tot}$
   \end{itemize}
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{A Quick Note on Inference}
 
-  Inference for the specific indirect effects is basically the same as it is for 
-  the sole indirect effect in simple mediation.
+  Inference for the specific indirect effects is basically the same as it is for the sole indirect effect in simple
+  mediation.
   \vb
   \begin{itemize}
-  \item \rmsc{Caveat:} Normal-theory, Sobel-Type, standard errors for the 
-    specific indirect effects that involve more than two constituent paths can 
-    be very complex.
+  \item \rmsc{Caveat:} Normal-theory, Sobel-Type, standard errors for the specific indirect effects that involve more
+    than two constituent paths can be very complex.
     \vc
     \begin{itemize}
-    \item This isn't really a problem since you should always use bootstrapping, 
-      anyway!
+    \item This isn't really a problem since you should always use bootstrapping, anyway!
     \end{itemize}
   \end{itemize}
 
 \end{frame}
 
-\watermarkoff %%%------------------------------------------------------------%%%
+\watermarkoff
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -1837,12 +1562,12 @@ fullIE := a1*d21*b2
 totalIE := ab1 + ab2 + fullIE
 '
 
-out2.1 <- sem(mod2.1, data = dat1, se = "boot", bootstrap = 5000)
+out2.1 <- sem(mod2.1, data = dat1, se = "boot", bootstrap = nSams)
 @ 
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -1853,7 +1578,7 @@ partSummary(out2.1, 7)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -1863,7 +1588,7 @@ partSummary(out2.1, 8:9)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -1873,28 +1598,27 @@ partSummary(out2.1, 10)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
 <<>>=
-parameterEstimates(out2.1, boot.ci.type = "bca.simple") %>%
-    select(c("label", "est", "ci.lower", "ci.upper")) %>%
+parameterEstimates(out2.1, boot.ci.type = "bca.simple") |>
+    select(c("label", "est", "ci.lower", "ci.upper")) |>
     tail(4)
 @
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Restricted Models}
 
-  In the preceding example, the $a_2$ and $b_1$ paths and the specific indirect 
-  effects $a_1b_1$ and $a_2b_2$ were all non-significant.
+  In the preceding example, the $a_2$ and $b_1$ paths and the specific indirect effects $a_1b_1$ and $a_2b_2$ were all
+  non-significant.
   \vb
   \begin{itemize}
-  \item There is a school of thinking that would prescribe constraining the 
-    $a_2$ and $b_1$ paths to zero as in:
+  \item There is a school of thinking that would prescribe constraining the $a_2$ and $b_1$ paths to zero as in:
   \end{itemize}
 
   \begin{figure}
@@ -1902,8 +1626,8 @@ parameterEstimates(out2.1, boot.ci.type = "bca.simple") %>%
   \end{figure}
 
   \begin{itemize}
-  \item This model will ascribe a larger effect size to $a_1d_{21}b_2$ since it 
-    must convey all of the indirect influence of $X$ on $Y$.
+  \item This model will ascribe a larger effect size to $a_1d_{21}b_2$ since it must convey all of the indirect
+    influence of $X$ on $Y$.
     %\vb
     %\begin{itemize}
     %\item We should first fit a saturated model, but subsequently culling 
@@ -1913,7 +1637,7 @@ parameterEstimates(out2.1, boot.ci.type = "bca.simple") %>%
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile, allowframebreaks]{Example}
 
@@ -1926,12 +1650,12 @@ sysRac ~ 1 + d21*merit
 fullIE := a1*d21*b2
 '
 
-out2.2 <- sem(mod2.2, data = dat1, se = "boot", bootstrap = 5000)
+out2.2 <- sem(mod2.2, data = dat1, se = "boot", bootstrap = nSams)
 @
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -1941,7 +1665,7 @@ partSummary(out2.2, 7:8)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -1951,24 +1675,24 @@ partSummary(out2.2, 9:10)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
 <<>>=
-parameterEstimates(out2.2, boot.ci.type = "bca.simple") %>%
-    select(c("label", "est", "ci.lower", "ci.upper")) %>%
+parameterEstimates(out2.2, boot.ci.type = "bca.simple") |>
+    select(c("label", "est", "ci.lower", "ci.upper")) |>
     filter(label != "")
 @
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
-  As in parallel multiple mediation, we can test for differences in the specific 
-  indirect effects of a serial multiple mediator model:
+  As in parallel multiple mediation, we can test for differences in the specific indirect effects of a serial multiple
+  mediator model:
 
 <<cache = TRUE>>=
 mod2.3 <- '
@@ -1990,7 +1714,7 @@ out2.3 <- sem(mod2.3, data = dat1)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -2000,7 +1724,7 @@ partSummary(out2.3, 7:8)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -2010,7 +1734,7 @@ partSummary(out2.3, 9:10)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -2024,12 +1748,11 @@ pchisq(chiDiff, dfDiff, lower = FALSE)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Serial Multiple Mediation}
 
-  OK. We've supported an interesting hypothesis with the following model, but 
-  why stop there?
+  OK. We've supported an interesting hypothesis with the following model, but why stop there?
 
   \begin{figure}
     \includegraphics[width=\textwidth]{figures/adamsKlpsSerial1.pdf}
@@ -2039,7 +1762,7 @@ pchisq(chiDiff, dfDiff, lower = FALSE)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Serial Multiple Mediation}
 
@@ -2051,12 +1774,12 @@ pchisq(chiDiff, dfDiff, lower = FALSE)
 
 \end{frame}
 
-\watermarkon %%%-------------------------------------------------------------%%%
+\watermarkon
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Serial Multiple Mediation}
 
-  \rmsc{Question:} How many equations do we need to get the
-  information in the preceding diagram?
+  \rmsc{Question:} How many equations do we need to get the information in the preceding diagram?
   \pause
   \begin{align*}
     Policy &= i_Y + b_1 Merit + b_2 SysRac + b_3 RevDisc + c' PolAff + e_Y\\
@@ -2094,7 +1817,8 @@ pchisq(chiDiff, dfDiff, lower = FALSE)
 
 \end{frame}
 
-\watermarkoff %%%------------------------------------------------------------%%%
+\watermarkoff
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -2119,12 +1843,12 @@ fullIE := a1*d21*d32*b3
 totalIE := ab1 + ab2 + ab3 + partIE1 + partIE2 + partIE3 + fullIE
 '
 
-out3.1 <- sem(mod3.1, data = dat1, se = "boot", bootstrap = 5000)
+out3.1 <- sem(mod3.1, data = dat1, se = "boot", bootstrap = nSams)
 @
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -2134,7 +1858,7 @@ partSummary(out3.1, 7)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -2144,7 +1868,7 @@ partSummary(out3.1, 8:9)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -2154,19 +1878,19 @@ partSummary(out3.1, 10)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
 <<>>=
-parameterEstimates(out3.1, boot.ci.type = "bca.simple") %>%
-    select(c("label", "est", "ci.lower", "ci.upper")) %>%
+parameterEstimates(out3.1, boot.ci.type = "bca.simple") |>
+    select(c("label", "est", "ci.lower", "ci.upper")) |>
     tail(8)
 @
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Hybrid Multiple Mediation}
 
@@ -2178,7 +1902,7 @@ parameterEstimates(out3.1, boot.ci.type = "bca.simple") %>%
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -2202,12 +1926,12 @@ fullIE22 := a1*d221*b22
 totalIE := ab1 + ab21 + ab22 + fullIE21 + fullIE22
 '
 
-out4.1 <- sem(mod4.1, data = dat1, se = "boot", bootstrap = 5000)
+out4.1 <- sem(mod4.1, data = dat1, se = "boot", bootstrap = nSams)
 @
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -2217,7 +1941,7 @@ partSummary(out4.1, 7)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -2227,7 +1951,7 @@ partSummary(out4.1, 8:10)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -2237,19 +1961,19 @@ partSummary(out4.1, 11)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
 <<>>=
-parameterEstimates(out4.1, boot.ci.type = "bca.simple") %>%
-    select(c("label", "est", "ci.lower", "ci.upper")) %>%
+parameterEstimates(out4.1, boot.ci.type = "bca.simple") |>
+    select(c("label", "est", "ci.lower", "ci.upper")) |>
     tail(6)
 @
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Practice}
 
@@ -2261,11 +1985,11 @@ parameterEstimates(out4.1, boot.ci.type = "bca.simple") %>%
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \subsection{Mediation + SEM}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Boring Model}
 
@@ -2275,12 +1999,11 @@ parameterEstimates(out4.1, boot.ci.type = "bca.simple") %>%
     \includegraphics[width=0.7\textwidth]{figures/simpleMediationPathDiagram.pdf}
   \end{figure}
   
-  But there is no reason that we need to restrict ourselves to mucking around 
-  with observed variables.
+  But there is no reason that we need to restrict ourselves to mucking around with observed variables.
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Better Model}
 
@@ -2290,17 +2013,17 @@ parameterEstimates(out4.1, boot.ci.type = "bca.simple") %>%
     \includegraphics[width=0.8\textwidth]{figures/semMedDiagram.pdf}
   \end{figure}
   
-  Measurement error can be a big problem for mediation analysis, so latent 
-  variable modeling is highly recommended.
+  Measurement error can be a big problem for mediation analysis, so latent variable modeling is highly recommended.
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
 <<cache = TRUE>>=
-dat1 <- readRDS("../data/adamsKlpsData.rds") %>% select(-merit, -policy)
+dat1 <- readRDS(here::here("data", "adamsKlpsData.rds")) |>
+  select(-merit, -policy)
 
 ## Specify the CFA model:
 mod5.1 <- '
@@ -2319,7 +2042,7 @@ fitMeasures(out5.1,
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -2329,7 +2052,7 @@ partSummary(out5.1, 7)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -2339,7 +2062,7 @@ partSummary(out5.1, 8:9)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -2357,12 +2080,12 @@ ab := a*b
 
 ## Fit the structural model and test the indirect effect:
 out5.2 <- 
-    sem(mod5.2, data = dat1, std.lv = TRUE, se = "boot", bootstrap = 2500)
+    sem(mod5.2, data = dat1, std.lv = TRUE, se = "boot", bootstrap = nSams)
 @
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -2372,7 +2095,7 @@ partSummary(out5.2, 7:8)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -2382,399 +2105,48 @@ partSummary(out5.2, 9:10)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
 <<>>=
-parameterEstimates(out5.2, boot.ci.type = "bca.simple") %>%
-    select(c("label", "est", "ci.lower", "ci.upper")) %>%
+parameterEstimates(out5.2, boot.ci.type = "bca.simple") |>
+    select(c("label", "est", "ci.lower", "ci.upper")) |>
     filter(label != "")
 @
 
 \end{frame}
 
-\watermarkon %%%-------------------------------------------------------------%%%
+\watermarkon
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Interpretation of Indirect Effects}
 
-  Indirect effects are composed parameters, but they can be interpreted
-  independently of their constituent paths.
+  Indirect effects are composed parameters, but they can be interpreted independently of their constituent paths.
   \vb
   \begin{itemize}
-  \item The $X \rightarrow M \rightarrow Y$ indirect effect, $ab$, is interpreted 
-    as:
+  \item The $X \rightarrow M \rightarrow Y$ indirect effect, $ab$, is interpreted as:
     \vb
     \begin{itemize}
-    \item The expected change in $Y$ for a unit change in $X$ that is transmitted 
-      indirectly through $M$.
+    \item The expected change in $Y$ for a unit change in $X$ that is transmitted indirectly through $M$.
       \vb
-    \item For a unit change in $X$, $Y$ is expected to change by $ab$ units, 
-      indirectly through $M$.
+    \item For a unit change in $X$, $Y$ is expected to change by $ab$ units, indirectly through $M$.
       \vb
-    \item Participants who differ by one unit on $X$ are expect to differ by $ab$ 
-      units on $Y$ as a results of the effect of $X$ on $M$ which, in turn, 
-      affects $Y$.
+    \item Participants who differ by one unit on $X$ are expect to differ by $ab$ units on $Y$ as a results of the
+      effect of $X$ on $M$ which, in turn, affects $Y$.
     \end{itemize}
     \va
-  \item The interpretation/scaling of the indirect effect is entirely defined by 
-    the input, $X$, and outcome, $Y$.
+  \item The interpretation/scaling of the indirect effect is entirely defined by the input, $X$, and outcome, $Y$.
     \vb
     \begin{itemize}
-    \item The scaling of the intermediary variable, $M$, does not affect the 
-      interpretation of the indirect effect.
+    \item The scaling of the intermediary variable, $M$, does not affect the interpretation of the indirect effect.
     \end{itemize}
   \end{itemize}
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
-\comment{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Partially Standardized Indirect Effect}
+%----------------------------------------------------------------------------------------------------------------------%
 
-  \begin{align*}
-    ab_{ps} &= \frac{ab}{SD_Y}\\
-    c'_{ps} &= \frac{c'}{SD_Y}\\
-    c_{ps} &= \frac{c}{SD_Y} = ab_{ps} + c'_{ps}
-  \end{align*}
-
-  \begin{itemize}
-    \item Simple
-    \item Removes binding to the scale of $Y$
-    \item Still scale-bound by $X$
-    \item Not clear what constitutes a ``large'' effect
-  \end{itemize}
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}{Completely Standardized Indirect Effect}
-
-  \begin{align*}
-    ab_{cs} &= \frac{SD_X ab}{SD_Y}\\
-    c'_{cs} &= \frac{SD_X c'}{SD_Y}\\
-    c_{cs} &= \frac{SD_X c}{SD_Y} = ab_{cs} + c'_{cs}
-  \end{align*}
-
-  \begin{itemize}
-    \item Simple
-    \item Removes all scale binding
-    \item Not clear what constitutes a ``large'' effect
-  \end{itemize}
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}{Ratio of the Indirect Effect to the Total Effect}
-
-  \begin{align*}
-    P_M = \frac{ab}{c} = \frac{ab}{c' + ab}
-  \end{align*}
-
-  \begin{itemize}
-  \item Very simple
-  \item Not bounded by 0 and 1
-  \item Explodes toward $\pm \infty$ as $c\rightarrow 0$
-  \item Very unstable
-    \begin{itemize}
-    \item High between-sample variability
-    \item Requires $N \geq 500$
-    \end{itemize}
-  \end{itemize}
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}{Ratio of the Indirect Effect to the Direct Effect}
-
-  \begin{align*}
-    R_M = \frac{ab}{c'} = \frac{P_M}{1 - P_M}
-  \end{align*}
-
-  \begin{itemize}
-  \item Very simple
-  \item Not bounded by 0 and 1
-  \item Explodes toward $\pm \infty$ as $c'\rightarrow 0$
-  \item Very unstable
-    \begin{itemize}
-    \item High between-sample variability
-    \item Requires $N \geq 2000$
-    \end{itemize}
-  \end{itemize}
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}{Proportion of Variance in $Y$ Explained by the Indirect Effect}
-
-  Developed by \citet{fairchildEtAl:2009}.
-  \begin{itemize}
-    \item Given a non-zero total effect, represents the proportion of
-      variance in Y accounted for by the indirect effect.
-  \end{itemize}
-
-  \begin{align*}
-    R_{med}^2 = r_{MY}^2 - \left( R_{Y.MX}^2-r_{XY}^2 \right)
-  \end{align*}
-
-  \begin{itemize}
-  \item Mostly sensible interpretation
-  \item Predicated on the assumption that $\beta_{YX} \neq 0$
-  \item $|ab| > |c| \Rightarrow R_{med}^2 < 0$
-    \begin{itemize}
-    \item Not a strict proportion
-    \end{itemize}
-  \end{itemize}
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}{Kappa Squared}
-
-  Developed by \citet{preacherKelley:2011}.
-  \begin{itemize}
-  \item Gives the proportion of the \emph{maximum possible} indirect
-    effect represented by $ab$.
-  \end{itemize}
-
-  \begin{align*}
-    \kappa^2 = \frac{ab}{\text{max}(ab)}
-  \end{align*}
-
-  \begin{itemize}
-  \item Bounded by 0 and 1
-  \item Values closer to 1.0 indicate a bigger effect
-  \item A bit of a pain to calculate.
-  \end{itemize}
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}{Computing $\text{max}(ab)$}
-
-  \begin{align*}
-    a &\in \left\{
-    \frac{
-      \sigma_{YM} \sigma_{YX} \pm
-      \sqrt{ \sigma_M^2 \sigma_Y^2 - \sigma_{YM}^2 }
-      \sqrt{ \sigma_X^2 \sigma_Y^2 - \sigma_{YX}^2 }
-    }{
-      \sigma_X^2 \sigma_Y^2
-    }
-    \right\}
-    = [a_{low}, a_{high}],
-    \\
-    \\
-    b &\in \left\{
-    \pm \frac{
-      \sqrt{ \sigma_X^2 \sigma_Y^2 - \sigma_{YX}^2 }
-    }{
-      \sqrt{ \sigma_X^2 \sigma_M^2 - \sigma_{MX}^2 }
-    }
-    \right\} = [b_{low}, b_{high}],
-  \end{align*}
-
-  \begin{align*}
-    \text{max}(a) = \left\{ \begin{array}{lll}
-      a_{high}, & \text{ if } & \hat{a} > 0\\
-      a_{low}, & \text{ if } & \hat{a} < 0
-    \end{array}
-    \right.,~~
-    \text{max}(b) = \left\{ \begin{array}{lll}
-      b_{high}, & \text{ if } & \hat{b} > 0\\
-      b_{low}, & \text{ if } & \hat{b} < 0
-    \end{array}
-    \right.,
-  \end{align*}
-
-  \begin{align*}
-    \text{max}(ab) = \text{max}(a) \text{max}(b)
-  \end{align*}
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}[fragile, allowframebreaks]{Example}
-
-<<>>=
-## Specify the model:
-mod2 <- "
-policy ~ b*sysRac + cp*polAffil
-sysRac ~ a*polAffil
-
-ab := a*b
-"
-
-## Estimate the model:
-out2 <- sem(mod2, data = dat1)
-##
-## Extract/compute the necessary quantities:
-ab <- prod(coef(out2)[c("a", "b")])
-ab
-cPrime <- coef(out2)["cp"]
-##
-sdY <- sd(dat1$policy)
-sdX <- sd(dat1$polAffil)
-##
-r2MY <- with(dat1, cor(policy, sysRac))^2
-r2XY <- with(dat1, cor(policy, polAffil))^2
-R2Y.MX <- inspect(out2, "r2")["policy"]
-@
-
-\pagebreak
-
-<<>>=
-## Partially Standardized:
-abPS <- ab / sdY
-abPS
-cPrimePS <- cPrime / sdY
-cPrimePS
-cPS <- abPS + cPrimePS
-cPS
-@
-
-\pagebreak
-
-<<>>=
-## Completely Standardized:
-abCS <- (sdX * ab) / sdY
-abCS
-cPrimeCS <- (sdX * cPrime) / sdY
-cPrimeCS
-cCS <- abCS + cPrimeCS
-cCS
-@
-
-\pagebreak
-
-<<>>=
-## Proportions:
-pm <- ab / (cPrime + ab)
-pm
-rm <- ab / cPrime
-rm
-
-## R2:
-R2med <- r2MY - (R2Y.MX - r2XY)
-R2med
-@
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}[fragile, allowframebreaks]{Compute $\kappa^2$}
-
-<<>>=
-## Subset the data:
-tmpData <- dat1[ , c("polAffil", "sysRac", "policy")]
-colnames(tmpData) <- c("x", "m", "y")
-##
-## Extract pertinent variance/covariance elements:
-cov1 <- cov(tmpData)
-
-sYM <- cov1["x", "m"]
-sYX <- cov1["y", "x"]
-sMX <- cov1["m", "x"]
-s2X <- cov1["x", "x"]
-s2M <- cov1["m", "m"]
-s2Y <- cov1["y", "y"]
-@
-
-\pagebreak
-
-<<>>=
-## Possible range of a:
-aMarg <- sqrt(s2M * s2Y - sYM^2) * sqrt(s2X * s2Y - sYX^2)
-aInt <- c(
-    (sYM * sYX - aMarg) / (s2X * s2Y),
-    (sYM * sYX + aMarg) / (s2X * s2Y)
-)
-aInt
-##
-## Possible range of b:
-bMarg <- sqrt(s2X * s2Y - sYX^2) / sqrt(s2X * s2M - sMX^2)
-bInt <- c(-1 * bMarg, bMarg)
-bInt
-##
-## max(a):
-aMax <- ifelse(coef(out2)["a"] < 0,
-               aInt[1],
-               aInt[2])
-aMax
-##
-## max(b)
-bMax <- ifelse(coef(out2)["b"] < 0,
-               bInt[1],
-               bInt[2])
-bMax
-##
-## max(ab)
-abMax <- aMax * bMax
-abMax
-##
-## Kappa Squared:
-k2 <- ab / abMax
-k2
-@
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-
-\begin{frame}{Practice}
-
-<<echo = FALSE>>=
-## Practice:
-set.seed(235711)
-
-sigma <- matrix(c(1.5, 0.3, 0.6,
-                  0.3, 1.4, 0.45,
-                  0.6, 0.45, 1.55),
-                3, 3)
-
-rownames(sigma) <- colnames(sigma) <- c("x", "m", "y")
-
-a <- sigma["x", "m"] / sigma["x", "x"]
-betaYMX <- solve(sigma[c("x", "m"), c("x", "m")]) %*% sigma[c("x", "m"), "y"]
-b <- betaYMX["m", ]
-@
-
-Suppose:
-\begin{enumerate}
-\item $\Sigma$ is given by:
-<<echo = FALSE, results = "asis">>=
-sigma[upper.tri(sigma)] <- ""
-sigmaTab <- xtable(sigma,
-                   digits = 2,
-                   align = c( "r|",rep( "c", 3 ) )
-                   )
-
-print(sigmaTab)
-@
-\va
-\item The estimated paths are:
-  \begin{itemize}
-  \item $a = $ \Sexpr{round(a, 3)}
-    \vb
-  \item $b = $ \Sexpr{round(b, 3)}
-    \vb
-  \item $ab = $ \Sexpr{round(a*b, 3)}
-  \end{itemize}
-  \end{enumerate}
-  \va
-  Compute $\kappa^2$ for the estimated $ab$.
-
-\end{frame}
-
-%%%--------------------------------------------------------------------------%%%
-}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[allowframebreaks]{References}
 
   \bibliographystyle{apacite}
@@ -2782,6 +2154,6 @@ print(sigmaTab)
 
 \end{frame}
 
-%%%--------------------------------------------------------------------------%%%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \end{document}

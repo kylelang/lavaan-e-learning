@@ -11,13 +11,16 @@ all: $(TARGET).pdf
 %.tex: %.Rnw
 	Rscript -e "knitr::knit('$^')"
 
-.PHONY: nuke clean tidy
-
-nuke: clean
-	rm -f cache/* figure/* $(TARGET).pdf
+.PHONY: tidy nuke clean uncache
 
 tidy: clean
-	mv $(TARGET).pdf $(DEST)
+	cp $(TARGET).pdf $(DEST)
+
+nuke: uncache clean
+	rm -f $(TARGET).pdf $(TARGET).tex
 
 clean:
-	rm -f *.tex *.aux *.log *.out *.nav *.snm *.toc *.vrb *.bbl *.blg *.fdb_latexmk *.fls
+	find ./$(TARGET)* -maxdepth 1 -type f | grep -vE "\.pdf|\.Rnw|\.tex|\.bib" | xargs rm -f
+
+uncache:
+	rm -f cache/* figure/*

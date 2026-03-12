@@ -22,7 +22,7 @@ code.r { /* Code block */
 }
 pre { /* Code block - determines code spacing between lines */
   font-size: 14px;
-  max-height: 300px;
+  max-height: 500px;
 }
 pre.fig {
   max-height: 1000px;

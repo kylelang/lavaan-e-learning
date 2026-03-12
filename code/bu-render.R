@@ -1,7 +1,7 @@
 ### Title:    Render Lab Exercises
 ### Author:   Kyle M. Lang
 ### Created:  2021-10-14
-### Modified: 2026-03-11
+### Modified: 2021-10-20
 
 ## Extract command line arguments:
 args <- commandArgs(trailingOnly = TRUE)
@@ -14,6 +14,6 @@ outFile <- paste0(args[1],
 ## Render the document:
 rmarkdown::render(input = paste0(args[1], ".Rmd"),
                   params = list(answers = as.logical(args[2])),
-                  output_file = outFile
-                  # envir = new.env()
+                  output_file = outFile,
+                  envir = new.env()
                   )

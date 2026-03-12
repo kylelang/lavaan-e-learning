@@ -1,7 +1,7 @@
 ### Title:    Support Functions for Examples
 ### Author:   Kyle M. Lang
 ### Created:  2017-08-24
-### Modified: 2022-07-01
+### Modified: 2026-02-27
 
 ###--------------------------------------------------------------------------###
 
@@ -135,7 +135,7 @@ partSummary <- function(x,
                         drops = NULL,
                         ...)
 {
-    s0 <- summary(x, ...) %>% quiet()
+    s0 <- summary(x, ...) |> quiet()
     if(!is.null(drops)) s0 <- dplyr::select(s0, -all_of(drops))
 
     out <- paragraphs(print(s0, signif.stars = stars))
@@ -188,9 +188,9 @@ pooledCorMat <- function(x, vars) {
                   vars = vars)
     
     ## Average the correlation matrices:
-    unlist(tmp) %>% 
-        matrix(ncol = length(vars)^2, byrow = TRUE) %>% 
-        colMeans() %>% 
+    unlist(tmp) |> 
+        matrix(ncol = length(vars)^2, byrow = TRUE) |> 
+        colMeans() |> 
         matrix(ncol = length(vars), dimnames = list(vars, vars))
 }
 
@@ -332,12 +332,12 @@ imposeMissData <- function(data, targets, preds, pm, types = "random", ...) {
 ## Extract the FMI for a parameter (what) from a lavaan object (x):
 getFmi <- function(x, what) {
     ## Create the summary:
-    tmp <- summary(x, fmi = TRUE) %>% quiet()
+    tmp <- summary(x, fmi = TRUE) |> quiet()
     
     if(class(x) == "lavaan") tmp <- tmp$pe
     
     ## Create labels á la coef():
-    labs <- with(tmp, c(lhs, op, rhs)) %>% matrix(ncol = 3) %>% apply(1, paste0, collapse = "")
+    labs <- with(tmp, c(lhs, op, rhs)) |> matrix(ncol = 3) |> apply(1, paste0, collapse = "")
     
     ## Extract the appropriate FMI:
     tmp$fmi[labs %in% what]
