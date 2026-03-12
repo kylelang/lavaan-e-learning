@@ -2769,7 +2769,7 @@ border-radius: 0px;
 <h1 class="title toc-ignore">Lab 5: Moderation</h1>
 <h3 class="subtitle">SEM in R with lavaan</h3>
 <h4 class="author">Kyle M. Lang</h4>
-<h4 class="date">Updated: 2026-03-11</h4>
+<h4 class="date">Updated: 2026-03-12</h4>
 
 </div>
 
@@ -2980,7 +2980,7 @@ therebetween. We will define these interaction factors using products of the obs
 <ul>
 <li>Correlate the latent factors.</li>
 <li>Estimate the mean structure.</li>
-<li>Set the scale by standardizing the latent factors.</li>
+<li>Set the scale via the <em>marker variable method</em>.</li>
 </ul>
 <hr />
 </div>
@@ -3085,6 +3085,110 @@ therebetween. We will define these interaction factors using products of the obs
 <li>Use <code>probe2WayRC()</code> to estimate and test simple slopes and intercepts.</li>
 <li>Use <code>plotProbe()</code> to visualize the simple slopes.</li>
 </ul>
+<p>In the next section, we will conduct the same analysis using the <em>Structural after Measurement</em> (SAM) approach to define
+the latent variable interaction.</p>
+<hr />
+</div>
+</div>
+<div id="structural-after-measurement" class="section level2" number="1.6">
+<h2><span class="header-section-number">1.6</span> Structural after Measurement</h2>
+<hr />
+<p>In March 2026, the SAM implementation in <strong>lavaan</strong> is still limited, but it now has sufficient functionality for
+testing moderation with latent variable interactions. Crucially, we can use bootstrapping to estimate standard errors,
+so we can now conduct significance tests for the latent variable interaction terms. Analytic, two-step standard errors
+for latent variable interactions are not yet available.</p>
+<hr />
+<div id="section-22" class="section level3" number="1.6.1">
+<h3><span class="header-section-number">1.6.1</span> </h3>
+<p><strong>Define the model syntax for the structural model.</strong></p>
+<ul>
+<li>Include the <em>progress</em> and <em>lib2Con</em> variables as single observed items.</li>
+<li>Estimate the intercept of the latent regression model.</li>
+</ul>
+<hr />
+</div>
+<div id="section-23" class="section level3" number="1.6.2">
+<h3><span class="header-section-number">1.6.2</span> </h3>
+<p><strong>Estimate the structural model.</strong></p>
+<ol style="list-style-type: decimal">
+<li>Estimate the model without bootstrapping to check the model specification
+<ul>
+<li>Set <code>se = &quot;none&quot;</code></li>
+</ul></li>
+<li>Estimate the model again, and use bootstrapping to estimate the standard errors.
+<ul>
+<li>Set <code>se = &quot;bootstrap&quot;</code></li>
+</ul></li>
+</ol>
+<hr />
+</div>
+<div id="section-24" class="section level3" number="1.6.3">
+<h3><span class="header-section-number">1.6.3</span> </h3>
+<p><strong>Summarize and interpret the results.</strong></p>
+<ul>
+<li>Is the moderation hypothesis supported?</li>
+<li>Do the results differ from the two product indicator versions?</li>
+</ul>
+<hr />
+<p>When we define the interaction term using SAM, we can use the <code>simple_slopes()</code> function from <strong>modsem</strong> to conduct a
+simple slopes analysis, and we can use the <code>modsem::plot_interaction()</code> function to visualize the simple slopes.</p>
+<hr />
+</div>
+<div id="section-25" class="section level3" number="1.6.4">
+<h3><span class="header-section-number">1.6.4</span> </h3>
+<p><strong>Probe the interaction.</strong></p>
+<ul>
+<li>Use <code>modsem::simple_slopes()</code> to estimate and test simple slopes.</li>
+<li>Use <code>modsem::plot_interaction()</code> to visualize the simple slopes.</li>
+</ul>
+<hr />
+</div>
+</div>
+<div id="latent-moderated-structural-equations" class="section level2" number="1.7">
+<h2><span class="header-section-number">1.7</span> Latent Moderated Structural Equations</h2>
+<hr />
+<p>Finally, we will use the <em>latent moderated structural equations</em> (LMS) approach to estimate the latent variable
+interaction terms. We need to use the <strong>modsem</strong> package for this analysis because <strong>lavaan</strong> does not implement the LMS
+approach.</p>
+<hr />
+<div id="section-26" class="section level3" number="1.7.1">
+<h3><span class="header-section-number">1.7.1</span> </h3>
+<p><strong>Define the model syntax for the structural model.</strong></p>
+<ul>
+<li>Include the <em>progress</em> and <em>lib2Con</em> variables as single observed items.</li>
+<li>Estimate the intercept of the latent regression model.</li>
+</ul>
+<hr />
+</div>
+<div id="section-27" class="section level3" number="1.7.2">
+<h3><span class="header-section-number">1.7.2</span> </h3>
+<p><strong>Estimate the structural model.</strong></p>
+<ul>
+<li>Use the <code>modsem::modsem()</code> function to estimate your model.</li>
+<li>Specify the estimation method via the <code>method</code> argument.</li>
+</ul>
+<hr />
+</div>
+<div id="section-28" class="section level3" number="1.7.3">
+<h3><span class="header-section-number">1.7.3</span> </h3>
+<p><strong>Summarize and interpret the results.</strong></p>
+<ul>
+<li>Is the moderation hypothesis supported?</li>
+<li>Do the results differ from the other approaches you’ve tried?</li>
+</ul>
+<hr />
+<p>When we estimate our moderated model using using <code>modsem()</code>, we can use the <code>simple_slopes()</code> function from <strong>modsem</strong>
+to conduct a simple slopes analysis, and we can use the <code>modsem::plot_interaction()</code> function to visualize the simple
+slopes.</p>
+<hr />
+</div>
+<div id="section-29" class="section level3" number="1.7.4">
+<h3><span class="header-section-number">1.7.4</span> </h3>
+<p><strong>Probe the interaction.</strong></p>
+<ul>
+<li>Use <code>modsem::simple_slopes()</code> to estimate and test simple slopes.</li>
+<li>Use <code>modsem::plot_interaction()</code> to visualize the simple slopes.</li>
+</ul>
 <hr />
 </div>
 </div>
@@ -3130,7 +3234,7 @@ comprises 301 observations of the following 29 variables.</p>
 <p>You can access the original version of the data via the <a href="https://cran.r-project.org/web/packages/MBESS/index.html"><strong>MBESS</strong></a> package, and you can access the code used to
 process the data <a href="https://github.com/kylelang/lavaan-e-learning/blob/main/code/lab_prep/process_hs_data.R">here</a>.</p>
 <hr />
-<div id="section-22" class="section level3" number="2.1.1">
+<div id="section-30" class="section level3" number="2.1.1">
 <h3><span class="header-section-number">2.1.1</span> </h3>
 <p><strong>Read in the <em>holzinger_swineford.rds</em> dataset.</strong></p>
 <p>NOTES:</p>
@@ -3142,7 +3246,7 @@ conducted for Lab 4.</li>
 </ol>
 <hr />
 </div>
-<div id="section-23" class="section level3" number="2.1.2">
+<div id="section-31" class="section level3" number="2.1.2">
 <h3><span class="header-section-number">2.1.2</span> </h3>
 <p><strong>Run the following code to create scale scores.</strong></p>
 <p>The following code will use the <code>scoreVeryFast()</code> function from the <a href="https://cran.r-project.org/web/packages/psych/index.html"><strong>psych</strong></a> package to create scale scores
@@ -3179,17 +3283,17 @@ mathematical ability but the strengths of these effects differ for boys and girl
 information using language pathways whereas boys are enculturated to process information via visio-spatial.</li>
 </ul>
 <hr />
-<div id="section-24" class="section level3" number="2.2.1">
+<div id="section-32" class="section level3" number="2.2.1">
 <h3><span class="header-section-number">2.2.1</span> </h3>
 <p><strong>Draw the conceptual path diagram for the model described above.</strong></p>
 <hr />
 </div>
-<div id="section-25" class="section level3" number="2.2.2">
+<div id="section-33" class="section level3" number="2.2.2">
 <h3><span class="header-section-number">2.2.2</span> </h3>
 <p><strong>Draw the analytic path diagram for the model described above.</strong></p>
 <hr />
 </div>
-<div id="section-26" class="section level3" number="2.2.3">
+<div id="section-34" class="section level3" number="2.2.3">
 <h3><span class="header-section-number">2.2.3</span> </h3>
 <p><strong>Write out the regression equation necessary to evaluate the moderation hypothesis described above.</strong></p>
 <hr />
@@ -3199,7 +3303,7 @@ information using language pathways whereas boys are enculturated to process inf
 <p><strong>Use <code>lm()</code> to estimate the moderated regression model described above.</strong></p>
 <hr />
 </div>
-<div id="section-27" class="section level3" number="2.2.5">
+<div id="section-35" class="section level3" number="2.2.5">
 <h3><span class="header-section-number">2.2.5</span> </h3>
 <p><strong>Summarize the model from <a href="#catOls">2.2.4</a> and interpret the results.</strong></p>
 <ul>
@@ -3217,7 +3321,7 @@ information using language pathways whereas boys are enculturated to process inf
 <p><strong>Rerun the analysis from <a href="#catOls">2.2.4</a> using path analysis in <em>lavaan</em>.</strong></p>
 <hr />
 </div>
-<div id="section-28" class="section level3" number="2.3.2">
+<div id="section-36" class="section level3" number="2.3.2">
 <h3><span class="header-section-number">2.3.2</span> </h3>
 <p><strong>Summarize the model from <a href="#catPath">2.3.1</a> and interpret the results.</strong></p>
 <ul>
@@ -3268,7 +3372,7 @@ girls’ samples.</li>
 </ul>
 <hr />
 </div>
-<div id="section-29" class="section level3" number="2.4.3">
+<div id="section-37" class="section level3" number="2.4.3">
 <h3><span class="header-section-number">2.4.3</span> </h3>
 <p><strong>Summarize the model from <a href="#config">2.4.2</a> and interpret the results.</strong></p>
 <ul>
@@ -3359,7 +3463,7 @@ unrestricted SEM.</p>
 </ul>
 <hr />
 </div>
-<div id="section-30" class="section level3" number="2.5.3">
+<div id="section-38" class="section level3" number="2.5.3">
 <h3><span class="header-section-number">2.5.3</span> </h3>
 <p><strong>Compare the results from <a href="#defParTest">2.5.1</a> and <a href="#waldTest">2.5.2</a>.</strong></p>
 <ul>
@@ -3375,7 +3479,7 @@ likelihood ratio test involves two steps:</p>
 </ol>
 <hr />
 </div>
-<div id="section-31" class="section level3" number="2.5.4">
+<div id="section-39" class="section level3" number="2.5.4">
 <h3><span class="header-section-number">2.5.4</span> </h3>
 <p><strong>Test the moderation hypotheses using likelihood ratio tests.</strong></p>
 <ul>
@@ -3390,7 +3494,7 @@ equality constraints.</li>
 <div id="simple-slopes" class="section level2" number="2.6">
 <h2><span class="header-section-number">2.6</span> Simple Slopes</h2>
 <hr />
-<div id="section-32" class="section level3" number="2.6.1">
+<div id="section-40" class="section level3" number="2.6.1">
 <h3><span class="header-section-number">2.6.1</span> </h3>
 <p><strong>Conduct a simple slope analysis using the multiple-group SEM.</strong></p>
 <ul>
