@@ -1,7 +1,7 @@
 %%% Title:    Lavaan E-Learning: Missing Data
 %%% Author:   Kyle M. Lang
 %%% Created:  2015-11-06
-%%% Modified: 2022-06-29
+%%% Modified: 2026-03-13
 
 \documentclass{beamer}
 \usetheme{Utrecht}
@@ -24,19 +24,17 @@
 \newcommand{\betab}[0]{\boldsymbol{\betaup}}
 
 \title{Missing Data in SEM}
-\subtitle{Introduction to SEM with Lavaan}
+\subtitle{SEM in R using Lavaan}
 \author{Kyle M. Lang}
 \institute{Department of Methodology \& Statistics\\Utrecht University}
 \date{}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{document}
 
 <<setup, include = FALSE, cache = FALSE>>=
 set.seed(235711)
-
-library(lavaan, lib.loc = "~/R/manual_installs") 
 
 library(knitr)
 library(ggplot2)
@@ -49,50 +47,51 @@ library(magrittr)
 library(naniar)
 library(ggpubr)
 library(lme4)
-                                        #library(lavaan)
+library(lavaan)
 library(LaplacesDemon)
 library(semTools)
 library(optimx)
 library(mgcv)
 
-source("../../code/supportFunctions.R")
-source("../../code/sim_missing/code/simMissingness.R")
-source("../../code/ml_functions.R")
+codeDir <- "code"
+dataDir <- "data"
 
-dataDir <- "../data/"
+source(here::here(codeDir, "supportFunctions.R"))
+source(here::here(codeDir, "sim_missing", "code", "simMissingness.R"))
+source(here::here(codeDir, "ml_functions.R"))
 
-options(width = 80)
+options(width = 70)
 opts_chunk$set(size = "footnotesize",
                fig.align = "center",
                fig.path = "figure/missing_data-",
                message = FALSE,
                warning = FALSE,
-               comment = "")
+               comment = "",
+               root.dir = here::here("./")
+)
 knit_theme$set('edit-kwrite')
 @
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[t, plain]
   \titlepage
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Outline}
   \tableofcontents
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{What are Missing Data?}
 
-  Missing data are empty cells in a dataset where there should be observed
-  values.
+  Missing data are empty cells in a dataset where there should be observed values.
   \vc
   \begin{itemize}
-  \item The missing cells correspond to true population values, but we haven't
-    observed those values.
+  \item The missing cells correspond to true population values, but we haven't observed those values.
   \end{itemize}
   \vb
   \pause
@@ -110,32 +109,30 @@ knit_theme$set('edit-kwrite')
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{A Little Notation}
 
   \vx{-16}
   
   \begin{align*}
-    Y &\coloneqq \text{An $N \times P$ Matrix of Arbitrary Data}\\[8pt]
-    Y_{mis} &\coloneqq \text{The \emph{missing} part of $Y$}\\[8pt]
-    Y_{obs} &\coloneqq \text{The \emph{observed} part of $Y$}\\[8pt]
-    R &\coloneqq \text{An $N \times P$ response matrix}\\[8pt]
-    M &\coloneqq \text{An $N \times P$ missingness matrix}
+    Y &\coloneq \text{An $N \times P$ Matrix of Arbitrary Data}\\[8pt]
+    Y_{mis} &\coloneq \text{The \emph{missing} part of $Y$}\\[8pt]
+    Y_{obs} &\coloneq \text{The \emph{observed} part of $Y$}\\[8pt]
+    R &\coloneq \text{An $N \times P$ response matrix}\\[8pt]
+    M &\coloneq \text{An $N \times P$ missingness matrix}
   \end{align*}
 
   The $R$ and $M$ matrices are complementary.
   \begin{itemize}
-  \item $r_{np} = 1$ means $y_{np}$ is observed; $m_{np} = 1$ means $y_{np}$ is
-    missing.
-  \item $r_{np} = 0$ means $y_{np}$ is missing; $m_{np} = 0$ means $y_{np}$ is
-    observed.
+  \item $r_{np} = 1$ means $y_{np}$ is observed; $m_{np} = 1$ means $y_{np}$ is missing.
+  \item $r_{np} = 0$ means $y_{np}$ is missing; $m_{np} = 0$ means $y_{np}$ is observed.
   \item $M_p$ is the \emph{missingness} of $Y_p$.
   \end{itemize}
 
 \end{frame}
 
-\watermarkoff %----------------------------------------------------------------%
+\watermarkoff %--------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile, allowframebreaks]{Example}
 
@@ -146,16 +143,16 @@ library(naniar)
 library(ggmice)
 
 ## Read in some data:
-bfi0 <- readRDS("../data/bfi_datasets.rds")
-bfi  <- bfi0$incomplete %>% select(-matches("N\\d|C\\d|E\\d|male"))
+bfi0 <- readRDS(here::here("data", "bfi_datasets.rds"))
+bfi  <- bfi0$incomplete |> select(-matches("N\\d|C\\d|E\\d|male"))
 
 ## Compute the variablewise proportions of missing data:
-bfi %>% is.na() %>% colMeans() %>% round(2)
+bfi |> is.na() |> colMeans() |> round(2)
 @ 
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -166,18 +163,18 @@ gg_miss_var(bfi, show_pct = TRUE)
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
   Visualize the missing data patterns via \pkg{ggmice}\src{::plot\_pattern()}.
 <<out.width = "50%">>=
-plot_pattern(bfi)
+plot_pattern(bfi, rotate = TRUE)
 @ 
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile, allowframebreaks]{Example}
 
@@ -198,7 +195,7 @@ naiveOut <- cfa(cfaMod, data = bfi, std.lv = TRUE)
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -210,7 +207,7 @@ partSummary(naiveOut, c(1, 7))
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -220,7 +217,7 @@ partSummary(naiveOut, 8:9, 1:17)
 
 \end{frame}
 
-\watermarkon %-----------------------------------------------------------------%
+\watermarkon %---------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -232,20 +229,19 @@ partSummary(naiveOut, 3)
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Default Approach}
   
-  Like most software packages, \pkg{lavaan} will default to \emph{complete case
-  analysis} when asked to analyze incomplete data.
+  Like most software packages, \pkg{lavaan} will default to \emph{complete case analysis} when asked to analyze
+  incomplete data.
   
   \vc
   
   \begin{itemize}
   \item In the absence of user input, this is a sensible option.
     \vc
-  \item That doesn't mean you should actually use deletion to treat the missing
-    data in your analysis.
+  \item That doesn't mean you should actually use deletion to treat the missing data in your analysis.
   \end{itemize}
 
   \vb
@@ -265,11 +261,11 @@ partSummary(naiveOut, 3)
   
 \end{frame}
 
-\watermarkon %-----------------------------------------------------------------%
+\watermarkon %---------------------------------------------------------------------------------------------------------%
 
 \sectionslide{Missing Data Mechanisms}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Missing Data Mechanisms}
 
@@ -288,8 +284,7 @@ partSummary(naiveOut, 3)
   \begin{itemize}
   \item $P(R | Y_{mis}, Y_{obs}) = P(R | Y_{obs})$
     \vc
-  \item Missingness is related to only the \emph{observed} parts of study
-      variables.
+  \item Missingness is related to only the \emph{observed} parts of study variables.
   \end{itemize}
   \vb
   %\begin{align*}
@@ -300,8 +295,7 @@ partSummary(naiveOut, 3)
   \begin{itemize}
   \item $P(R | Y_{mis}, Y_{obs}) \neq P(R | Y_{obs})$
     \vc
-  \item Missingness is related to the \emph{unobserved} parts of study
-    variables.
+  \item Missingness is related to the \emph{unobserved} parts of study variables.
   \end{itemize}
   %\begin{align*}
   %  P(R | Y_{mis}, Y_{obs}) \neq P(R | Y_{obs})
@@ -309,7 +303,7 @@ partSummary(naiveOut, 3)
 
 \end{frame}
 
-\watermarkoff %----------------------------------------------------------------%
+\watermarkoff %--------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Simulate Some Toy Data}
 
@@ -332,7 +326,7 @@ cor(y0, x0) # Check correlation between X and Y
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile, allowframebreaks]{MCAR Example}
 
@@ -371,7 +365,7 @@ ggplot(data = pDat, mapping = aes(x = x, y = y, color = g)) +
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile, allowframebreaks]{MAR Example}
 
@@ -411,7 +405,7 @@ marP
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile, allowframebreaks]{MNAR Example}
 
@@ -450,95 +444,21 @@ ggplot(data = pDat, mapping = aes(x = x, y = y, color = g)) +
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
-\comment{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}[fragile]{Crucial Nuance}
-
-  In our previous MAR example, ignoring the predictor of missingness actually
-  produces \emph{Indirect MNAR}.\\
-
-  \pause
-  \va
-
-  \rmsc{Question:} What happens if we ignore the predictor of missingness, but
-  that predictor is independent of our study variables?
-
-  \pause
-
-<<>>=
-mVec <- z0 < quantile(z0, probs = pm)
-
-y       <- y0
-y[mVec] <- NA
-
-cor(y, x0, use = "pairwise")
-@
-
-\rmsc{Answer:} We get back to MCAR :)
-
-\end{frame}
-
-%------------------------------------------------------------------------------%
-
-\begin{frame}{Crucial Nuance}
-
-  The missing data mechanisms are not simply characteristics of an incomplete
-  dataset; we also need to account for the analysis.
-  \vb
-  \begin{columns}
-    \begin{column}{0.5\textwidth}
-
-<<echo = FALSE, out.width = "100%", message = FALSE>>=
-marP + scale_color_manual(values = c("blue", "red"),
-                          labels = c("Complete", "Indirect MNAR")
-                          )
-@
-
-\end{column}
-\begin{column}{0.5\textwidth}
-
-<<echo = FALSE, out.width = "100%">>=
-yDen <- density(y, na.rm = TRUE)
-
-pDat <- data.frame(y = c(y0Den$y, yDen$y),
-                   x = c(y0Den$x, yDen$x),
-                   g = rep(c("Complete", "MCAR2"),
-                           each = length(yDen$y)
-                           )
-                   )
-
-ggplot(data = pDat, mapping = aes(x = x, y = y, color = g)) +
-    geom_line(size = 1) +
-    theme_classic() +
-    theme(text = element_text(family = "Courier", size = 16)) +
-    ylab("Density") +
-    xlab("Value of Y") +
-    scale_color_manual(values = c("blue", "red")) +
-    theme(legend.position = c(0.8, 0.95), legend.title = element_blank())
-@
-
-\end{column}
-\end{columns}
-
-\end{frame}
-}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\watermarkoff %----------------------------------------------------------------%
+\watermarkoff %--------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Effects of Deletion}
 
-  As we saw in the preceding plots, excluding incomplete cases usually alters
-  the variables' distributions.
+  As we saw in the preceding plots, excluding incomplete cases usually alters the variables' distributions.
   \vc
   \begin{itemize}
-  \item The statistics upon which we base our analyses generally summarize these 
-    distributions.
+  \item The statistics upon which we base our analyses generally summarize these distributions.
     \vc
-  \item Problems with the distributions show up as bias in the results of our 
-    anlayses.
+  \item Problems with the distributions show up as bias in the results of our analyses.
   \end{itemize}
   
 <<>>=
-diabetes1 <- diabetes2 <- readRDS("../data/diabetes.rds")
+diabetes1 <- diabetes2 <-
+  readRDS(here::here("data", "diabetes.rds"))
 
 mVec <- simLogisticMissingness0(data    = diabetes1,
                                 pm      = 0.3,
@@ -549,7 +469,7 @@ diabetes2[mVec, "glu"] <- NA
 
 \end{frame}
 
-\watermarkoff %----------------------------------------------------------------%
+\watermarkoff %--------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
  
@@ -583,7 +503,7 @@ ggarrange(
     
     ncol = 2,
     widths = c(1.05, 1)
-) %>%
+) |>
     annotate_figure(left = text_grob("Blood Glucose", 
                                      family = "Courier", 
                                      size = 10,
@@ -594,18 +514,18 @@ ggarrange(
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
 <<>>=
-diabetes1 %>% select(bmi, glu, bp) %>% cor()
-diabetes2 %>% select(bmi, glu, bp) %>% cor(use = "complete")
+diabetes1 |> select(bmi, glu, bp) |> cor()
+diabetes2 |> select(bmi, glu, bp) |> cor(use = "complete")
 @ 
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -618,7 +538,7 @@ var(diabetes2$glu, na.rm = TRUE)
 
 \end{frame}
 
-\watermarkon %-----------------------------------------------------------------%
+\watermarkon %---------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[allowframebreaks]{Good Missing Data Methods}
 
@@ -628,8 +548,8 @@ var(diabetes2$glu, na.rm = TRUE)
   \item Replace the missing values with $M$ plausible estimates
     \vc
     \begin{itemize}
-    \item Essentially, a repeated application of stochastic, regression-based 
-      prediction to synthesize replacements for the missing data.
+    \item Essentially, a repeated application of stochastic, regression-based prediction to synthesize replacements for
+      the missing data.
       \vc
     \item Produces unbiased parameter estimates and predictions
       \vc
@@ -646,8 +566,7 @@ var(diabetes2$glu, na.rm = TRUE)
   Full Information Maximum Likelihood (FIML)
   \vc
   \begin{itemize}
-  \item Adjust the objective function to only consider the observed parts of the
-    data
+  \item Adjust the objective function to only consider the observed parts of the data
     \vc
     \begin{itemize}
     \item Models are directly estimated in the presence of missing data
@@ -656,14 +575,14 @@ var(diabetes2$glu, na.rm = TRUE)
       \vc
     \item FIML is only available for certain types of models
       \vc
-    \item In linear regression models, FIML cannot treat missing data on
-      predictors (if the predictors are taken as fixed)
+    \item In linear regression models, FIML cannot treat missing data on predictors (if the predictors are taken as
+      fixed)
     \end{itemize}
   \end{itemize}
 
 \end{frame}
 
-\watermarkoff %----------------------------------------------------------------%
+\watermarkoff %--------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[allowframebreaks, fragile]{Good Missing Data Methods}
 
@@ -677,7 +596,7 @@ miceOut <- mice(data      = data.frame(y = yMar, x = x0),
                 printFlag = FALSE)
 
 ## Estimate and pool M correlations:
-with(miceOut, cor(y, x))$analyses %>% unlist() %>% mean()
+with(miceOut, cor(y, x))$analyses |> unlist() |> mean()
 @
 
 The MI-based parameter estimate looks good.
@@ -722,7 +641,7 @@ ggplot(data    = pDat,
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile, allowframebreaks]{Good Missing Data Methods}
 
@@ -736,7 +655,7 @@ miceOut <- mice(data      = data.frame(y = yMnar, x = x0),
                 printFlag = FALSE)
 
 ## Estimate and pool M correlations:
-with(miceOut, cor(y, x))$analyses %>% unlist() %>% mean()
+with(miceOut, cor(y, x))$analyses |> unlist() |> mean()
 @
 
 The MI-based parameter estimate is still biased.
@@ -785,7 +704,7 @@ ggplot(data = pDat, mapping = aes(x = x, y = y, color = c, group = g, size = c))
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{MI Example}
  
@@ -803,13 +722,13 @@ miceOut <- mice(data      = diabetes2,
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{MI Example}
 
 <<>>=
 ## Complete data:
-diabetes1 %>% select(bmi, glu, bp) %>% cor()
+diabetes1 |> select(bmi, glu, bp) |> cor()
 
 ## MI:
 pooledCorMat(miceOut, c("bmi", "glu", "bp"))
@@ -817,30 +736,30 @@ pooledCorMat(miceOut, c("bmi", "glu", "bp"))
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{MI Example}
 
 <<>>=
 mean(diabetes1$glu)
-with(miceOut, mean(glu))$analyses %>% unlist() %>% mean()
+with(miceOut, mean(glu))$analyses |> unlist() |> mean()
 var(diabetes1$glu)
-with(miceOut, var(glu))$analyses %>% unlist() %>% mean()
+with(miceOut, var(glu))$analyses |> unlist() |> mean()
 @ 
 
 \end{frame}
 
-\watermarkoff %----------------------------------------------------------------%
+\watermarkoff %--------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{FIML Example}
   
 <<>>=
-fit <- diabetes2 %>% 
-    select(bmi, glu, bp) %>% 
+fit <- diabetes2 |> 
+    select(bmi, glu, bp) |> 
     lavCor(missing = "fiml", output = "sampstat")
 
 ## Complete data:
-diabetes1 %>% summarize(mean = mean(glu), var = var(glu))
+diabetes1 |> summarize(mean = mean(glu), var = var(glu))
 
 ## FIML:
 fit %$% c(mean = mean[["glu"]], var = cov["glu", "glu"])
@@ -848,25 +767,25 @@ fit %$% c(mean = mean[["glu"]], var = cov["glu", "glu"])
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{FIML Example}
 
 <<>>=
 ## Complete data:
-diabetes1 %>% select(bmi, glu, bp) %>% cor() %>% round(3)
+diabetes1 |> select(bmi, glu, bp) |> cor() |> round(3)
 
 ## FIML:
-fit$cov %>% cov2cor()
+fit$cov |> cov2cor()
 @
 
 \end{frame}
 
-\watermarkon %-----------------------------------------------------------------%
+\watermarkon %---------------------------------------------------------------------------------------------------------%
 
 \sectionslide{Imputation-Based Solutions}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Prediction Example}
   
@@ -877,7 +796,7 @@ fit$cov %>% cov2cor()
   \end{align*}
   
 <<echo = FALSE>>=
-diabetes <- readRDS(paste0(dataDir, "diabetes.rds"))
+diabetes <- readRDS(here::here(dataDir, "diabetes.rds"))
 
 trainDat <- diabetes[1 : 400, ]
 testDat  <- diabetes[401 : 442, ]
@@ -901,28 +820,27 @@ predInt <- round(
 )
 @ 
 
-Training this model on the first $N = 400$ observations from the \emph{diabetes}
-data produces the following fitted model:
+Training this model on the first $N = 400$ observations from the \emph{diabetes} data produces the following fitted
+  model:
 \begin{align*}
   Y_{LDL} = \Sexpr{b0} + \Sexpr{b1} X_{BP} + \Sexpr{b2} X_{gluc} + 
   \Sexpr{b3} X_{BMI}
 \end{align*}
 \pause
-Suppose a new patient presents with $BP = \Sexpr{x1}$, $gluc = \Sexpr{x2}$, and
-$BMI = \Sexpr{x3}$. We can predict their $LDL$ score by:
+Suppose a new patient presents with $BP = \Sexpr{x1}$, $gluc = \Sexpr{x2}$, and $BMI = \Sexpr{x3}$. We can predict their
+  $LDL$ score by:
 \begin{align*}
-  \hat{Y}_{LDL} &= \Sexpr{b0} + \Sexpr{b1} (\Sexpr{x1}) + \Sexpr{b2} 
-  (\Sexpr{x2}) + \Sexpr{b3} (\Sexpr{x3})\\
+  \hat{Y}_{LDL} &= \Sexpr{b0} + \Sexpr{b1} (\Sexpr{x1}) + \Sexpr{b2} (\Sexpr{x2}) + \Sexpr{b3} (\Sexpr{x3})\\
   &= \Sexpr{round(predict(out1, testDat[1 : 2, ])[1], 3)}
 \end{align*}
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \subsection{Single Imputation}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Imputation is Just Prediction*}
   
@@ -957,7 +875,7 @@ $BMI = \Sexpr{x3}$. We can predict their $LDL$ score by:
   
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{*Levels of Uncertainty Modeling}
 
@@ -966,15 +884,13 @@ $BMI = \Sexpr{x3}$. We can predict their $LDL$ score by:
   \begin{enumerate}
   \item Simple Prediction
     \begin{itemize}
-    \item The missing data are naively filled with predicted values from some 
-      regression equation.
+    \item The missing data are naively filled with predicted values from some regression equation.
     \item All uncertainty is ignored.
     \end{itemize}
     \vb
   \item Prediction + Noise
     \begin{itemize}
-    \item A random residual error is added to each predicted value to create the 
-      imputations.
+    \item A random residual error is added to each predicted value to create the imputations.
     \item Only uncertainty in the predicted values is modeled.
     \item The imputation model itself is assumed to be correct and error-free.
     \end{itemize}
@@ -988,12 +904,11 @@ $BMI = \Sexpr{x3}$. We can predict their $LDL$ score by:
   
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Do we really need to worry?}
 
-  The arguments against single imputation can seem archaic and petty. Do we 
-  really need to worry about this stuff?\\  
+  The arguments against single imputation can seem archaic and petty. Do we really need to worry about this stuff?\\  
   \pause
   \vc
   \begin{itemize}
@@ -1003,7 +918,7 @@ $BMI = \Sexpr{x3}$. We can predict their $LDL$ score by:
   The following are results from a simple Monte Carlo simulation:
   
 <<echo = FALSE, results = "asis">>=
-simRes <- readRDS(paste0(dataDir, "simResMat.rds"))
+simRes <- readRDS(here::here(dataDir, "simResMat.rds"))
 
 simResTab <- 
     xtable(simRes, 
@@ -1027,7 +942,7 @@ print(simResTab, scale = 0.8, booktabs = TRUE)
 
 \end{frame}
 
-\watermarkoff %----------------------------------------------------------------%
+\watermarkoff %--------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile, allowframebreaks]{Simulate Some Toy Data}
   
@@ -1060,11 +975,11 @@ yObs <- dat1[!mVec, ]
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Look at the Data}
   
-\begin{columns}
+\begin{columns}[onlytextwidth]
 \begin{column}{0.5\textwidth}
       
 \begin{onlyenv}<1>
@@ -1100,11 +1015,11 @@ p1
   
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Expected Imputation Model Parameters}
    
-\begin{columns}
+\begin{columns}[onlytextwidth]
 \begin{column}{0.5\textwidth}
 
 <<>>=
@@ -1135,11 +1050,11 @@ p2
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Conditional Mean Substitution}
 
-\begin{columns}
+\begin{columns}[onlytextwidth]
 \begin{column}{0.5\textwidth}
 
 <<>>=
@@ -1166,11 +1081,11 @@ p2 + geom_point(mapping = aes(x = yMis[, "x"], y = imps),  color = "red")
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Stochastic Regression Imputation}
    
-\begin{columns}
+\begin{columns}[onlytextwidth]
 \begin{column}{0.52\textwidth}
   
 <<>>=
@@ -1197,11 +1112,11 @@ p2 + geom_point(mapping = aes(x = yMis[, "x"], y = imps),  color = "red")
 
 \end{frame}
 
-\watermarkon %-----------------------------------------------------------------%
+\watermarkon %---------------------------------------------------------------------------------------------------------%
 
 \subsection{Multiple Imputation}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Flavors of MI}
   
@@ -1211,14 +1126,13 @@ p2 + geom_point(mapping = aes(x = yMis[, "x"], y = imps),  color = "red")
   \end{itemize}
   \vb
   \pause
-  Simply repeating the stochastic regression imputation procedure described 
-  above won't suffice.
+  Simply repeating the stochastic regression imputation procedure described above won't suffice.
   \begin{itemize}
   \item Still produces too many Type I errors
   \end {itemize}
   
 <<echo = FALSE, results = "asis">>=
-simRes2 <- readRDS(paste0(dataDir, "simResMat2.rds"))
+simRes2 <- readRDS(here::here(dataDir, "simResMat2.rds"))
 
 simResTab2 <- 
     xtable(simRes2, 
@@ -1231,18 +1145,17 @@ print(simResTab2, scale = 0.8, booktabs = TRUE)
 @
 
 \begin{itemize}
-\item Type I error rates for PN-Type MI improve on single stochastic regression 
-  imputation, but they're still too high.
+\item Type I error rates for PN-Type MI improve on single stochastic regression imputation, but they're still too high.
 \end{itemize}
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Proper MI}
   
-  The problems on the previous slide arise from using the same regression 
-  coefficients to create each of the $M$ imputations.
+  The problems on the previous slide arise from using the same regression coefficients to create each of the $M$
+  imputations.
   \vc
   \begin{itemize}
   \item Implies that you're using the ``correct'' coefficients.
@@ -1251,21 +1164,19 @@ print(simResTab2, scale = 0.8, booktabs = TRUE)
     \item This assumption is plainly ridiculous.
     \end{itemize}
     \vb
-  \item Proper MI also models uncertainty in the regression coefficients used to 
-    create the imputations.
+  \item Proper MI also models uncertainty in the regression coefficients used to create the imputations.
     \vc
     \begin{itemize}
-    \item A different set of of coefficients is randomly sampled (using Bayesian 
-      simulation) to create each of the $M$ imputations.
+    \item A different set of of coefficients is randomly sampled (using Bayesian simulation) to create each of the $M$
+      imputations.
       \vc
-    \item The tricky part about implemented MI is deriving the distributions 
-      from which to sample these coefficients.
+    \item The tricky part about implemented MI is deriving the distributions from which to sample these coefficients.
     \end{itemize}
   \end{itemize}
   
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Setting Up Proper MI}
   
@@ -1273,16 +1184,14 @@ print(simResTab2, scale = 0.8, booktabs = TRUE)
   \begin{align*}
     Y = \mathbf{X} \beta + \varepsilon
   \end{align*}
-  To fully account for model uncertainty, we need to randomly sample both 
-  $\beta$ and $var(\varepsilon) = \sigma^2$.
+  To fully account for model uncertainty, we need to randomly sample both $\beta$ and $var(\varepsilon) = \sigma^2$.
   \begin{itemize}
-  \item \rmsc{Question:} Why do we only sample $\sigma^2$ and not 
-    $\varepsilon$?
+  \item \rmsc{Question:} Why do we only sample $\sigma^2$ and not $\varepsilon$?
   \end{itemize}
   \pause
   \va
-  For an imputation model with a normally distributed outcome and uninformative 
-  priors, we need to specify two distributions:
+  For an imputation model with a normally distributed outcome and uninformative priors, we need to specify two
+  distributions:
   \begin{enumerate}
     \item The marginal posterior distribution of $\sigma^2$
     \item The conditional posterior distribution of $\beta$ 
@@ -1290,12 +1199,11 @@ print(simResTab2, scale = 0.8, booktabs = TRUE)
   
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Marginal Distribution of $\sigma^2$}
  
-  We first specify the marginal posterior distribution for the noise variance,
-  $\sigma^2$.
+  We first specify the marginal posterior distribution for the noise variance, $\sigma^2$.
   \vc
   \begin{itemize}
   \item This distribution does not depend on any other parameters.
@@ -1311,7 +1219,7 @@ print(simResTab2, scale = 0.8, booktabs = TRUE)
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Conditional Distribution of $\beta$}
 
@@ -1330,19 +1238,17 @@ print(simResTab2, scale = 0.8, booktabs = TRUE)
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{PPD of the Missing Data}
   
-  Once we've sampled our imputation model parameters, we can construct the 
-  posterior predictive distribution of the missing data.
+  Once we've sampled our imputation model parameters, we can construct the posterior predictive distribution of the
+  missing data.
   \vc
   \begin{itemize}
-  \item This is the distribution from which we sample replacements for the 
-    missing values (i.e., imputations).
+  \item This is the distribution from which we sample replacements for the missing values (i.e., imputations).
     \vc
-  \item In practice, we directly compute the imputations based on the simulated 
-    imputation model parameters.
+  \item In practice, we directly compute the imputations based on the simulated imputation model parameters.
   \end{itemize}
   \begin{align}
     Y_{imp} &= \mathbf{X}_{mis}\tilde{\beta} + \tilde{\varepsilon} \label{impPosteriorEq}\\
@@ -1351,32 +1257,27 @@ print(simResTab2, scale = 0.8, booktabs = TRUE)
   
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{General Steps for Basic MI}
   
-  With all of the elements in place, we can execute a basic MI by following 
-  these steps:
+  With all of the elements in place, we can execute a basic MI by following these steps:
   \vb
   \begin{enumerate}
-  \item Find the least squares estimates of $\beta$, $\hat{\beta}_{ls}$, by 
-    regressing the observed portion of $Y$ onto the the analogous rows of 
-    $\mathbf{X}$.
+  \item Find the least squares estimates of $\beta$, $\hat{\beta}_{ls}$, by regressing the observed portion of $Y$ onto
+    the analogous rows of $\mathbf{X}$.
     \vb
-  \item Use $\hat{\beta}_{ls}$ to parameterize the posterior distribution of 
-    $\sigma^2$, given by Equation \ref{sigma2PosteriorEq}, and draw $M$ samples 
-    of $\sigma^2$ from this distribution.
+  \item Use $\hat{\beta}_{ls}$ to parameterize the posterior distribution of $\sigma^2$, given by Equation
+    \ref{sigma2PosteriorEq}, and draw $M$ samples of $\sigma^2$ from this distribution.
     \vb
-  \item For each of the $\sigma^2_m$, sample a corresponding value of $\beta$ 
-    from Equation \ref{betaPosteriorEq}.
+  \item For each of the $\sigma^2_m$, sample a corresponding value of $\beta$ from Equation \ref{betaPosteriorEq}.
     \vb
-  \item Plug the $M$ samples of $\beta$ and $\sigma^2$ into Equation 
-    \ref{impPosteriorEq} to create the $M$ imputations.
+  \item Plug the $M$ samples of $\beta$ and $\sigma^2$ into Equation \ref{impPosteriorEq} to create the $M$ imputations.
   \end{enumerate}
   
 \end{frame}
 
-\watermarkoff %----------------------------------------------------------------%
+\watermarkoff %--------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Visualizing MI}
   
@@ -1407,12 +1308,11 @@ dS  <- density(sigmaSams)
 dB1 <- density(betaSams2[ , 2])
 @ 
 
-Use Bayesian simulation to estimate posterior distributions for the imputation 
-model parameters:\\
+Use Bayesian simulation to estimate posterior distributions for the imputation model parameters:\\
 
 \vb
 
-\begin{columns}
+\begin{columns}[onlytextwidth]
 \begin{column}{0.5\textwidth}
 
 <<echo = FALSE, out.width = "90%">>=
@@ -1437,11 +1337,11 @@ gg0(x = dB1$x, y = dB1$y, points = FALSE) +
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Visualizing MI}
   
-\begin{columns}
+\begin{columns}[onlytextwidth]
 \begin{column}{0.5\textwidth}
 
   \only<1>{
@@ -1597,7 +1497,7 @@ p3 + geom_point(mapping = aes(x = yMis$x, y = imps), color = "red")
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Extending the Basic MI Algorithm}
 
@@ -1631,7 +1531,7 @@ p3 + geom_point(mapping = aes(x = yMis$x, y = imps), color = "red")
   
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -1650,7 +1550,7 @@ rhat(miceOut)
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -1660,12 +1560,12 @@ ggmice::plot_trace(miceOut)
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
 <<cache = TRUE>>=
-## Extend the Markov chains by 10 interations:
+## Extend the Markov chains by 10 iterations:
 miceOut <- mice.mids(miceOut, maxit = 10, printFlag = FALSE)
 
 ## Check convergence via PSR factor:
@@ -1674,7 +1574,7 @@ rhat(miceOut)
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -1684,7 +1584,7 @@ ggmice::plot_trace(miceOut)
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example}
 
@@ -1694,11 +1594,11 @@ mice::densityplot(miceOut)
 
 \end{frame}
 
-\watermarkon %-----------------------------------------------------------------%
+\watermarkon %---------------------------------------------------------------------------------------------------------%
 
 \subsection{MI-Based Analysis}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Doing MI-Based Analysis}
   
@@ -1719,16 +1619,15 @@ mice::densityplot(miceOut)
     \vb
   \item The pooling phase
     \begin{itemize}
-    \item Combine the $M$ sets of parameter estimates and standard errors from 
-      Step \ref{aStep} into a single set of MI estimates.
-    \item Use these pooled parameter estimates and standard errors for 
-      inference.
+    \item Combine the $M$ sets of parameter estimates and standard errors from Step \ref{aStep} into a single set of MI
+      estimates.
+    \item Use these pooled parameter estimates and standard errors for inference.
     \end{itemize}
   \end{enumerate}
   
 \end{frame}
 
-\watermarkoff %----------------------------------------------------------------%
+\watermarkoff %--------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{MI-Based Analysis}
 
@@ -1741,15 +1640,15 @@ mice::densityplot(miceOut)
   
 \end{frame}
 
-\watermarkon %-----------------------------------------------------------------%
+\watermarkon %---------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Pooling MI Estimates}
   
   \citet{rubin:1987} formulated a simple set of pooling rules for MI estimates.
   \vb
   \begin{itemize}
-  \item The MI point estimate of some interesting quantity, $Q^*$, is simply 
-    the mean of the $M$ estimates, $\{\hat{Q}_m\}$:
+  \item The MI point estimate of some interesting quantity, $Q^*$, is simply the mean of the $M$ estimates,
+    $\{\hat{Q}_m\}$:
     \begin{align*}
       Q^* &= \frac{1}{M} \sum_{m = 1}^M \hat{Q}_m\\
     \end{align*}
@@ -1757,15 +1656,14 @@ mice::densityplot(miceOut)
   
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Pooling MI Estimates}
   
   The MI variability estimate, $T$, is a slightly more complex entity.
   \vb
   \begin{itemize}
-  \item A weighted sum of the \emph{within-imputation} variance, $W$, and the 
-    \emph{between-imputation} variance, $B$.
+  \item A weighted sum of the \emph{within-imputation} variance, $W$, and the \emph{between-imputation} variance, $B$.
     \begin{align*}
       W &= \frac{1}{M} \sum_{m = 1}^M \widehat{SE}_{Q,m}^2\\
       B &= \frac{1}{M - 1} \sum_{m = 1}^M \left( \hat{Q}_m - Q^* \right)^2\\
@@ -1776,12 +1674,11 @@ mice::densityplot(miceOut)
   
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Inference with MI Estimates}
   
-  After computing $Q^*$ and $T$, we combine them in the usual way to get test 
-  statistics and confidence intervals.
+  After computing $Q^*$ and $T$, we combine them in the usual way to get test statistics and confidence intervals.
   \begin{align*}
     t &= \frac{Q^* - Q_0}{\sqrt{T}}\\
     CI &= Q^* \pm t_{crit} \sqrt{T}
@@ -1794,12 +1691,11 @@ mice::densityplot(miceOut)
   
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Fraction of Missing Information}
   
-  The \emph{fraction of missing information} (FMI) is a crucial effect size
-  measure for missing data problems.
+  The \emph{fraction of missing information} (FMI) is a crucial effect size measure for missing data problems.
   
   \begin{align*}
     FMI = \frac{r + \frac{2}{(df + 3)}}{r + 1} \approx \frac{(1 + M^{-1})B}{(1 + M^{-1})B + W} \rightarrow \frac{B}{B + W}
@@ -1808,25 +1704,24 @@ mice::densityplot(miceOut)
   \begin{align*}
     r = \frac{(1 + M^{-1})B}{W}
   \end{align*}
-  The FMI gives us a sense of how much the missing data (and their treatment) 
-  have influence our parameter estimates.
+  The FMI gives us a sense of how much the missing data (and their treatment) have influence our parameter estimates.
   \vc
   \begin{itemize}
-  \item We should report the FMI for an estimated parameter along with other 
-     statistics (e.g., t-tests, p-values, effect sizes, etc.).
+  \item We should report the FMI for an estimated parameter along with other statistics (e.g., t-tests, p-values, effect
+    sizes, etc.).
   \end{itemize}
   
 \end{frame}
 
-\watermarkoff %----------------------------------------------------------------%
+\watermarkoff %--------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example: Analysis \& Pooling}
   
-  We can use the \src{runMI()} function from the \pkg{semTools} package (or one
-  of its wrappers) to analyze the multiply imputed datasets and pool results.
+  We can use the \src{lavaan.mi()} function (or one of its wrappers) from the \pkg{lavaan.mi} package to analyze the
+  multiply imputed datasets and pool results.
   
 <<cache = TRUE>>=
-library(semTools)
+library(lavaan.mi)
 
 miOut <- 
     cfa.mi(cfaMod, data = complete(miceOut, "all"), std.lv = TRUE)  
@@ -1834,32 +1729,51 @@ miOut <-
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example: Analysis \& Pooling}
 
 <<echo = FALSE>>=
-partSummary(miOut, 1, fmi = TRUE, drops = c("df", "riv"))
+partSummary(miOut, 1:4, fmi = TRUE, header = FALSE)
 @ 
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Example: Analysis \& Pooling}
 
 <<echo = FALSE>>=
-partSummary(miOut, 2:3, 1:17, fmi = TRUE, drops = c("df", "riv"))
+partSummary(miOut, 7, fmi = TRUE, header = FALSE, drops = c("df", "riv"))
 @ 
 
 \end{frame}
 
-\watermarkon %-----------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
+
+\begin{frame}[fragile]{Example: Analysis \& Pooling}
+
+<<echo = FALSE>>=
+partSummary(miOut, 8, fmi = TRUE, header = FALSE, drops = c("df", "riv"))
+@ 
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------------------------------------%
+
+\begin{frame}[fragile]{Example: Analysis \& Pooling}
+
+<<echo = FALSE>>=
+partSummary(miOut, 9, fmi = TRUE, header = FALSE, drops = c("df", "riv"))
+@ 
+
+\end{frame}
+
+\watermarkon %---------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Model Fit, Model Comparisons, MV Testing}
   
-  We cannot simply average the $\chi^2$ statistics as we do the parameter
-  estimates.
+  We cannot simply average the $\chi^2$ statistics as we do the parameter estimates.
   \vc
   \begin{itemize}
   \item We need some fancy processing to get an appropriate statistic.
@@ -1888,24 +1802,32 @@ partSummary(miOut, 2:3, 1:17, fmi = TRUE, drops = c("df", "riv"))
   
 \end{frame}
 
-\watermarkoff %----------------------------------------------------------------%
+\watermarkoff %--------------------------------------------------------------------------------------------------------%
 
-\begin{frame}[fragile]{Model Fit}
-  
-  When we submit the \src{lavaan.mi} object created by \src{runMI()} to the 
-  \src{fitMeasures()} function, we can specify the type of pooling rule.
-  
+\begin{frame}[fragile, allowframebreaks]{Model Fit}
+
+  When we submit the \src{lavaan.mi} object created by \src{cfa.mi()} to the \src{fitMeasures()} function, we can
+  specify the type of pooling rule.
+
 <<>>=
-what <- c("chisq", "df", "pvalue", "fmi", "rmsea", "cfi", "tli")
-fitMeasures(miOut, test = "D3")[what] %>% round(3)
-fitMeasures(miOut, test = "D2")[what] %>% round(3)
+what <- c("chisq", "df", "pvalue", "cfi",
+          "rmsea", "rmsea.ci.lower", "rmsea.ci.upper")
+fitMeasures(miOut, fit.measures = what, pool.method = "D3") |>
+  round(3)
+@
+
+\pagebreak
+
+<<>>=
+fitMeasures(miOut, fit.measures = what, pool.method = "D2") |>
+  round(3)
 @ 
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
-\begin{frame}[fragile]{Model Comparison}
+\begin{frame}[fragile, allowframebreaks]{Model Comparison}
 
 <<>>=
 ## Define a restricted model:
@@ -1916,13 +1838,18 @@ miOut2 <-
     cfa.mi(cfaMod2, data = complete(miceOut, "all"), std.lv = TRUE)
 
 ## Test the constraint via nested model comparison:
-anova(miOut2, miOut, test = "D3")
-anova(miOut2, miOut, test = "D2")
+anova(miOut2, miOut, pool.method = "D3")
+@
+
+\pagebreak
+
+<<>>=
+anova(miOut2, miOut, pool.method = "D2")
 @ 
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Multivariate Testing}
 
@@ -1949,125 +1876,35 @@ l51 == l52
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Multivariate Testing}
 
   Now, we test the constraints via multivariate Wald tests.
 
 <<>>=
-lavTestWald.mi(miOut3, constraints = cons, test = "D1")
-lavTestWald.mi(miOut3, constraints = cons, test = "D2")
+lavTestWald.mi(miOut3, constraints = cons, pool.method = "D1")
+lavTestWald.mi(miOut3, constraints = cons, pool.method = "D2")
 @ 
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
-\comment{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}[fragile]{MV Testing via Model Comparison}
-
-  We can also do an analagous test via a model comparison.
-  
-<<>>=
-## Define constraints directly in the model syntax:
-cfaMod4 <- paste(cfaMod3, cons, sep = '\n')
-
-## Estimate the model and pool the results:
-miOut4 <- 
-    cfa.mi(cfaMod4, data = complete(miceOut, "all"), std.lv = TRUE)
-
-## Test the constraints via a nested model comparison:
-anova(miOut4, miOut3, test = "D3")
-@ 
-
-\end{frame}
-
-%------------------------------------------------------------------------------%
-
-\begin{frame}[fragile, allowframebreaks]{Model Fit}
-
-<<>>=
-## Define some syntax to allow cross-loadings from the "agree" 
-## factor to the "open" items:
-adds <- 'agree =~ O1 + O2 + O3'
-
-## Test the parameter relaxations via a score test:
-stD1 <- lavTestScore.mi(miOut, add = adds, test = "D1")
-stD2 <- lavTestScore.mi(miOut, add = adds, test = "D2")
-@ 
-
-\end{frame}
-
-%------------------------------------------------------------------------------%
-
-\begin{frame}[fragile]{Model Fit}
-
-<<>>=
-stD1
-@ 
-
-\end{frame}
-
-%------------------------------------------------------------------------------%
-
-\begin{frame}[fragile]{Model Fit}
-
-<<>>=
-stD2
-@ 
-
-\end{frame}
-
-%------------------------------------------------------------------------------%
-
-\begin{frame}{Special Pooling Considerations}
-  
-  The \citet{rubin:1987} pooling rules only hold when the parameter of 
-  interest, $Q$, follows an approximately normal sampling distribution.
-  \vc
-  \begin{itemize}
-  \item For substantially non-normal parameters, we may want to transform before 
-    pooling and back-transform the pooled estimate.
-  \end{itemize}
-  \vb
-  The following table, reproduced from \citet{vanBuuren:2018}, shows some 
-  recommended transformations.
-  \vx{-6}
-  \begin{center}
-    \begin{tabular}{lll}
-      \hline
-      \bf{Statistic} & \bf{Transformation} & \bf{Source}\\
-      \hline
-      Correlation & Fisher's $z$ & \citet{schafer:1997}\\
-      Odds ratio & Logarithm & \citet{agresti:2013}\\
-      Relative risk & Logarithm & \citet{agresti:2013}\\
-      Hazard ratio & Logarithm & \shortcites{marshallEtAl:2009}\citet{marshallEtAl:2009}\\
-      $R^2$ & Fisher's $z$ on square root & \citet{harel:2009}\\
-      Survival probabilities & Complementary log-log & \citet{marshallEtAl:2009}\\
-      Survival distribution & Logarithm & \citet{marshallEtAl:2009}\\
-      \hline
-    \end{tabular}
-  \end{center}
-  
-\end{frame}
-}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\watermarkon %-----------------------------------------------------------------%
+\watermarkon %---------------------------------------------------------------------------------------------------------%
 
 \sectionslide{ML-Based Solutions}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{FIML Intuition}
 
   FIML is an ML estimation method that is robust to ignorable nonresponse.
   \vc
   \begin{itemize}
-  \item FIML partitions the missing information out of the likelihood function 
-    so that the model is only estimated from the observed parts of the data.
+  \item FIML partitions the missing information out of the likelihood function so that the model is only estimated from
+    the observed parts of the data.
   \end{itemize}
   \vb
-  After a minor alteration to the likelihood function, FIML reduces to simple ML 
-  estimation.
+  After a minor alteration to the likelihood function, FIML reduces to simple ML estimation.
   \vc
   \begin{itemize}
   \item So, let's review ML estimation before moving forward.
@@ -2075,55 +1912,49 @@ stD2
   
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \subsection{Maximum Likelihood Estimation}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[allowframebreaks]{Maximum Likelihood Estimation}
 
-  ML estimation simply finds the parameter values that are ``most likely'' to 
-  have given rise to the observed data.
+  ML estimation simply finds the parameter values that are ``most likely'' to have given rise to the observed data.
   \vb
   \begin{itemize}
-  \item The \emph{likelihood} function is just a probability density (or mass) 
-    function with the data treated as fixed and the parameters treated as 
-    random variables.
+  \item The \emph{likelihood} function is just a probability density (or mass) function with the data treated as fixed
+    and the parameters treated as random variables.
     \vb
-  \item Having such a framework allows us to ask: ``Given that I've observed 
-    these data values, what parameter values most probably describe these 
-    data?''
+  \item Having such a framework allows us to ask: ``Given that I've observed these data values, what parameter values
+    most probably describe these data?''
   \end{itemize}
   
   \pagebreak
   
-  ML estimation is usually employed when there is no closed form solution for 
-  the parameters we seek.
+  ML estimation is usually employed when there is no closed form solution for the parameters we seek.
   \vb
   \begin{itemize}
   \item This is why you don't usually see ML used to fit general linear models.
   \end{itemize}
   \vb
-  After choosing a likelihood function, we iteratively optimize the function to 
-  produce the ML estimated parameters.
+  After choosing a likelihood function, we iteratively optimize the function to produce the ML estimated parameters.
   \vb
   \begin{itemize}
-  \item In practice, we nearly always work with the natural logarithm of the 
-    likelihood function (i.e., the \emph{loglikelihood}).
+  \item In practice, we nearly always work with the natural logarithm of the likelihood function (i.e., the
+    \emph{loglikelihood}).
   \end{itemize}
   
 \end{frame}
 
-\watermarkoff %----------------------------------------------------------------%
+\watermarkoff %--------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile, allowframebreaks]{ML Intuition}
   
   Let's say we have the following $N = 10$ observations.
   \vc
   \begin{itemize}
-  \item We assume these data come from a normal distribution with a known 
-    variance of $\sigma^2 = 1$.  
+  \item We assume these data come from a normal distribution with a known variance of $\sigma^2 = 1$.  
     \vc
   \item We want to estimate the mean of this distribution, $\mu$.
   \end{itemize}
@@ -2136,7 +1967,7 @@ options(width = 80)
 
 \end{frame}
 
-\watermarkon %-----------------------------------------------------------------%
+\watermarkon %---------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{ML Intuition}
   
@@ -2148,12 +1979,11 @@ options(width = 80)
   \item Each distribution would have a different value of $\mu$.
   \end{itemize}
   \vb
-  We then compare the observed data to those distributions and see which 
-  distribution best fits the data.
+  We then compare the observed data to those distributions and see which distribution best fits the data.
 
 \end{frame}
 
-\watermarkoff %----------------------------------------------------------------%
+\watermarkoff %--------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{ML Intuition}
   
@@ -2189,11 +2019,11 @@ ggplot(data = dat1, mapping = aes(y = y, x = x)) +
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Likelihoods}
   
-  \begin{columns}
+  \begin{columns}[onlytextwidth]
     \begin{column}{0.5\textwidth}
       
       Suppose we have the following model:
@@ -2223,7 +2053,7 @@ ggplot(data = dat1, aes(x = x, y = y)) +
 
 \end{frame}
 
-\watermarkon %-----------------------------------------------------------------%
+\watermarkon %---------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Likelihoods}
   
@@ -2234,16 +2064,15 @@ ggplot(data = dat1, aes(x = x, y = y)) +
     e^{-\frac{\left( Y_n - \mu \right)^2}{2\sigma^2}}. \label{margPdf}
   \end{align}
   
-  If we plug estimated parameters into Equation \ref{margPdf}, we get the 
-  probability of observing $Y_n$ given $\hat{\mu}$ and $\hat{\sigma}^2$:
+  If we plug estimated parameters into Equation \ref{margPdf}, we get the probability of observing $Y_n$ given
+  $\hat{\mu}$ and $\hat{\sigma}^2$:
   \begin{align}
     P \left( Y_n|\hat{\mu}, \hat{\sigma}^2 \right) = 
     \frac{1}{\sqrt{2 \pi \hat{\sigma}^2}} 
     e^{-\frac{\left( Y_n - \hat{\mu}\right)^2}{2\hat{\sigma}^2}}. \label{estMargPdf}
   \end{align}
   
-  Applying Equation \ref{estMargPdf} to all $N$ observations and multiplying the 
-  results produces a \emph{likelihood}:
+  Applying Equation \ref{estMargPdf} to all $N$ observations and multiplying the results produces a \emph{likelihood}:
   \begin{align*}
     L \left( \hat{\mu}, \hat{\sigma}^2 \right) = 
     \prod_{n = 1}^N P \left( Y_n|\hat{\mu}, \hat{\sigma}^2 \right).
@@ -2251,12 +2080,12 @@ ggplot(data = dat1, aes(x = x, y = y)) +
   
 \end{frame}
 
-%%----------------------------------------------------------------------------%%
+%%--------------------------------------------------------------------------------------------------------------------%%
 
 \begin{frame}{Likelihoods}
   
-  We generally want to work with the natural logarithm of Equation 
-  \ref{estMargPdf}. Doing so gives the \emph{loglikelihood}:
+  We generally want to work with the natural logarithm of Equation \ref{estMargPdf}. Doing so gives the
+  \emph{loglikelihood}:
   \begin{align*}
   \mathcal{L} \left( \hat{\mu}, \hat{\sigma}^2 \right) &= 
     \ln \prod_{n = 1}^N P \left( Y_n|\hat{\mu}, \hat{\sigma}^2 \right)\\ 
@@ -2264,21 +2093,21 @@ ggplot(data = dat1, aes(x = x, y = y)) +
     \sum_{n = 1}^N \left( Y_n - \hat{\mu} \right)^2
   \end{align*}
   
-  ML tries to find the values of $\hat{\mu}$ and $\hat{\sigma}^2$ that maximize 
-  $\mathcal{L} \left( \hat{\mu}, \hat{\sigma}^2 \right)$.
+  ML tries to find the values of $\hat{\mu}$ and $\hat{\sigma}^2$ that maximize $\mathcal{L} \left( \hat{\mu},
+  \hat{\sigma}^2 \right)$.
   \vc
   \begin{itemize}
-  \item Find the values of $\hat{\mu}$ and $\hat{\sigma}^2$ that are \emph{most 
-    likely}, given the observed values of $Y$.
+  \item Find the values of $\hat{\mu}$ and $\hat{\sigma}^2$ that are \emph{most likely}, given the observed values of
+    $Y$.
   \end{itemize}
   
 \end{frame}
 
-\watermarkoff %----------------------------------------------------------------%
+\watermarkoff %--------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Likelihoods}
   
-    \begin{columns}
+    \begin{columns}[onlytextwidth]
     \begin{column}{0.5\textwidth}
       
       Suppose we have a linear regression model:
@@ -2306,7 +2135,7 @@ ggplot(data = dat1, aes(x = x, y = y)) +
     
 \end{frame}
 
-\watermarkon %-----------------------------------------------------------------%
+\watermarkon %---------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Likelihoods}
   
@@ -2317,9 +2146,8 @@ ggplot(data = dat1, aes(x = x, y = y)) +
     e^{-\frac{\left( Y_n - \beta_0 - \beta_1 X_n \right)^2}{2\sigma^2}}. \label{olsPdf}
   \end{align}
   
-  If we plug our estimated parameters into Equation \ref{olsPdf}, we get the 
-  probability of observing $Y_n$ given $\hat{Y}_n = \hat{\beta}_0 + 
-  \hat{\beta}_1X_n$ and $\hat{\sigma}^2$.
+  If we plug our estimated parameters into Equation \ref{olsPdf}, we get the probability of observing $Y_n$ given
+  $\hat{Y}_n = \hat{\beta}_0 + \hat{\beta}_1X_n$ and $\hat{\sigma}^2$.
   \begin{align}
     P \left( Y_n|X_n, \hat{\beta}_0, \hat{\beta}_1, \hat{\sigma}^2 \right) = 
     \frac{1}{\sqrt{2 \pi \hat{\sigma}^2}} 
@@ -2328,7 +2156,7 @@ ggplot(data = dat1, aes(x = x, y = y)) +
   
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Likelihoods}
  
@@ -2342,12 +2170,12 @@ ggplot(data = dat1, aes(x = x, y = y)) +
   
 \end{frame}
   
-\watermarkoff %----------------------------------------------------------------%
+\watermarkoff %--------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile, allowframebreaks]{Example}
     
 <<echo = FALSE>>=
-diabetes <- readRDS(paste0(dataDir, "diabetes.rds"))
+diabetes <- readRDS(here::here(dataDir, "diabetes.rds"))
 @ 
 
 <<>>=
@@ -2368,7 +2196,7 @@ sum(log(pY)); logLik(out1)[1]
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Likelihoods}
  
@@ -2383,19 +2211,18 @@ sum(log(pY)); logLik(out1)[1]
   
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Likelihood Function Visualized}
   
-  \begin{columns}
+  \begin{columns}[onlytextwidth]
     \begin{column}{0.5\textwidth}
       
       Here, we see the conditional loglikelhood function for $\beta_{glu}$.
       \vc
       \begin{itemize}
-        \item What loglikelihoods do we get by varying the value of 
-          $\hat{\beta}_{glu}$ while keep all other parameters fixed at their ML 
-          estimates?
+        \item What loglikelihoods do we get by varying the value of $\hat{\beta}_{glu}$ while keep all other parameters
+          fixed at their ML estimates?
       \end{itemize}
       
     \end{column}
@@ -2410,7 +2237,7 @@ x <- seq(beta[3] - margin, beta[3] + margin, length.out = 500)
 llY <- rep(NA, length(x))
 for(i in 1:length(x)) {
     yHat <- with(diabetes, beta[1] + beta[2] * bp + x[i] * glu + beta[4] * bmi)
-    llY[i] <- dnorm(diabetes$ldl, yHat, s, log = TRUE) %>% sum()
+    llY[i] <- dnorm(diabetes$ldl, yHat, s, log = TRUE) |> sum()
 }
 
 tmp <- data.frame(x = beta[3], y0 = min(llY), y1 = logLik(out1)[1])
@@ -2429,37 +2256,34 @@ gg0(x, llY, FALSE) +
   
 \end{frame}
 
-\watermarkon %-----------------------------------------------------------------%
+\watermarkon %---------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Steps of ML}
 
   \begin{enumerate}
-  \item Choose a probability distribution, $f(Y|\theta)$, to describe the 
-    distribution of the data, $Y$, given the parameters, $\theta$.
+  \item Choose a probability distribution, $f(Y|\theta)$, to describe the distribution of the data, $Y$, given the
+    parameters, $\theta$.
     \vc
   \item Choose some estimate of $\theta$, $\hat{\theta}^{(i)}$.
     \vc
-  \item Compute each row's contribution to the loglikelihood function by 
-    evaluating: $\ln \left[f\left(Y_n|\hat{\theta}^{(i)}\right)\right]$. 
-    \label{rowContrib}
+  \item Compute each row's contribution to the loglikelihood function by evaluating: $\ln
+    \left[f\left(Y_n|\hat{\theta}^{(i)}\right)\right]$. \label{rowContrib}
     \vc
-  \item Sum the individual loglikelihood contributions from Step 
-    \ref{rowContrib} to find the loglikelihood value, $\mathcal{L}^{(i)}$. 
-    \label{getLL}
+  \item Sum the individual loglikelihood contributions from Step \ref{rowContrib} to find the loglikelihood value,
+    $\mathcal{L}^{(i)}$. \label{getLL}
     \vc
-  \item Choose a ``better'' estimate of the parameters, $\hat{\theta}^{(i + 1)}$, 
-    and repeat Steps \ref{rowContrib} and \ref{getLL}. \label{updateTheta}
+  \item Choose a ``better'' estimate of the parameters, $\hat{\theta}^{(i + 1)}$, and repeat Steps \ref{rowContrib} and
+    \ref{getLL}. \label{updateTheta}
     \vc
-  \item Repeat Steps \ref{rowContrib} -- \ref{updateTheta} until the change 
-    between $\mathcal{L}^{(i - 1)}$ and $\mathcal{L}^{(i)}$ falls below some 
-    trivially small threshold.
+  \item Repeat Steps \ref{rowContrib} -- \ref{updateTheta} until the change between $\mathcal{L}^{(i - 1)}$ and
+    $\mathcal{L}^{(i)}$ falls below some trivially small threshold.
     \vc
   \item Take $\hat{\theta}^{(i)}$ as your estimate.
   \end{enumerate}
 
 \end{frame}
 
-%%----------------------------------------------------------------------------%%
+%%--------------------------------------------------------------------------------------------------------------------%%
 
 \begin{frame}{Multivariate Normal Distribution}
   
@@ -2481,12 +2305,11 @@ gg0(x, llY, FALSE) +
   
 \end{frame}
 
-\watermarkoff %----------------------------------------------------------------%
+\watermarkoff %--------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{ML Example}
   
-  Recall the $n$th observation's contribution to the multivariate normal 
-  loglikelihood function:
+  Recall the $n$th observation's contribution to the multivariate normal loglikelihood function:
   \begin{align*}
    \mathcal{L} \left( \mub, \Sigma \right)_n = 
    -\frac{P}{2} \ln(2\pi) - \frac{1}{2} \ln |\Sigma| - \frac{1}{2} (\mathbf{Y}_n - \mub)^T \Sigma^{-1}(\mathbf{Y}_n - \mub).
@@ -2494,8 +2317,7 @@ gg0(x, llY, FALSE) +
 
   \va
 
-  It turns out that this function is readily available in R via the 
-  \pkg{mvtnorm} package:
+  It turns out that this function is readily available in R via the \pkg{mvtnorm} package:
 
 <<eval = FALSE>>=
 ## Vector of row-wise contributions to the overall LL:
@@ -2508,7 +2330,7 @@ options(width = 60)
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{ML Example}
 
@@ -2532,7 +2354,7 @@ ll <- function(par, data) {
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{ML Example}
   
@@ -2543,11 +2365,11 @@ ll <- function(par, data) {
   
 <<cache = TRUE>>=
 ## Subset the 'diabetes' data:
-dat1 <- diabetes %>% select(bmi, ldl, glu) %>% as.matrix()
+dat1 <- diabetes |> select(bmi, ldl, glu) |> as.matrix()
 
 ## Choose some starting values:
 m0   <- rep(0, 3)
-s0   <- diag(3) %>% vecChol()
+s0   <- diag(3) |> vecChol()
 par0 <- c(m0, s0)
 
 ## Use optimx() to numerically optimize the LL function:
@@ -2556,12 +2378,12 @@ mle <- optimx(par     = par0,
               data    = dat1,
               method  = "BFGS",
               control = list(maximize = TRUE, maxit = 1000)
-              ) %>% quiet()
+              ) |> quiet()
 @ 
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{ML Example}
   
@@ -2573,14 +2395,14 @@ mle[c("convcode", "kkt1", "kkt2")]
 
 ## Get the optimize mean vector and covariance matrix:
 muHat    <- mle[1:3]
-sigmaHat <- mle[4:9] %>% 
-    as.numeric() %>% 
+sigmaHat <- mle[4:9] |> 
+    as.numeric() |> 
     vecChol(p = 3, revert = TRUE)
 @ 
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{ML Example}
 
@@ -2588,8 +2410,8 @@ sigmaHat <- mle[4:9] %>%
 
 <<>>=
 ## Estimate the parameters:
-fit <- diabetes %>% 
-    select(bmi, ldl, glu) %>% 
+fit <- diabetes |> 
+    select(bmi, ldl, glu) |> 
     lavCor(meanstructure = TRUE, output = "sampstat")
 
 ## Extract the estimated parameters:
@@ -2599,7 +2421,7 @@ sigmaHat2 <- fit$cov
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{ML Example}
   
@@ -2614,7 +2436,7 @@ print(xtable(muMat, digits = 2, caption = "Estimated Means"), booktabs = TRUE)
 
 \vx{-12}
 
-\begin{columns}
+\begin{columns}[onlytextwidth]
   \begin{column}{0.5\textwidth}
     
 <<echo = FALSE, results = "asis">>= 
@@ -2636,16 +2458,15 @@ print(xtable(sigmaHat2, digits = 2, caption = "Lavaan Covariance Matrix"),
 
 \end{frame}
 
-\watermarkon %-----------------------------------------------------------------%
+\watermarkon %---------------------------------------------------------------------------------------------------------%
 
 \subsection{Full Information Maximum Likelihood}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{From ML to FIML}
 
-  The $n$th observation's contribution to the multivariate normal loglikelihood 
-  function would be the following:
+  The $n$th observation's contribution to the multivariate normal loglikelihood function would be the following:
   \begin{align}
    \mathcal{L} \left( \mub, \Sigma \right)_n = 
    -\frac{P}{2} \ln(2\pi) - \frac{1}{2} \ln |\Sigma| - \frac{1}{2} (\mathbf{Y}_n - \mub)^T \Sigma^{-1}(\mathbf{Y}_n - \mub). \label{llContrib}
@@ -2661,7 +2482,7 @@ print(xtable(sigmaHat2, digits = 2, caption = "Lavaan Covariance Matrix"),
   
 \end{frame}
 
-\watermarkoff %----------------------------------------------------------------%
+\watermarkoff %--------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{FIML Example}
 
@@ -2679,15 +2500,15 @@ dat2 <- imposeMissData(data    = dat1,
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Visualize the Response Patterns}
 
 <<echo = FALSE>>=
-nPats <- md.pattern(dat2, plot = FALSE) %>% nrow() - 1
+nPats <- md.pattern(dat2, plot = FALSE) |> nrow() - 1
 @
 
-  \begin{columns}
+  \begin{columns}[onlytextwidth]
     \begin{column}{0.5\textwidth}
       
       The data contain \Sexpr{nPats} unique response patterns.
@@ -2695,8 +2516,8 @@ nPats <- md.pattern(dat2, plot = FALSE) %>% nrow() - 1
       \begin{itemize}
       \item We'll define \Sexpr{nPats} different version of $\mu$ and $\Sigma$.
         \vc
-      \item We'll calculate each individual loglikelihood contribution using 
-        the appropriate flavor of $\mu$ and $\Sigma$. 
+      \item We'll calculate each individual loglikelihood contribution using the appropriate flavor of $\mu$ and
+        $\Sigma$. 
       \end{itemize}
       
     \end{column}
@@ -2711,7 +2532,7 @@ nPats <- md.pattern(dat2, plot = FALSE) %>% nrow() - 1
   
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{FIML Example}
 
@@ -2736,7 +2557,7 @@ ll0 <- function(i, mu, sigma, pats, ind, data) {
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{FIML Example}
 
@@ -2761,7 +2582,7 @@ llm <- function(par, data, pats, ind) {
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{FIML Example}
 
@@ -2772,7 +2593,7 @@ ind  <- attr(pats, "index")
 
 ## Choose some starting values:
 m0   <- colMeans(dat2, na.rm = TRUE)
-s0   <- cov(dat2, use = "pairwise") %>% vecChol()
+s0   <- cov(dat2, use = "pairwise") |> vecChol()
 par0 <- c(m0, s0)
 
 ## Use optimx() to numerically optimize the LL function:
@@ -2783,12 +2604,12 @@ mle <- optimx(par     = par0,
               ind     = ind,
               method  = "BFGS",
               control = list(maximize = TRUE, maxit = 1000)
-              ) %>% quiet()
+              ) |> quiet()
 @
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{FIML Example}
   
@@ -2800,14 +2621,14 @@ mle[c("convcode", "kkt1", "kkt2")]
 
 ## Get the optimize mean vector and covariance matrix:
 muHat1    <- mle[1:3]
-sigmaHat1 <- mle[4:9] %>% 
-    as.numeric() %>% 
+sigmaHat1 <- mle[4:9] |> 
+    as.numeric() |> 
     vecChol(p = 3, revert = TRUE)
 @ 
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{FIML Example}
 
@@ -2834,7 +2655,7 @@ sigmaHat2 <- inspect(fit, "theta")
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{FIML Example}
   
@@ -2848,7 +2669,7 @@ print(xtable(muMat, digits = 2, caption = "Estimated Means"), booktabs = TRUE)
 
 \vx{-12}
 
-\begin{columns}
+\begin{columns}[onlytextwidth]
   \begin{column}{0.5\textwidth}
     
 <<echo = FALSE, results = "asis">>= 
@@ -2874,7 +2695,7 @@ print(xtable(sigmaHat2,
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{CFA Example}
 
@@ -2887,7 +2708,7 @@ fimlOut <- cfa(cfaMod, data = bfi, std.lv = TRUE, missing = "fiml")
   
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{CFA Example}
   
@@ -2901,7 +2722,7 @@ partSummary(fimlOut, 1:4)
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{CFA Example}
   
@@ -2911,7 +2732,7 @@ partSummary(fimlOut, 7, fmi = TRUE)
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{CFA Example}
   
@@ -2921,7 +2742,7 @@ partSummary(fimlOut, 8, fmi = TRUE)
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{CFA Example}
   
@@ -2931,7 +2752,7 @@ partSummary(fimlOut, 9, fmi = TRUE)
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{CFA Example}
   
@@ -2941,37 +2762,32 @@ partSummary(fimlOut, 10, fmi = TRUE)
 
 \end{frame}
 
-\watermarkon %-----------------------------------------------------------------%
+\watermarkon %---------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{FMI with FIML}
 
   As you saw above, we can also estimate the FMI when using FIML.
   \vc
   \begin{itemize}
-  \item The FMI is calculated using the method described by 
-    \citet{savaleiRhemtulla:2012}.
+  \item The FMI is calculated using the method described by \citet{savaleiRhemtulla:2012}.
   \end{itemize}
   \vb
-  \citet{savaleiRhemtulla:2012} take an information-theoretic approach to 
-  defining the FMI.
+  \citet{savaleiRhemtulla:2012} take an information-theoretic approach to defining the FMI.
   \begin{itemize}
-  \item Based on the \emph{Missing Information Principle} of 
-    \citet{orchardWoodbury:1972}
+  \item Based on the \emph{Missing Information Principle} of \citet{orchardWoodbury:1972}
     \vc  
-  \item Their FMI estimates the ratio of missing to complete information for 
-    each parameter.
+  \item Their FMI estimates the ratio of missing to complete information for each parameter.
   \end{itemize}
   \vb
-  You can use this method to compute the FMI for sufficient statistics via the 
-  \pkg{semTools}::\src{fmi()} function.
+  You can use this method to compute the FMI for sufficient statistics via the \pkg{semTools}::\src{fmi()} function.
     
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \sectionslide{Auxiliary Variables}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[allowframebreaks]{Satisfying the MAR Assumption}
  
@@ -2981,8 +2797,7 @@ partSummary(fimlOut, 10, fmi = TRUE)
   \item Parameters will be biased when data are MNAR.
   \end{itemize}
   \vb
-  Unlike MI, FIML directly treats the missing data while estimating the analysis 
-  model.
+  Unlike MI, FIML directly treats the missing data while estimating the analysis model.
   \vc
   \begin{itemize}
   \item The MAR predictors must be included in the analysis model.
@@ -2990,8 +2805,8 @@ partSummary(fimlOut, 10, fmi = TRUE)
   \item Otherwise, FIML reduces to pairwise deletion.
   \end{itemize}
   \vb  
-  When the MAR predictors are not substantively interesting variables, naively 
-  included them in the analysis model can change the model's meaning.
+  When the MAR predictors are not substantively interesting variables, naively included them in the analysis model can
+  change the model's meaning.
   
   %\vc
   %\begin{itemize}
@@ -3014,33 +2829,29 @@ partSummary(fimlOut, 10, fmi = TRUE)
   
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Saturated Correlates Technique}
 
-  \citet{graham:2003} developed the \emph{saturated correlates} approach to 
-  meet two desiderata:
+  \citet{graham:2003} developed the \emph{saturated correlates} approach to meet two desiderata:
   \vc
   \begin{enumerate}
-  \item Satisfy the MAR assumption by incorporating MAR predictors into the 
-    analysis model.
+  \item Satisfy the MAR assumption by incorporating MAR predictors into the analysis model.
     \vc
   \item Maintain the fit and substantive meaning of the analysis model.
   \end{enumerate}
   \vb
-  The approach entails incorporating the MAR predictors via a fully-saturated 
-  covariance structure:
+  The approach entails incorporating the MAR predictors via a fully-saturated covariance structure:
   \vc
   \begin{enumerate}
   \item Allow every MAR predictor to covary with all other MAR predictors.
     \vc
-  \item Allow every MAR predictor to covary with all observed variables in the
-    analysis model (or their residuals).
+  \item Allow every MAR predictor to covary with all observed variables in the analysis model (or their residuals).
   \end{enumerate}
   
 \end{frame}
 
-\watermarkoff %----------------------------------------------------------------%
+\watermarkoff %--------------------------------------------------------------------------------------------------------%
 
 \begin{frame}{Saturated Correlates Diagram}
   
@@ -3050,45 +2861,101 @@ partSummary(fimlOut, 10, fmi = TRUE)
   
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Saturated Correlates Example}
 
-  We can use the \src{lavaan.auxiliary()} function from \pkg{semTools} (or one 
-  of its wrappers) to streamline the analysis.
+  We can use the \src{lavaan.auxiliary()} function from \pkg{semTools} (or one of its wrappers) to streamline the
+  analysis.
 
 <<cache = TRUE>>=
-fimlOut2 <- bfi %>% 
-    mutate(male = as.numeric(sex == "male")) %>%
+fimlOut2 <- bfi |> 
+    mutate(male = as.numeric(sex == "male")) |>
     cfa.auxiliary(cfaMod, 
-                  data = ., 
+                  data = _, 
                   aux = c("age", "male"), 
                   std.lv = TRUE)
 @ 
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Saturated Correlates Example}
 
-  The \src{cfa.auxiliary()} function has automatically added the following paths
-  to our model.
-  
-  \begin{columns}
-    \begin{column}{0.5\textwidth}
+  The \src{cfa.auxiliary()} function has automatically added the following paths to our model.
+
+   \begin{columns}[onlytextwidth]
+    \begin{column}{0.3\textwidth}
       
 <<echo = FALSE>>=
-modString <- lavExport(fimlOut2, export = FALSE) %>% cat() %>% capture.output()
-
-grep("age ~~", modString, value = TRUE) %>% cat(sep = "\n")
+modString <- lavExport(fimlOut2, export = FALSE) |> cat() |> capture.output()
+grep("age ~~ age", modString, value = TRUE) |> cat(sep = "\n")
 @ 
 
     \end{column}
-    \begin{column}{0.5\textwidth}
+
+    \begin{column}{0.05\textwidth}
+    \end{column}
+
+    \begin{column}{0.3\textwidth}
       
 <<echo = FALSE>>=
-grep("male ~~", modString, value = TRUE) %>% cat(sep = "\n")
+grep("age ~~ male", modString, value = TRUE) |> cat(sep = "\n")
+@ 
+
+    \end{column}
+
+    \begin{column}{0.05\textwidth}
+    \end{column}
+
+    \begin{column}{0.3\textwidth}
+      
+<<echo = FALSE>>=
+grep("male ~~ male", modString, value = TRUE) |> cat(sep = "\n")
+@ 
+
+    \end{column}
+  \end{columns}
+  
+  \begin{columns}[onlytextwidth]
+    \begin{column}{0.2\textwidth}
+      
+<<echo = FALSE>>=
+grep("age ~~ A\\d", modString, value = TRUE) |> cat(sep = "\n")
+@ 
+
+    \end{column}
+
+    \begin{column}{0.06\textwidth}
+    \end{column}
+
+    \begin{column}{0.2\textwidth}
+      
+<<echo = FALSE>>=
+grep("age ~~ O\\d", modString, value = TRUE) |> cat(sep = "\n")
+@ 
+
+    \end{column}
+
+    \begin{column}{0.06\textwidth}
+    \end{column}
+
+    \begin{column}{0.2\textwidth}
+      
+<<echo = FALSE>>=
+grep("male ~~ A\\d", modString, value = TRUE) |> cat(sep = "\n")
+@ 
+
+    \end{column}
+
+    \begin{column}{0.06\textwidth}
+    \end{column}
+
+    \begin{column}{0.2\textwidth}
+      
+<<echo = FALSE>>=
+grep("male ~~ O\\d", modString, value = TRUE) |> cat(sep = "\n")
 @ 
 
     \end{column}
@@ -3096,20 +2963,20 @@ grep("male ~~", modString, value = TRUE) %>% cat(sep = "\n")
   
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Saturated Correlates Example}
 
 The auxiliaries have been correlated with all other variables.
 
 <<>>=
-inspect(fimlOut2, "est")$theta[11:12, 1:6] %>% round(3)
-inspect(fimlOut2, "est")$theta[11:12, 7:12] %>% round(3)
+inspect(fimlOut2, "est")$theta[11:12, 1:6] |> round(3)
+inspect(fimlOut2, "est")$theta[11:12, 7:12] |> round(3)
 @
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Saturated Correlates Example}
 
@@ -3125,12 +2992,11 @@ fitMeasures(fimlOut2, "df")
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[fragile]{Saturated Correlates Example}
 
-Let's compare the effects of the various missing data treatments on the latent
-covariance estimates.
+Let's compare the effects of the various missing data treatments on the latent covariance estimates.
 
 \va
 
@@ -3170,7 +3036,7 @@ tabData <- cbind(name3,
                        )
                  )
 
-xtable(tabData, caption = "Latent Covariances", align = "rrrrrrr") %>%
+xtable(tabData, caption = "Latent Covariances", align = "rrrrrrr") |>
     print(hline.after = c(-1, 2, nrow(tabData)), 
           include.colnames = FALSE,
           include.rownames = FALSE,
@@ -3179,15 +3045,15 @@ xtable(tabData, caption = "Latent Covariances", align = "rrrrrrr") %>%
 
 \end{frame}
 
-\watermarkon %-----------------------------------------------------------------%
+\watermarkon %---------------------------------------------------------------------------------------------------------%
 
 \begin{frame}[allowframebreaks]{References}
 
   \bibliographystyle{apacite}
-  \bibliography{../../bibtex/winter_school_refs.bib,../../bibtex/missing_data_papers.bib}
+  \bibliography{../../bibtex/missing_data_refs.bib}
 
 \end{frame}
 
-%------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
 
 \end{document}

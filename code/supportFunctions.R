@@ -136,10 +136,10 @@ partSummary <- function(x,
                         ...)
 {
     s0 <- summary(x, ...) |> quiet()
-    if(!is.null(drops)) s0 <- dplyr::select(s0, -all_of(drops))
+    if(!is.null(drops)) s0$pe %<>% dplyr::select(-all_of(drops))
 
     out <- paragraphs(print(s0, signif.stars = stars))
-    
+
     check <- length(which) == 1 && is.infinite(which)
     if(!check) out <- out[which]
 
@@ -331,16 +331,17 @@ imposeMissData <- function(data, targets, preds, pm, types = "random", ...) {
 
 ## Extract the FMI for a parameter (what) from a lavaan object (x):
 getFmi <- function(x, what) {
-    ## Create the summary:
-    tmp <- summary(x, fmi = TRUE) |> quiet()
-    
-    if(class(x) == "lavaan") tmp <- tmp$pe
-    
-    ## Create labels á la coef():
-    labs <- with(tmp, c(lhs, op, rhs)) |> matrix(ncol = 3) |> apply(1, paste0, collapse = "")
-    
-    ## Extract the appropriate FMI:
-    tmp$fmi[labs %in% what]
+  ## Create the summary:
+  tmp <- summary(x, fmi = TRUE) |> quiet()
+  tmp <- tmp$pe
+
+  # if(class(x) == "lavaan") tmp <- tmp$pe
+
+  ## Create labels á la coef():
+  labs <- with(tmp, c(lhs, op, rhs)) |> matrix(ncol = 3) |> apply(1, paste0, collapse = "")
+
+  ## Extract the appropriate FMI:
+  tmp$fmi[labs %in% what]
 }
 
 ###--------------------------------------------------------------------------###
