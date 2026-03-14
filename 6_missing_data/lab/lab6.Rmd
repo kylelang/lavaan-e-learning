@@ -1,6 +1,6 @@
 ---
 title: "Lab 6: Missing Data"
-subtitle: "Introduction to SEM with lavaan"
+subtitle: "SEM in R using lavaan"
 author: "Kyle M. Lang"
 date: "Updated: `r format(Sys.time(), format = '%Y-%m-%d')`"
 params:
@@ -24,10 +24,11 @@ library(magrittr)
 library(mice)
 
 figDir <- "../figures/"
+dataDir <- "data"
 
 set.seed(235711)
 
-source("../../code/supportFunctions.R")
+source(here::here("code", "supportFunctions.R"))
 
 ## Define an asis engine that will evaluate inline code within an asis block:
 knit_engines$set(asis = function(options) {
@@ -35,14 +36,17 @@ knit_engines$set(asis = function(options) {
 }
 )
 
-opts_chunk$set(include = params$answers, 
-               echo = params$answers, 
-               eval = params$answers,
-               error = TRUE,
-               message = FALSE,
-               warning = FALSE,
-               fig.align = "center",
-               comment = NA)
+opts_chunk$set(
+  include = params$answers, 
+  echo = params$answers, 
+  eval = params$answers,
+  error = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  fig.align = "center",
+  comment = NA,
+  root.dir = here::here("./")
+)
 ```
 
 <!-- 
@@ -56,8 +60,8 @@ NOTE: These must be called within a math environment (e.g., $\va$)
 
 ---
 
-In this lab, you will practice methods for dealing with missing data when using 
-[**lavaan**][lavaan] to fit latent variable models.
+In this lab, you will practice methods for dealing with missing data when using [**lavaan**][lavaan] to fit latent
+variable models.
 
 ---
 
@@ -70,18 +74,15 @@ In this lab, you will practice methods for dealing with missing data when using
 ---
 
 ```{r, eval = TRUE, include = FALSE}
-dataDir <- "../../data/"
-ea      <- readRDS(paste0(dataDir, "eating_attitudes.rds"))
+ea <- readRDS(here::here(dataDir, "eating_attitudes.rds"))
 ```
 
-For this lab, we will go back to working with the *Eating Attitudes* data from 
-Lab 4. These data are available as [*eating_attitudes.rds*][ea_data1]. Unlike 
-the completed version that we analyzed in Lab 4, we will now work with the 
+For this lab, we will go back to working with the *Eating Attitudes* data from Lab 4. These data are available as
+[*eating_attitudes.rds*][ea_data1]. Unlike the completed version that we analyzed in Lab 4, we will now work with the
 incomplete version that is actually analyzed in [Enders (2010)][amda].
 
-As before, this dataset includes `r nrow(ea)` observations of the following 
-`r ncol(ea)` variables. Note that the variables are listed in the order that 
-they appear on the dataset.
+As before, this dataset includes `r nrow(ea)` observations of the following `r ncol(ea)` variables. Note that the
+variables are listed in the order that they appear on the dataset.
 
 - `id`: A numeric ID
 - `eat1:eat24`: Seven indicators of a *Drive for Thinness* construct
@@ -90,8 +91,8 @@ they appear on the dataset.
 - `wsb`: A single item assessing *Western Standards of Beauty*
 - `anx`: A single item assessing *Anxiety Level*
 
-You can download the original data [here][ea_data0], and you can access the code 
-used to process the data [here][ea_code].
+You can download the original data [here][ea_data0], and you can access the code used to process the data
+[here][ea_code].
 
 ---
 
@@ -100,15 +101,14 @@ used to process the data [here][ea_code].
 **Read in the *eating_attitudes.rds* dataset.**
 
 ```{r, eval = FALSE}
-dataDir <- "../../data/"
-ea      <- readRDS(paste0(dataDir, "eating_attitudes.rds"))
+dataDir <- "data"
+ea      <- readRDS(here::here(dataDir, "eating_attitudes.rds"))
 ```
 
 NOTE: 
 
 1. In the following, I will refer to these data as the *EA data*.
-1. Unless otherwise specified, the data analyzed in all following questions are 
-the EA data.
+1. Unless otherwise specified, the data analyzed in all following questions are the EA data.
 
 ---
 
@@ -130,9 +130,8 @@ str(ea)
 
 ---
 
-Before we can make any headway with missing data treatment or substantive 
-analyses, we need to get a handle on the extent of our missing data problem. So, 
-we will begin with some descriptive analysis of the missing data.
+Before we can make any headway with missing data treatment or substantive analyses, we need to get a handle on the
+extent of our missing data problem. So, we will begin with some descriptive analysis of the missing data.
 
 ---
 
@@ -144,7 +143,7 @@ we will begin with some descriptive analysis of the missing data.
 library(dplyr)
 
 ## Calculate variablewise proportions missing:
-ea %>% is.na() %>% colMeans()
+ea |> is.na() |> colMeans()
 ```
 
 ---
@@ -153,16 +152,16 @@ ea %>% is.na() %>% colMeans()
 
 **Calculate the covariance coverage rates.**
 
-- You can use the `md.pairs()` function from the [**mice**][mice] package to 
-count the number of jointly observed cases for every pair or variables.
+- You can use the `md.pairs()` function from the [**mice**][mice] package to count the number of jointly observed cases
+for every pair or variables.
   
 ```{r}
 library(mice)     # Provides md.pairs()
 library(magrittr) # Provides the extract2() alias function
 
 ## Calculate covariance coverage:
-cc <- (ea %>% select(-id) %>% md.pairs() %>% extract2("rr")) /  nrow(ea)
-cc %>% round(2)
+cc <- (ea |> select(-id) |> md.pairs() |> extract2("rr")) /  nrow(ea)
+cc |> round(2)
 ```
 
 ---
@@ -171,21 +170,18 @@ cc %>% round(2)
 
 **Summarize the coverages from \@ref(calcCover).**
 
-Covariance coverage matrices are often very large and, hence, difficult to parse. 
-It can be useful to distill this information into a few succinct summaries to 
-help extract the useful knowledge.
+Covariance coverage matrices are often very large and, hence, difficult to parse. It can be useful to distill this
+information into a few succinct summaries to help extract the useful knowledge.
 
 ```{asis}
 One of the most useful numeric summaries is the range. We'll start there.
 
 NOTE:
 
-- When computing the range, it is often helpful to exclude coverages of 1.0 
-since variables that are fully jointly observed won't have much direct influence 
-on our missing data treatment.
-- We usually want to exclude the diagonal elements from the coverage matrix, too. 
-These values represent *variance* coverages instead of *covariance* coverages. 
-In other words, the diagonal of the coverage matrix gives the proportion of 
+- When computing the range, it is often helpful to exclude coverages of 1.0 since variables that are fully jointly
+observed won't have much direct influence on our missing data treatment.
+- We usually want to exclude the diagonal elements from the coverage matrix, too. These values represent *variance*
+coverages instead of *covariance* coverages. In other words, the diagonal of the coverage matrix gives the proportion of
 observed cases for each variable.
 ```
 
@@ -193,19 +189,18 @@ observed cases for each variable.
 ## Range of coverages < 1.0:
 ## NOTE: Use lower.tri() to select only the elements below the diagonal.
 uniqueCc <- cc[lower.tri(cc)] 
-uniqueCc[uniqueCc < 1] %>% range()
+uniqueCc[uniqueCc < 1] |> range()
 ```
 
 ```{asis}
-Sometimes, we may want to count the number of coverages that satisfy some 
-condition (e.g., fall below some threshold). When doing such a summary, we need 
-to remember two idiosyncrasies of the covariance coverage matrix:
+Sometimes, we may want to count the number of coverages that satisfy some condition (e.g., fall below some threshold).
+When doing such a summary, we need to remember two idiosyncrasies of the covariance coverage matrix:
 
 1. The diagonal elements are not covariance coverages.
 1. The matrix is symmetric.
 
-So, to get a count of covariance coverages without double counting, we consider 
-only the elements from the lower (or upper) triangle.
+So, to get a count of covariance coverages without double counting, we consider only the elements from the lower (or
+upper) triangle.
 ```
 
 ```{r}
@@ -219,36 +214,34 @@ sum(uniqueCc < 0.9)
 
 **Visualize the covariance coverage rates from \@ref(calcCover).**
   
-As with numeric summaries, visualizations are also a good way to distill 
-meaningful knowledge from the raw information in a covariance coverage matrix.
+As with numeric summaries, visualizations are also a good way to distill meaningful knowledge from the raw information
+in a covariance coverage matrix.
   
 ```{asis}
 We'll try two different visualizations. 
 
-First, we'll create a simple histogram of the coverages to get a sense of their 
-distribution. To see why such a visualization is useful, consider two 
-hypothetical situations wherein the range of coverages is [0.2; 0.8].
+First, we'll create a simple histogram of the coverages to get a sense of their distribution. To see why such a
+visualization is useful, consider two hypothetical situations wherein the range of coverages is [0.2; 0.8].
 
 1. Half of these coverages are lower than 0.3
 1. Only one of the coverages is lower than 0.3
 
-Clearly, the second situation is less problematic, but we cannot differentiate 
-between these two simply by examining the range of coverages.
+Clearly, the second situation is less problematic, but we cannot differentiate between these two simply by examining the
+range of coverages.
 ```
 
 ```{r}
 library(ggplot2)
 
 ## Simple histogram of coverages:
-data.frame(Coverage = uniqueCc) %>% 
+data.frame(Coverage = uniqueCc) |> 
   ggplot(aes(Coverage)) + 
   geom_histogram(bins = 15, color = "black")
 ```
 
 ```{asis}
-Next, we'll create a heatmap of the coverage matrix itself. Such a visualization
-could help us locate clusters of variables with especially low coverages, for 
-example.
+Next, we'll create a heatmap of the coverage matrix itself. Such a visualization could help us locate clusters of
+variables with especially low coverages, for example.
 ```
 
 ```{r}
@@ -278,16 +271,15 @@ ggplot(pDat, aes(x = x, y = y, fill = Coverage)) +
 
 *HINT*: 
 
-- The `plot_pattern()` function from [**ggmice**][ggmice] will create a nice 
-visualization of the patterns.
-- The `md.pattern()` function from **mice** will create a (somewhat less beautiful) 
-visualization but will return a numeric pattern matrix that you can further analyze.
+- The `plot_pattern()` function from [**ggmice**][ggmice] will create a nice visualization of the patterns.
+- The `md.pattern()` function from **mice** will create a (somewhat less beautiful) visualization but will return a
+numeric pattern matrix that you can further analyze.
 
 ```{r, fig.asp = 1.25}
 library(ggmice)
 
 ## Visualize the response patterns:
-plot_pattern(ea)
+plot_pattern(ea, rotate = TRUE)
 
 ## Create an analyzable pattern matrix (without visualization):
 (pats <- md.pattern(ea, plot = FALSE))
@@ -297,8 +289,7 @@ nrow(pats) - 1
 ```
 
 ```{asis}
-As shown by the above code, there are `r nrow(pats) - 1` unique response 
-patterns in the EA data.
+As shown by the above code, there are `r nrow(pats) - 1` unique response patterns in the EA data.
 ```
 
 ---
@@ -307,27 +298,23 @@ patterns in the EA data.
 
 **Calculate the fraction of missing information for the summary statistics.**
 
-The fraction of missing information (FMI) is a crucial statistic for quantifying 
-the extent to which missing data (and their treatment) affect parameter estimates. 
-We generally calculate the FMI for the estimates of our substantive model 
-parameters, but we can also use the FMI as a descriptive tool before fitting 
-any substantive model.
+The fraction of missing information (FMI) is a crucial statistic for quantifying the extent to which missing data (and
+their treatment) affect parameter estimates. We generally calculate the FMI for the estimates of our substantive model
+parameters, but we can also use the FMI as a descriptive tool before fitting any substantive model.
 
-- The FMI for the sufficient statistics (e.g., means, variance, and covariances)
-of our data can give us a good idea of what level of FMI to expect for models 
-fit to those data.
-- With the `fmi()` function from [**semTools**][semTools], we can efficiently 
-compute the FMI for sufficient statistics using the FIML-based approach 
-described by [Savalei and Rhemtulla (2012)][fimlFmi].
+- The FMI for the sufficient statistics (e.g., means, variance, and covariances) of our data can give us a good idea of
+what level of FMI to expect for models fit to those data.
+- With the `fmi()` function from [**semTools**][semTools], we can efficiently compute the FMI for sufficient statistics
+using the FIML-based approach described by [Savalei and Rhemtulla (2012)][fimlFmi].
 
 ```{r, R.options = list(width = 100)}
 library(semTools)
 
-fmi <- ea %>% select(-id) %>% fmi()
+fmi <- ea |> select(-id) |> fmi()
 
 fmi$Covariances$fmi
 
-fmi$Means %>% select(variable, fmi) %>% print(digits = 3)
+fmi$Means |> select(variable, fmi) |> print(digits = 3)
 ```
 
 ---
@@ -336,16 +323,14 @@ fmi$Means %>% select(variable, fmi) %>% print(digits = 3)
 
 ---
 
-Of course, we can estimate models in **lavaan** without doing anything fancy to 
-the missing data. If we fit a model to incomplete data using **lavaan**, the 
-software will automatically apply listwise deletion to remove any missing 
-data before estimating the model.
+Of course, we can estimate models in **lavaan** without doing anything fancy to the missing data. If we fit a model to
+incomplete data using **lavaan**, the software will automatically apply listwise deletion to remove any missing data
+before estimating the model.
 
-Although you should almost never use deletion-based treatments, we'll start our 
-modeling exercises by fitting a model using the default complete case analysis. 
-Sometimes, something goes wrong with the modeling, and you end up deleting cases 
-accidentally. If you're keyed into the signs that listwise deletion has occurred, 
-you'll know what to check when working with these methods in the wild.
+Although you should almost never use deletion-based treatments, we'll start our modeling exercises by fitting a model
+using the default complete case analysis. Sometimes, something goes wrong with the modeling, and you end up deleting
+cases accidentally. If you're keyed into the signs that listwise deletion has occurred, you'll know what to check when
+working with these methods in the wild.
 
 ---
 
@@ -353,14 +338,12 @@ you'll know what to check when working with these methods in the wild.
 
 **Define the model syntax for the CFA.**
 
-The data only contain multi-item scales for *Drive for Thinness* and 
-*Preoccupation with Food*, so we only need a two-dimensional CFA evaluating the 
-measurement structure of these two factors.
+The data only contain multi-item scales for *Drive for Thinness* and *Preoccupation with Food*, so we only need a
+two-dimensional CFA evaluating the measurement structure of these two factors.
 
 - Indicated the *Drive for Thinness* factor from the seven relevant scale items.
    - `eat1`, `eat2`, `eat10`, `eat11`, `eat12`, `eat14`, `eat24`
-- Indicated the *Preoccupation with Food* factor from the remaining three scale 
-items.
+- Indicated the *Preoccupation with Food* factor from the remaining three scale items.
    - `eat3`, `eat18`, `eat21`
    
 ```{r, eval = TRUE}
@@ -401,11 +384,10 @@ fitMeasures(naiveCfa)
 ```
 
 ```{asis}
-This model looks fine. All measurement model parameters seem reasonable, and the 
-model fits the data well. That being said, `r nrow(ea) - lavInspect(naiveCfa, "nobs")` observations were deleted to "fix" the missing data. Also, we can be reasonably 
-certain that these estimates are biased, unless the data were all missing 
-completely at random (MCAR). Even though the estimates look "good", they can 
-still be wrong.
+This model looks fine. All measurement model parameters seem reasonable, and the model fits the data well. That being
+said, `r nrow(ea) - lavInspect(naiveCfa, "nobs")` observations were deleted to "fix" the missing data. Also, we can be
+reasonably certain that these estimates are biased, unless the data were all missing completely at random (MCAR). Even
+though the estimates look "good", they can still be wrong.
 ```
 
 ---
@@ -414,15 +396,13 @@ still be wrong.
 
 ---
 
-Now, we'll get into the real meat of the lab and move into the realm of 
-recommended approaches. Specifically, we will treat the missing data via 
-principled methods that correct the missing data problem through a theoretically 
-motivated model for the missing values.
+Now, we'll get into the real meat of the lab and move into the realm of recommended approaches. Specifically, we will
+treat the missing data via principled methods that correct the missing data problem through a theoretically motivated
+model for the missing values.
 
-The first such approach we will consider is *multiple imputation* (MI). MI is a 
-pre-processing method that treats the missing data as a separate step prior to 
-estimating the analysis model. Consequently, the fist step in our journey toward 
-an MI-based analysis will be multiply imputing the missing data.
+The first such approach we will consider is *multiple imputation* (MI). MI is a pre-processing method that treats the
+missing data as a separate step prior to estimating the analysis model. Consequently, the fist step in our journey
+toward an MI-based analysis will be multiply imputing the missing data.
 
 ---
 
@@ -434,8 +414,7 @@ an MI-based analysis will be multiply imputing the missing data.
 
 **Multiply impute the missing data.**
 
-Use the **mice**::`mice()` function to impute the missing data using the 
-following settings.
+Use the **mice**::`mice()` function to impute the missing data using the following settings.
 
 - Create 20 imputations.
 - Use 25 iterations of the MICE algorithm.
@@ -444,8 +423,7 @@ following settings.
 
 *HINT*: 
 
-- If you are unsure of how to implement these options check the documentation 
-for the `mice()` function.
+- If you are unsure of how to implement these options check the documentation for the `mice()` function.
 - If you are really, really stuck, unhide the solution below.
 
 <details>
@@ -465,8 +443,8 @@ miceOut <- mice(ea, m = 20, maxit = 25, method = "pmm", seed = 235711)
 
 **Create a list of imputed datasets from the *mids* object generated in \@ref(mi).**
 
-The `mice()` function returns a *mids* object that contains the imputations and 
-a bunch of other metadata but not the imputed datasets.
+The `mice()` function returns a *mids* object that contains the imputations and a bunch of other metadata but not the
+imputed datasets.
 
 - We use the **mice**::`complete()` function to create the final imputed datasets.
 - Return the imputed data as a list (with length 20) of multiply imputed datasets.
@@ -482,28 +460,23 @@ eaImp <- complete(miceOut, "all")
 
 ---
 
-MI operates by filling the missing values with samples from the posterior 
-predictive distribution (PPD) of the missing data. This PPD is essentially just 
-a distribution of predictions generated from some Bayesian regression model. 
-These models are usually estimated via Markov Chain Monte Carlo (MCMC) methods. 
+MI operates by filling the missing values with samples from the posterior predictive distribution (PPD) of the missing
+data. This PPD is essentially just a distribution of predictions generated from some Bayesian regression model. These
+models are usually estimated via Markov Chain Monte Carlo (MCMC) methods. 
 
-MCMC is a stochastic estimation procedure that estimates a probabilistic model 
-by randomly sampling from the joint distribution of the model parameters (the 
-so-called posterior distribution in Bayesian models) to build up an empirical 
-representation of this distribution. When using MCMC, the estimated model (and,
-in our case, the imputations) is only valid if the MCMC algorithm has converged.
+MCMC is a stochastic estimation procedure that estimates a probabilistic model by randomly sampling from the joint
+distribution of the model parameters (the so-called posterior distribution in Bayesian models) to build up an empirical
+representation of this distribution. When using MCMC, the estimated model (and, in our case, the imputations) is only
+valid if the MCMC algorithm has converged.
 
-Therefore, before we can proceed with the analysis, we need to check two 
-important criteria:
+Therefore, before we can proceed with the analysis, we need to check two important criteria:
 
-1. The MCMC algorithm has converged onto a stationary solution (i.e., the MCMC
-samples represent valid draws from some stable distribution).
-1. The imputations are sensible (i.e., they look like reasonable replacements 
-for the missing data).
+1. The MCMC algorithm has converged onto a stationary solution (i.e., the MCMC samples represent valid draws from some
+   stable distribution).
+1. The imputations are sensible (i.e., they look like reasonable replacements for the missing data).
 
-For more information on MCMC estimation, convergence, and diagnostics for MI 
-models, see Sections [4.5][fimd_4.5], [6.5][fimd_6.5], and [6.6][fimd_6.6] of 
-[Van Buuren (2019)][fimd].
+For more information on MCMC estimation, convergence, and diagnostics for MI models, see Sections [4.5][fimd_4.5],
+[6.5][fimd_6.5], and [6.6][fimd_6.6] of [Van Buuren (2019)][fimd].
 
 ---
 
@@ -511,36 +484,33 @@ models, see Sections [4.5][fimd_4.5], [6.5][fimd_6.5], and [6.6][fimd_6.6] of
 
 **Create traceplots of the imputations' means and variances.**
 
-One especially expedient way to evaluate convergence is by plotting the 
-iteration history of the means and variances of the imputed values for each 
-variable. Once the MCMC algorithm has converged, the individual lines in these 
-plots (each of which corresponds to one imputation and represents an independent 
-Markov Chain) should mix thoroughly, and the overall mass of the tracelines 
-should show no trend.
+One especially expedient way to evaluate convergence is by plotting the iteration history of the means and variances of
+the imputed values for each variable. Once the MCMC algorithm has converged, the individual lines in these plots (each
+of which corresponds to one imputation and represents an independent Markov Chain) should mix thoroughly, and the
+overall mass of the tracelines should show no trend.
 
-- Use the `plot_trace()` function from **ggmice** to create traceplots for each 
-imputed variable.
+- Use the `plot_trace()` function from **ggmice** to create traceplots for each imputed variable.
 - Do these plots suggest convergence?
 
- <!-- , animation.hook = "gifski", cache = TRUE} -->
-
-```{r trace_plots}
+```{r trace_plots, animation.hook = "gifski"}
 ## Get the names of the imputed variables:
-targets <- which(miceOut$method != "") %>% names()
+targets <- which(miceOut$method != "") |> names()
 
 ## Create traceplots of the imputed means and variances:
-plot_trace(miceOut, "all")
+for(v in targets) {
+  plot_trace(miceOut, !!v) |> print()
+}
 ```
 
 ```{asis}
-The plots show well-mixed tracelines for each imputation, and there is no 
-evidence of a global trend. So, these plots suggest convergence.
+The plots show well-mixed tracelines for each imputation, and there is no evidence of a global trend. So, these plots
+suggest convergence.
 ```
 
 ---
 
-We can also evaluate convergence via numeric statistics such as the *Potential 
-Scale Reduction Factor*, $\hat{R}$, ([Gelman & Rubin, 1992][psrf]).
+We can also evaluate convergence via numeric statistics such as the *Potential Scale Reduction Factor*, $\hat{R}$,
+([Gelman & Rubin, 1992][psrf]).
 
 ---
 
@@ -548,9 +518,8 @@ Scale Reduction Factor*, $\hat{R}$, ([Gelman & Rubin, 1992][psrf]).
 
 **Compute the $\hat{R}$ statistic for the means and variances of the imputations.**
 
-For *mids* objects, we can use the `Rhat.mice()` function from 
-[**miceadds**][miceadds] to compute the $\hat{R}$ statistics for the means and 
-variances of the imputed data.
+For *mids* objects, we can use the `Rhat.mice()` function from [**miceadds**][miceadds] to compute the $\hat{R}$
+statistics for the means and variances of the imputed data.
 
 - At convergence, these statistic should all be close to 1.0 (i.e., $\hat{R} < 1.1$)
 - Do the $\hat{R}$ statistics suggest convergence?
@@ -563,21 +532,18 @@ Rhat.mice(miceOut)
 ```
 
 ```{asis}
-Yes, all $\hat{R}$ statistics are less than 1.1 (and very near 1.0), so these
-statistics suggest convergence.
+Yes, all $\hat{R}$ statistics are less than 1.1 (and very near 1.0), so these statistics suggest convergence.
 ```
 
 ---
 
-After we confirm that the imputation model has converged, we still need to sanity
-check the imputed values, themselves. A convergent imputation model can still
-produce completely ridiculous and useless imputations. The fact that the MCMC 
-algorithm has converged onto a stationary distribution does not mean that this 
-distribution represents a sensible imputation model.
+After we confirm that the imputation model has converged, we still need to sanity check the imputed values, themselves.
+A convergent imputation model can still produce completely ridiculous and useless imputations. The fact that the MCMC
+algorithm has converged onto a stationary distribution does not mean that this distribution represents a sensible
+imputation model.
 
-One of the best ways to check the plausibility of the imputations is with plots
-that juxtapose the imputed and observed data. Since we're comparing distributions
-of numeric variables, kernel density plots are a good option.
+One of the best ways to check the plausibility of the imputations is with plots that juxtapose the imputed and observed
+data. Since we're comparing distributions of numeric variables, kernel density plots are a good option.
 
 ---
 
@@ -585,14 +551,13 @@ of numeric variables, kernel density plots are a good option.
 
 **Create kernel density plots of the imputed and observed data.**
 
-We can create "quick-and-dirty" density plots via the **mice**::`densityplot()` 
-function, but **ggmice**::`ggmice()` allows us to create the same figures with
-all the control provided by `ggplot()`. For more details check 
+We can create "quick-and-dirty" density plots via the **mice**::`densityplot()` function, but **ggmice**::`ggmice()`
+allows us to create the same figures with all the control provided by `ggplot()`. For more details check
 [this page][ggmice_density].
 
 - Do the imputed values look reasonable?
 
-```{r density_plots, animation.hook = "gifski", cache = TRUE}
+```{r density_plots, animation.hook = "gifski"}
 for(v in targets) {
   p <- ggmice(miceOut, aes_string(v, group = ".imp", size = ".where")) + 
     geom_density() + 
@@ -604,12 +569,10 @@ for(v in targets) {
 ```
 
 ```{asis}
-Yes, the imputed values all seem plausible. The kernel densities for the imputed
-data all seem as though they could represent samples from a population similar 
-to the one that generated the complete data.
+Yes, the imputed values all seem plausible. The kernel densities for the imputed data all seem as though they could
+represent samples from a population similar to the one that generated the complete data.
 
-- Note that the populations that generate the observed and imputed data need not 
-be the same unless the data are MCAR.
+- Note that the populations that generate the observed and imputed data need not be the same unless the data are MCAR.
 ```
 
 ---
@@ -618,25 +581,9 @@ be the same unless the data are MCAR.
 
 ---
 
-Assuming our imputations pass the above checks, it's time to move into the 
-analysis phase of the process. In practice, we will lean heavily on routines 
-from the **lavaan.mi** package to implement both the analysis and pooling phases.
-
----
-
-The **lavaan.mi** package contains most of the MI-related functionality that was
-orginally part of **semTools**. At this point (2024-07-12), **lavaan.mi** isn't
-available on CRAN, so we'll need to install the development version from GitHub.
-
-Run the following code to install **lavaan.mi**. You will need to have the
-**remotes** package installed to run this code.
-
-```{r install_lavaan_mi, eval = FALSE}
-remotes::install_github("TDJorgensen/lavaan.mi")
-```
-
-Now, we can use **lavaan.mi**::`cfa.mi()` to fit our models to the list of
-multiply imputed datasets from \@ref(fillMissing).
+Assuming our imputations pass the above checks, it's time to move into the analysis phase of the process. In practice,
+we will lean heavily on routines from the [**lavaan.mi**][lavaan_mi] package to implement both the analysis and pooling
+phases.
 
 ---
 
@@ -656,7 +603,7 @@ multiply imputed datasets from \@ref(fillMissing).
 
 ```{r cfa_mi1, cache = TRUE}
 library(lavaan.mi)
-miCfa <- lavaan.mi::cfa.mi(cfaMod, data = eaImp, std.lv = TRUE, meanstructure = TRUE)
+miCfa <- cfa.mi(cfaMod, data = eaImp, std.lv = TRUE, meanstructure = TRUE)
 ```
 
 ---
@@ -672,24 +619,22 @@ miCfa <- lavaan.mi::cfa.mi(cfaMod, data = eaImp, std.lv = TRUE, meanstructure = 
 - Do any of the FMI estimates cause you to question the results?
 
 ```{r, R.options = list(width = 100)}
-summary(miCfa, fmi = TRUE) %>% print()
+summary(miCfa, fmi = TRUE)
 ```
 
 ```{r}
-fitMeasures(miCfa, stat = "D3")
+fitMeasures(miCfa, pool.method = "D3")
 ```
 
 ```{asis}
-- This model looks good. All measurement model parameters seem reasonable, and 
-the model fits the data very well.
+- This model looks good. All measurement model parameters seem reasonable, and the model fits the data very well.
 - None of the FMI values looks worryingly large.
 ```
 
 ---
 
-Now, we will estimate a latent regression model wherein the *preoccupation with 
-food* factor and the *drive for thinness* factor are correlated and regressed 
-onto *anxiety*, *Western beauty standards*, and *BMI*.
+Now, we will estimate a latent regression model wherein the *preoccupation with food* factor and the *drive for
+thinness* factor are correlated and regressed onto *anxiety*, *Western beauty standards*, and *BMI*.
 
 ---
 
@@ -731,24 +676,24 @@ miSem1 <- sem.mi(semMod, data = eaImp, std.lv = TRUE)
 **Summarize the fitted SEM and interpret the results.**
 
 - Include the FMI statistics in your summary.
-- Does *anxiety* significantly predict *preoccupation with food* and/or *drive 
-for thinness* after controlling for *Western beauty standards* and *BMI*?
-- Does *Western beauty standards* significantly predict *preoccupation with food* 
-and/or *drive for thinness* after controlling for *anxiety* and *BMI*?
+- Does *anxiety* significantly predict *preoccupation with food* and/or *drive for thinness* after controlling for
+*Western beauty standards* and *BMI*?
+- Does *Western beauty standards* significantly predict *preoccupation with food* and/or *drive for thinness* after
+controlling for *anxiety* and *BMI*?
 
 
 ```{r, R.options = list(width = 100)}
-summary(miSem1, fmi = TRUE) %>% print()
+summary(miSem1, fmi = TRUE)
 ```
 
 ```{r semRes1, echo = FALSE, results = "asis"}
-tmp <- summary(miSem1, fmi = TRUE) %>% quiet()
-tmp <- tmp %>% filter(label != "") %>% as.data.frame()
+tmp <- summary(miSem1, fmi = TRUE) |> quiet()
+tmp <- tmp$pe |> filter(label != "") |> as.data.frame()
 
-paths <- tmp %>% select(1:3) %>% apply(1, paste, collapse = " ")
-dat   <- tmp %>% 
-  select(est, t, pvalue, fmi) %>%
-  round(3) %>%
+paths <- tmp |> select(1:3) |> apply(1, paste, collapse = " ")
+dat   <- tmp |> 
+  select(est, t, pvalue, fmi) |>
+  round(3) |>
   mutate(p = case_when(pvalue < 0.001 ~ "< 0.001",
                        TRUE           ~ as.character(pvalue)
                        ),
@@ -765,12 +710,10 @@ kable(dat,
 ```
 
 ```{asis}
-- Yes, as shown in Table \@ref(tab:semRes1), *anxiety* is significantly and 
-positively associated with both *preoccupation with food* and *drive for thinness* 
-after controlling for *Western beauty standards* and *BMI*.
-- Likewise, *Western beauty standards* significantly and positively predicts 
-*preoccupation with food* and *drive for thinness* after controlling for *anxiety* 
-and *BMI*.
+- Yes, as shown in Table \@ref(tab:semRes1), *anxiety* is significantly and positively associated with both
+*preoccupation with food* and *drive for thinness* after controlling for *Western beauty standards* and *BMI*.
+- Likewise, *Western beauty standards* significantly and positively predicts *preoccupation with food* and *drive for
+thinness* after controlling for *anxiety* and *BMI*.
 ```
 
 ---
@@ -779,9 +722,8 @@ and *BMI*.
 
 ---
 
-Given an SEM fitted to multiply imputed data via **semTools**::`lavaan.mi()`, we
-can use the testing utilities from **semTools** to evaluate (multivariate) 
-hypotheses defined in terms of parameter constraints.
+Given an SEM fitted to multiply imputed data via **lavaan.mi**::`lavaan.mi()`, we can use the testing utilities from
+**lavaan.mi** to evaluate (multivariate) hypotheses defined in terms of parameter constraints.
 
 - In the next two questions, we'll test one such hypothesis.
 
@@ -797,7 +739,7 @@ hypotheses defined in terms of parameter constraints.
 - Use the $D1$ statistic to conduct the test.
 - What is the conclusion of this test?
 
-*HINT*: The **semTools**::`lavTestWald.mi()` function can be very helpful here.
+*HINT*: The **lavaan.mi**::`lavTestWald.mi()` function can be very helpful here.
 
 ```{r}
 ## Define the constraints implied by the null hypothesis:
@@ -807,26 +749,25 @@ b2p == b2d
 '
 
 ## Test the constraints via a multivariate Wald test:
-lavTestWald.mi(miSem1, cons, test = "D1")
+lavTestWald.mi(miSem1, cons, pool.method = "D1")
 ```
 
 ```{r, echo = FALSE}
-tmp <- lavTestWald.mi(miSem1, cons, test = "D1")
+tmp <- lavTestWald.mi(miSem1, cons, pool.method = "D1")
 
-f   <- tmp["F"] %>% round(2)
-df1 <- tmp["df1"] %>% round()
-df2 <- tmp["df2"] %>% round(2)
-p   <- tmp["pvalue"] %>% round(3)
-fmi <- tmp["fmi"] %>% round(3)
+f   <- tmp["F"] |> round(2)
+df1 <- tmp["df1"] |> round()
+df2 <- tmp["df2"] |> round(2)
+p   <- tmp["pvalue"] |> round(3)
+fmi <- tmp["fmi"] |> round(3)
 ```
 
 ```{asis}
-The Wald test returned a nonsignificant result (
-$F[`r df1`, `r df2`] = `r f`$, 
-$p = `r p`$,
-$FMI = `r fmi`$
-). Hence, we cannot infer a difference in the effect of either predictor on 
-either outcome.
+The Wald test returned a nonsignificant result
+$(F[`r df1`, `r df2`] = `r f`,$
+$p = `r p`,$
+$\mathit{FMI} = `r fmi`).$
+Hence, we cannot infer a difference in the effect of either predictor on either outcome.
 ```
 
 ---
@@ -840,7 +781,7 @@ either outcome.
 - Use the $D3$ statistic to conduct the test.
 - What is the conclusion of this test?
 
-```{r sem_anova1, cache = TRUE}
+```{r sem_anova1, paged.print = FALSE, cache = TRUE}
 ## Define the restricted model by combining the constraint and SEM syntax:
 semMod2 <- paste(semMod, cons, sep = '\n')
 
@@ -848,27 +789,26 @@ semMod2 <- paste(semMod, cons, sep = '\n')
 miSem2 <- sem.mi(semMod2, data = eaImp, std.lv = TRUE)
 
 ## Conduct the LRT:
-anova(miSem1, miSem2, stat = "D3")
+anova(miSem1, miSem2, pool.method = "D3")
 ```
 
 ```{r, echo = FALSE}
-tmp <- anova(miSem1, miSem2, stat = "D3")
+tmp <- anova(miSem1, miSem2, pool.method = "D3")[2, ]
 
-f   <- tmp["F"] %>% round(2)
-df1 <- tmp["df1"] %>% round()
-df2 <- tmp["df2"] %>% round(2)
-p   <- tmp["pvalue"] %>% round(3)
-fmi <- tmp["fmi"] %>% round(3)
+f   <- tmp[["F"]] |> round(2)
+df1 <- tmp[["num Df"]] |> round()
+df2 <- tmp[["den Df"]] |> round(2)
+p   <- tmp[["Pr(>F)"]] |> round(3)
+fmi <- tmp[["FMI"]] |> round(3)
 ```
 
 ```{asis}
-As above, the LRT returned a nonsignificant result (
-$F[`r df1`, `r df2`] = `r f`$, 
-$p = `r p`$,
-$FMI = `r fmi`$
-). So, the restricted model does not fit significantly worse than the full model, 
-and, consequently, we cannot infer a difference in the effect of either 
-predictor on either outcome.
+As above, the LRT returned a nonsignificant result
+$(F[`r df1`, `r df2`] = `r f`,$
+$p = `r p`,$
+$\mathit{FMI} = `r fmi`).$
+So, the restricted model does not fit significantly worse than the full model, and, consequently, we cannot infer a
+difference in the effect of either predictor on either outcome.
 ```
 
 ---
@@ -877,10 +817,9 @@ predictor on either outcome.
 
 ---
 
-Next, we'll consider methods for modeling mediation when working with MI data. 
-To keep things simple, we're only going to estimate wherein *Western beauty 
-standards* predict *preoccupation with food*, and *drive for thinness* mediates 
-this relation.
+Next, we'll consider methods for modeling mediation when working with MI data. To keep things simple, we're only going
+to estimate wherein *Western beauty standards* predict *preoccupation with food*, and *drive for thinness* mediates this
+relation.
 
 - You can see the path diagram for this model below.
 
@@ -912,45 +851,36 @@ semMod3 <- paste(cfaMod, semMod3, sep = '\n')
 
 ---
 
-Combining mediation with MI is a bit tricky. When treating the missing data with 
-MI, we produce $M$ different datasets, but we also need to create $B$ bootstrap 
-samples to test the indirect effects. The best method for combining these two 
-layers of sampling is not immediately obvious, but the literature does provide 
-some guidance. [Wu and Jia (2013)][wu_jia_2013] recommend nesting bootstrapping 
-within MI via an approach that they call *MI(Boot)*. The MI(Boot) procedure 
-entails the following steps.
+Combining mediation with MI is a bit tricky. When treating the missing data with MI, we produce $M$ different datasets,
+but we also need to create $B$ bootstrap samples to test the indirect effects. The best method for combining these two
+layers of sampling is not immediately obvious, but the literature does provide some guidance. [Wu and Jia
+(2013)][wu_jia_2013] recommend nesting bootstrapping within MI via an approach that they call *MI(Boot)*. The MI(Boot)
+procedure entails the following steps.
 
 1. Impute the missing data $M$ times.
-$\vb$
-1. For each of these $M$ imputed datasets, estimate your mediation model as you 
-would on fully observed data.
+1. For each of these $M$ imputed datasets, estimate your mediation model as you would on fully observed data.
    - I.e., use $B$ bootstrap samples to quantify the uncertainty.
-$\vb$
-1. Combine the $M \times B$ resulting estimates of the indirect effect into a 
-single sample with $N = M \times B$ observations.
-$\vb$
-1. Treat this aggregated sample as a single pool of bootstrapped estimates and 
-construct CIs in the usual way.
+1. Combine the $M \times B$ resulting estimates of the indirect effect into a single sample with $N = M \times B$
+   observations.
+1. Treat this aggregated sample as a single pool of bootstrapped estimates and construct CIs in the usual way.
 
 ---
 
-The MI(Boot) approach is not currently implemented in **lavaan** or **semTools** 
-(neither is any alternative method of combining MI and bootstrapping). If you 
-really wanted to, however, you could implement MI(Boot) manually. 
+The MI(Boot) approach is not currently implemented in **lavaan** or **semTools** (neither is any alternative method of
+combining MI and bootstrapping). If you really wanted to, however, you could implement MI(Boot) manually. 
 
 - The following three code chunks demonstrate one potential implementation.
 
 ---
 
-First, we'll define a function that will take a fitted lavaan object (`lavObj`) 
-as input and return the bootstrapped estimates of all defined parameters 
-specified in the model syntax of `lavObj`.
+First, we'll define a function that will take a fitted lavaan object (`lavObj`) as input and return the bootstrapped
+estimates of all defined parameters specified in the model syntax of `lavObj`.
 
 ```{r, eval = TRUE, include = TRUE, echo = TRUE}
 getDefParEstimates <- function(lavObj) {
   ## Use lavaan::lav_partable_constraints_def() to generate a function that 
   ## computes all defined parameters represented in 'lavObj':
-  getDefPar <- lavObj %>% parTable() %>% lav_partable_constraints_def()
+  getDefPar <- lavObj |> parTable() |> lav_partable_constraints_def()
   
   ## Extract the bootstrapped coefficient estimates from 'lavObj':
   cf <- inspect(lavObj, "coef.boot")
@@ -960,89 +890,73 @@ getDefParEstimates <- function(lavObj) {
 }
 ```
 
-Now, we'll use the `semList()` function from **lavaan** to fit `semMod3` to each 
-of the M = 20 imputed datasets in `eaImp`.
+Now, we'll use the `semList()` function from **lavaan** to fit `semMod3` to each of the M = 20 imputed datasets in
+`eaImp`.
 
 - We'll generate B = 1000 bootstrap samples for each of these 20 imputed datasets.
-- We'll use the `getDefParEstimates()` function defined above to extract the 
-relevant estimates (i.e., the bootstrapped estimates of the indirect effect) 
-from each one of our 20 fitted lavaan objects.
+- We'll use the `getDefParEstimates()` function defined above to extract the relevant estimates (i.e., the bootstrapped
+estimates of the indirect effect) from each one of our 20 fitted lavaan objects.
 
-*NOTE*: This code will take quite a long time to run. So, if you want to run the 
-code yourself, consider first doing so with a small number of bootstrap samples 
-(e.g., $B = 50$) to get a sense of the run time to expect.
+*NOTE*: This code will take quite a long time to run. So, if you want to run the code yourself, consider first doing so
+with a small number of bootstrap samples (e.g., $B = 50$) to get a sense of the run time to expect.
 
-   - If you want a more accurate estimate, you can time this baby run with 
-   `system.time()` and extrapolate from there.
+- If you want a more accurate estimate, you can time this baby run with `system.time()` and extrapolate from there.
 
 ```{r miBoot, eval = TRUE, include = TRUE, echo = TRUE, cache = TRUE}
+## Variable to set the number of bootstrap samples:
+nBoot <- 1000
+
 ## Fit the models:
 fits <- semList(semMod3, 
                 dataList  = eaImp, 
                 std.lv    = TRUE, 
                 se        = "boot", 
-                bootstrap = 1000, 
+                bootstrap = nBoot,
                 FUN       = getDefParEstimates)
-
 ```
 
-Finally, we aggregate the bootstrapped estimates of the indirect effect from 
-above (these live in the `funList` slot of the `fits` object) into a single 
-sample with $N = 20 \times 1000 = 20000$ observations.
+Finally, we aggregate the bootstrapped estimates of the indirect effect from above (these live in the `funList` slot of
+the `fits` object) into a single sample with $N = 20 \times 1000 = 20000$ observations.
 
-- This aggregated pool of estimates represents the empirical sampling 
-distribution of our indirect effect, so we can summarize this aggregated sample
-for inference (e.g., by compute the BCa CI of the indirect effect).
+- This aggregated pool of estimates represents the empirical sampling distribution of our indirect effect, so we can
+summarize this aggregated sample for inference (e.g., by compute the 95\% CI of the indirect effect).
 
 ```{r, eval = TRUE, include = TRUE, echo = TRUE}
 ## Aggregate estimates:
-ab <- fits@funList %>% unlist()
+ab <- fits@funList |> unlist()
 
-## Use the bca() function from the coxed package to compute the BCa CI for the 
-## indirect effect:
-coxed::bca(ab)
+## Calculate a basic percentile CI for the indirect effect:
+quantile(ab, c(0.025, 0.975))
 ```
 
 ---
 
-The MI(Boot) approach will produce theoretically optimal results, but it does so 
-at a high computational cost. Implementing the approach for **lavaan** models is 
-also a bit tricky. Thankfully, we have a very satisfactory alternative: the 
-Monte Carlo method proposed by [MacKinnon et al. (2004)][mcMed].
+The MI(Boot) approach will produce theoretically optimal results, but it does so at a high computational cost.
+Implementing the approach for **lavaan** models is also a bit tricky. Thankfully, we have a very satisfactory
+alternative: the Monte Carlo method proposed by [MacKinnon et al. (2004)][mcMed].
 
-The justification for the Monte Carlo method begins with the original motivation 
-for using bootstrapping to test the indirect effect: the $a$ and $b$ paths are 
-normally distributed, so their product cannot be. Rather than going fully 
-non-parametric (as in bootstrapping), though, the Monte Carlo method leverages 
-the known sampling distributions of $a$ and $b$ to synthesize an empirical 
-sampling distribution of their product (i.e., the indirect effect). The Monte 
-Carlo method entails the following procedure.
+The justification for the Monte Carlo method begins with the original motivation for using bootstrapping to test the
+indirect effect: the $a$ and $b$ paths are normally distributed, so their product cannot be. Rather than going fully
+non-parametric (as in bootstrapping), though, the Monte Carlo method leverages the known sampling distributions of $a$
+and $b$ to synthesize an empirical sampling distribution of their product (i.e., the indirect effect). The Monte Carlo
+method entails the following procedure.
 
 1. Estimate the mediation model on the full dataset.
-   - For MI data, this model is estimated in the usual way, and the parameter 
-   estimates used in the following steps are the pooled MI estimates.
-$\vb$   
-1. Use the estimated $a$ and $b$ paths along with their asymptotic covariance 
-matrix to define a bivariate normal distribution.
-   - This distribution represents an estimate of the joint sampling distribution 
-   of $a$ and $b$ under the assumption of bivariate normality (which is usually 
-   a reasonable assumption). 
-$\vb$
-1. Generate a very large sample (e.g., $N \geq 20000$) from the bivariate normal 
-distribution defined above.
-   - Although we need to generate a very large sample here, generating such a 
-   sample is computationally trivial and very fast.
-$\vb$
-1. For each $\{a_n, b_n\}$ pair in the above sample, compute the indirect effect, 
-$ab_n = a_n \times b_n$.
-$\vb$
-1. Use the $N$ estimates of the indirect effect to define an empirical sampling 
-distribution, and summarize this distribution as you would if the sample had been 
-generated by ordinary bootstrapping.
+   - For MI data, this model is estimated in the usual way, and the parameter estimates used in the following steps are
+   the pooled MI estimates.
+1. Use the estimated $a$ and $b$ paths along with their asymptotic covariance matrix to define a bivariate normal
+   distribution.
+   - This distribution represents an estimate of the joint sampling distribution of $a$ and $b$ under the assumption of
+   bivariate normality (which is usually a reasonable assumption). 
+1. Generate a very large sample (e.g., $N \geq 20000$) from the bivariate normal distribution defined above.
+   - Although we need to generate a very large sample here, generating such a sample is computationally trivial and very
+   fast.
+1. For each $\{a_n, b_n\}$ pair in the above sample, compute the indirect effect, $ab_n = a_n \times b_n$.
+1. Use the $N$ estimates of the indirect effect to define an empirical sampling distribution, and summarize this
+   distribution as you would if the sample had been generated by ordinary bootstrapping.
 
-Fortunately for us, the Monte Carlo simulation approach is implemented in the 
-`monteCarloCI()` function from **semTools**. For more information on this 
-approach, see [MacKinnon et al. (2004)][mcMed] and 
+Fortunately for us, the Monte Carlo simulation approach is implemented in the `monteCarloCI()` function from
+**semTools**. For more information on this approach, see [MacKinnon et al. (2004)][mcMed] and
 [Preacher and Selig (2012)][preacher_selig_2012].
 
 ---
@@ -1053,7 +967,7 @@ approach, see [MacKinnon et al. (2004)][mcMed] and
 
 - Is the indirect effect statistically significant?
 
-```{r mi_mediation1, cache = TRUE}
+```{r mi_mediation1, paged.print = FALSE, cache = TRUE}
 ## Estimate the mediation model on the MI data:
 miSem3 <- sem.mi(semMod3, data = eaImp, std.lv = TRUE)
 
@@ -1062,8 +976,8 @@ monteCarloCI(miSem3, plot = TRUE)
 ```
 
 ```{asis}
-Yes, the indirect effect is statistically significant. It is also interesting to 
-note that the Monte Carlo CI is very similar to the MI(Boot) CI estimated above.
+Yes, the indirect effect is statistically significant. It is also interesting to note that the Monte Carlo CI is very
+similar to the MI(Boot) CI estimated above.
 ```
 
 ---
@@ -1072,8 +986,8 @@ note that the Monte Carlo CI is very similar to the MI(Boot) CI estimated above.
 
 ---
 
-Now that we've had our fun with MI, lets explore the final topic of this lab: 
-*full information maximum likelihood* (FIML).
+Now that we've had our fun with MI, lets explore the final topic of this lab: *full information maximum likelihood*
+(FIML).
 
 ---
 
@@ -1095,8 +1009,7 @@ fimlCfa1 <- cfa(cfaMod, data = ea, std.lv = TRUE, missing = "fiml")
 ```
 
 ```{asis}
-To implement basic FIML estimation, we need only add the `missing = "fiml"` 
-option to our `cfa()` call.
+To implement basic FIML estimation, we need only add the `missing = "fiml"` option to our `cfa()` call.
 ```
 
 ---
@@ -1108,9 +1021,7 @@ option to our `cfa()` call.
 - Include the FMI statistics in your summary
    - Do any of these FMI values give you pause?
    - How do these FMI estimates compare to those from the MI-based CFA in \@ref(miCfa)?
-$\vb$
-- Does the number of missing data patterns shown in the summary match the number 
-you calculated in \@ref(mdPattern)?
+- Does the number of missing data patterns shown in the summary match the number you calculated in \@ref(mdPattern)?
    - If not, what do you think causes this discrepancy?
 - Do the parameter estimates looks sensible?
 - Does the model fit the data well enough?
@@ -1121,13 +1032,13 @@ fitMeasures(fimlCfa1)
 ```
 
 ```{asis}
-- None of the FMI values are especially large, and they tend to be a little 
-smaller than the FMI values produced by MI (as shown below).
+- None of the FMI values are especially large, and they tend to be a little smaller than the FMI values produced by MI
+(as shown below).
 ```
 
 ```{r, echo = FALSE}
 fmi1 <- summary(fimlCfa1, fmi = TRUE)$pe$fmi
-fmi2 <- summary(miCfa, fmi = TRUE)$fmi %>% quiet()
+fmi2 <- summary(miCfa, fmi = TRUE)$pe$fmi
 
 dat <- data.frame(FMI = c(fmi1, fmi2), 
                   Method = rep(c("FIML", "MI"), each = length(fmi1))
@@ -1139,18 +1050,11 @@ ggplot(dat, aes(FMI, color = Method)) +
 ```
 
 ```{asis}
-- The number of response patterns listed in the summary,
-`r lavInspect(fimlCfa1, "patterns") %>% nrow()`, 
-is fewer than the number of patterns calculated from the full dataset, 
-`r nrow(pats) - 1`
-.
-
-   - This discrepancy arises because we are only analyzing a subset of the 
-   incomplete variables here. The total number of response patterns increases 
-   when considering the full dataset.
-$\va$
-- Generally, the model looks good. The parameter estimates all seem sensible, 
-and the model fits the data very well.
+- The number of response patterns listed in the summary, `r lavInspect(fimlCfa1, "patterns") |> nrow()`, is fewer than
+the number of patterns calculated from the full dataset, `r nrow(pats) - 1`.
+   - This discrepancy arises because we are only analyzing a subset of the incomplete variables here. The total number
+of response patterns increases when considering the full dataset.
+- Generally, the model looks good. The parameter estimates all seem sensible, and the model fits the data very well.
 ```
 
 ---
@@ -1159,15 +1063,13 @@ and the model fits the data very well.
 
 ---
 
-Although the model above seems to have produced satisfactory estimates, the MAR 
-assumption will have been violated unless the missingness on the indicators of 
-`drive` and `pre` is associated only with other such indicators. If, for example, 
-missingness on some of the `pre` items is associated with *BMI*, then the data 
-are MNAR, and the model estimates are probably biased.
+Although the model above seems to have produced satisfactory estimates, the MAR assumption will have been violated
+unless the missingness on the indicators of `drive` and `pre` is associated only with other such indicators. If, for
+example, missingness on some of the `pre` items is associated with *BMI*, then the data are MNAR, and the model
+estimates are probably biased.
 
-- We can address this issue by including auxiliary variables (i.e., potential 
-correlates of missingness in which we have no substantive interest) via the 
-[Graham (2003)][graham_2003] saturated correlates technique.
+- We can address this issue by including auxiliary variables (i.e., potential correlates of missingness in which we have
+no substantive interest) via the [Graham (2003)][graham_2003] saturated correlates technique.
 
 ---
 
@@ -1188,9 +1090,8 @@ fimlCfa2 <- cfa.auxiliary(cfaMod,
 ```
 
 ```{asis}
-NOTE: When you run this model, you will probably receive a warning message about 
-a not positive definite residual covariance matrix. As you can see from the 
-eigenvalues below, it is true that the residual covariance matrix is NPD. 
+NOTE: When you run this model, you will probably receive a warning message about a not positive definite residual
+covariance matrix. As you can see from the eigenvalues below, it is true that the residual covariance matrix is NPD. 
 ```
 
 ```{r}
@@ -1202,9 +1103,9 @@ eigen(theta)$values
 ```
 
 ```{asis}
-However, I honestly cannot figure out what's wrong. As you can see below, the 
-residual covariance matrix itself looks fine (i.e., no Heywood cases, no extreme 
-values, all covariances are legal according to the relevant triangle inequalities). 
+However, I honestly cannot figure out what's wrong. As you can see below, the residual covariance matrix itself looks
+fine (i.e., no Heywood cases, no extreme values, all covariances are legal according to the relevant triangle
+inequalities). 
 ```
 
 ```{r, R.options = list(width = 100)}
@@ -1212,8 +1113,8 @@ print(theta)
 ```
 
 ```{asis}
-If you want to check my sleuthing w.r.t. this issue, you can find the relevant 
-code [here][ea_mwe]. In the end, I'm willing to tentatively trust these estimates.
+If you want to check my sleuthing w.r.t. this issue, you can find the relevant code [here][ea_mwe]. In the end, I'm
+willing to tentatively trust these estimates.
 ```
 
 ---
@@ -1230,12 +1131,10 @@ fitMeasures(fimlCfa2)
 ```
 
 ```{asis}
-The results are all very similar, and this model looks equally good. The 
-similarity of the results should not be too surprising when considering the 
-relatively small amount of missing data. One interesting difference is that the 
-number of missing data patterns given in the output now matches the number we 
-computed for the entire dataset. Of course, this change is also natural since we 
-are now using every variable from the EA data in the model.
+The results are all very similar, and this model looks equally good. The similarity of the results should not be too
+surprising when considering the relatively small amount of missing data. One interesting difference is that the number
+of missing data patterns given in the output now matches the number we computed for the entire dataset. Of course, this
+change is also natural since we are now using every variable from the EA data in the model.
 ```
 
 ---
@@ -1260,15 +1159,13 @@ fimlSem1 <- sem(semMod, data = ea, std.lv = TRUE, missing = "fiml")
 ```{asis}
 Some cases have been deleted due to missing values. 
 
-We're treating the observed predictors as fixed (as is customary in OLS
-regression models, and as we did in the MI-based analysis). This choice caused 
-no issues when analyzing the MI data because those predictors were completed in 
-every imputed dataset. Now, however, the observed predictors enter the analysis 
-in their incomplete state, and FIML cannot treat their missing data because 
-fixed variables are not represented in the likelihood function.
+We're treating the observed predictors as fixed (as is customary in OLS regression models, and as we did in the MI-based
+analysis). This choice caused no issues when analyzing the MI data because those predictors were completed in every
+imputed dataset. Now, however, the observed predictors enter the analysis in their incomplete state, and FIML cannot
+treat their missing data because fixed variables are not represented in the likelihood function.
 
-Consequently, any observations with missing data on one of the observed predictor 
-variables are deleted before estimating the model.
+Consequently, any observations with missing data on one of the observed predictor variables are deleted before
+estimating the model.
 ```
 
 ---
@@ -1287,13 +1184,12 @@ summary(fimlSem1, fmi = TRUE)
 partSummary(fimlSem1, 8, fmi = TRUE)
 
 ## Latent regression estimates for MI:
-partSummary(miSem1, 2, drops = "riv", fmi = TRUE)
+partSummary(miSem1, 12, drops = "riv", fmi = TRUE)
 ```
 
 ```{asis}
-The parameter estimates are very similar to those produced by MI, and the 
-inferential conclusions are all the same. The FMI estimates for the FIML-based 
-regression slopes are quite a bit smaller than their MI-based counterparts, though.
+The parameter estimates are very similar to those produced by MI, and the inferential conclusions are all the same. The
+FMI estimates for the FIML-based regression slopes are quite a bit smaller than their MI-based counterparts, though.
 ```
 
 ---
@@ -1302,8 +1198,7 @@ regression slopes are quite a bit smaller than their MI-based counterparts, thou
 
 **Rerun the model from \@ref(fixedX) with random predictors.**
 
-- Model the observed predictor variables as random by setting `fixed.x = FALSE` 
-in the `sem()` call.
+- Model the observed predictor variables as random by setting `fixed.x = FALSE` in the `sem()` call.
 - Keep all other settings the same as above.
 
 ```{r, warning = TRUE}
@@ -1328,28 +1223,20 @@ summary(fimlSem2, fmi = TRUE)
 ```
 
 ```{asis}
-Naturally, we can observe a few differences when modeling the predictors as 
-random variables.
+Naturally, we can observe a few differences when modeling the predictors as random variables.
 
-1. We use every observation because none need to be deleted due to unmodeled 
-missing data.
-1. We estimate means and variances for the observed predictors in the random-$X$ 
-model and not in the fixed-$X$ model.
-1. The estimates are somewhat different between the two models, most importantly 
-the latent regression estimates.
+1. We use every observation because none need to be deleted due to unmodeled missing data.
+1. We estimate means and variances for the observed predictors in the random-$X$ model and not in the fixed-$X$ model.
+1. The estimates are somewhat different between the two models, most importantly the latent regression estimates.
 
-Apart from the obviously problematic deletion of the incomplete cases when $X$ 
-is treated as fixed, we cannot really say that one approach is better, or more 
-correct, than the other. Treating the predictors as fixed versus random is not 
-simply an estimation choice (as, for example, selecting a different optimization 
-algorithm or adjusting the convergence criteria would be). When we model $X$ as 
-random, we are specifying a fundamentally different model than we are when $X$ 
-is treated as fixed. In the former case, our latent regression model summarizes 
-the joint distribution of $Y$ and $X$. In the latter case, $X$ has no 
-distribution and simply serves to define the mean of $Y$. Neither of these is 
-the "correct" way to represent the data; they're just different. As researchers, 
-we need to be aware of the model we're estimating, and ensure that said model 
-aligns with our inferential objectives.
+Apart from the obviously problematic deletion of the incomplete cases when $X$ is treated as fixed, we cannot really say
+that one approach is better, or more correct, than the other. Treating the predictors as fixed versus random is not
+simply an estimation choice (as, for example, selecting a different optimization algorithm or adjusting the convergence
+criteria would be). When we model $X$ as random, we are specifying a fundamentally different model than we are when $X$
+is treated as fixed. In the former case, our latent regression model summarizes the joint distribution of $Y$ and $X$.
+In the latter case, $X$ has no distribution and simply serves to define the mean of $Y$. Neither of these is the
+"correct" way to represent the data; they're just different. As researchers, we need to be aware of the model we're
+estimating, and ensure that said model aligns with our inferential objectives.
 ```
 
 ---
@@ -1363,10 +1250,10 @@ aligns with our inferential objectives.
 **Use FIML to estimate the mediation model defined in \@ref(medSyntax).**
 
 - Include `bmi` and `anx` as auxiliary variables.
-- Use B = 2000 bootstrap resamples to quantify the sampling variability.
+- Use B = 1000 bootstrap resamples to quantify the sampling variability.
 
-*NOTE*: This code will take a long time to run. You may want to consider using 
-the run timing strategies discussed in the MI(Boot) section.
+*NOTE*: This code will take a long time to run. You may want to consider using the run timing strategies discussed in
+the MI(Boot) section.
 
 ```{r fiml_mediation_boot, cache = TRUE}
 ## Estimate the mediation model using FIML with auxiliaries and bootstrapping:
@@ -1375,7 +1262,7 @@ fimlSem3 <- sem.auxiliary(semMod3,
                           aux       = c("bmi", "anx"),
                           std.lv    = TRUE, 
                           se        = "boot", 
-                          bootstrap = 2000)
+                          bootstrap = nBoot)
 ```
 
 ---
@@ -1384,36 +1271,32 @@ fimlSem3 <- sem.auxiliary(semMod3,
 
 **Summarize the fitted mediation model and interpret the results.**
 
-- Is the indirect effect through *Drive for Thinness* significant according to 
-the 95% BC CI?
+- Is the indirect effect through *Drive for Thinness* significant according to the 95% BC CI?
 - Briefly interpret the indirect effects.
 
-```{r}
+```{r, paged.print = FALSE}
 summary(fimlSem3, fmi = TRUE)
 
-parameterEstimates(fimlSem3, boot.ci.type = "bca.simple") %>% 
-  select(-(1:3)) %>%
+parameterEstimates(fimlSem3, boot.ci.type = "bca.simple") |> 
+  select(-(1:3)) |>
   tail(1)
 ```
 
 ```{r, include = FALSE}
-out <- parameterEstimates(fimlSem3, boot.ci.type = "bca.simple") %>% tail(1)
+out <- parameterEstimates(fimlSem3, boot.ci.type = "bca.simple") |> tail(1)
+out$est
 ```
 
 ```{asis}
-- Yes, the indirect effect through *Drive for Thinness* is statistically 
-significant (
-$ab = `r round(out$est, 3)`$, 
-$95\%~CI_{BC} = [`r round(out$ci.lower, 3)`; `r round(out$ci.upper, 3)`]$
-).
-   - As an aside, it is also interesting to note how similar this CI is to the 
-   one produced by MI(Boot).
+- Yes, the indirect effect through *Drive for Thinness* is statistically significant
+$(\mathit{ab} = `r round(out$est, 3)`,$
+$95\%~\mathit{CI}_{\mathit{BC}} = [`r round(out$ci.lower, 3)`; `r round(out$ci.upper, 3)`]).$
+   - As an aside, it is also interesting to note how similar this CI is to the one produced by MI(Boot).
 
-- The results suggest a statistically significant, positive indirect effect by 
-which the influence of Western beauty standards on preoccupation with food is 
-transmitted through drive for thinness. This effect implies a process whereby 
-higher levels of Western beauty standards promote a greater drive for thinness 
-which, in turn, contributes to increasing preoccupation with food. 
+- The results suggest a statistically significant, positive indirect effect by which the influence of Western beauty
+standards on preoccupation with food is transmitted through drive for thinness. This effect implies a process whereby
+higher levels of Western beauty standards promote a greater drive for thinness which, in turn, contributes to increasing
+preoccupation with food. 
 ```
 
 ---
@@ -1432,6 +1315,7 @@ End of Lab 6
 [ggmice]: https://amices.org/ggmice/index.html
 [ggmice_density]: https://amices.org/ggmice/articles/old_friends.html
 [lavaan]: https://cran.r-project.org/web/packages/lavaan/
+[lavaan_mi]: https://cran.r-project.org/web/packages/lavaan.mi/index.html
 [semTools]: https://cran.r-project.org/web/packages/semTools/index.html
 [wu_jia_2013]: https://doi.org/10.1080/00273171.2013.816235
 [mcMed]: https://doi.org/10.1207/s15327906mbr3901_4

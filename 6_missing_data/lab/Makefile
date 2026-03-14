@@ -1,14 +1,15 @@
 # -*- Makefile -*-
 
-## Find all RMD files:
-RMDS := $(wildcard lab*.Rmd)
+NAME = lab6
 
-## Strip the file extension off the located RMD files:
-NAMES := $(RMDS:%.Rmd=%)
-
-all: ${NAMES}
+all: ${NAME}
 
 ## Rule to compile both the RMD files with and without solutions: 
 %: %.Rmd
-	Rscript --vanilla ../../code/render.R $@ TRUE
-	Rscript --vanilla ../../code/render.R $@ FALSE
+	Rscript render.R $@ TRUE
+	Rscript render.R $@ FALSE
+
+.phony: uncache 
+
+uncache:
+	rm -rf ${NAME}_cache/* ${NAME}_files/* ${NAME}_solutions_files/*
