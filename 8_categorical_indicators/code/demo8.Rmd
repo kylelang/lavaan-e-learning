@@ -19,6 +19,7 @@ editor_options:
 
 ```{r setup, echo = FALSE, message = FALSE, warning = FALSE}
 library(knitr)
+library(kableExtra)
 library(dplyr)
 library(magrittr)
 library(ggplot2)
@@ -620,27 +621,94 @@ partSummary(fit1.2, c(7:8))
 
 The robust SEs tend to be somewhat larger than their naive counterparts, especially for the latent covariance.
 
+### Fit Statistics
+
+Estimating the model with `estimator = "DWLS"` doesn't affect the fit measures. The `lavaan::fitMeasures()` function
+returns the same statistics that we got with the default ML estimation.
+
 ```{r}
-## Define a few character vectors to specify which fit indices we want:
-s1 <- c("chisq", "df", "pvalue")
-s2 <- c("cfi", 
-        "tli", 
-        "rmsea", 
-        "rmsea.ci.lower", 
-        "rmsea.ci.upper", 
-        "srmr")
-s3 <- c(paste(s1, "scaled", sep = "."),
-        paste(s2, "robust", sep = ".")
-        )
-
 ## Fit statistics for the basic DWLS fit:
-fitMeasures(fit1.1, c(s1, s2))
-
-## Fit measures for the robust DWLS fit:
-fitMeasures(fit1.2, s3)
+fitMeasures(fit1.1)
 ```
 
-Likewise, the scaled/robust fit statistics/indices suggest slightly worse fit than the naive versions. 
+When estimating the model with `estimator = "WLSMV"`, we implicitly set `test = "scaled.shifted"`, so we get three
+variants of our main fit measures:
+
+- Raw, uncorrected statistics
+- Scaled statistics
+- Robust statistics
+
+```{r}
+## Fit statistics for the robust DWLS fit:
+fitMeasures(fit1.2)
+```
+
+The scaled/robust fit statistics/indices typically suggest slightly worse fit than the raw versions, but why? Which
+statistics should you report? The short answer: *report the scaled fit statistics when modeling categorical indicators
+with WLSMV estimation.*
+
+```{r, echo = FALSE}
+## Define a few character vectors to specify which fit indices we want:
+s1 <- c("chisq", "df", "pvalue")
+s2 <- c("cfi", "tli", "rmsea")
+s3 <- c("rmsea.ci.lower", "rmsea.ci.upper")
+
+makeCiString <- function(x, digits = 3) {
+  x <- round(x, digits)
+  paste0("[", paste0(x, collapse = "; "), "]")
+}
+
+scaledNames <- paste(c(s1, s2), "scaled", sep = ".")
+robustNames <- paste(s2, "robust", sep = ".")
+
+ci <- c(
+  makeCiString(fitMeasures(fit1.2, s3), 3),
+  makeCiString(fitMeasures(fit1.2, paste(s3, "scaled", sep = ".")), 3),
+  makeCiString(fitMeasures(fit1.2, paste(s3, "robust", sep = ".")), 3)
+)
+
+Raw    <- fitMeasures(fit1.2, c(s1, s2)) |> round(3)
+Scaled <- fitMeasures(fit1.2, scaledNames) |> round(3)
+Robust <- c(
+  rep("-", 3),
+  round(fitMeasures(fit1.2, robustNames), 3)
+  )
+
+Scaled["pvalue.scaled"] <- "< 0.001"
+
+tab <- cbind(
+  rbind(Raw, Scaled, Robust),
+  ci
+)
+
+kable(
+  tab,
+  col.names = c("$\\chi^2$", "DF", "p-value", "CFI", "TLI", "RMSEA", "RMSEA 90% CI"),
+  escape = FALSE,
+  booktabs = TRUE,
+  caption = "Different flavors of fit indices"
+)
+```
+
+#### What are the differences? {-}
+
+The raw, uncorrected fit statistics are based on the ordinary ML $\chi^2$ statistic. These statistics do not accuractly
+quantify model fit for LRV models estimated with DWLS. Typically, the raw fit statistics suggest overly optimistic fit.
+
+The scaled fit statistics are based on the scaled and shifted $\chi^2$ (AKA, mean and variance adjusted $\chi^2$,
+Satorra-Bentler $\chi^2$) developed by XXX. The scaled CFI, TLI, and RMSEA values are computed by plugging the
+Satorra-Bentler $\chi^1$ into the standard formulas.
+
+The robust CFI, TLI, and RMSEA are also based on the scaled and shifted $\chi^2$, but they also include the additional
+correction factor proposed by XXX.
+
+#### Scaled or Robust? {-}
+
+The robust fit statistics are the most refined and accurate variants, but not for the kinds of models we're estimating
+here. The rationnale for the additional correction factor assumes continuous, non-normal data and robust ML estimation
+(e.g., `estimator = "MLR"`). The key assumptions needed to justify this additional correction don't hold for categorical
+data and DWLS estimation. Hence, the robust statistics are not appropriate for categorical indicator models, and we
+should use the scaled statistics.
 
 ---
 
@@ -748,7 +816,10 @@ summary(baseOut)
 Check the model fit to test configural invariance.
 
 ```{r}
-s4 <- paste(c(s1, s2), "scaled", sep = ".")
+## Define a few character vectors to specify which fit indices we want:
+stats <- c("chisq", "df", "pvalue", "cfi", "tli",
+  "rmsea", "rmsea.ci.lower", "rmsea.ci.upper")
+s4 <- paste(stats, "scaled", sep = ".")
 
 ## Check the model fit:
 fitMeasures(baseOut, s4)

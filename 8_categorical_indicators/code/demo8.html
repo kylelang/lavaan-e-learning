@@ -2769,7 +2769,7 @@ border-radius: 0px;
 <h1 class="title toc-ignore">Demonstration 8: Categorical Indicators</h1>
 <h3 class="subtitle">SEM in R using lavaan</h3>
 <h4 class="author">Kyle M. Lang</h4>
-<h4 class="date">Updated: 2026-03-16</h4>
+<h4 class="date">Updated: 2026-03-18</h4>
 
 </div>
 
@@ -3612,34 +3612,191 @@ Covariances:
   disillusion ~~                                      
     success          -0.275    0.028   -9.657    0.000</code></pre>
 <p>The robust SEs tend to be somewhat larger than their naive counterparts, especially for the latent covariance.</p>
-<pre class="r"><code>## Define a few character vectors to specify which fit indices we want:
-s1 &lt;- c(&quot;chisq&quot;, &quot;df&quot;, &quot;pvalue&quot;)
-s2 &lt;- c(&quot;cfi&quot;, 
-        &quot;tli&quot;, 
-        &quot;rmsea&quot;, 
-        &quot;rmsea.ci.lower&quot;, 
-        &quot;rmsea.ci.upper&quot;, 
-        &quot;srmr&quot;)
-s3 &lt;- c(paste(s1, &quot;scaled&quot;, sep = &quot;.&quot;),
-        paste(s2, &quot;robust&quot;, sep = &quot;.&quot;)
-        )
-
-## Fit statistics for the basic DWLS fit:
-fitMeasures(fit1.1, c(s1, s2))</code></pre>
-<pre><code>         chisq             df         pvalue            cfi            tli 
-        23.749         13.000             NA          0.999          0.998 
-         rmsea rmsea.ci.lower rmsea.ci.upper           srmr 
-         0.020          0.005          0.032          0.021 </code></pre>
-<pre class="r"><code>## Fit measures for the robust DWLS fit:
-fitMeasures(fit1.2, s3)</code></pre>
-<pre><code>         chisq.scaled             df.scaled         pvalue.scaled 
-               37.139                13.000                 0.000 
-           cfi.robust            tli.robust          rmsea.robust 
-                0.995                 0.991                 0.030 
-rmsea.ci.lower.robust rmsea.ci.upper.robust 
-                0.017                 0.043 </code></pre>
-<p>Likewise, the scaled/robust fit statistics/indices suggest slightly worse fit than the naive versions.</p>
+<div id="fit-statistics" class="section level3" number="3.3.1">
+<h3><span class="header-section-number">3.3.1</span> Fit Statistics</h3>
+<p>Estimating the model with <code>estimator = &quot;DWLS&quot;</code> doesn’t affect the fit measures. The <code>lavaan::fitMeasures()</code> function
+returns the same statistics that we got with the default ML estimation.</p>
+<pre class="r"><code>## Fit statistics for the basic DWLS fit:
+fitMeasures(fit1.1)</code></pre>
+<pre><code>                 npar                  fmin                 chisq 
+               32.000                 0.005                23.749 
+                   df                pvalue        baseline.chisq 
+               13.000                    NA              9439.299 
+          baseline.df       baseline.pvalue                   cfi 
+               21.000                    NA                 0.999 
+                  tli                  nnfi                   rfi 
+                0.998                 0.998                 0.996 
+                  nfi                  pnfi                   ifi 
+                0.997                 0.617                 0.999 
+                  rni                 rmsea        rmsea.ci.lower 
+                0.999                 0.020                 0.005 
+       rmsea.ci.upper        rmsea.ci.level          rmsea.pvalue 
+                0.032                 0.900                 1.000 
+       rmsea.close.h0 rmsea.notclose.pvalue     rmsea.notclose.h0 
+                0.050                 0.000                 0.080 
+                  rmr            rmr_nomean                  srmr 
+                0.015                 0.021                 0.021 
+         srmr_bentler   srmr_bentler_nomean                  crmr 
+                0.015                 0.021                 0.017 
+          crmr_nomean            srmr_mplus     srmr_mplus_nomean 
+                0.024                    NA                    NA 
+                cn_05                 cn_01                   gfi 
+             2045.171              2532.055                 0.999 
+                 agfi                  pgfi                   mfi 
+                0.997                 0.289                 0.998 
+                 wrmr 
+                0.726 </code></pre>
+<p>When estimating the model with <code>estimator = &quot;WLSMV&quot;</code>, we implicitly set <code>test = &quot;scaled.shifted&quot;</code>, so we get three
+variants of our main fit measures:</p>
+<ul>
+<li>Raw, uncorrected statistics</li>
+<li>Scaled statistics</li>
+<li>Robust statistics</li>
+</ul>
+<pre class="r"><code>## Fit statistics for the robust DWLS fit:
+fitMeasures(fit1.2)</code></pre>
+<pre><code>                         npar                          fmin 
+                       32.000                         0.005 
+                        chisq                            df 
+                       23.749                        13.000 
+                       pvalue                  chisq.scaled 
+                           NA                        37.139 
+                    df.scaled                 pvalue.scaled 
+                       13.000                         0.000 
+         chisq.scaling.factor                baseline.chisq 
+                        0.674                      9439.299 
+                  baseline.df               baseline.pvalue 
+                       21.000                            NA 
+        baseline.chisq.scaled            baseline.df.scaled 
+                     6324.973                        21.000 
+       baseline.pvalue.scaled baseline.chisq.scaling.factor 
+                        0.000                         1.494 
+                          cfi                           tli 
+                        0.999                         0.998 
+                   cfi.scaled                    tli.scaled 
+                        0.996                         0.994 
+                   cfi.robust                    tli.robust 
+                        0.995                         0.991 
+                         nnfi                           rfi 
+                        0.998                         0.996 
+                          nfi                          pnfi 
+                        0.997                         0.617 
+                          ifi                           rni 
+                        0.999                         0.999 
+                  nnfi.scaled                    rfi.scaled 
+                        0.994                         0.991 
+                   nfi.scaled                   pnfi.scaled 
+                        0.994                         0.615 
+                   ifi.scaled                    rni.scaled 
+                        0.996                         0.996 
+                  nnfi.robust                    rni.robust 
+                        0.991                         0.995 
+                        rmsea                rmsea.ci.lower 
+                        0.020                         0.005 
+               rmsea.ci.upper                rmsea.ci.level 
+                        0.032                         0.900 
+                 rmsea.pvalue                rmsea.close.h0 
+                        1.000                         0.050 
+        rmsea.notclose.pvalue             rmsea.notclose.h0 
+                        0.000                         0.080 
+                 rmsea.scaled         rmsea.ci.lower.scaled 
+                        0.029                         0.018 
+        rmsea.ci.upper.scaled           rmsea.pvalue.scaled 
+                        0.041                         0.999 
+ rmsea.notclose.pvalue.scaled                  rmsea.robust 
+                        0.000                         0.030 
+        rmsea.ci.lower.robust         rmsea.ci.upper.robust 
+                        0.017                         0.043 
+          rmsea.pvalue.robust  rmsea.notclose.pvalue.robust 
+                        0.995                         0.000 
+                          rmr                    rmr_nomean 
+                        0.015                         0.021 
+                         srmr                  srmr_bentler 
+                        0.021                         0.015 
+          srmr_bentler_nomean                          crmr 
+                        0.021                         0.017 
+                  crmr_nomean                    srmr_mplus 
+                        0.024                            NA 
+            srmr_mplus_nomean                         cn_05 
+                           NA                      2045.171 
+                        cn_01                           gfi 
+                     2532.055                         0.999 
+                         agfi                          pgfi 
+                        0.997                         0.289 
+                          mfi                          wrmr 
+                        0.998                         0.726 
+attr(,&quot;scaled.test&quot;)
+[1] &quot;scaled.shifted&quot;</code></pre>
+<p>The scaled/robust fit statistics/indices typically suggest slightly worse fit than the raw versions, but why? Which
+statistics should you report? The short answer: <em>report the scaled fit statistics when modeling categorical indicators
+with WLSMV estimation.</em></p>
+<table>
+<caption><span id="tab:unnamed-chunk-22">Table 3.1: </span>Different flavors of fit indices</caption>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="left"><span class="math inline">\(\chi^2\)</span></th>
+<th align="left">DF</th>
+<th align="left">p-value</th>
+<th align="left">CFI</th>
+<th align="left">TLI</th>
+<th align="left">RMSEA</th>
+<th align="left">RMSEA 90% CI</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Raw</td>
+<td align="left">23.749</td>
+<td align="left">13</td>
+<td align="left">NA</td>
+<td align="left">0.999</td>
+<td align="left">0.998</td>
+<td align="left">0.02</td>
+<td align="left">[0.005; 0.032]</td>
+</tr>
+<tr class="even">
+<td align="left">Scaled</td>
+<td align="left">37.139</td>
+<td align="left">13</td>
+<td align="left">&lt; 0.001</td>
+<td align="left">0.996</td>
+<td align="left">0.994</td>
+<td align="left">0.029</td>
+<td align="left">[0.018; 0.041]</td>
+</tr>
+<tr class="odd">
+<td align="left">Robust</td>
+<td align="left">-</td>
+<td align="left">-</td>
+<td align="left">-</td>
+<td align="left">0.995</td>
+<td align="left">0.991</td>
+<td align="left">0.03</td>
+<td align="left">[0.017; 0.043]</td>
+</tr>
+</tbody>
+</table>
+<div id="what-are-the-differences" class="section level4 unnumbered">
+<h4>What are the differences?</h4>
+<p>The raw, uncorrected fit statistics are based on the ordinary ML <span class="math inline">\(\chi^2\)</span> statistic. These statistics do not accuractly
+quantify model fit for LRV models estimated with DWLS. Typically, the raw fit statistics suggest overly optimistic fit.</p>
+<p>The scaled fit statistics are based on the scaled and shifted <span class="math inline">\(\chi^2\)</span> (AKA, mean and variance adjusted <span class="math inline">\(\chi^2\)</span>,
+Satorra-Bentler <span class="math inline">\(\chi^2\)</span>) developed by XXX. The scaled CFI, TLI, and RMSEA values are computed by plugging the
+Satorra-Bentler <span class="math inline">\(\chi^1\)</span> into the standard formulas.</p>
+<p>The robust CFI, TLI, and RMSEA are also based on the scaled and shifted <span class="math inline">\(\chi^2\)</span>, but they also include the additional
+correction factor proposed by XXX.</p>
+</div>
+<div id="scaled-or-robust" class="section level4 unnumbered">
+<h4>Scaled or Robust?</h4>
+<p>The robust fit statistics are the most refined and accurate variants, but not for the kinds of models we’re estimating
+here. The rationnale for the additional correction factor assumes continuous, non-normal data and robust ML estimation
+(e.g., <code>estimator = &quot;MLR&quot;</code>). The key assumptions needed to justify this additional correction don’t hold for categorical
+data and DWLS estimation. Hence, the robust statistics are not appropriate for categorical indicator models, and we
+should use the scaled statistics.</p>
 <hr />
+</div>
+</div>
 </div>
 <div id="alternative-cfa-specifications" class="section level2" number="3.4">
 <h2><span class="header-section-number">3.4</span> Alternative <code>cfa()</code> Specifications</h2>
@@ -3924,7 +4081,10 @@ Variances:
     disillusion       1.000                           
     success           1.000                           </code></pre>
 <p>Check the model fit to test configural invariance.</p>
-<pre class="r"><code>s4 &lt;- paste(c(s1, s2), &quot;scaled&quot;, sep = &quot;.&quot;)
+<pre class="r"><code>## Define a few character vectors to specify which fit indices we want:
+stats &lt;- c(&quot;chisq&quot;, &quot;df&quot;, &quot;pvalue&quot;, &quot;cfi&quot;, &quot;tli&quot;,
+  &quot;rmsea&quot;, &quot;rmsea.ci.lower&quot;, &quot;rmsea.ci.upper&quot;)
+s4 &lt;- paste(stats, &quot;scaled&quot;, sep = &quot;.&quot;)
 
 ## Check the model fit:
 fitMeasures(baseOut, s4)</code></pre>
