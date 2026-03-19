@@ -1,0 +1,9 @@
+Welcome to the second lecture of this course. This lecture gives you an introduction to conducting exploratory and confirmatory factor analysis (EFA and a CFA, respectively) using lavaan.
+
+The (updated) slides of this lecture can be found at the bottom (under the header Resources).
+
+Below, you can find the lecture recordings covering the slides. Feel free to play the video on double speed.
+
+
+Recordings
+Unfortunately, the recordings do not capture my mouse cursor (it was visible in the recording program, but apparently I needed to tick a box or so). In case anything is unclear, please ask me or Kyle during the Q&A session or via the discussion platform below.

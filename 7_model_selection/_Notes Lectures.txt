@@ -1,0 +1,14 @@
+Welcome to the last lecture of this course. This lecture gives you an introduction to model selection for lavaan SEM models, where we will mainly look at the AIC and the so-called GORICA and at IC weights.
+
+The slides of this lecture can be found at the bottom (under the header Resources). I also added a new set of slides that contain the newest R code (of the R package restriktor).
+
+Below, you can find the lecture recordings covering the slides (in 'Slides_Model_selection - used in recording.pdf'). Feel free to play the video on double speed.
+
+
+Note: If, after the course, you want to use GORIC or GORICA in your own research, feel free to contact me (r.m.kuiper@uu.nl).
+
+If you want to learn more regarding the GORIC(A), you can follow an e-learning course or you could join an on-location course.
+
+ 
+Recordings
+I thought I figured out how to capture my mouse cursor, but in the first recording it is not visible anymore after some slides. In case anything is unclear, please ask me or Kyle during the Q&A session or via the discussion platform below.

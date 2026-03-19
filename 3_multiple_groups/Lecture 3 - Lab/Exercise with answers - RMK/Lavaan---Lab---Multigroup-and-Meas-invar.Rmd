@@ -520,8 +520,13 @@ Model 1: configural invariance.
 fit_MG1CFA_ci <- cfa(model.1CFA, data=data_PGD,
                   group = 'Kin2',
                   missing='fiml', fixed.x=F)
-#lavInspect(fit_MG1CFA_ci) # npar = 30 & 0 equality restrictions
+#lavInspect(fit_MG1CFA_ci) 
+# npar = number of free parameters = 30 - 0 = 30, namely
+# 30 parameters & 0 equality restrictions
 ```
+
+<!-- NB npar = number of free parameters. -->
+<!-- fitmeasures(fit_MG1CFA_ci, "npar") # 30 -->
 
 
 Model 2: metric/weak invariance. 
@@ -534,8 +539,14 @@ fit_MG1CFA_wi <- cfa(model.1CFA, data=data_PGD,
                      group = 'Kin2',
                      missing='fiml', fixed.x=F,
                       group.equal = "loadings") 
-#lavInspect(fit_MG1CFA_wi) # npar = 30 & 4 equality restrictions: on the 4 free factor loadings  ('lambda')
+#lavInspect(fit_MG1CFA_wi) 
+# npar = number of free parameters = 30-4 = 26, namely
+# 30 parameters & 4 equality restrictions: on the 4 free factor loadings  ('lambda')
 ```
+
+<!-- NB npar = number of free parameters. -->
+<!-- fitmeasures(fit_MG1CFA_wi, "npar") # 26 -->
+
 *Note on constraints in output:*  
 At the top of of the output, lavaan tells you with "1 == 16" that it restricts the 1st and 16th to-be-estimated parameters to be the same; and likewise for the other parameters.  
 If you look at the output, you see that 1 (so, the 1st parameter of the to-be-estimated parameters) is the factor loading (lambda) of item b2pss2 of the group 'partners':
@@ -566,8 +577,14 @@ fit_MG1CFA_si <- cfa(model.1CFA, data=data_PGD,
                      group = 'Kin2',
                      missing='fiml', fixed.x=F,
                       group.equal = c("intercepts", "loadings"))
-#lavInspect(fit_MG1CFA_si) # npar = 30+1=31 (now, also estimating alpha of the second group) & 9 equality restrictions: on the 4 free factor loadings ('lambda') and on the 5 intercepts ('nu')
+#lavInspect(fit_MG1CFA_si) 
+# npar = number of free parameters = 31-9 = 22, namely
+# 31 parameters (now, also estimating alpha of the second group) & 9 equality restrictions: on the 4 free factor loadings ('lambda') and on the 5 intercepts ('nu')
 ```
+
+<!-- NB npar = number of free parameters. -->
+<!-- fitmeasures(fit_MG1CFA_si, "npar") # 22 -->
+
 *Note on number of parameters:*  
 In each group, 5 intercepts ('nu') are estimated: if we would constrain these, we would be saying that the means across the two groups are equal.
 However, what we want to say is that the differences in observed means are completely explained by mean differences on the latent variables.
@@ -678,12 +695,17 @@ fitMeasures(fit_MG1CFA_si_res, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea",
 
 # Technical output
 lavInspect(fit_MG1CFA_si_res) 
-# npar = 31 (now, also estimating alpha of the second group, see note above) & 14 equality restrictions: on the 4 free factor loadings ('lambda'), on the 5 intercepts ('nu'), and on the 5 residual variances ('theta')
+# npar = number of free parameters = 31-14 = 17, namely
+# 31 parameters (now, also estimating alpha of the second group) & 14 equality restrictions: on the 4 free factor loadings ('lambda'), on the 5 intercepts ('nu'), and on the 5 residual variances ('theta')
 ```
+
+<!-- NB npar = number of free parameters. -->
+<!-- fitmeasures(fit_MG1CFA_si_res, "npar") # 17 -->
+
 <!-- Note on Df diff:  -->
 <!-- si vs si_res: 5 because of (additionally) restricting the 5 residual variances. -->
 
-<!-- *Note on contraints in output:*   -->
+<!-- *Note on constraints in output:*   -->
 <!-- At the top of of the output, lavaan tells you with "1 == 16" that it restricts the 1st and 16th to-be-estimated parameters to be the same; and likewise for the other parameters.   -->
 <!-- If you look at the output, you see that 1 (so, the 1st parameter of the to-be-estimated parameters) is the factor loading (lambda) of item b2pss2 of the group 'partners': -->
 <!-- ````{verbatim} -->
