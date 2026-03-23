@@ -2769,7 +2769,7 @@ border-radius: 0px;
 <h1 class="title toc-ignore">Lab 8: Categorical Indicators</h1>
 <h3 class="subtitle">SEM in R using lavaan</h3>
 <h4 class="author">Kyle M. Lang</h4>
-<h4 class="date">Updated: 2026-03-18</h4>
+<h4 class="date">Updated: 2026-03-23</h4>
 
 </div>
 
@@ -2842,89 +2842,166 @@ NOTE: These must be called within a math environment (e.g., $\va$)
 <div id="categorical-variable-cfa" class="section level1" number="2">
 <h1><span class="header-section-number">2</span> Categorical Variable CFA</h1>
 <hr />
-<p>Let’s assume we want to fit the CFA model depicted in Figure <a href="#fig:cfa2"><strong>??</strong></a>. The following <strong>lavaan</strong> model syntax will
-suffice to define our model.</p>
+<p>Let’s assume we want to fit a three-factor CFA model of the <em>Observing</em>, <em>Describing</em>, and <em>Accepting</em> constructs
+represented in the KIMS data.</p>
+<div id="section" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> </h2>
+<p><strong>Define the model syntax for the three-factor CFA described above.</strong></p>
 <hr />
-<div id="robust-dwls-fit" class="section level2" number="2.1">
-<h2><span class="header-section-number">2.1</span> Robust DWLS Fit</h2>
-<p>Finally, we’ll estimating the model with DWLS using robust SEs and scaled fit statistics.</p>
+</div>
+<div id="section-1" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> </h2>
+<p><strong>Estimate the CFA using appropriate CVM-based settings.</strong></p>
+<ul>
+<li>Estimate the model with DWLS</li>
+<li>Use robust SEs to quantify sampling variability</li>
+<li>Use the scaled-and-shifted <span class="math inline">\(\chi^2\)</span> statistic to evaluate model fit</li>
+</ul>
 <hr />
+</div>
+<div id="section-2" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> </h2>
+<p><strong>Summarize and evalute the model.</strong></p>
+<ul>
+<li>Is the model an acceptable representaiton of the data?
+<ul>
+<li>Does the model fit well?</li>
+<li>Do the parameter estimates seem plausible?</li>
+</ul></li>
+</ul>
 <hr />
 </div>
 </div>
 <div id="sem" class="section level1" number="3">
 <h1><span class="header-section-number">3</span> SEM</h1>
 <hr />
+<div id="section-3" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> </h2>
+<p><strong>Estimate a baseline SEM wherein <em>Accepting</em> is regressed onto <em>Age</em>.</strong></p>
+<ul>
+<li>Estimate the covariances between <em>Age</em>, <em>Describing</em>, and <em>Observing</em>.</li>
+<li>Do not allow <em>Describing</em> or <em>Observing</em> to covary with <em>Accepting</em>.</li>
+</ul>
+</div>
+<div id="section-4" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> </h2>
+<p><strong>Summarize and interpret the model.</strong></p>
+<ul>
+<li>Does <em>Age</em> significantly predict <em>Accepting</em>?</li>
+<li>If so, interpret the age effect.</li>
+</ul>
 <hr />
+</div>
+<div id="section-5" class="section level2" number="3.3">
+<h2><span class="header-section-number">3.3</span> </h2>
+<p><strong>Estimate an augmented version of the model from above.</strong></p>
+<ul>
+<li>Add <em>Observing</em> and <em>Describing</em> as predictors of <em>Accepting</em>.</li>
+<li>Do not change anything else about the model structure.</li>
+</ul>
+<hr />
+</div>
+<div id="section-6" class="section level2" number="3.4">
+<h2><span class="header-section-number">3.4</span> </h2>
+<p><strong>Summarize and interpret the model parameters.</strong></p>
+<ul>
+<li>Does adding the two new predictors significantly improve the model?</li>
+<li>Interpret the effects of <em>Observing</em> and <em>Describing</em>.</li>
+</ul>
+<hr />
+</div>
 </div>
 <div id="measurement-invariance" class="section level1" number="4">
 <h1><span class="header-section-number">4</span> Measurement Invariance</h1>
 <hr />
-<div id="configural-invariance" class="section level2" number="4.1">
-<h2><span class="header-section-number">4.1</span> Configural Invariance</h2>
-<p>First, we estimate the configural invariance model by adding the grouping factor without placing any cross-group
-constraints (i.e., in the same way that we did for continuous indicator models).</p>
-<p>Check the summary to ensure that everything looks sensible.</p>
-<p>Check the model fit to test configural invariance.</p>
+<div id="section-7" class="section level2" number="4.1">
+<h2><span class="header-section-number">4.1</span> </h2>
+<p><strong>Estimate the CFA from XXX as a mutiple-group model.</strong></p>
+<ul>
+<li>Specify <em>sex</em> as the grouping factor.</li>
+<li>Estimate a configurally invariant model (i.e., don’t equate any parameters across groups).</li>
+</ul>
+<hr />
+</div>
+<div id="section-8" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> </h2>
+<p><strong>Evaluate configural invariance.</strong></p>
+<ul>
+<li>What is your conclusion?</li>
+</ul>
 <p>The model fits well. Configural invariance holds.</p>
 <hr />
 </div>
-<div id="threshold-invariance" class="section level2" number="4.2">
-<h2><span class="header-section-number">4.2</span> Threshold Invariance</h2>
-<p>Now, we need to test threshold invariance. We do so via the same procedure we would use to test invariance of factor
-loadings or intercepts.</p>
-<ol style="list-style-type: decimal">
-<li>Estimate a restricted model wherein the thresholds are constrained to equality across groups.</li>
-<li>Test the tenability of the constraint by comparing to the configurally invariant model.</li>
-</ol>
-<p>We must establish threshold invariance before considering weak or strong invariance because weak and strong invariance
-both concern paths linking the LRVs to the common latent factors. We must first demonstrate, therefore, that the LRVs
-are defined equivalently in all groups.</p>
-<hr />
-<p>We can make our lives much easier by using the <code>measEq.syntax()</code> function from the <strong>semTools</strong> package to
-programmatically generate the <strong>lavaan</strong> model syntax for our various restricted models.</p>
-<p>We can view the resulting syntax by casting the <code>tMod</code> object as a character vector and printing it with the <code>cat()</code>
-function.</p>
-<hr />
-<p>Now, we estimate the threshold invariant model.</p>
-<p><em>Notes:</em></p>
+<div id="section-9" class="section level2" number="4.3">
+<h2><span class="header-section-number">4.3</span> </h2>
+<p><strong>Define the model syntax for the threshold invariance model.</strong></p>
 <ul>
-<li>We do not need to specify anything for the <code>group.equal</code> argument because all invariance constraints are defined in
-the model syntax we generated via <code>measEq.syntax()</code>.</li>
-<li>We must type cast the object returned by <code>measEq.syntax()</code> as a character vector (i.e., by wrapping it with
-<code>as.character()</code>) to get the <code>cfa()</code> function to recognize this object as model syntax.</li>
+<li>Use the <code>measEq.syntax()</code> function from the <strong>semTools</strong> package to generate the model syntax.</li>
+<li>Set the scale by standardizing the latent factors (i.e., use the fixed-factor/reference-group method of identification).</li>
+<li>Use the delta parameterization to define the latent response variables.</li>
+<li>Use the Wu &amp; Estabrook (2016) identification conditions.</li>
 </ul>
-<p>As expected, the thresholds are equal across groups. Additionally, constraining the thresholds helps identify the model,
-so we can freely estimate the item intercepts and the scales of the latent response variables in the second and third
-groups.</p>
-<p>The model still fits very well.</p>
 <hr />
-<p>We test threshold invariance by comparing to the configurally invariant model.</p>
+</div>
+<div id="section-10" class="section level2" number="4.4">
+<h2><span class="header-section-number">4.4</span> </h2>
+<p><strong>Estimate the threshold invariant model.</strong></p>
+<ul>
+<li>Check the results by summarizing the model and evaluating the model fit.</li>
+</ul>
+<p>As expected, the thresholds are equal across groups. All the parameter estimates seem sensible, and the model still fits very well.</p>
+<hr />
+</div>
+<div id="section-11" class="section level2" number="4.5">
+<h2><span class="header-section-number">4.5</span> </h2>
+<p><strong>Test threshold invariance.</strong></p>
 <p>The <span class="math inline">\(\Delta \chi^2\)</span> test is nonsignificant, so we can infer invariant thresholds.</p>
 <hr />
 </div>
-<div id="weak-invariance" class="section level2" number="4.3">
-<h2><span class="header-section-number">4.3</span> Weak Invariance</h2>
-<p>After establishing threshold invariance, the next step is testing the additional constraint of loading invariance (i.e.,
-weak invariance or metric invariance).</p>
+<div id="section-12" class="section level2" number="4.6">
+<h2><span class="header-section-number">4.6</span> </h2>
+<p><strong>Define the model syntax for the weak/metric invariance model.</strong></p>
 <ul>
-<li>Again, we can use the <code>measEq.syntax()</code> function to streamline the process.</li>
+<li>Use the <code>measEq.syntax()</code> function from the <strong>semTools</strong> package to generate the model syntax.</li>
+<li>Set the scale by standardizing the latent factors (i.e., use the fixed-factor/reference-group method of identification).</li>
+<li>Use the delta parameterization to define the latent response variables.</li>
+<li>Use the Wu &amp; Estabrook (2016) identification conditions.</li>
 </ul>
 <hr />
-<p>We estimate the model in the usual way.</p>
-<p>Now that we’ve equated the factor loadings across groups, we have the additional identification necessary to freely
-estimate the latent variances in the second and third groups.</p>
-<p>Again, model fit is still excellent.</p>
+</div>
+<div id="section-13" class="section level2" number="4.7">
+<h2><span class="header-section-number">4.7</span> </h2>
+<p><strong>Estimate the weak invariant model.</strong></p>
+<ul>
+<li>Check the results by summarizing the model and evaluating the model fit.</li>
+</ul>
+<p>Again, model fit is still excellent, and all the parameter estimates are reasonable.</p>
 <hr />
-<p>We evaluate weak invariance by comparing back to the threshold-invariance model.</p>
+</div>
+<div id="section-14" class="section level2" number="4.8">
+<h2><span class="header-section-number">4.8</span> </h2>
+<p><strong>Test weak invariance.</strong></p>
 <p>Relative to the threshold-invariant model, we haven’t lost a significant amount of fit by equating the factor loadings
 across groups. Conditioning on the dubious threshold invariance, we can claim weak invariance.</p>
 <hr />
 </div>
-<div id="strong-invariance" class="section level2" number="4.4">
-<h2><span class="header-section-number">4.4</span> Strong Invariance</h2>
-<p>We conclude by equating the item intercepts across groups to test strong/metric invariance.</p>
-<p>Constraining the item intercepts allows us to freely estimate the latent means in the second and third groups.</p>
+<div id="section-15" class="section level2" number="4.9">
+<h2><span class="header-section-number">4.9</span> </h2>
+<p><strong>Define the model syntax for the strong/scalar invariance model.</strong></p>
+<ul>
+<li>Use the <code>measEq.syntax()</code> function from the <strong>semTools</strong> package to generate the model syntax.</li>
+<li>Set the scale by standardizing the latent factors (i.e., use the fixed-factor/reference-group method of identification).</li>
+<li>Use the delta parameterization to define the latent response variables.</li>
+<li>Use the Wu &amp; Estabrook (2016) identification conditions.</li>
+</ul>
+<hr />
+</div>
+<div id="section-16" class="section level2" number="4.10">
+<h2><span class="header-section-number">4.10</span> </h2>
+<p><strong>Estimate the weak invariant model.</strong></p>
+<ul>
+<li>Check the results by summarizing the model and evaluating the model fit.</li>
+</ul>
 <p>The strongly invariant model still fits very well.</p>
 <p>Now, we lose a significant amount of fit by constraining the item intercepts in addition to the factor loadings and
 thresholds (i.e., the <span class="math inline">\(\Delta \chi^2\)</span> test is significant). So, we should reject the hypothesis of strong invariance.</p>

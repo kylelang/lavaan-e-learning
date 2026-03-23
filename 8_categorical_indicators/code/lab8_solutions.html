@@ -2769,7 +2769,7 @@ border-radius: 0px;
 <h1 class="title toc-ignore">Lab 8: Categorical Indicators</h1>
 <h3 class="subtitle">SEM in R using lavaan</h3>
 <h4 class="author">Kyle M. Lang</h4>
-<h4 class="date">Updated: 2026-03-18</h4>
+<h4 class="date">Updated: 2026-03-23</h4>
 
 </div>
 
@@ -2844,41 +2844,58 @@ kims    &lt;- readRDS(here::here(dataDir, &quot;kims.rds&quot;))</code></pre>
 <div id="categorical-variable-cfa" class="section level1" number="2">
 <h1><span class="header-section-number">2</span> Categorical Variable CFA</h1>
 <hr />
-<p>Let’s assume we want to fit the CFA model depicted in Figure <a href="#fig:cfa2"><strong>??</strong></a>. The following <strong>lavaan</strong> model syntax will
-suffice to define our model.</p>
-<pre class="r"><code>## Create separate strings for each constructs model, so I can mix and match:
-obsMod &lt;- &#39;obs =~ Q1 + Q5 + Q9  + Q13 + Q17 + Q25 + Q29 + Q30 + Q33 + Q37 + Q39&#39;
-desMod &lt;- &#39;des =~ Q2 + Q6 + Q10 + Q14 + Q18 + Q22 + Q26 + Q34&#39;
-actMod &lt;- &#39;act =~ Q3 + Q7 + Q11 + Q15 + Q19 + Q23 + Q27 + Q31 + Q35 + Q38&#39;
-accMod &lt;- &#39;acc =~ Q5 + Q8 + Q12 + Q16 + Q20 + Q24 + Q28 + Q32 + Q36&#39;
-
-# kimsKeys &lt;- list(
-#   obs = c(&quot;Q5&quot;, &quot;Q9&quot;, &quot;Q13&quot;, &quot;Q17&quot;, &quot;Q25&quot;, &quot;Q29&quot;, &quot;Q30&quot;, &quot;Q33&quot;, &quot;Q37&quot;, &quot;Q39&quot;),
-#   des = c(&quot;Q6&quot;, &quot;Q10&quot;, &quot;-Q14&quot;, &quot;-Q18&quot;, &quot;-Q22&quot;, &quot;Q26&quot;, &quot;Q34&quot;),
-#   acc = c(&quot;Q8&quot;, &quot;Q12&quot;, &quot;Q16&quot;, &quot;Q20&quot;, &quot;Q24&quot;, &quot;Q28&quot;, &quot;Q32&quot;, &quot;Q36&quot;),
-#   act = c(&quot;Q7&quot;, &quot;-Q11&quot;, &quot;Q15&quot;, &quot;Q19&quot;, &quot;-Q23&quot;, &quot;-Q27&quot;, &quot;-Q31&quot;, &quot;-Q35&quot;, &quot;Q38&quot;)
-# )
-# 
-# tmp &lt;- scoreItems(keys = kimsKeys, items = kims)
-# tmp
-
-## Paste the construct-specific strings into a single CFA syntax string:
-# cfaMod &lt;- paste(obsMod, desMod, accMod, actMod, sep = &quot;\n&quot;)
-cfaMod &lt;- paste(obsMod, desMod, accMod, sep = &quot;\n&quot;)</code></pre>
+<p>Let’s assume we want to fit a three-factor CFA model of the <em>Observing</em>, <em>Describing</em>, and <em>Accepting</em> constructs
+represented in the KIMS data.</p>
+<div id="section" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> </h2>
+<p><strong>Define the model syntax for the three-factor CFA described above.</strong></p>
+<pre class="r"><code>cfaMod &lt;- &#39;
+obs =~ Q1 + Q5 + Q9  + Q13 + Q17 + Q25 + Q29 + Q30 + Q33 + Q37 + Q39
+des =~ Q2 + Q6 + Q10 + Q14 + Q18 + Q22 + Q26 + Q34
+acc =~ Q5 + Q8 + Q12 + Q16 + Q20 + Q24 + Q28 + Q32 + Q36
+&#39;</code></pre>
 <hr />
-<div id="robust-dwls-fit" class="section level2" number="2.1">
-<h2><span class="header-section-number">2.1</span> Robust DWLS Fit</h2>
-<p>Finally, we’ll estimating the model with DWLS using robust SEs and scaled fit statistics.</p>
+</div>
+<div id="section-1" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> </h2>
+<p><strong>Estimate the CFA using appropriate CVM-based settings.</strong></p>
+<ul>
+<li>Estimate the model with DWLS</li>
+<li>Use robust SEs to quantify sampling variability</li>
+<li>Use the scaled-and-shifted <span class="math inline">\(\chi^2\)</span> statistic to evaluate model fit</li>
+</ul>
 <pre class="r"><code>library(lavaan)
 
-## Robust DWLS fit:
-fit1.2 &lt;- cfa(cfaMod,
+## Specify individual options:
+cfaOut &lt;- cfa(cfaMod,
               data = kims,
               std.lv = TRUE,
               ordered = TRUE,
-              estimator = &quot;WLSMV&quot;)
+              estimator = &quot;DWLS&quot;,
+              se = &quot;robust&quot;,
+              test = &quot;scaled.shifted&quot;)
 
-summary(fit1.2)</code></pre>
+## OR ##
+
+## Use the WLSMV shorthand:
+cfaOut2 &lt;- cfa(cfaMod,
+              data = kims,
+              std.lv = TRUE,
+              ordered = TRUE,
+              estimator = &quot;WLSMV&quot;)</code></pre>
+<hr />
+</div>
+<div id="section-2" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> </h2>
+<p><strong>Summarize and evalute the model.</strong></p>
+<ul>
+<li>Is the model an acceptable representaiton of the data?
+<ul>
+<li>Does the model fit well?</li>
+<li>Do the parameter estimates seem plausible?</li>
+</ul></li>
+</ul>
+<pre class="r"><code>summary(cfaOut)</code></pre>
 <pre><code>lavaan 0.6-21 ended normally after 31 iterations
 
   Estimator                                       DWLS
@@ -3088,96 +3105,22 @@ Variances:
     obs               1.000                           
     des               1.000                           
     acc               1.000                           </code></pre>
-<pre class="r"><code>fitMeasures(fit1.2)</code></pre>
-<pre><code>                         npar                          fmin 
-                      139.000                         1.681 
-                        chisq                            df 
-                     1993.781                       320.000 
-                       pvalue                  chisq.scaled 
-                           NA                      1757.091 
-                    df.scaled                 pvalue.scaled 
-                      320.000                         0.000 
-         chisq.scaling.factor                baseline.chisq 
-                        1.251                     64464.409 
-                  baseline.df               baseline.pvalue 
-                      351.000                            NA 
-        baseline.chisq.scaled            baseline.df.scaled 
-                    20905.551                       351.000 
-       baseline.pvalue.scaled baseline.chisq.scaling.factor 
-                        0.000                         3.119 
-                          cfi                           tli 
-                        0.974                         0.971 
-                   cfi.scaled                    tli.scaled 
-                        0.930                         0.923 
-                   cfi.robust                    tli.robust 
-                        0.857                         0.843 
-                         nnfi                           rfi 
-                        0.971                         0.966 
-                          nfi                          pnfi 
-                        0.969                         0.883 
-                          ifi                           rni 
-                        0.974                         0.974 
-                  nnfi.scaled                    rfi.scaled 
-                        0.923                         0.908 
-                   nfi.scaled                   pnfi.scaled 
-                        0.916                         0.835 
-                   ifi.scaled                    rni.scaled 
-                        0.930                         0.930 
-                  nnfi.robust                    rni.robust 
-                        0.843                         0.857 
-                        rmsea                rmsea.ci.lower 
-                        0.094                         0.090 
-               rmsea.ci.upper                rmsea.ci.level 
-                        0.098                         0.900 
-                 rmsea.pvalue                rmsea.close.h0 
-                        0.000                         0.050 
-        rmsea.notclose.pvalue             rmsea.notclose.h0 
-                        1.000                         0.080 
-                 rmsea.scaled         rmsea.ci.lower.scaled 
-                        0.087                         0.083 
-        rmsea.ci.upper.scaled           rmsea.pvalue.scaled 
-                        0.091                         0.000 
- rmsea.notclose.pvalue.scaled                  rmsea.robust 
-                        0.998                         0.087 
-        rmsea.ci.lower.robust         rmsea.ci.upper.robust 
-                        0.083                         0.092 
-          rmsea.pvalue.robust  rmsea.notclose.pvalue.robust 
-                        0.000                         0.997 
-                          rmr                    rmr_nomean 
-                        0.075                         0.085 
-                         srmr                  srmr_bentler 
-                        0.085                         0.075 
-          srmr_bentler_nomean                          crmr 
-                        0.085                         0.077 
-                  crmr_nomean                    srmr_mplus 
-                        0.088                            NA 
-            srmr_mplus_nomean                         cn_05 
-                           NA                       108.699 
-                        cn_01                           gfi 
-                      114.358                         0.976 
-                         agfi                          pgfi 
-                        0.966                         0.681 
-                          mfi                          wrmr 
-                        0.243                         2.084 
-attr(,&quot;scaled.test&quot;)
-[1] &quot;scaled.shifted&quot;</code></pre>
-<hr />
-<pre class="r"><code>## Define a few character vectors to specify which fit indices we want:
-s1 &lt;- c(&quot;chisq&quot;, &quot;df&quot;, &quot;pvalue&quot;)
-s2 &lt;- c(&quot;cfi&quot;, 
-        &quot;tli&quot;, 
-        &quot;rmsea&quot;, 
-        &quot;rmsea.ci.lower&quot;, 
-        &quot;rmsea.ci.upper&quot;, 
-        &quot;srmr&quot;)
-s3 &lt;- c(paste(s1, &quot;scaled&quot;, sep = &quot;.&quot;),
-        paste(s2, &quot;robust&quot;, sep = &quot;.&quot;)
-        )
-
-s4 &lt;- c(paste(c(s1, s2), &quot;scaled&quot;, sep = &quot;.&quot;))
+<pre class="r"><code>## Define a character to specify only the scaled fit indices:
+stats &lt;- paste(
+  c(&quot;chisq&quot;,
+    &quot;df&quot;,
+    &quot;pvalue&quot;,
+    &quot;cfi&quot;, 
+    &quot;tli&quot;, 
+    &quot;rmsea&quot;, 
+    &quot;rmsea.ci.lower&quot;, 
+    &quot;rmsea.ci.upper&quot;),
+  &quot;scaled&quot;,
+  sep = &quot;.&quot;
+)
 
 ## Fit measures for the robust DWLS fit:
-fitMeasures(fit1.2, s4)</code></pre>
+fitMeasures(cfaOut, stats)</code></pre>
 <pre><code>         chisq.scaled             df.scaled         pvalue.scaled 
              1757.091               320.000                 0.000 
            cfi.scaled            tli.scaled          rmsea.scaled 
@@ -3190,19 +3133,278 @@ rmsea.ci.lower.scaled rmsea.ci.upper.scaled
 <div id="sem" class="section level1" number="3">
 <h1><span class="header-section-number">3</span> SEM</h1>
 <hr />
+<div id="section-3" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> </h2>
+<p><strong>Estimate a baseline SEM wherein <em>Accepting</em> is regressed onto <em>Age</em>.</strong></p>
+<ul>
+<li>Estimate the covariances between <em>Age</em>, <em>Describing</em>, and <em>Observing</em>.</li>
+<li>Do not allow <em>Describing</em> or <em>Observing</em> to covary with <em>Accepting</em>.</li>
+</ul>
 <pre class="r"><code>semMod &lt;- paste(
   cfaMod,
-  &quot;acc ~ des + obs + age&quot;,
+  &quot;acc ~ age&quot;,
   &quot;age ~~ des + obs&quot;,
   sep = &quot;\n&quot;
 )
 
-cats &lt;- grep(&quot;^Q\\d&quot;, colnames(kims), value = TRUE)
 cats &lt;- setdiff(colnames(kims), &quot;age&quot;)
 
-semFit &lt;- sem(semMod, data = kims, ordered = cats, estimator = &quot;WLSMV&quot;, std.lv = TRUE)
+semFit0 &lt;- sem(semMod, data = kims, ordered = cats, estimator = &quot;WLSMV&quot;, std.lv = TRUE)</code></pre>
+</div>
+<div id="section-4" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> </h2>
+<p><strong>Summarize and interpret the model.</strong></p>
+<ul>
+<li>Does <em>Age</em> significantly predict <em>Accepting</em>?</li>
+<li>If so, interpret the age effect.</li>
+</ul>
+<pre class="r"><code>summary(semFit0)</code></pre>
+<pre><code>lavaan 0.6-21 ended normally after 116 iterations
 
-summary(semFit)</code></pre>
+  Estimator                                       DWLS
+  Optimization method                           NLMINB
+  Number of model parameters                       142
+
+  Number of observations                           593
+
+Model Test User Model:
+                                              Standard      Scaled
+  Test Statistic                              2164.645    1888.131
+  Degrees of freedom                               346         346
+  P-value (Unknown)                                 NA       0.000
+  Scaling correction factor                                  1.265
+  Shift parameter                                          177.431
+    simple second-order correction                                
+
+Parameter Estimates:
+
+  Parameterization                               Delta
+  Standard errors                           Robust.sem
+  Information                                 Expected
+  Information saturated (h1) model        Unstructured
+
+Latent Variables:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  obs =~                                              
+    Q1                0.627    0.029   21.937    0.000
+    Q5                0.683    0.025   27.594    0.000
+    Q9                0.630    0.027   23.002    0.000
+    Q13               0.594    0.029   20.589    0.000
+    Q17               0.610    0.031   19.784    0.000
+    Q25               0.632    0.028   22.761    0.000
+    Q29               0.665    0.027   24.623    0.000
+    Q30               0.650    0.028   23.263    0.000
+    Q33               0.686    0.028   24.206    0.000
+    Q37               0.682    0.026   25.913    0.000
+    Q39               0.644    0.029   22.166    0.000
+  des =~                                              
+    Q2                0.790    0.017   47.087    0.000
+    Q6                0.793    0.017   45.589    0.000
+    Q10               0.760    0.020   38.672    0.000
+    Q14              -0.799    0.017  -48.153    0.000
+    Q18              -0.837    0.016  -53.365    0.000
+    Q22              -0.732    0.020  -36.534    0.000
+    Q26               0.788    0.018   43.288    0.000
+    Q34               0.649    0.025   26.012    0.000
+  acc =~                                              
+    Q5               -0.007    0.025   -0.284    0.776
+    Q8               -0.156    0.035   -4.423    0.000
+    Q12              -0.615    0.065   -9.476    0.000
+    Q16              -0.652    0.068   -9.524    0.000
+    Q20              -0.580    0.062   -9.283    0.000
+    Q24              -0.459    0.052   -8.822    0.000
+    Q28              -0.676    0.071   -9.466    0.000
+    Q32              -0.672    0.071   -9.458    0.000
+    Q36              -0.582    0.062   -9.392    0.000
+
+Regressions:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  acc ~                                               
+    age               0.151    0.047    3.190    0.001
+
+Covariances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  des ~~                                              
+    age               3.241    0.683    4.744    0.000
+  obs ~~                                              
+    age               0.810    0.368    2.203    0.028
+    des               0.461    0.032   14.249    0.000
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+    age              38.567    0.672   57.430    0.000
+
+Thresholds:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+    Q1|t1            -1.901    0.105  -18.159    0.000
+    Q1|t2            -1.127    0.065  -17.245    0.000
+    Q1|t3            -0.206    0.052   -3.977    0.000
+    Q1|t4             0.920    0.060   15.266    0.000
+    Q5|t1            -1.635    0.171   -9.550    0.000
+    Q5|t2            -0.635    0.163   -3.906    0.000
+    Q5|t3             0.117    0.160    0.730    0.465
+    Q5|t4             1.302    0.166    7.835    0.000
+    Q9|t1            -1.377    0.074  -18.644    0.000
+    Q9|t2            -0.420    0.053   -7.894    0.000
+    Q9|t3             0.338    0.053    6.429    0.000
+    Q9|t4             1.265    0.070   18.156    0.000
+    Q13|t1           -1.578    0.083  -18.978    0.000
+    Q13|t2           -0.655    0.056  -11.748    0.000
+    Q13|t3            0.083    0.052    1.600    0.110
+    Q13|t4            0.987    0.062   15.980    0.000
+    Q17|t1           -1.410    0.075  -18.748    0.000
+    Q17|t2           -0.548    0.054  -10.075    0.000
+    Q17|t3            0.134    0.052    2.584    0.010
+    Q17|t4            1.051    0.063   16.598    0.000
+    Q25|t1           -1.901    0.105  -18.159    0.000
+    Q25|t2           -1.193    0.067  -17.724    0.000
+    Q25|t3           -0.370    0.053   -7.000    0.000
+    Q25|t4            0.644    0.056   11.590    0.000
+    Q29|t1           -2.165    0.131  -16.486    0.000
+    Q29|t2           -1.457    0.077  -18.862    0.000
+    Q29|t3           -0.676    0.056  -12.063    0.000
+    Q29|t4            0.448    0.053    8.381    0.000
+    Q30|t1           -1.578    0.083  -18.978    0.000
+    Q30|t2           -0.752    0.057  -13.156    0.000
+    Q30|t3           -0.066    0.052   -1.272    0.203
+    Q30|t4            0.907    0.060   15.120    0.000
+    Q33|t1           -2.049    0.118  -17.314    0.000
+    Q33|t2           -1.265    0.070  -18.156    0.000
+    Q33|t3           -0.634    0.055  -11.431    0.000
+    Q33|t4            0.370    0.053    7.000    0.000
+    Q37|t1           -2.085    0.122  -17.073    0.000
+    Q37|t2           -1.073    0.064  -16.797    0.000
+    Q37|t3           -0.298    0.052   -5.695    0.000
+    Q37|t4            0.741    0.057   13.001    0.000
+    Q39|t1           -2.085    0.122  -17.073    0.000
+    Q39|t2           -1.265    0.070  -18.156    0.000
+    Q39|t3           -0.457    0.054   -8.543    0.000
+    Q39|t4            0.804    0.058   13.848    0.000
+    Q2|t1            -2.016    0.115  -17.526    0.000
+    Q2|t2            -1.036    0.063  -16.463    0.000
+    Q2|t3            -0.202    0.052   -3.895    0.000
+    Q2|t4             0.775    0.058   13.465    0.000
+    Q6|t1            -2.212    0.137  -16.124    0.000
+    Q6|t2            -1.151    0.066  -17.429    0.000
+    Q6|t3            -0.347    0.053   -6.592    0.000
+    Q6|t4             0.539    0.054    9.914    0.000
+    Q10|t1           -1.984    0.112  -17.713    0.000
+    Q10|t2           -1.073    0.064  -16.797    0.000
+    Q10|t3           -0.241    0.052   -4.632    0.000
+    Q10|t4            0.781    0.058   13.542    0.000
+    Q14|t1           -0.781    0.058  -13.542    0.000
+    Q14|t2            0.211    0.052    4.059    0.000
+    Q14|t3            0.953    0.061   15.626    0.000
+    Q14|t4            1.656    0.087   18.926    0.000
+    Q18|t1           -0.730    0.057  -12.846    0.000
+    Q18|t2            0.125    0.052    2.420    0.016
+    Q18|t3            0.815    0.058   14.000    0.000
+    Q18|t4            1.708    0.091   18.836    0.000
+    Q22|t1           -0.798    0.058  -13.771    0.000
+    Q22|t2            0.263    0.052    5.041    0.000
+    Q22|t3            1.015    0.062   16.258    0.000
+    Q22|t4            1.829    0.099   18.473    0.000
+    Q26|t1           -1.592    0.084  -18.976    0.000
+    Q26|t2           -0.786    0.058  -13.618    0.000
+    Q26|t3           -0.134    0.052   -2.584    0.010
+    Q26|t4            0.839    0.059   14.302    0.000
+    Q34|t1           -1.608    0.085  -18.970    0.000
+    Q34|t2           -0.730    0.057  -12.846    0.000
+    Q34|t3           -0.015    0.052   -0.287    0.774
+    Q34|t4            0.792    0.058   13.695    0.000
+    Q8|t1            -3.074    0.278  -11.042    0.000
+    Q8|t2            -2.128    0.256   -8.327    0.000
+    Q8|t3            -1.306    0.254   -5.145    0.000
+    Q8|t4            -0.259    0.258   -1.004    0.315
+    Q12|t1           -4.705    0.822   -5.723    0.000
+    Q12|t2           -3.891    0.821   -4.741    0.000
+    Q12|t3           -3.178    0.826   -3.848    0.000
+    Q12|t4           -2.458    0.826   -2.975    0.003
+    Q16|t1           -4.458    0.870   -5.126    0.000
+    Q16|t2           -3.810    0.867   -4.394    0.000
+    Q16|t3           -3.185    0.872   -3.650    0.000
+    Q16|t4           -2.589    0.873   -2.966    0.003
+    Q20|t1           -4.455    0.773   -5.764    0.000
+    Q20|t2           -3.782    0.774   -4.889    0.000
+    Q20|t3           -3.161    0.772   -4.093    0.000
+    Q20|t4           -2.324    0.779   -2.984    0.003
+    Q24|t1           -3.759    0.615   -6.113    0.000
+    Q24|t2           -3.071    0.617   -4.981    0.000
+    Q24|t3           -2.359    0.621   -3.797    0.000
+    Q24|t4           -1.477    0.625   -2.363    0.018
+    Q28|t1           -4.705    0.899   -5.235    0.000
+    Q28|t2           -4.013    0.899   -4.461    0.000
+    Q28|t3           -3.359    0.900   -3.734    0.000
+    Q28|t4           -2.736    0.899   -3.043    0.002
+    Q32|t1           -4.567    0.894   -5.107    0.000
+    Q32|t2           -3.857    0.896   -4.304    0.000
+    Q32|t3           -3.289    0.897   -3.666    0.000
+    Q32|t4           -2.639    0.898   -2.940    0.003
+    Q36|t1           -4.186    0.780   -5.369    0.000
+    Q36|t2           -3.503    0.779   -4.495    0.000
+    Q36|t3           -2.928    0.784   -3.735    0.000
+    Q36|t4           -2.188    0.786   -2.785    0.005
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .Q1                0.607                           
+   .Q5                0.535                           
+   .Q9                0.603                           
+   .Q13               0.647                           
+   .Q17               0.628                           
+   .Q25               0.600                           
+   .Q29               0.557                           
+   .Q30               0.577                           
+   .Q33               0.529                           
+   .Q37               0.535                           
+   .Q39               0.585                           
+   .Q2                0.375                           
+   .Q6                0.371                           
+   .Q10               0.422                           
+   .Q14               0.362                           
+   .Q18               0.299                           
+   .Q22               0.464                           
+   .Q26               0.380                           
+   .Q34               0.579                           
+   .Q8                0.954                           
+   .Q12               0.287                           
+   .Q16               0.199                           
+   .Q20               0.365                           
+   .Q24               0.604                           
+   .Q28               0.139                           
+   .Q32               0.150                           
+   .Q36               0.362                           
+    age              38.578   11.694    3.299    0.001
+    obs               1.000                           
+    des               1.000                           
+   .acc               1.000                           </code></pre>
+<hr />
+</div>
+<div id="section-5" class="section level2" number="3.3">
+<h2><span class="header-section-number">3.3</span> </h2>
+<p><strong>Estimate an augmented version of the model from above.</strong></p>
+<ul>
+<li>Add <em>Observing</em> and <em>Describing</em> as predictors of <em>Accepting</em>.</li>
+<li>Do not change anything else about the model structure.</li>
+</ul>
+<pre class="r"><code>semMod &lt;- paste(
+  cfaMod,
+  &quot;acc ~ age + des + obs&quot;,
+  &quot;age ~~ des + obs&quot;,
+  sep = &quot;\n&quot;
+)
+
+semFit1 &lt;- sem(semMod, data = kims, ordered = cats, estimator = &quot;WLSMV&quot;, std.lv = TRUE)</code></pre>
+<hr />
+</div>
+<div id="section-6" class="section level2" number="3.4">
+<h2><span class="header-section-number">3.4</span> </h2>
+<p><strong>Summarize and interpret the model parameters.</strong></p>
+<ul>
+<li>Does adding the two new predictors significantly improve the model?</li>
+<li>Interpret the effects of <em>Observing</em> and <em>Describing</em>.</li>
+</ul>
+<pre class="r"><code>summary(semFit1)</code></pre>
 <pre><code>lavaan 0.6-21 ended normally after 66 iterations
 
   Estimator                                       DWLS
@@ -3264,9 +3466,9 @@ Latent Variables:
 Regressions:
                    Estimate  Std.Err  z-value  P(&gt;|z|)
   acc ~                                               
+    age               0.013    0.003    4.343    0.000
     des               0.386    0.054    7.194    0.000
     obs              -0.064    0.053   -1.213    0.225
-    age               0.013    0.003    4.343    0.000
 
 Covariances:
                    Estimate  Std.Err  z-value  P(&gt;|z|)
@@ -3424,88 +3626,32 @@ Variances:
     obs               1.000                           
     des               1.000                           
    .acc               1.000                           </code></pre>
-<pre class="r"><code>fitMeasures(semFit)</code></pre>
-<pre><code>                         npar                          fmin 
-                      144.000                         1.717 
-                        chisq                            df 
-                     2036.538                       344.000 
-                       pvalue                  chisq.scaled 
-                           NA                      1816.688 
-                    df.scaled                 pvalue.scaled 
-                      344.000                         0.000 
-         chisq.scaling.factor                baseline.chisq 
-                        1.241                     64751.659 
-                  baseline.df               baseline.pvalue 
-                      378.000                            NA 
-        baseline.chisq.scaled            baseline.df.scaled 
-                    21317.877                       378.000 
-       baseline.pvalue.scaled baseline.chisq.scaling.factor 
-                        0.000                         3.074 
-                          cfi                           tli 
-                        0.974                         0.971 
-                   cfi.scaled                    tli.scaled 
-                        0.930                         0.923 
-                   cfi.robust                    tli.robust 
-                           NA                            NA 
-                         nnfi                           rfi 
-                        0.971                         0.965 
-                          nfi                          pnfi 
-                        0.969                         0.881 
-                          ifi                           rni 
-                        0.974                         0.974 
-                  nnfi.scaled                    rfi.scaled 
-                        0.923                         0.906 
-                   nfi.scaled                   pnfi.scaled 
-                        0.915                         0.832 
-                   ifi.scaled                    rni.scaled 
-                        0.930                         0.930 
-                  nnfi.robust                    rni.robust 
-                           NA                            NA 
-                        rmsea                rmsea.ci.lower 
-                        0.091                         0.087 
-               rmsea.ci.upper                rmsea.ci.level 
-                        0.095                         0.900 
-                 rmsea.pvalue                rmsea.close.h0 
-                        0.000                         0.050 
-        rmsea.notclose.pvalue             rmsea.notclose.h0 
-                        1.000                         0.080 
-                 rmsea.scaled         rmsea.ci.lower.scaled 
-                        0.085                         0.081 
-        rmsea.ci.upper.scaled           rmsea.pvalue.scaled 
-                        0.089                         0.000 
- rmsea.notclose.pvalue.scaled                  rmsea.robust 
-                        0.985                            NA 
-        rmsea.ci.lower.robust         rmsea.ci.upper.robust 
-                           NA                            NA 
-          rmsea.pvalue.robust  rmsea.notclose.pvalue.robust 
-                           NA                            NA 
-                          rmr                    rmr_nomean 
-                        0.200                         0.225 
-                         srmr                  srmr_bentler 
-                        0.083                         0.074 
-          srmr_bentler_nomean                          crmr 
-                        0.083                         0.076 
-                  crmr_nomean                    srmr_mplus 
-                        0.086                            NA 
-            srmr_mplus_nomean                         cn_05 
-                           NA                       113.860 
-                        cn_01                           gfi 
-                      119.585                         0.977 
-                         agfi                          pgfi 
-                        0.967                         0.689 
-                          mfi                          wrmr 
-                        0.239                         2.043 
-attr(,&quot;scaled.test&quot;)
-[1] &quot;scaled.shifted&quot;</code></pre>
+<pre class="r"><code>fitMeasures(semFit1, stats)</code></pre>
+<pre><code>         chisq.scaled             df.scaled         pvalue.scaled 
+             1816.688               344.000                 0.000 
+           cfi.scaled            tli.scaled          rmsea.scaled 
+                0.930                 0.923                 0.085 
+rmsea.ci.lower.scaled rmsea.ci.upper.scaled 
+                0.081                 0.089 </code></pre>
+<pre class="r"><code>anova(semFit0, semFit1)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Df"],"name":[1],"type":["int"],"align":["right"]},{"label":["AIC"],"name":[2],"type":["lgl"],"align":["right"]},{"label":["BIC"],"name":[3],"type":["lgl"],"align":["right"]},{"label":["Chisq"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Chisq diff"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["RMSEA"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["Df diff"],"name":[7],"type":["int"],"align":["right"]},{"label":["Pr(>Chisq)"],"name":[8],"type":["dbl"],"align":["right"]}],"data":[{"1":"344","2":"NA","3":"NA","4":"2036.538","5":"NA","6":"NA","7":"NA","8":"NA","_rn_":"semFit1"},{"1":"346","2":"NA","3":"NA","4":"2164.645","5":"45.66491","6":"0.3260818","7":"2","8":"1.213364e-10","_rn_":"semFit0"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 <hr />
+</div>
 </div>
 <div id="measurement-invariance" class="section level1" number="4">
 <h1><span class="header-section-number">4</span> Measurement Invariance</h1>
 <hr />
-<div id="configural-invariance" class="section level2" number="4.1">
-<h2><span class="header-section-number">4.1</span> Configural Invariance</h2>
-<p>First, we estimate the configural invariance model by adding the grouping factor without placing any cross-group
-constraints (i.e., in the same way that we did for continuous indicator models).</p>
+<div id="section-7" class="section level2" number="4.1">
+<h2><span class="header-section-number">4.1</span> </h2>
+<p><strong>Estimate the CFA from XXX as a mutiple-group model.</strong></p>
+<ul>
+<li>Specify <em>sex</em> as the grouping factor.</li>
+<li>Estimate a configurally invariant model (i.e., don’t equate any parameters across groups).</li>
+</ul>
 <pre class="r"><code>## Estimate the baseline (configurally invariant) model:
 baseOut &lt;- cfa(model            = cfaMod,
                data             = kims,
@@ -3513,9 +3659,10 @@ baseOut &lt;- cfa(model            = cfaMod,
                ordered          = TRUE,
                estimator        = &quot;WLSMV&quot;,
                parameterization = &quot;delta&quot;,
-               std.lv           = TRUE)</code></pre>
-<p>Check the summary to ensure that everything looks sensible.</p>
-<pre class="r"><code>summary(baseOut)</code></pre>
+               std.lv           = TRUE)
+
+## Check the summary to ensure that everything looks sensible.
+summary(baseOut)</code></pre>
 <pre><code>lavaan 0.6-21 ended normally after 31 iterations
 
   Estimator                                       DWLS
@@ -3922,11 +4069,16 @@ Variances:
     obs               1.000                           
     des               1.000                           
     acc               1.000                           </code></pre>
-<p>Check the model fit to test configural invariance.</p>
-<pre class="r"><code>s4 &lt;- paste(c(s1, s2), &quot;scaled&quot;, sep = &quot;.&quot;)
-
-## Check the model fit:
-fitMeasures(baseOut, s4)</code></pre>
+<hr />
+</div>
+<div id="section-8" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> </h2>
+<p><strong>Evaluate configural invariance.</strong></p>
+<ul>
+<li>What is your conclusion?</li>
+</ul>
+<pre class="r"><code>## Check the model fit:
+fitMeasures(baseOut, stats)</code></pre>
 <pre><code>         chisq.scaled             df.scaled         pvalue.scaled 
              2073.614               640.000                 0.000 
            cfi.scaled            tli.scaled          rmsea.scaled 
@@ -3936,20 +4088,15 @@ rmsea.ci.lower.scaled rmsea.ci.upper.scaled
 <p>The model fits well. Configural invariance holds.</p>
 <hr />
 </div>
-<div id="threshold-invariance" class="section level2" number="4.2">
-<h2><span class="header-section-number">4.2</span> Threshold Invariance</h2>
-<p>Now, we need to test threshold invariance. We do so via the same procedure we would use to test invariance of factor
-loadings or intercepts.</p>
-<ol style="list-style-type: decimal">
-<li>Estimate a restricted model wherein the thresholds are constrained to equality across groups.</li>
-<li>Test the tenability of the constraint by comparing to the configurally invariant model.</li>
-</ol>
-<p>We must establish threshold invariance before considering weak or strong invariance because weak and strong invariance
-both concern paths linking the LRVs to the common latent factors. We must first demonstrate, therefore, that the LRVs
-are defined equivalently in all groups.</p>
-<hr />
-<p>We can make our lives much easier by using the <code>measEq.syntax()</code> function from the <strong>semTools</strong> package to
-programmatically generate the <strong>lavaan</strong> model syntax for our various restricted models.</p>
+<div id="section-9" class="section level2" number="4.3">
+<h2><span class="header-section-number">4.3</span> </h2>
+<p><strong>Define the model syntax for the threshold invariance model.</strong></p>
+<ul>
+<li>Use the <code>measEq.syntax()</code> function from the <strong>semTools</strong> package to generate the model syntax.</li>
+<li>Set the scale by standardizing the latent factors (i.e., use the fixed-factor/reference-group method of identification).</li>
+<li>Use the delta parameterization to define the latent response variables.</li>
+<li>Use the Wu &amp; Estabrook (2016) identification conditions.</li>
+</ul>
 <pre class="r"><code>library(semTools)
 
 ## Define the model syntax for the threshold-invariant model:
@@ -3960,10 +4107,10 @@ tMod &lt;- measEq.syntax(configural.model = cfaMod,
                       ID.fac           = &quot;std.lv&quot;,
                       ID.cat           = &quot;Wu.Estabrook.2016&quot;,
                       group            = &quot;sex&quot;,
-                      group.equal      = &quot;thresholds&quot;)</code></pre>
-<p>We can view the resulting syntax by casting the <code>tMod</code> object as a character vector and printing it with the <code>cat()</code>
-function.</p>
-<pre class="r"><code>tMod %&gt;% as.character() %&gt;% cat()</code></pre>
+                      group.equal      = &quot;thresholds&quot;)
+
+## Print the syntax to check:
+tMod |&gt; as.character() |&gt; cat()</code></pre>
 <pre><code>## LOADINGS:
 
 obs =~ c(NA, NA)*Q1 + c(lambda.1_1.g1, lambda.1_1.g2)*Q1
@@ -4185,13 +4332,12 @@ obs ~~ c(NA, NA)*des + c(psi.2_1.g1, psi.2_1.g2)*des
 obs ~~ c(NA, NA)*acc + c(psi.3_1.g1, psi.3_1.g2)*acc
 des ~~ c(NA, NA)*acc + c(psi.3_2.g1, psi.3_2.g2)*acc</code></pre>
 <hr />
-<p>Now, we estimate the threshold invariant model.</p>
-<p><em>Notes:</em></p>
+</div>
+<div id="section-10" class="section level2" number="4.4">
+<h2><span class="header-section-number">4.4</span> </h2>
+<p><strong>Estimate the threshold invariant model.</strong></p>
 <ul>
-<li>We do not need to specify anything for the <code>group.equal</code> argument because all invariance constraints are defined in
-the model syntax we generated via <code>measEq.syntax()</code>.</li>
-<li>We must type cast the object returned by <code>measEq.syntax()</code> as a character vector (i.e., by wrapping it with
-<code>as.character()</code>) to get the <code>cfa()</code> function to recognize this object as model syntax.</li>
+<li>Check the results by summarizing the model and evaluating the model fit.</li>
 </ul>
 <pre class="r"><code>## Estimate the threshold-invariant model:
 tOut &lt;- cfa(model     = as.character(tMod),
@@ -4735,22 +4881,22 @@ Scales y*:
     Q28               1.008    0.081   12.511    0.000
     Q32               1.092    0.089   12.224    0.000
     Q36               1.035    0.082   12.604    0.000</code></pre>
-<p>As expected, the thresholds are equal across groups. Additionally, constraining the thresholds helps identify the model,
-so we can freely estimate the item intercepts and the scales of the latent response variables in the second and third
-groups.</p>
 <pre class="r"><code>## Check the model fit:
-fitMeasures(tOut, s4)</code></pre>
+fitMeasures(tOut, stats)</code></pre>
 <pre><code>         chisq.scaled             df.scaled         pvalue.scaled 
              2149.515               694.000                 0.000 
            cfi.scaled            tli.scaled          rmsea.scaled 
                 0.933                 0.932                 0.084 
 rmsea.ci.lower.scaled rmsea.ci.upper.scaled 
                 0.080                 0.088 </code></pre>
-<p>The model still fits very well.</p>
+<p>As expected, the thresholds are equal across groups. All the parameter estimates seem sensible, and the model still fits very well.</p>
 <hr />
-<p>We test threshold invariance by comparing to the configurally invariant model.</p>
+</div>
+<div id="section-11" class="section level2" number="4.5">
+<h2><span class="header-section-number">4.5</span> </h2>
+<p><strong>Test threshold invariance.</strong></p>
 <pre class="r"><code>## Test threshold invariance via model comparisons:
-compareFit(baseOut, tOut) %&gt;% summary()</code></pre>
+compareFit(baseOut, tOut) |&gt; summary()</code></pre>
 <pre><code>################### Nested Model Comparison #########################
 
 Scaled Chi-Squared Difference Test (method = &quot;satorra.2000&quot;)
@@ -4778,12 +4924,14 @@ tOut - baseOut        54       -0.003     -0.001      0.005    0</code></pre>
 <p>The <span class="math inline">\(\Delta \chi^2\)</span> test is nonsignificant, so we can infer invariant thresholds.</p>
 <hr />
 </div>
-<div id="weak-invariance" class="section level2" number="4.3">
-<h2><span class="header-section-number">4.3</span> Weak Invariance</h2>
-<p>After establishing threshold invariance, the next step is testing the additional constraint of loading invariance (i.e.,
-weak invariance or metric invariance).</p>
+<div id="section-12" class="section level2" number="4.6">
+<h2><span class="header-section-number">4.6</span> </h2>
+<p><strong>Define the model syntax for the weak/metric invariance model.</strong></p>
 <ul>
-<li>Again, we can use the <code>measEq.syntax()</code> function to streamline the process.</li>
+<li>Use the <code>measEq.syntax()</code> function from the <strong>semTools</strong> package to generate the model syntax.</li>
+<li>Set the scale by standardizing the latent factors (i.e., use the fixed-factor/reference-group method of identification).</li>
+<li>Use the delta parameterization to define the latent response variables.</li>
+<li>Use the Wu &amp; Estabrook (2016) identification conditions.</li>
 </ul>
 <pre class="r"><code>## Define the model syntax for the threshold/loading-invariant model:
 tlMod &lt;- measEq.syntax(configural.model = cfaMod,
@@ -4797,7 +4945,7 @@ tlMod &lt;- measEq.syntax(configural.model = cfaMod,
                        )
 
 ## Check the resulting syntax:
-tlMod %&gt;% as.character() %&gt;% cat()</code></pre>
+tlMod |&gt; as.character() |&gt; cat()</code></pre>
 <pre><code>## LOADINGS:
 
 obs =~ c(NA, NA)*Q1 + c(lambda.1_1, lambda.1_1)*Q1
@@ -5019,13 +5167,20 @@ obs ~~ c(NA, NA)*des + c(psi.2_1.g1, psi.2_1.g2)*des
 obs ~~ c(NA, NA)*acc + c(psi.3_1.g1, psi.3_1.g2)*acc
 des ~~ c(NA, NA)*acc + c(psi.3_2.g1, psi.3_2.g2)*acc</code></pre>
 <hr />
-<p>We estimate the model in the usual way.</p>
+</div>
+<div id="section-13" class="section level2" number="4.7">
+<h2><span class="header-section-number">4.7</span> </h2>
+<p><strong>Estimate the weak invariant model.</strong></p>
+<ul>
+<li>Check the results by summarizing the model and evaluating the model fit.</li>
+</ul>
 <pre class="r"><code>## Estimate the threshold/loading-invariant model:
 tlOut &lt;- cfa(model     = as.character(tlMod),
              data      = kims,
              group     = &quot;sex&quot;,
              ordered   = TRUE,
-             estimator = &quot;WLSMV&quot;)
+             estimator = &quot;WLSMV&quot;,
+             int.ov.free = TRUE)
 
 ## Summarize the results:
 summary(tlOut)</code></pre>
@@ -5562,21 +5717,22 @@ Scales y*:
     Q28               1.117    0.076   14.715    0.000
     Q32               1.087    0.074   14.656    0.000
     Q36               0.992    0.061   16.320    0.000</code></pre>
-<p>Now that we’ve equated the factor loadings across groups, we have the additional identification necessary to freely
-estimate the latent variances in the second and third groups.</p>
 <pre class="r"><code>## Check the model fit:
-fitMeasures(tlOut, s4)</code></pre>
+fitMeasures(tlOut, stats)</code></pre>
 <pre><code>         chisq.scaled             df.scaled         pvalue.scaled 
              2119.463               719.000                 0.000 
            cfi.scaled            tli.scaled          rmsea.scaled 
                 0.935                 0.937                 0.081 
 rmsea.ci.lower.scaled rmsea.ci.upper.scaled 
                 0.077                 0.085 </code></pre>
-<p>Again, model fit is still excellent.</p>
+<p>Again, model fit is still excellent, and all the parameter estimates are reasonable.</p>
 <hr />
-<p>We evaluate weak invariance by comparing back to the threshold-invariance model.</p>
+</div>
+<div id="section-14" class="section level2" number="4.8">
+<h2><span class="header-section-number">4.8</span> </h2>
+<p><strong>Test weak invariance.</strong></p>
 <pre class="r"><code>## Test threshold/loading invariance via model comparisons:
-compareFit(tOut, tlOut) %&gt;% summary()</code></pre>
+compareFit(tOut, tlOut) |&gt; summary()</code></pre>
 <pre><code>################### Nested Model Comparison #########################
 
 Scaled Chi-Squared Difference Test (method = &quot;satorra.2000&quot;)
@@ -5607,9 +5763,15 @@ tlOut - tOut        25       -0.003      0.003      0.005    0</code></pre>
 across groups. Conditioning on the dubious threshold invariance, we can claim weak invariance.</p>
 <hr />
 </div>
-<div id="strong-invariance" class="section level2" number="4.4">
-<h2><span class="header-section-number">4.4</span> Strong Invariance</h2>
-<p>We conclude by equating the item intercepts across groups to test strong/metric invariance.</p>
+<div id="section-15" class="section level2" number="4.9">
+<h2><span class="header-section-number">4.9</span> </h2>
+<p><strong>Define the model syntax for the strong/scalar invariance model.</strong></p>
+<ul>
+<li>Use the <code>measEq.syntax()</code> function from the <strong>semTools</strong> package to generate the model syntax.</li>
+<li>Set the scale by standardizing the latent factors (i.e., use the fixed-factor/reference-group method of identification).</li>
+<li>Use the delta parameterization to define the latent response variables.</li>
+<li>Use the Wu &amp; Estabrook (2016) identification conditions.</li>
+</ul>
 <pre class="r"><code>## Define the model syntax for the threshold/loading/intercept-invariant model:
 tliMod &lt;-
     measEq.syntax(configural.model = cfaMod,
@@ -5623,7 +5785,7 @@ tliMod &lt;-
                   )
 
 ## Check the syntax:
-tliMod %&gt;% as.character() %&gt;% cat()</code></pre>
+tliMod |&gt; as.character() |&gt; cat()</code></pre>
 <pre><code>## LOADINGS:
 
 obs =~ c(NA, NA)*Q1 + c(lambda.1_1, lambda.1_1)*Q1
@@ -5844,6 +6006,14 @@ acc ~~ c(1, NA)*acc + c(psi.3_3.g1, psi.3_3.g2)*acc
 obs ~~ c(NA, NA)*des + c(psi.2_1.g1, psi.2_1.g2)*des
 obs ~~ c(NA, NA)*acc + c(psi.3_1.g1, psi.3_1.g2)*acc
 des ~~ c(NA, NA)*acc + c(psi.3_2.g1, psi.3_2.g2)*acc</code></pre>
+<hr />
+</div>
+<div id="section-16" class="section level2" number="4.10">
+<h2><span class="header-section-number">4.10</span> </h2>
+<p><strong>Estimate the weak invariant model.</strong></p>
+<ul>
+<li>Check the results by summarizing the model and evaluating the model fit.</li>
+</ul>
 <pre class="r"><code>## Estimate the threshold/loading/intercept-invariant model:
 tliOut &lt;- cfa(model     = as.character(tliMod),
               data      = kims,
@@ -6386,9 +6556,8 @@ Scales y*:
     Q28               1.138    0.077   14.801    0.000
     Q32               1.106    0.075   14.785    0.000
     Q36               1.007    0.061   16.484    0.000</code></pre>
-<p>Constraining the item intercepts allows us to freely estimate the latent means in the second and third groups.</p>
 <pre class="r"><code>## Check the model fit:
-fitMeasures(tliOut, s4)</code></pre>
+fitMeasures(tliOut, stats)</code></pre>
 <pre><code>         chisq.scaled             df.scaled         pvalue.scaled 
              2168.606               743.000                 0.000 
            cfi.scaled            tli.scaled          rmsea.scaled 
@@ -6397,7 +6566,7 @@ rmsea.ci.lower.scaled rmsea.ci.upper.scaled
                 0.077                 0.085 </code></pre>
 <p>The strongly invariant model still fits very well.</p>
 <pre class="r"><code>## Test threshold/loading/intercept invariance via model comparisons:
-compareFit(tlOut, tliOut) %&gt;% summary()</code></pre>
+compareFit(tlOut, tliOut) |&gt; summary()</code></pre>
 <pre><code>################### Nested Model Comparison #########################
 
 Scaled Chi-Squared Difference Test (method = &quot;satorra.2000&quot;)
@@ -6953,6 +7122,536 @@ $p.value
 
 $se
 [1] &quot;robust.sem&quot;</code></pre>
+<pre class="r"><code>semMod &lt;- paste(
+  cfaMod,
+  &#39;acc ~ c(&quot;b1&quot;, &quot;b1&quot;) * des + c(&quot;b2&quot;, &quot;b2&quot;) * obs + c(&quot;b3&quot;, &quot;b3&quot;) * age&#39;,
+  &#39;age ~~ des + obs&#39;,
+  sep = &quot;\n&quot;
+)
+
+# tlSemMod &lt;-
+#     measEq.syntax(configural.model = semMod,
+#                   data             = kims,
+#                   ordered          = cats,
+#                   parameterization = &quot;delta&quot;,
+#                   ID.fac           = &quot;std.lv&quot;,
+#                   ID.cat           = &quot;Wu.Estabrook.2016&quot;,
+#                   group            = &quot;sex&quot;,
+#                   group.equal      = c(&quot;thresholds&quot;, &quot;loadings&quot;)
+#                   )
+
+modOut2 &lt;- sem(
+  model = semMod,
+  data = kims,
+  group = &quot;sex&quot;,
+  ordered = cats,
+  estimator = &quot;WLSMV&quot;,
+  parameterization = &quot;delta&quot;,
+  std.lv = TRUE,
+  group.equal = c(&quot;thresholds&quot;, &quot;loadings&quot;)
+)
+
+summary(modOut)</code></pre>
+<pre><code>lavaan 0.6-21 ended normally after 151 iterations
+
+  Estimator                                       DWLS
+  Optimization method                           NLMINB
+  Number of model parameters                       345
+  Number of equality constraints                   136
+
+  Number of observations per group:                   
+    female                                         301
+    male                                           292
+
+Model Test User Model:
+                                              Standard      Scaled
+  Test Statistic                              2525.096    2190.462
+  Degrees of freedom                               767         767
+  P-value (Unknown)                                 NA       0.000
+  Scaling correction factor                                  1.434
+  Shift parameter                                          429.645
+    simple second-order correction                                
+  Test statistic for each group:
+    female                                    1030.251    1030.251
+    male                                      1160.211    1160.211
+
+Parameter Estimates:
+
+  Parameterization                               Delta
+  Standard errors                           Robust.sem
+  Information                                 Expected
+  Information saturated (h1) model        Unstructured
+
+
+Group 1 [female]:
+
+Latent Variables:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  obs =~                                              
+    Q1      (.p1.)    0.562    0.038   14.739    0.000
+    Q5      (.p2.)    0.669    0.034   19.778    0.000
+    Q9      (.p3.)    0.603    0.035   17.444    0.000
+    Q13     (.p4.)    0.611    0.034   17.803    0.000
+    Q17     (.p5.)    0.613    0.036   16.890    0.000
+    Q25     (.p6.)    0.652    0.033   19.472    0.000
+    Q29     (.p7.)    0.717    0.032   22.353    0.000
+    Q30     (.p8.)    0.671    0.036   18.689    0.000
+    Q33     (.p9.)    0.744    0.033   22.551    0.000
+    Q37     (.10.)    0.707    0.034   20.666    0.000
+    Q39     (.11.)    0.617    0.038   16.427    0.000
+  des =~                                              
+    Q2      (.12.)    0.812    0.019   43.011    0.000
+    Q6      (.13.)    0.796    0.022   35.516    0.000
+    Q10     (.14.)    0.775    0.023   33.012    0.000
+    Q14     (.15.)   -0.854    0.019  -44.998    0.000
+    Q18     (.16.)   -0.826    0.021  -39.266    0.000
+    Q22     (.17.)   -0.762    0.025  -30.240    0.000
+    Q26     (.18.)    0.834    0.019   42.946    0.000
+    Q34     (.19.)    0.692    0.031   22.024    0.000
+  acc =~                                              
+    Q5      (.20.)   -0.010    0.033   -0.306    0.760
+    Q8      (.21.)   -0.214    0.040   -5.329    0.000
+    Q12     (.22.)   -0.787    0.022  -35.113    0.000
+    Q16     (.23.)   -0.812    0.022  -36.715    0.000
+    Q20     (.24.)   -0.750    0.024  -31.794    0.000
+    Q24     (.25.)   -0.609    0.031  -19.675    0.000
+    Q28     (.26.)   -0.831    0.022  -37.296    0.000
+    Q32     (.27.)   -0.834    0.023  -36.638    0.000
+    Q36     (.28.)   -0.753    0.023  -32.502    0.000
+
+Regressions:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  acc ~                                               
+    des      (b1f)    0.422    0.080    5.299    0.000
+    obs      (b2f)    0.012    0.079    0.147    0.883
+    age      (b3f)    0.014    0.004    3.263    0.001
+
+Covariances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  des ~~                                              
+    age               3.186    0.918    3.472    0.001
+  obs ~~                                              
+    age               0.227    0.862    0.264    0.792
+    des               0.541    0.040   13.682    0.000
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+    age              39.266    0.898   43.704    0.000
+
+Thresholds:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+    Q1|t1   (.34.)   -1.756    0.122  -14.367    0.000
+    Q1|t2   (.35.)   -1.090    0.082  -13.275    0.000
+    Q1|t3   (.36.)   -0.264    0.067   -3.972    0.000
+    Q1|t4   (.37.)    0.756    0.081    9.362    0.000
+    Q5|t1   (.38.)   -1.551    0.108  -14.390    0.000
+    Q5|t2   (.39.)   -0.565    0.075   -7.493    0.000
+    Q5|t3   (.40.)    0.173    0.070    2.466    0.014
+    Q5|t4   (.41.)    1.339    0.094   14.298    0.000
+    Q9|t1   (.42.)   -1.247    0.091  -13.747    0.000
+    Q9|t2   (.43.)   -0.337    0.068   -4.928    0.000
+    Q9|t3   (.44.)    0.383    0.067    5.687    0.000
+    Q9|t4   (.45.)    1.249    0.091   13.719    0.000
+    Q13|t1  (.46.)   -1.631    0.111  -14.685    0.000
+    Q13|t2  (.47.)   -0.660    0.071   -9.259    0.000
+    Q13|t3  (.48.)    0.107    0.068    1.576    0.115
+    Q13|t4  (.49.)    1.048    0.084   12.435    0.000
+    Q17|t1  (.50.)   -1.400    0.098  -14.261    0.000
+    Q17|t2  (.51.)   -0.534    0.070   -7.607    0.000
+    Q17|t3  (.52.)    0.150    0.068    2.229    0.026
+    Q17|t4  (.53.)    1.071    0.086   12.508    0.000
+    Q25|t1  (.54.)   -1.997    0.126  -15.841    0.000
+    Q25|t2  (.55.)   -1.271    0.087  -14.632    0.000
+    Q25|t3  (.56.)   -0.423    0.069   -6.111    0.000
+    Q25|t4  (.57.)    0.616    0.076    8.111    0.000
+    Q29|t1  (.58.)   -2.522    0.178  -14.158    0.000
+    Q29|t2  (.59.)   -1.690    0.103  -16.385    0.000
+    Q29|t3  (.60.)   -0.852    0.077  -11.109    0.000
+    Q29|t4  (.61.)    0.363    0.074    4.936    0.000
+    Q30|t1  (.62.)   -1.674    0.113  -14.761    0.000
+    Q30|t2  (.63.)   -0.810    0.076  -10.712    0.000
+    Q30|t3  (.64.)   -0.098    0.068   -1.452    0.146
+    Q30|t4  (.65.)    0.910    0.081   11.285    0.000
+    Q33|t1  (.66.)   -2.184    0.146  -14.914    0.000
+    Q33|t2  (.67.)   -1.321    0.088  -15.022    0.000
+    Q33|t3  (.68.)   -0.649    0.073   -8.843    0.000
+    Q33|t4  (.69.)    0.438    0.074    5.877    0.000
+    Q37|t1  (.70.)   -2.225    0.148  -15.064    0.000
+    Q37|t2  (.71.)   -1.168    0.085  -13.753    0.000
+    Q37|t3  (.72.)   -0.350    0.068   -5.121    0.000
+    Q37|t4  (.73.)    0.739    0.077    9.604    0.000
+    Q39|t1  (.74.)   -2.151    0.145  -14.849    0.000
+    Q39|t2  (.75.)   -1.353    0.092  -14.687    0.000
+    Q39|t3  (.76.)   -0.556    0.070   -7.898    0.000
+    Q39|t4  (.77.)    0.692    0.079    8.775    0.000
+    Q2|t1   (.78.)   -2.120    0.137  -15.484    0.000
+    Q2|t2   (.79.)   -1.137    0.082  -13.903    0.000
+    Q2|t3   (.80.)   -0.300    0.068   -4.419    0.000
+    Q2|t4   (.81.)    0.681    0.076    8.923    0.000
+    Q6|t1   (.82.)   -2.104    0.143  -14.684    0.000
+    Q6|t2   (.83.)   -1.066    0.081  -13.238    0.000
+    Q6|t3   (.84.)   -0.286    0.068   -4.225    0.000
+    Q6|t4   (.85.)    0.572    0.076    7.559    0.000
+    Q10|t1  (.86.)   -1.990    0.130  -15.291    0.000
+    Q10|t2  (.87.)   -1.115    0.081  -13.727    0.000
+    Q10|t3  (.88.)   -0.283    0.068   -4.147    0.000
+    Q10|t4  (.89.)    0.739    0.078    9.437    0.000
+    Q14|t1  (.90.)   -0.852    0.082  -10.429    0.000
+    Q14|t2  (.91.)    0.173    0.067    2.582    0.010
+    Q14|t3  (.92.)    0.942    0.078   12.050    0.000
+    Q14|t4  (.93.)    1.664    0.110   15.084    0.000
+    Q18|t1  (.94.)   -0.711    0.076   -9.402    0.000
+    Q18|t2  (.95.)    0.112    0.067    1.682    0.093
+    Q18|t3  (.96.)    0.772    0.073   10.535    0.000
+    Q18|t4  (.97.)    1.628    0.106   15.299    0.000
+    Q22|t1  (.98.)   -0.763    0.077   -9.946    0.000
+    Q22|t2  (.99.)    0.306    0.068    4.531    0.000
+    Q22|t3  (.100)    1.066    0.080   13.254    0.000
+    Q22|t4  (.101)    1.889    0.118   16.048    0.000
+    Q26|t1  (.102)   -1.702    0.103  -16.539    0.000
+    Q26|t2  (.103)   -0.872    0.075  -11.557    0.000
+    Q26|t3  (.104)   -0.193    0.068   -2.840    0.005
+    Q26|t4  (.105)    0.808    0.080   10.121    0.000
+    Q34|t1  (.106)   -1.806    0.114  -15.811    0.000
+    Q34|t2  (.107)   -0.887    0.076  -11.646    0.000
+    Q34|t3  (.108)   -0.137    0.068   -2.029    0.042
+    Q34|t4  (.109)    0.700    0.078    8.948    0.000
+    Q8|t1   (.110)   -2.317    0.188  -12.352    0.000
+    Q8|t2   (.111)   -1.320    0.100  -13.264    0.000
+    Q8|t3   (.112)   -0.448    0.078   -5.760    0.000
+    Q8|t4   (.113)    0.663    0.091    7.282    0.000
+    Q12|t1  (.114)   -1.594    0.154  -10.337    0.000
+    Q12|t2  (.115)   -0.791    0.147   -5.388    0.000
+    Q12|t3  (.116)   -0.085    0.150   -0.569    0.570
+    Q12|t4  (.117)    0.627    0.162    3.874    0.000
+    Q16|t1  (.118)   -1.159    0.148   -7.842    0.000
+    Q16|t2  (.119)   -0.537    0.150   -3.583    0.000
+    Q16|t3  (.120)    0.072    0.154    0.467    0.640
+    Q16|t4  (.121)    0.652    0.165    3.964    0.000
+    Q20|t1  (.122)   -1.442    0.141  -10.210    0.000
+    Q20|t2  (.123)   -0.776    0.138   -5.638    0.000
+    Q20|t3  (.124)   -0.163    0.141   -1.159    0.246
+    Q20|t4  (.125)    0.666    0.154    4.319    0.000
+    Q24|t1  (.126)   -1.367    0.124  -11.061    0.000
+    Q24|t2  (.127)   -0.667    0.116   -5.727    0.000
+    Q24|t3  (.128)    0.059    0.122    0.483    0.629
+    Q24|t4  (.129)    0.957    0.137    6.967    0.000
+    Q28|t1  (.130)   -1.257    0.155   -8.129    0.000
+    Q28|t2  (.131)   -0.601    0.152   -3.959    0.000
+    Q28|t3  (.132)    0.018    0.156    0.116    0.908
+    Q28|t4  (.133)    0.609    0.168    3.629    0.000
+    Q32|t1  (.134)   -1.138    0.155   -7.349    0.000
+    Q32|t2  (.135)   -0.457    0.155   -2.959    0.003
+    Q32|t3  (.136)    0.090    0.160    0.565    0.572
+    Q32|t4  (.137)    0.720    0.172    4.182    0.000
+    Q36|t1  (.138)   -1.212    0.145   -8.370    0.000
+    Q36|t2  (.139)   -0.527    0.141   -3.730    0.000
+    Q36|t3  (.140)    0.051    0.145    0.351    0.725
+    Q36|t4  (.141)    0.794    0.158    5.022    0.000
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .Q1                0.684                           
+   .Q5                0.556                           
+   .Q9                0.636                           
+   .Q13               0.626                           
+   .Q17               0.624                           
+   .Q25               0.575                           
+   .Q29               0.486                           
+   .Q30               0.550                           
+   .Q33               0.446                           
+   .Q37               0.500                           
+   .Q39               0.620                           
+   .Q2                0.340                           
+   .Q6                0.367                           
+   .Q10               0.399                           
+   .Q14               0.271                           
+   .Q18               0.317                           
+   .Q22               0.420                           
+   .Q26               0.304                           
+   .Q34               0.521                           
+   .Q8                0.942                           
+   .Q12               0.214                           
+   .Q16               0.164                           
+   .Q20               0.287                           
+   .Q24               0.530                           
+   .Q28               0.124                           
+   .Q32               0.118                           
+   .Q36               0.280                           
+    age             227.052   26.712    8.500    0.000
+    obs               1.000                           
+    des               1.000                           
+   .acc               1.000                           
+
+
+Group 2 [male]:
+
+Latent Variables:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  obs =~                                              
+    Q1      (.p1.)    0.562    0.038   14.739    0.000
+    Q5      (.p2.)    0.669    0.034   19.778    0.000
+    Q9      (.p3.)    0.603    0.035   17.444    0.000
+    Q13     (.p4.)    0.611    0.034   17.803    0.000
+    Q17     (.p5.)    0.613    0.036   16.890    0.000
+    Q25     (.p6.)    0.652    0.033   19.472    0.000
+    Q29     (.p7.)    0.717    0.032   22.353    0.000
+    Q30     (.p8.)    0.671    0.036   18.689    0.000
+    Q33     (.p9.)    0.744    0.033   22.551    0.000
+    Q37     (.10.)    0.707    0.034   20.666    0.000
+    Q39     (.11.)    0.617    0.038   16.427    0.000
+  des =~                                              
+    Q2      (.12.)    0.812    0.019   43.011    0.000
+    Q6      (.13.)    0.796    0.022   35.516    0.000
+    Q10     (.14.)    0.775    0.023   33.012    0.000
+    Q14     (.15.)   -0.854    0.019  -44.998    0.000
+    Q18     (.16.)   -0.826    0.021  -39.266    0.000
+    Q22     (.17.)   -0.762    0.025  -30.240    0.000
+    Q26     (.18.)    0.834    0.019   42.946    0.000
+    Q34     (.19.)    0.692    0.031   22.024    0.000
+  acc =~                                              
+    Q5      (.20.)   -0.010    0.033   -0.306    0.760
+    Q8      (.21.)   -0.214    0.040   -5.329    0.000
+    Q12     (.22.)   -0.787    0.022  -35.113    0.000
+    Q16     (.23.)   -0.812    0.022  -36.715    0.000
+    Q20     (.24.)   -0.750    0.024  -31.794    0.000
+    Q24     (.25.)   -0.609    0.031  -19.675    0.000
+    Q28     (.26.)   -0.831    0.022  -37.296    0.000
+    Q32     (.27.)   -0.834    0.023  -36.638    0.000
+    Q36     (.28.)   -0.753    0.023  -32.502    0.000
+
+Regressions:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  acc ~                                               
+    des      (b1m)    0.334    0.071    4.737    0.000
+    obs      (b2m)   -0.133    0.064   -2.087    0.037
+    age      (b3m)    0.011    0.004    2.813    0.005
+
+Covariances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  des ~~                                              
+    age               2.416    0.887    2.723    0.006
+  obs ~~                                              
+    age              -1.215    0.913   -1.330    0.184
+    des               0.361    0.068    5.339    0.000
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .Q1               -0.138    0.081   -1.707    0.088
+   .Q5                0.044    0.086    0.508    0.611
+   .Q9                0.118    0.082    1.441    0.150
+   .Q13               0.042    0.091    0.462    0.644
+   .Q17               0.033    0.087    0.380    0.704
+   .Q25              -0.092    0.093   -0.990    0.322
+   .Q29              -0.252    0.100   -2.521    0.012
+   .Q30              -0.063    0.091   -0.693    0.488
+   .Q33               0.101    0.109    0.928    0.353
+   .Q37              -0.081    0.093   -0.866    0.386
+   .Q39              -0.209    0.089   -2.340    0.019
+   .Q2               -0.198    0.088   -2.258    0.024
+   .Q6                0.100    0.089    1.128    0.259
+   .Q10              -0.084    0.089   -0.946    0.344
+   .Q14              -0.090    0.093   -0.974    0.330
+   .Q18              -0.020    0.085   -0.231    0.817
+   .Q22               0.085    0.089    0.958    0.338
+   .Q26              -0.118    0.091   -1.292    0.196
+   .Q34              -0.257    0.090   -2.850    0.004
+   .Q8                0.161    0.109    1.479    0.139
+   .Q12              -0.233    0.193   -1.203    0.229
+   .Q16              -0.279    0.198   -1.406    0.160
+   .Q20              -0.053    0.185   -0.285    0.776
+   .Q24               0.057    0.157    0.366    0.714
+   .Q28              -0.273    0.201   -1.359    0.174
+   .Q32              -0.232    0.203   -1.142    0.254
+   .Q36              -0.118    0.189   -0.624    0.533
+    age              37.846    1.014   37.340    0.000
+
+Thresholds:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+    Q1|t1   (.34.)   -1.756    0.122  -14.367    0.000
+    Q1|t2   (.35.)   -1.090    0.082  -13.275    0.000
+    Q1|t3   (.36.)   -0.264    0.067   -3.972    0.000
+    Q1|t4   (.37.)    0.756    0.081    9.362    0.000
+    Q5|t1   (.38.)   -1.551    0.108  -14.390    0.000
+    Q5|t2   (.39.)   -0.565    0.075   -7.493    0.000
+    Q5|t3   (.40.)    0.173    0.070    2.466    0.014
+    Q5|t4   (.41.)    1.339    0.094   14.298    0.000
+    Q9|t1   (.42.)   -1.247    0.091  -13.747    0.000
+    Q9|t2   (.43.)   -0.337    0.068   -4.928    0.000
+    Q9|t3   (.44.)    0.383    0.067    5.687    0.000
+    Q9|t4   (.45.)    1.249    0.091   13.719    0.000
+    Q13|t1  (.46.)   -1.631    0.111  -14.685    0.000
+    Q13|t2  (.47.)   -0.660    0.071   -9.259    0.000
+    Q13|t3  (.48.)    0.107    0.068    1.576    0.115
+    Q13|t4  (.49.)    1.048    0.084   12.435    0.000
+    Q17|t1  (.50.)   -1.400    0.098  -14.261    0.000
+    Q17|t2  (.51.)   -0.534    0.070   -7.607    0.000
+    Q17|t3  (.52.)    0.150    0.068    2.229    0.026
+    Q17|t4  (.53.)    1.071    0.086   12.508    0.000
+    Q25|t1  (.54.)   -1.997    0.126  -15.841    0.000
+    Q25|t2  (.55.)   -1.271    0.087  -14.632    0.000
+    Q25|t3  (.56.)   -0.423    0.069   -6.111    0.000
+    Q25|t4  (.57.)    0.616    0.076    8.111    0.000
+    Q29|t1  (.58.)   -2.522    0.178  -14.158    0.000
+    Q29|t2  (.59.)   -1.690    0.103  -16.385    0.000
+    Q29|t3  (.60.)   -0.852    0.077  -11.109    0.000
+    Q29|t4  (.61.)    0.363    0.074    4.936    0.000
+    Q30|t1  (.62.)   -1.674    0.113  -14.761    0.000
+    Q30|t2  (.63.)   -0.810    0.076  -10.712    0.000
+    Q30|t3  (.64.)   -0.098    0.068   -1.452    0.146
+    Q30|t4  (.65.)    0.910    0.081   11.285    0.000
+    Q33|t1  (.66.)   -2.184    0.146  -14.914    0.000
+    Q33|t2  (.67.)   -1.321    0.088  -15.022    0.000
+    Q33|t3  (.68.)   -0.649    0.073   -8.843    0.000
+    Q33|t4  (.69.)    0.438    0.074    5.877    0.000
+    Q37|t1  (.70.)   -2.225    0.148  -15.064    0.000
+    Q37|t2  (.71.)   -1.168    0.085  -13.753    0.000
+    Q37|t3  (.72.)   -0.350    0.068   -5.121    0.000
+    Q37|t4  (.73.)    0.739    0.077    9.604    0.000
+    Q39|t1  (.74.)   -2.151    0.145  -14.849    0.000
+    Q39|t2  (.75.)   -1.353    0.092  -14.687    0.000
+    Q39|t3  (.76.)   -0.556    0.070   -7.898    0.000
+    Q39|t4  (.77.)    0.692    0.079    8.775    0.000
+    Q2|t1   (.78.)   -2.120    0.137  -15.484    0.000
+    Q2|t2   (.79.)   -1.137    0.082  -13.903    0.000
+    Q2|t3   (.80.)   -0.300    0.068   -4.419    0.000
+    Q2|t4   (.81.)    0.681    0.076    8.923    0.000
+    Q6|t1   (.82.)   -2.104    0.143  -14.684    0.000
+    Q6|t2   (.83.)   -1.066    0.081  -13.238    0.000
+    Q6|t3   (.84.)   -0.286    0.068   -4.225    0.000
+    Q6|t4   (.85.)    0.572    0.076    7.559    0.000
+    Q10|t1  (.86.)   -1.990    0.130  -15.291    0.000
+    Q10|t2  (.87.)   -1.115    0.081  -13.727    0.000
+    Q10|t3  (.88.)   -0.283    0.068   -4.147    0.000
+    Q10|t4  (.89.)    0.739    0.078    9.437    0.000
+    Q14|t1  (.90.)   -0.852    0.082  -10.429    0.000
+    Q14|t2  (.91.)    0.173    0.067    2.582    0.010
+    Q14|t3  (.92.)    0.942    0.078   12.050    0.000
+    Q14|t4  (.93.)    1.664    0.110   15.084    0.000
+    Q18|t1  (.94.)   -0.711    0.076   -9.402    0.000
+    Q18|t2  (.95.)    0.112    0.067    1.682    0.093
+    Q18|t3  (.96.)    0.772    0.073   10.535    0.000
+    Q18|t4  (.97.)    1.628    0.106   15.299    0.000
+    Q22|t1  (.98.)   -0.763    0.077   -9.946    0.000
+    Q22|t2  (.99.)    0.306    0.068    4.531    0.000
+    Q22|t3  (.100)    1.066    0.080   13.254    0.000
+    Q22|t4  (.101)    1.889    0.118   16.048    0.000
+    Q26|t1  (.102)   -1.702    0.103  -16.539    0.000
+    Q26|t2  (.103)   -0.872    0.075  -11.557    0.000
+    Q26|t3  (.104)   -0.193    0.068   -2.840    0.005
+    Q26|t4  (.105)    0.808    0.080   10.121    0.000
+    Q34|t1  (.106)   -1.806    0.114  -15.811    0.000
+    Q34|t2  (.107)   -0.887    0.076  -11.646    0.000
+    Q34|t3  (.108)   -0.137    0.068   -2.029    0.042
+    Q34|t4  (.109)    0.700    0.078    8.948    0.000
+    Q8|t1   (.110)   -2.317    0.188  -12.352    0.000
+    Q8|t2   (.111)   -1.320    0.100  -13.264    0.000
+    Q8|t3   (.112)   -0.448    0.078   -5.760    0.000
+    Q8|t4   (.113)    0.663    0.091    7.282    0.000
+    Q12|t1  (.114)   -1.594    0.154  -10.337    0.000
+    Q12|t2  (.115)   -0.791    0.147   -5.388    0.000
+    Q12|t3  (.116)   -0.085    0.150   -0.569    0.570
+    Q12|t4  (.117)    0.627    0.162    3.874    0.000
+    Q16|t1  (.118)   -1.159    0.148   -7.842    0.000
+    Q16|t2  (.119)   -0.537    0.150   -3.583    0.000
+    Q16|t3  (.120)    0.072    0.154    0.467    0.640
+    Q16|t4  (.121)    0.652    0.165    3.964    0.000
+    Q20|t1  (.122)   -1.442    0.141  -10.210    0.000
+    Q20|t2  (.123)   -0.776    0.138   -5.638    0.000
+    Q20|t3  (.124)   -0.163    0.141   -1.159    0.246
+    Q20|t4  (.125)    0.666    0.154    4.319    0.000
+    Q24|t1  (.126)   -1.367    0.124  -11.061    0.000
+    Q24|t2  (.127)   -0.667    0.116   -5.727    0.000
+    Q24|t3  (.128)    0.059    0.122    0.483    0.629
+    Q24|t4  (.129)    0.957    0.137    6.967    0.000
+    Q28|t1  (.130)   -1.257    0.155   -8.129    0.000
+    Q28|t2  (.131)   -0.601    0.152   -3.959    0.000
+    Q28|t3  (.132)    0.018    0.156    0.116    0.908
+    Q28|t4  (.133)    0.609    0.168    3.629    0.000
+    Q32|t1  (.134)   -1.138    0.155   -7.349    0.000
+    Q32|t2  (.135)   -0.457    0.155   -2.959    0.003
+    Q32|t3  (.136)    0.090    0.160    0.565    0.572
+    Q32|t4  (.137)    0.720    0.172    4.182    0.000
+    Q36|t1  (.138)   -1.212    0.145   -8.370    0.000
+    Q36|t2  (.139)   -0.527    0.141   -3.730    0.000
+    Q36|t3  (.140)    0.051    0.145    0.351    0.725
+    Q36|t4  (.141)    0.794    0.158    5.022    0.000
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .Q1                0.361                           
+   .Q5                0.469                           
+   .Q9                0.436                           
+   .Q13               0.805                           
+   .Q17               0.623                           
+   .Q25               0.666                           
+   .Q29               0.806                           
+   .Q30               0.702                           
+   .Q33               0.889                           
+   .Q37               0.685                           
+   .Q39               0.535                           
+   .Q2                0.400                           
+   .Q6                0.308                           
+   .Q10               0.458                           
+   .Q14               0.485                           
+   .Q18               0.241                           
+   .Q22               0.512                           
+   .Q26               0.522                           
+   .Q34               0.716                           
+   .Q8                1.215                           
+   .Q12               0.340                           
+   .Q16               0.207                           
+   .Q20               0.404                           
+   .Q24               0.705                           
+   .Q28               0.124                           
+   .Q32               0.164                           
+   .Q36               0.460                           
+    age             233.869   25.783    9.071    0.000
+    obs               1.050    0.149    7.042    0.000
+    des               0.901    0.127    7.099    0.000
+   .acc               0.849    0.135    6.308    0.000
+
+Scales y*:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+    Q1                1.202    0.080   14.943    0.000
+    Q5                1.032    0.060   17.081    0.000
+    Q9                1.105    0.069   16.115    0.000
+    Q13               0.914    0.061   14.961    0.000
+    Q17               0.991    0.071   14.055    0.000
+    Q25               0.948    0.061   15.627    0.000
+    Q29               0.862    0.058   14.887    0.000
+    Q30               0.923    0.064   14.341    0.000
+    Q33               0.825    0.058   14.150    0.000
+    Q37               0.909    0.056   16.280    0.000
+    Q39               1.035    0.068   15.112    0.000
+    Q2                1.003    0.057   17.603    0.000
+    Q6                1.067    0.064   16.560    0.000
+    Q10               1.001    0.060   16.621    0.000
+    Q14               0.936    0.056   16.709    0.000
+    Q18               1.081    0.065   16.594    0.000
+    Q22               0.983    0.054   18.187    0.000
+    Q26               0.933    0.055   17.086    0.000
+    Q34               0.933    0.058   16.145    0.000
+    Q8                0.891    0.081   11.042    0.000
+    Q12               1.026    0.065   15.850    0.000
+    Q16               1.081    0.072   15.030    0.000
+    Q20               1.022    0.062   16.554    0.000
+    Q24               0.967    0.062   15.472    0.000
+    Q28               1.115    0.076   14.716    0.000
+    Q32               1.085    0.074   14.662    0.000
+    Q36               0.991    0.061   16.322    0.000</code></pre>
+<pre class="r"><code>lavTestLRT(modOut, modOut2)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Df"],"name":[1],"type":["int"],"align":["right"]},{"label":["AIC"],"name":[2],"type":["lgl"],"align":["right"]},{"label":["BIC"],"name":[3],"type":["lgl"],"align":["right"]},{"label":["Chisq"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Chisq diff"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["RMSEA"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["Df diff"],"name":[7],"type":["int"],"align":["right"]},{"label":["Pr(>Chisq)"],"name":[8],"type":["dbl"],"align":["right"]}],"data":[{"1":"767","2":"NA","3":"NA","4":"2525.096","5":"NA","6":"NA","7":"NA","8":"NA","_rn_":"modOut"},{"1":"770","2":"NA","3":"NA","4":"2617.680","5":"11.15973","6":"0.3173528","7":"3","8":"0.01089279","_rn_":"modOut2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>anova(modOut, modOut2)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Df"],"name":[1],"type":["int"],"align":["right"]},{"label":["AIC"],"name":[2],"type":["lgl"],"align":["right"]},{"label":["BIC"],"name":[3],"type":["lgl"],"align":["right"]},{"label":["Chisq"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Chisq diff"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["RMSEA"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["Df diff"],"name":[7],"type":["int"],"align":["right"]},{"label":["Pr(>Chisq)"],"name":[8],"type":["dbl"],"align":["right"]}],"data":[{"1":"767","2":"NA","3":"NA","4":"2525.096","5":"NA","6":"NA","7":"NA","8":"NA","_rn_":"modOut"},{"1":"770","2":"NA","3":"NA","4":"2617.680","5":"11.15973","6":"0.3173528","7":"3","8":"0.01089279","_rn_":"modOut2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 <hr />
 <p>End of Lab 8</p>
 <hr />

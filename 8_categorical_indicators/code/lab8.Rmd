@@ -130,70 +130,82 @@ kims    <- readRDS(here::here(dataDir, "kims.rds"))
 
 ---
 
-Let's assume we want to fit the CFA model depicted in Figure \@ref(fig:cfa2). The following **lavaan** model syntax will
-suffice to define our model.
+Let's assume we want to fit a three-factor CFA model of the *Observing*, *Describing*, and *Accepting* constructs
+represented in the KIMS data.
+
+##
+
+**Define the model syntax for the three-factor CFA described above.**
 
 ```{r}
-## Create separate strings for each constructs model, so I can mix and match:
-obsMod <- 'obs =~ Q1 + Q5 + Q9  + Q13 + Q17 + Q25 + Q29 + Q30 + Q33 + Q37 + Q39'
-desMod <- 'des =~ Q2 + Q6 + Q10 + Q14 + Q18 + Q22 + Q26 + Q34'
-actMod <- 'act =~ Q3 + Q7 + Q11 + Q15 + Q19 + Q23 + Q27 + Q31 + Q35 + Q38'
-accMod <- 'acc =~ Q5 + Q8 + Q12 + Q16 + Q20 + Q24 + Q28 + Q32 + Q36'
-
-# kimsKeys <- list(
-#   obs = c("Q5", "Q9", "Q13", "Q17", "Q25", "Q29", "Q30", "Q33", "Q37", "Q39"),
-#   des = c("Q6", "Q10", "-Q14", "-Q18", "-Q22", "Q26", "Q34"),
-#   acc = c("Q8", "Q12", "Q16", "Q20", "Q24", "Q28", "Q32", "Q36"),
-#   act = c("Q7", "-Q11", "Q15", "Q19", "-Q23", "-Q27", "-Q31", "-Q35", "Q38")
-# )
-# 
-# tmp <- scoreItems(keys = kimsKeys, items = kims)
-# tmp
-
-## Paste the construct-specific strings into a single CFA syntax string:
-# cfaMod <- paste(obsMod, desMod, accMod, actMod, sep = "\n")
-cfaMod <- paste(obsMod, desMod, accMod, sep = "\n")
+cfaMod <- '
+obs =~ Q1 + Q5 + Q9  + Q13 + Q17 + Q25 + Q29 + Q30 + Q33 + Q37 + Q39
+des =~ Q2 + Q6 + Q10 + Q14 + Q18 + Q22 + Q26 + Q34
+acc =~ Q5 + Q8 + Q12 + Q16 + Q20 + Q24 + Q28 + Q32 + Q36
+'
 ```
 
 ---
 
-## Robust DWLS Fit
+##
 
-Finally, we'll estimating the model with DWLS using robust SEs and scaled fit statistics.
+**Estimate the CFA using appropriate CVM-based settings.**
+
+- Estimate the model with DWLS
+- Use robust SEs to quantify sampling variability
+- Use the scaled-and-shifted $\chi^2$ statistic to evaluate model fit
 
 ```{r}
 library(lavaan)
 
-## Robust DWLS fit:
-fit1.2 <- cfa(cfaMod,
+## Specify individual options:
+cfaOut <- cfa(cfaMod,
+              data = kims,
+              std.lv = TRUE,
+              ordered = TRUE,
+              estimator = "DWLS",
+              se = "robust",
+              test = "scaled.shifted")
+
+## OR ##
+
+## Use the WLSMV shorthand:
+cfaOut2 <- cfa(cfaMod,
               data = kims,
               std.lv = TRUE,
               ordered = TRUE,
               estimator = "WLSMV")
-
-summary(fit1.2)
-fitMeasures(fit1.2)
 ```
 
 ---
 
-```{r}
-## Define a few character vectors to specify which fit indices we want:
-s1 <- c("chisq", "df", "pvalue")
-s2 <- c("cfi", 
-        "tli", 
-        "rmsea", 
-        "rmsea.ci.lower", 
-        "rmsea.ci.upper", 
-        "srmr")
-s3 <- c(paste(s1, "scaled", sep = "."),
-        paste(s2, "robust", sep = ".")
-        )
+##
 
-s4 <- c(paste(c(s1, s2), "scaled", sep = "."))
+**Summarize and evalute the model.**
+
+- Is the model an acceptable representaiton of the data?
+   - Does the model fit well?
+   - Do the parameter estimates seem plausible?
+
+```{r}
+summary(cfaOut)
+
+## Define a character to specify only the scaled fit indices:
+stats <- paste(
+  c("chisq",
+    "df",
+    "pvalue",
+    "cfi", 
+    "tli", 
+    "rmsea", 
+    "rmsea.ci.lower", 
+    "rmsea.ci.upper"),
+  "scaled",
+  sep = "."
+)
 
 ## Fit measures for the robust DWLS fit:
-fitMeasures(fit1.2, s4)
+fitMeasures(cfaOut, stats)
 ```
 
 ---
@@ -202,21 +214,71 @@ fitMeasures(fit1.2, s4)
 
 ---
 
+##
+
+**Estimate a baseline SEM wherein *Accepting* is regressed onto *Age*.**
+
+- Estimate the covariances between *Age*, *Describing*, and *Observing*.
+- Do not allow *Describing* or *Observing* to covary with *Accepting*.
+
 ```{r}
 semMod <- paste(
   cfaMod,
-  "acc ~ des + obs + age",
+  "acc ~ age",
   "age ~~ des + obs",
   sep = "\n"
 )
 
-cats <- grep("^Q\\d", colnames(kims), value = TRUE)
 cats <- setdiff(colnames(kims), "age")
 
-semFit <- sem(semMod, data = kims, ordered = cats, estimator = "WLSMV", std.lv = TRUE)
+semFit0 <- sem(semMod, data = kims, ordered = cats, estimator = "WLSMV", std.lv = TRUE)
+```
 
-summary(semFit)
-fitMeasures(semFit)
+##
+
+**Summarize and interpret the model.**
+
+- Does *Age* significantly predict *Accepting*?
+- If so, interpret the age effect.
+
+```{r}
+summary(semFit0)
+```
+
+---
+
+##
+
+**Estimate an augmented version of the model from above.**
+
+- Add *Observing* and *Describing* as predictors of *Accepting*.
+- Do not change anything else about the model structure.
+
+```{r}
+semMod <- paste(
+  cfaMod,
+  "acc ~ age + des + obs",
+  "age ~~ des + obs",
+  sep = "\n"
+)
+
+semFit1 <- sem(semMod, data = kims, ordered = cats, estimator = "WLSMV", std.lv = TRUE)
+```
+
+---
+
+##
+
+**Summarize and interpret the model parameters.**
+
+- Does adding the two new predictors significantly improve the model?
+- Interpret the effects of *Observing* and *Describing*.
+
+```{r}
+summary(semFit1)
+fitMeasures(semFit1, stats)
+
+anova(semFit0, semFit1)
 ```
 
 ---
@@ -225,10 +287,12 @@ fitMeasures(semFit)
 
 ---
 
-## Configural Invariance
+##
 
-First, we estimate the configural invariance model by adding the grouping factor without placing any cross-group
-constraints (i.e., in the same way that we did for continuous indicator models). 
+**Estimate the CFA from XXX as a mutiple-group model.**
+
+- Specify *sex* as the grouping factor.
+- Estimate a configurally invariant model (i.e., don't equate any parameters across groups).
 
 ```{r}
 ## Estimate the baseline (configurally invariant) model:
@@ -239,43 +303,36 @@ baseOut <- cfa(model            = cfaMod,
                estimator        = "WLSMV",
                parameterization = "delta",
                std.lv           = TRUE)
-```
 
-Check the summary to ensure that everything looks sensible.
-
-```{r}
+## Check the summary to ensure that everything looks sensible.
 summary(baseOut)
 ```
 
-Check the model fit to test configural invariance.
+---
+
+## 
+
+**Evaluate configural invariance.**
+
+- What is your conclusion?
 
 ```{r}
-s4 <- paste(c(s1, s2), "scaled", sep = ".")
-
 ## Check the model fit:
-fitMeasures(baseOut, s4)
+fitMeasures(baseOut, stats)
 ```
 
 The model fits well. Configural invariance holds.
 
 ---
 
-## Threshold Invariance
+##
 
-Now, we need to test threshold invariance. We do so via the same procedure we would use to test invariance of factor
-loadings or intercepts.
+**Define the model syntax for the threshold invariance model.**
 
-1. Estimate a restricted model wherein the thresholds are constrained to equality across groups.
-1. Test the tenability of the constraint by comparing to the configurally invariant model.
-
-We must establish threshold invariance before considering weak or strong invariance because weak and strong invariance
-both concern paths linking the LRVs to the common latent factors. We must first demonstrate, therefore, that the LRVs
-are defined equivalently in all groups.
-
----
-
-We can make our lives much easier by using the `measEq.syntax()` function from the **semTools** package to
-programmatically generate the **lavaan** model syntax for our various restricted models.
+- Use the `measEq.syntax()` function from the **semTools** package to generate the model syntax.
+- Set the scale by standardizing the latent factors (i.e., use the fixed-factor/reference-group method of identification).
+- Use the delta parameterization to define the latent response variables.
+- Use the Wu & Estabrook (2016) identification conditions.
 
 ```{r}
 library(semTools)
@@ -289,25 +346,18 @@ tMod <- measEq.syntax(configural.model = cfaMod,
                       ID.cat           = "Wu.Estabrook.2016",
                       group            = "sex",
                       group.equal      = "thresholds")
-```
 
-We can view the resulting syntax by casting the `tMod` object as a character vector and printing it with the `cat()`
-function.
-
-```{r}
-tMod %>% as.character() %>% cat()
+## Print the syntax to check:
+tMod |> as.character() |> cat()
 ```
 
 ---
 
-Now, we estimate the threshold invariant model. 
+##
 
-*Notes:*
+**Estimate the threshold invariant model.**
 
-- We do not need to specify anything for the `group.equal` argument because all invariance constraints are defined in
-the model syntax we generated via `measEq.syntax()`.
-- We must type cast the object returned by `measEq.syntax()` as a character vector (i.e., by wrapping it with
-`as.character()`) to get the `cfa()` function to recognize this object as model syntax.
+- Check the results by summarizing the model and evaluating the model fit.
 
 ```{r}
 ## Estimate the threshold-invariant model:
@@ -319,38 +369,36 @@ tOut <- cfa(model     = as.character(tMod),
 
 ## Summarize the results:
 summary(tOut)
-```
 
-As expected, the thresholds are equal across groups. Additionally, constraining the thresholds helps identify the model,
-so we can freely estimate the item intercepts and the scales of the latent response variables in the second and third
-groups.
-
-```{r}
 ## Check the model fit:
-fitMeasures(tOut, s4)
+fitMeasures(tOut, stats)
 ```
 
-The model still fits very well.
+As expected, the thresholds are equal across groups. All the parameter estimates seem sensible, and the model still fits very well.
 
 ---
 
-We test threshold invariance by comparing to the configurally invariant model.
+##
+
+**Test threshold invariance.**
 
 ```{r}
 ## Test threshold invariance via model comparisons:
-compareFit(baseOut, tOut) %>% summary()
+compareFit(baseOut, tOut) |> summary()
 ```
 
 The $\Delta \chi^2$ test is nonsignificant, so we can infer invariant thresholds.
 
 ---
 
-## Weak Invariance
+##
 
-After establishing threshold invariance, the next step is testing the additional constraint of loading invariance (i.e.,
-weak invariance or metric invariance).
+**Define the model syntax for the weak/metric invariance model.**
 
-- Again, we can use the `measEq.syntax()` function to streamline the process.
+- Use the `measEq.syntax()` function from the **semTools** package to generate the model syntax.
+- Set the scale by standardizing the latent factors (i.e., use the fixed-factor/reference-group method of identification).
+- Use the delta parameterization to define the latent response variables.
+- Use the Wu & Estabrook (2016) identification conditions.
 
 ```{r}
 ## Define the model syntax for the threshold/loading-invariant model:
@@ -365,12 +413,16 @@ tlMod <- measEq.syntax(configural.model = cfaMod,
                        )
 
 ## Check the resulting syntax:
-tlMod %>% as.character() %>% cat()
+tlMod |> as.character() |> cat()
 ```
 
 ---
 
-We estimate the model in the usual way.
+##
+
+**Estimate the weak invariant model.**
+
+- Check the results by summarizing the model and evaluating the model fit.
 
 ```{r}
 ## Estimate the threshold/loading-invariant model:
@@ -378,29 +430,27 @@ tlOut <- cfa(model     = as.character(tlMod),
              data      = kims,
              group     = "sex",
              ordered   = TRUE,
-             estimator = "WLSMV")
+             estimator = "WLSMV",
+             int.ov.free = TRUE)
 
 ## Summarize the results:
 summary(tlOut)
-```
 
-Now that we've equated the factor loadings across groups, we have the additional identification necessary to freely
-estimate the latent variances in the second and third groups.
-
-```{r}
 ## Check the model fit:
-fitMeasures(tlOut, s4)
+fitMeasures(tlOut, stats)
 ```
 
-Again, model fit is still excellent.
+Again, model fit is still excellent, and all the parameter estimates are reasonable.
 
 ---
 
-We evaluate weak invariance by comparing back to the threshold-invariance model.
+##
+
+**Test weak invariance.**
 
 ```{r}
 ## Test threshold/loading invariance via model comparisons:
-compareFit(tOut, tlOut) %>% summary()
+compareFit(tOut, tlOut) |> summary()
 ```
 
 Relative to the threshold-invariant model, we haven't lost a significant amount of fit by equating the factor loadings
@@ -408,9 +458,14 @@ across groups. Conditioning on the dubious threshold invariance, we can claim we
 
 ---
 
-## Strong Invariance
+##
 
-We conclude by equating the item intercepts across groups to test strong/metric invariance.
+**Define the model syntax for the strong/scalar invariance model.**
+
+- Use the `measEq.syntax()` function from the **semTools** package to generate the model syntax.
+- Set the scale by standardizing the latent factors (i.e., use the fixed-factor/reference-group method of identification).
+- Use the delta parameterization to define the latent response variables.
+- Use the Wu & Estabrook (2016) identification conditions.
 
 ```{r}
 ## Define the model syntax for the threshold/loading/intercept-invariant model:
@@ -426,8 +481,18 @@ tliMod <-
                   )
 
 ## Check the syntax:
-tliMod %>% as.character() %>% cat()
+tliMod |> as.character() |> cat()
+```
 
+---
+
+##
+
+**Estimate the weak invariant model.**
+
+- Check the results by summarizing the model and evaluating the model fit.
+
+```{r}
 ## Estimate the threshold/loading/intercept-invariant model:
 tliOut <- cfa(model     = as.character(tliMod),
               data      = kims,
@@ -437,20 +502,16 @@ tliOut <- cfa(model     = as.character(tliMod),
 
 ## Summarize the results:
 summary(tliOut)
-```
 
-Constraining the item intercepts allows us to freely estimate the latent means in the second and third groups.
-
-```{r}
 ## Check the model fit:
-fitMeasures(tliOut, s4)
+fitMeasures(tliOut, stats)
 ```
 
 The strongly invariant model still fits very well.
 
 ```{r}
 ## Test threshold/loading/intercept invariance via model comparisons:
-compareFit(tlOut, tliOut) %>% summary()
+compareFit(tlOut, tliOut) |> summary()
 ```
 
 Now, we lose a significant amount of fit by constraining the item intercepts in addition to the factor loadings and
@@ -488,6 +549,44 @@ summary(modOut)
 cons <- c('b1f == b1m', 'b2f == b2m', 'b3f == b3m')
 
 lavTestWald(modOut, constraints = cons)
+```
+
+```{r}
+semMod <- paste(
+  cfaMod,
+  'acc ~ c("b1", "b1") * des + c("b2", "b2") * obs + c("b3", "b3") * age',
+  'age ~~ des + obs',
+  sep = "\n"
+)
+
+# tlSemMod <-
+#     measEq.syntax(configural.model = semMod,
+#                   data             = kims,
+#                   ordered          = cats,
+#                   parameterization = "delta",
+#                   ID.fac           = "std.lv",
+#                   ID.cat           = "Wu.Estabrook.2016",
+#                   group            = "sex",
+#                   group.equal      = c("thresholds", "loadings")
+#                   )
+
+modOut2 <- sem(
+  model = semMod,
+  data = kims,
+  group = "sex",
+  ordered = cats,
+  estimator = "WLSMV",
+  parameterization = "delta",
+  std.lv = TRUE,
+  group.equal = c("thresholds", "loadings")
+)
+
+summary(modOut)
+```
+
+```{r}
+lavTestLRT(modOut, modOut2)
+anova(modOut, modOut2)
 ```
 
 ---
