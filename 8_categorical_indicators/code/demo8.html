@@ -2578,6 +2578,29 @@ if (window.hljs) {
 
 
 
+<style type="text/css">
+
+div.csl-bib-body { }
+div.csl-entry {
+clear: both;
+margin-bottom: 0em;
+}
+.hanging div.csl-entry {
+margin-left:2em;
+text-indent:-2em;
+}
+div.csl-left-margin {
+min-width:2em;
+float:left;
+}
+div.csl-right-inline {
+margin-left:2em;
+padding-left:1em;
+}
+div.csl-indent {
+margin-left: 2em;
+}
+</style>
 
 <style type="text/css">body { 
 font-size: 12px;
@@ -2769,7 +2792,7 @@ border-radius: 0px;
 <h1 class="title toc-ignore">Demonstration 8: Categorical Indicators</h1>
 <h3 class="subtitle">SEM in R using lavaan</h3>
 <h4 class="author">Kyle M. Lang</h4>
-<h4 class="date">Updated: 2026-03-18</h4>
+<h4 class="date">Updated: 2026-03-23</h4>
 
 </div>
 
@@ -2887,7 +2910,7 @@ and biases the estimated CFA/SEM parameters.</p>
 <p>In essence, the estimation methods we’ll employ when analyzing categorical indicators replace <span class="math inline">\(\mathbf{S}\)</span> with a
 polychoric correlation matrix. Rather than simply estimating a standalone polychoric correlation matrix and using this
 matrix as input to the model, however, <strong>lavaan</strong> implements a version of the <em>categorical variable methodology</em> (CVM)
-proposed by <a href="https://doi.org/10.1007/bf02294210">Muthen (1984)</a>.</p>
+proposed by <span class="citation">Muthén (<a href="#ref-muthen:1984">1984</a>)</span>.</p>
 <p>We could set up a CVM analysis in many ways, but the recommended <strong>lavaan</strong> flavor entails four modifications to the
 standard ML approach:</p>
 <ol style="list-style-type: decimal">
@@ -3044,34 +3067,34 @@ variables.</p>
 <li><code>d1:d3</code>: Three observed indicators of a construct measuring disillusionment with the US Federal government.
 <ul>
 <li>Higher scores indicate more disillusionment
-<span class="math inline">\(\\[6pt]\)</span></li>
+<span class="math inline">\(\\[3pt]\)</span></li>
 </ul></li>
 <li><code>s1:s4</code>: Four observed indicators of a construct measuring the perceived achievability of material success.
 <ul>
 <li>Higher scores indicate greater perceived achievability
-<span class="math inline">\(\\[6pt]\)</span></li>
+<span class="math inline">\(\\[3pt]\)</span></li>
 </ul></li>
 <li><code>progress</code>: A single item assessing perceived progress toward achieving the “American Dream”
 <ul>
 <li>Higher scores indicate greater perceived progress
-<span class="math inline">\(\\[6pt]\)</span></li>
+<span class="math inline">\(\\[3pt]\)</span></li>
 </ul></li>
 <li><code>merit</code>: A single item assessing endorsement of the meritocratic ideal that hard work leads to success.
 <ul>
 <li>Higher scores indicate stronger endorsement of the meritocratic ideal
-<span class="math inline">\(\\[6pt]\)</span></li>
+<span class="math inline">\(\\[3pt]\)</span></li>
 </ul></li>
 <li><code>lib2Con</code>: A single item assessing liberal-to-conservative orientation
 <ul>
 <li>Lower scores are more liberal, higher scores are more conservative
-<span class="math inline">\(\\[6pt]\)</span></li>
+<span class="math inline">\(\\[3pt]\)</span></li>
 </ul></li>
 <li><code>party</code>: A four-level factor indicating self-reported political party affiliation
-<span class="math inline">\(\\[6pt]\)</span></li>
+<span class="math inline">\(\\[3pt]\)</span></li>
 <li><code>disillusion</code>: A scale score representing disillusionment with the US Federal government
 <ul>
 <li>Created as the mean of <code>d1:d3</code>
-<span class="math inline">\(\\[6pt]\)</span></li>
+<span class="math inline">\(\\[3pt]\)</span></li>
 </ul></li>
 <li><code>success</code>: A scale score representing the perceived achievability of material success
 <ul>
@@ -3574,7 +3597,7 @@ the same estimator to fit both models.</p>
 <pre class="r"><code>all.equal(coef(fit1.1), coef(fit1.2))</code></pre>
 <pre><code>[1] TRUE</code></pre>
 <hr />
-<p>The differences come into play with the standard errors and fit statistics.</p>
+<p>We start to see differences when we compare the standard errors.</p>
 <pre class="r"><code>## Basic DWLS estimates:
 partSummary(fit1.1, c(7:8))</code></pre>
 <pre><code>Latent Variables:
@@ -3614,8 +3637,9 @@ Covariances:
 <p>The robust SEs tend to be somewhat larger than their naive counterparts, especially for the latent covariance.</p>
 <div id="fit-statistics" class="section level3" number="3.3.1">
 <h3><span class="header-section-number">3.3.1</span> Fit Statistics</h3>
-<p>Estimating the model with <code>estimator = &quot;DWLS&quot;</code> doesn’t affect the fit measures. The <code>lavaan::fitMeasures()</code> function
-returns the same statistics that we got with the default ML estimation.</p>
+<p>The fit statistics get a bit confusing when we use WLSMV estimation. Estimating the model with <code>estimator = &quot;DWLS&quot;</code>
+doesn’t affect the fit measures, so the <code>lavaan::fitMeasures()</code> function returns the same statistics that we got with
+the default ML estimation.</p>
 <pre class="r"><code>## Fit statistics for the basic DWLS fit:
 fitMeasures(fit1.1)</code></pre>
 <pre><code>                 npar                  fmin                 chisq 
@@ -3646,8 +3670,8 @@ fitMeasures(fit1.1)</code></pre>
                 0.997                 0.289                 0.998 
                  wrmr 
                 0.726 </code></pre>
-<p>When estimating the model with <code>estimator = &quot;WLSMV&quot;</code>, we implicitly set <code>test = &quot;scaled.shifted&quot;</code>, so we get three
-variants of our main fit measures:</p>
+<p>When estimating the model with <code>estimator = &quot;WLSMV&quot;</code>, we implicitly set <code>test = &quot;scaled.shifted&quot;</code>, so <code>fitMeasures()</code>
+now returns three variants of our main fit measures:</p>
 <ul>
 <li>Raw, uncorrected statistics</li>
 <li>Scaled statistics</li>
@@ -3727,9 +3751,10 @@ fitMeasures(fit1.2)</code></pre>
                         0.998                         0.726 
 attr(,&quot;scaled.test&quot;)
 [1] &quot;scaled.shifted&quot;</code></pre>
-<p>The scaled/robust fit statistics/indices typically suggest slightly worse fit than the raw versions, but why? Which
-statistics should you report? The short answer: <em>report the scaled fit statistics when modeling categorical indicators
-with WLSMV estimation.</em></p>
+<p>The scaled/robust fit statistics/indices typically suggest worse fit than the raw versions. It should come as no
+surprise that we need to use the corrected fit statistics to evaluate our model, but which variant? That part’s not
+quite as obvious.</p>
+<p>The short answer: <em>Report the scaled fit statistics when modeling categorical indicators with WLSMV estimation.</em></p>
 <table>
 <caption><span id="tab:unnamed-chunk-22">Table 3.1: </span>Different flavors of fit indices</caption>
 <thead>
@@ -3779,21 +3804,28 @@ with WLSMV estimation.</em></p>
 </table>
 <div id="what-are-the-differences" class="section level4 unnumbered">
 <h4>What are the differences?</h4>
-<p>The raw, uncorrected fit statistics are based on the ordinary ML <span class="math inline">\(\chi^2\)</span> statistic. These statistics do not accuractly
-quantify model fit for LRV models estimated with DWLS. Typically, the raw fit statistics suggest overly optimistic fit.</p>
-<p>The scaled fit statistics are based on the scaled and shifted <span class="math inline">\(\chi^2\)</span> (AKA, mean and variance adjusted <span class="math inline">\(\chi^2\)</span>,
-Satorra-Bentler <span class="math inline">\(\chi^2\)</span>) developed by XXX. The scaled CFI, TLI, and RMSEA values are computed by plugging the
-Satorra-Bentler <span class="math inline">\(\chi^1\)</span> into the standard formulas.</p>
-<p>The robust CFI, TLI, and RMSEA are also based on the scaled and shifted <span class="math inline">\(\chi^2\)</span>, but they also include the additional
-correction factor proposed by XXX.</p>
+<p>The long answer requires us to consider the differences between the different flavors of fit statistic.</p>
+<p>The raw, uncorrected fit statistics are computed using the same procedure that we’ve been using for ML-based analyses of
+continuous data. These statistics are all based on the ordinary ML <span class="math inline">\(\chi^2\)</span> statistic, so they <em>do not</em> accurately
+quantify model fit for LRV-formulated models estimated with DWLS. Typically, the raw fit statistics suggest overly
+optimistic fit.</p>
+<p>The scaled fit statistics are based on the scaled-and-shifted <span class="math inline">\(\chi^2\)</span> (AKA, mean and variance adjusted <span class="math inline">\(\chi^2\)</span>)
+developed by <span class="citation">Satorra &amp; Bentler (<a href="#ref-satorraBentler:1994">1994</a>)</span> and later refined by <span class="citation">Asparouhov &amp; Muthén (<a href="#ref-asparouhovMuthen:2010">2010</a>)</span>. The scaled CFI, TLI, and RMSEA values are
+computed by plugging the scaled-and-shifted <span class="math inline">\(\chi^1\)</span> into the standard formulas.</p>
+<p>The <code>fitMeasures()</code> function doesn’t return a robust <span class="math inline">\(\chi^2\)</span> value because the scaled-and-shifted <span class="math inline">\(\chi^2\)</span> is already
+sufficiently robust. Only the CFI, TLI, and RMSEA have different scaled and robust versions. The robust versions of
+these statistics are based on the scaled-and-shifted <span class="math inline">\(\chi^2\)</span>, but they also include the additional correction factor
+proposed by <span class="citation">Savalei (<a href="#ref-savalei:2018">2018</a>)</span>.</p>
 </div>
 <div id="scaled-or-robust" class="section level4 unnumbered">
 <h4>Scaled or Robust?</h4>
-<p>The robust fit statistics are the most refined and accurate variants, but not for the kinds of models we’re estimating
-here. The rationnale for the additional correction factor assumes continuous, non-normal data and robust ML estimation
-(e.g., <code>estimator = &quot;MLR&quot;</code>). The key assumptions needed to justify this additional correction don’t hold for categorical
-data and DWLS estimation. Hence, the robust statistics are not appropriate for categorical indicator models, and we
-should use the scaled statistics.</p>
+<p>If you’re anything like me, it won’t be obvious at this point whether you should use the scaled or robust versions of
+the CFI, TLI, and RMSEA. Since the robust versions have a more elaborate correction, you may be inclined to report
+those, but doing so would be a mistake. The robust fit statistics are indeed the most refined and accurate variants,
+<em>but not for the kinds of models we’re estimating here</em>. The theoretical basis for the additional correction factor
+assumes continuous, non-normal data (e.g., skewed data like reaction times) and robust ML estimation (e.g., <code>estimator = &quot;MLR&quot;</code>). The key assumptions needed to justify this additional correction don’t hold for categorical data and DWLS
+estimation. Hence, the robust fit statistics are not appropriate for categorical indicator models, and we’re better off
+using the scaled versions of CFI, TLI, and RMSEA.</p>
 <hr />
 </div>
 </div>
@@ -4512,8 +4544,11 @@ rmsea.ci.lower.scaled rmsea.ci.upper.scaled
 statistic as the naive difference of two robust <span class="math inline">\(\chi^2\)</span> statistics.
 <ul>
 <li>The naive difference between two scaled <span class="math inline">\(\chi^2\)</span> statistics is not <span class="math inline">\(\chi^2\)</span> distributed.</li>
-<li>The <span class="math inline">\(\Delta \chi^2\)</span> test needs to be conducted with particular corrections to account for the scaled fit
-statistics.</li>
+<li>The appropriate <span class="math inline">\(\Delta \chi^2\)</span> test statistics is a scaled version of the difference between two raw, uncorrected
+<span class="math inline">\(\chi^2\)</span> stats.
+<ul>
+<li>Hence the message shown in the following output.</li>
+</ul></li>
 </ul></li>
 </ul>
 <pre class="r"><code>## Test threshold invariance via model comparisons:
@@ -4544,8 +4579,10 @@ tOut    .025†
 ################## Differences in Fit Indices #######################
                df.scaled rmsea.scaled cfi.scaled tli.scaled srmr
 tOut - baseOut        20        0.005     -0.004     -0.002    0</code></pre>
-<p>The <span class="math inline">\(\Delta \chi^2\)</span> test is significant, so we should reject the null hypothesis of invariant thresholds. We have not
-established threshold invariance.</p>
+<p>The <span class="math inline">\(\Delta \chi^2\)</span> test is significant
+<span class="math inline">\((\Delta \chi^2[20] = 46.79,\)</span>
+<span class="math inline">\(p &lt; 0.001),\)</span>
+so we should reject the null hypothesis of invariant thresholds. We have not established threshold invariance.</p>
 <ul>
 <li>The <span class="math inline">\(\Delta \mathrm{CFI}\)</span> and <span class="math inline">\(\Delta \mathrm{RMSEA}\)</span> are both quite small, but the methodological work evaluating
 measurement invariance testing with approximate fit indices has not considered the robust/scaled versions of these
@@ -4972,7 +5009,10 @@ tlOut .027
              df.scaled rmsea.scaled cfi.scaled tli.scaled  srmr
 tlOut - tOut        10       -0.002          0      0.001 0.002</code></pre>
 <p>Relative to the threshold-invariant model, we haven’t lost a significant amount of fit by equating the factor loadings
-across groups. Conditioning on the dubious threshold invariance, we can claim weak invariance.</p>
+across groups
+<span class="math inline">\((\Delta \chi^2[10] = 13.01,\)</span>
+<span class="math inline">\(p = 0.223)\)</span>
+Conditioning on the dubious threshold invariance, we can claim weak invariance.</p>
 <hr />
 </div>
 <div id="strong-invariance" class="section level2" number="4.5">
@@ -5384,8 +5424,10 @@ tliOut .027
 ################## Differences in Fit Indices #######################
                df.scaled rmsea.scaled cfi.scaled tli.scaled srmr
 tliOut - tlOut        10        0.001     -0.002          0    0</code></pre>
-<p>We don’t lose a significant amount of fit by constraining the item intercepts in addition to the factor loadings and
-thresholds. Given our acceptance of the weakly invariant model, we can claim strong invariance.</p>
+<p>Constraining the item intercepts, in addition to the factor loadings and thresholds, significantly decreases model fit
+<span class="math inline">\((\Delta \chi^2[10] = 19.86,\)</span>
+<span class="math inline">\(p = 0.031).\)</span>
+These additional constraints are too restrictive, so we must reject the hypothesis of strong invariance.</p>
 <hr />
 </div>
 </div>
@@ -5413,6 +5455,21 @@ conducting the above analyses with multiply imputed data relatively painless.</l
 </ol>
 <hr />
 <p>End of Demonstration</p>
+<hr />
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0" line-spacing="2">
+<div id="ref-asparouhovMuthen:2010" class="csl-entry">
+Asparouhov, T., &amp; Muthén, B. (2010). Simple second order chi-square correction. <em>Mplus Technical Appendix</em>, <em>1</em>(1), 1–8. <a href="https://www.statmodel.com/download/WLSMV_new_chi21.pdf">https://www.statmodel.com/download/WLSMV_new_chi21.pdf</a>
+</div>
+<div id="ref-muthen:1984" class="csl-entry">
+Muthén, B. (1984). A general structural equation model with dichotomous, ordered categorical, and continuous latent variable indicators. <em>Psychometrika</em>, <em>49</em>(1), 115–132. <a href="https://doi.org/10.1007/BF02294210">https://doi.org/10.1007/BF02294210</a>
+</div>
+<div id="ref-satorraBentler:1994" class="csl-entry">
+Satorra, A., &amp; Bentler, P. M. (1994). Corrections to test statistics and standard errors in covariance structure analysis. In A. von Eye &amp; C. C. Clogg (Eds.), <em>Latent variable analysis: <span>A</span>pplications to developmental research</em> (pp. 399–419). Sage Publications, Inc.
+</div>
+<div id="ref-savalei:2018" class="csl-entry">
+Savalei, V. (2018). On the computation of the RMSEA and CFI from the mean-and-variance corrected test statistic with nonnormal data in SEM. <em>Multivariate Behavioral Research</em>, <em>53</em>(3), 419–429. <a href="https://doi.org/10.1080/00273171.2018.1455142">https://doi.org/10.1080/00273171.2018.1455142</a>
+</div>
+</div>
 </div>
 <div class="footnotes footnotes-end-of-document">
 <hr />
