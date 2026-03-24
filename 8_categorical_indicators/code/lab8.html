@@ -2769,7 +2769,7 @@ border-radius: 0px;
 <h1 class="title toc-ignore">Lab 8: Categorical Indicators</h1>
 <h3 class="subtitle">SEM in R using lavaan</h3>
 <h4 class="author">Kyle M. Lang</h4>
-<h4 class="date">Updated: 2026-03-23</h4>
+<h4 class="date">Updated: 2026-03-24</h4>
 
 </div>
 
@@ -2842,8 +2842,13 @@ NOTE: These must be called within a math environment (e.g., $\va$)
 <div id="categorical-variable-cfa" class="section level1" number="2">
 <h1><span class="header-section-number">2</span> Categorical Variable CFA</h1>
 <hr />
-<p>Let’s assume we want to fit a three-factor CFA model of the <em>Observing</em>, <em>Describing</em>, and <em>Accepting</em> constructs
-represented in the KIMS data.</p>
+<p>Let’s assume we want to use the KIMS data to estimate a three-factor CFA model of the <em>Observing</em>, <em>Describing</em>, and <em>Accepting</em> constructs.
+Use the item numbers listed below to define each latent construct.</p>
+<ul>
+<li><strong>Observing:</strong> 5, 9, 17, 25, 29, 30, 37</li>
+<li><strong>Describing:</strong> 2, 6, 10, 14, 18, 22, 26, 34</li>
+<li><strong>Accepting:</strong> 4, 12, 20, 24, 28, 32, 36</li>
+</ul>
 <div id="section" class="section level2" number="2.1">
 <h2><span class="header-section-number">2.1</span> </h2>
 <p><strong>Define the model syntax for the three-factor CFA described above.</strong></p>
@@ -2853,9 +2858,11 @@ represented in the KIMS data.</p>
 <h2><span class="header-section-number">2.2</span> </h2>
 <p><strong>Estimate the CFA using appropriate CVM-based settings.</strong></p>
 <ul>
-<li>Estimate the model with DWLS</li>
-<li>Use robust SEs to quantify sampling variability</li>
-<li>Use the scaled-and-shifted <span class="math inline">\(\chi^2\)</span> statistic to evaluate model fit</li>
+<li>Allow all latent constructs to covary.</li>
+<li>Set the scale with the fixed-factor method.</li>
+<li>Estimate the model with DWLS.</li>
+<li>Use robust SEs to quantify sampling variability.</li>
+<li>Use the scaled-and-shifted <span class="math inline">\(\chi^2\)</span> statistic to evaluate model fit.</li>
 </ul>
 <hr />
 </div>
@@ -2882,6 +2889,7 @@ represented in the KIMS data.</p>
 <li>Estimate the covariances between <em>Age</em>, <em>Describing</em>, and <em>Observing</em>.</li>
 <li>Do not allow <em>Describing</em> or <em>Observing</em> to covary with <em>Accepting</em>.</li>
 </ul>
+<hr />
 </div>
 <div id="section-4" class="section level2" number="3.2">
 <h2><span class="header-section-number">3.2</span> </h2>
@@ -2949,7 +2957,6 @@ represented in the KIMS data.</p>
 <ul>
 <li>Check the results by summarizing the model and evaluating the model fit.</li>
 </ul>
-<p>As expected, the thresholds are equal across groups. All the parameter estimates seem sensible, and the model still fits very well.</p>
 <hr />
 </div>
 <div id="section-11" class="section level2" number="4.5">
@@ -2998,11 +3005,16 @@ across groups. Conditioning on the dubious threshold invariance, we can claim we
 </div>
 <div id="section-16" class="section level2" number="4.10">
 <h2><span class="header-section-number">4.10</span> </h2>
-<p><strong>Estimate the weak invariant model.</strong></p>
+<p><strong>Estimate the strong invariance model.</strong></p>
 <ul>
 <li>Check the results by summarizing the model and evaluating the model fit.</li>
 </ul>
 <p>The strongly invariant model still fits very well.</p>
+<hr />
+</div>
+<div id="section-17" class="section level2" number="4.11">
+<h2><span class="header-section-number">4.11</span> </h2>
+<p><strong>Test strong invariance.</strong></p>
 <p>Now, we lose a significant amount of fit by constraining the item intercepts in addition to the factor loadings and
 thresholds (i.e., the <span class="math inline">\(\Delta \chi^2\)</span> test is significant). So, we should reject the hypothesis of strong invariance.</p>
 <hr />

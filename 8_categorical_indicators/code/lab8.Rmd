@@ -130,19 +130,51 @@ kims    <- readRDS(here::here(dataDir, "kims.rds"))
 
 ---
 
-Let's assume we want to fit a three-factor CFA model of the *Observing*, *Describing*, and *Accepting* constructs
-represented in the KIMS data.
+Let's assume we want to use the KIMS data to estimate a three-factor CFA model of the *Observing*, *Describing*, and *Accepting* constructs.
+Use the item numbers listed below to define each latent construct.
+
+- **Observing:** 5, 9, 17, 25, 29, 30, 37
+- **Describing:** 2, 6, 10, 14, 18, 22, 26, 34
+- **Accepting:** 4, 12, 20, 24, 28, 32, 36
 
 ##
 
 **Define the model syntax for the three-factor CFA described above.**
 
 ```{r}
+# cfaMod <- '
+# obs =~ Q1 + Q5 + Q9  + Q13 + Q17 + Q25 + Q29 + Q30 + Q33 + Q37 + Q39
+# des =~ Q2 + Q6 + Q10 + Q14 + Q18 + Q22 + Q26 + Q34
+# acc =~ Q4 + Q8 + Q12 + Q16 + Q20 + Q24 + Q28 + Q32 + Q36
+# '
+
 cfaMod <- '
-obs =~ Q1 + Q5 + Q9  + Q13 + Q17 + Q25 + Q29 + Q30 + Q33 + Q37 + Q39
-des =~ Q2 + Q6 + Q10 + Q14 + Q18 + Q22 + Q26 + Q34
-acc =~ Q5 + Q8 + Q12 + Q16 + Q20 + Q24 + Q28 + Q32 + Q36
+obs =~ Q5 + Q9  + Q17 + Q25 + Q29 + Q30 + Q37
+des =~ Q2 + Q6  + Q10 + Q14 + Q18 + Q22 + Q26 + Q34
+acc =~ Q4 + Q12 + Q20 + Q24 + Q28 + Q32 + Q36
 '
+
+# library(psych)
+# library(dplyr)
+# 
+# kimsKeys <- list(
+#   obs = c("Q1", "Q5", "Q9", "Q13", "Q17", "Q25", "Q29", "Q30", "Q33", "Q37", "Q39"),
+#   des = c("Q2", "Q6", "Q10", "-Q14", "-Q18", "-Q22", "Q26", "Q34"),
+#   act = c("Q3", "Q7", "-Q11", "Q15", "Q19", "-Q23", "-Q27", "-Q31", "-Q35", "Q38"),
+#   acc = c("Q4", "Q8", "Q12", "Q16", "Q20", "Q24", "Q28", "Q32", "Q36")
+# )
+# 
+# tmp1 <- kims |>
+#   filter(sex == "male") |>
+#   scoreItems(keys = kimsKeys, items = _)
+# 
+# tmp1 |> print(short = FALSE)
+# 
+# tmp2 <- kims |>
+#   filter(sex == "female") |>
+#   scoreItems(keys = kimsKeys, items = _)
+# 
+# tmp2 |> print(short = FALSE)
 ```
 
 ---
@@ -151,9 +183,11 @@ acc =~ Q5 + Q8 + Q12 + Q16 + Q20 + Q24 + Q28 + Q32 + Q36
 
 **Estimate the CFA using appropriate CVM-based settings.**
 
-- Estimate the model with DWLS
-- Use robust SEs to quantify sampling variability
-- Use the scaled-and-shifted $\chi^2$ statistic to evaluate model fit
+- Allow all latent constructs to covary.
+- Set the scale with the fixed-factor method.
+- Estimate the model with DWLS.
+- Use robust SEs to quantify sampling variability.
+- Use the scaled-and-shifted $\chi^2$ statistic to evaluate model fit.
 
 ```{r}
 library(lavaan)
@@ -188,6 +222,7 @@ cfaOut2 <- cfa(cfaMod,
    - Do the parameter estimates seem plausible?
 
 ```{r}
+## Summarize the model:
 summary(cfaOut)
 
 ## Define a character to specify only the scaled fit indices:
@@ -222,6 +257,7 @@ fitMeasures(cfaOut, stats)
 - Do not allow *Describing* or *Observing* to covary with *Accepting*.
 
 ```{r}
+## Add the structural paths to the CFA syntax:
 semMod <- paste(
   cfaMod,
   "acc ~ age",
@@ -229,10 +265,14 @@ semMod <- paste(
   sep = "\n"
 )
 
+## Tell lavaan that all variable other than 'age' are ordinal:
 cats <- setdiff(colnames(kims), "age")
 
+## Estimate the model:
 semFit0 <- sem(semMod, data = kims, ordered = cats, estimator = "WLSMV", std.lv = TRUE)
 ```
+
+---
 
 ##
 
@@ -374,7 +414,10 @@ summary(tOut)
 fitMeasures(tOut, stats)
 ```
 
-As expected, the thresholds are equal across groups. All the parameter estimates seem sensible, and the model still fits very well.
+```{asis}
+Everything looks good. The thresholds are equal across groups. All the parameter estimates seem sensible, and the model
+still fits very well.
+```
 
 ---
 
@@ -430,8 +473,7 @@ tlOut <- cfa(model     = as.character(tlMod),
              data      = kims,
              group     = "sex",
              ordered   = TRUE,
-             estimator = "WLSMV",
-             int.ov.free = TRUE)
+             estimator = "WLSMV")
 
 ## Summarize the results:
 summary(tlOut)
@@ -488,7 +530,7 @@ tliMod |> as.character() |> cat()
 
 ##
 
-**Estimate the weak invariant model.**
+**Estimate the strong invariance model.**
 
 - Check the results by summarizing the model and evaluating the model fit.
 
@@ -508,6 +550,12 @@ fitMeasures(tliOut, stats)
 ```
 
 The strongly invariant model still fits very well.
+
+---
+
+##
+
+**Test strong invariance.**
 
 ```{r}
 ## Test threshold/loading/intercept invariance via model comparisons:
@@ -559,17 +607,6 @@ semMod <- paste(
   sep = "\n"
 )
 
-# tlSemMod <-
-#     measEq.syntax(configural.model = semMod,
-#                   data             = kims,
-#                   ordered          = cats,
-#                   parameterization = "delta",
-#                   ID.fac           = "std.lv",
-#                   ID.cat           = "Wu.Estabrook.2016",
-#                   group            = "sex",
-#                   group.equal      = c("thresholds", "loadings")
-#                   )
-
 modOut2 <- sem(
   model = semMod,
   data = kims,
@@ -581,7 +618,7 @@ modOut2 <- sem(
   group.equal = c("thresholds", "loadings")
 )
 
-summary(modOut)
+summary(modOut2)
 ```
 
 ```{r}

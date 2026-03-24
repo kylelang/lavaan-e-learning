@@ -1191,6 +1191,93 @@ These additional constraints are too restrictive, so we must reject the hypothes
 
 ---
 
+## Without **semTools**
+
+It is also possible to impose the necessary constraints without using `semTools::measEq.syntax()`.
+
+```{r}
+## Estimate the configurally invariant model:
+baseOut2 <- cfa(model            = cfaMod,
+                data             = outlook,
+                std.lv           = TRUE,
+                group            = "party",
+                ordered          = TRUE,
+                estimator        = "WLSMV",
+                parameterization = "delta")
+
+## Summarize the results:
+summary(baseOut2, remove.unused = FALSE)
+```
+
+*NOTE:* The argument `remove.unused = FALSE` in the above `summary()` call tells **lavaan** to report the parameters
+that are fixed in all groups (the item intercepts and LRV scales, in this case). This option can be particularly helpful
+when we need to track a sequence of constraints across different fits.
+
+```{r}
+## Estimate the threshold-invariant model:
+tOut2 <- cfa(model            = cfaMod,
+             data             = outlook,
+             std.lv           = TRUE,
+             group            = "party",
+             group.equal      = "thresholds",
+             ordered          = TRUE,
+             estimator        = "WLSMV",
+             parameterization = "delta")
+
+## Summarize the results:
+summary(tOut2, remove.unused = TRUE)
+```
+
+```{r}
+## Estimate the threshold/loading-invariant model:
+tlOut2 <- cfa(model            = cfaMod,
+              data             = outlook,
+              std.lv           = TRUE,
+              group            = "party",
+              group.equal      = c("thresholds", "loadings"),
+              ordered          = TRUE,
+              estimator        = "WLSMV",
+              parameterization = "delta")
+
+## Summarize the results:
+summary(tlOut2, remove.unused = TRUE)
+```
+
+```{r}
+## Estimate the threshold/loading/intercept-invariant model:
+tliOut2 <- cfa(model            = cfaMod,
+               data             = outlook,
+               std.lv           = TRUE,
+               group            = "party",
+               group.equal      = c("thresholds", "loadings", "intercepts"),
+               ordered          = TRUE,
+               estimator        = "WLSMV",
+               parameterization = "delta")
+
+## Summarize the results:
+summary(tliOut2, remove.unused = TRUE)
+```
+
+The results are equivalent using either method, but the constraints are more explicit when using
+`semTools::measEq.syntax()`. Since we're dealing with quite a complex set of constraints, this added clarity is a
+non-trivial advantage.
+
+```{r}
+## Compare configurally invariant results:
+all.equal(baseOut, baseOut2, check.attributes = FALSE)
+
+## Compare threshold-invariant results:
+all.equal(tOut, tOut2, check.attributes = FALSE)
+
+## Compare threshold/loading-invariant results:
+all.equal(tlOut, tlOut2, check.attributes = FALSE)
+
+## Compare threshold/loading/intercept-invariant results:
+all.equal(tliOut, tliOut2, check.attributes = FALSE)
+```
+
+---
+
 # Concluding Remarks
 
 ---
