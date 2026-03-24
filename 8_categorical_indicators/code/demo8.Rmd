@@ -796,7 +796,78 @@ invariance for ordered categorical outcomes. *Psychometrika, 81*(4). 1014 -- 104
 
 ---
 
-## Grouping Factor
+## Invariance Constraints
+
+The sequence of contrainsts that we must apply to test measurement invariance is somewhat more complex than what we saw
+with ordinary ML-based analyses. Below, I describe the constraints that we need to impose to establish each level of
+invariance given the following conditions.
+
+- Our grouping factor contains $G$ levels.
+- We identify our models using the fixed-factor method.
+- Our indicator variables have three or more levels (the rules are different for binary data).
+- We use delta parameterization to define the LRV models.
+
+When specifying our model structure, we have 7 sets of parameters to consider:
+
+- Latent variances and covariances
+- Latent means
+- Factor loadings
+- Item intercepts
+- Residual variances and covariances
+- LRV thresholds
+- LRV scales
+
+At all levels of invariance, our models will share three conditions:
+
+- Freely estimate all latent covariances in all groups.
+- Freely estimate all residual variances in all groups.
+- Fix all residual covariances to 0 in all groups.
+
+### Configural Invariance {-}
+
+In the configurally invariant model, we apply no equality constraints across groups.
+
+- Fix latent variances to 1 in each group.
+- Fix latent means to 0 in each group.
+- Fix item intercepts to 0 in each group.
+- Fix LRV scales to 1 in each group.
+- Freely estimate LRV thresholds in each group.
+- Freely estimate factor loadings in each group.
+
+Note that we must fix both the item intercepts and the latent means to 0 in all groups. In the ML-based configural
+invariance models, we freely estimated all item intercepts because fixing the latent means to 0 identified the model. In
+LRV-formulated models, we cannot freely estimate the item intercepts and the LRV thresholds at the same time: we must
+constrain the item intercepts to identify the LRV models.
+
+### Threshold Invariance {-}
+
+To impose threshold invariance, apply the following changes to the configural invariance model.
+
+- Equate LRV thresholds across groups.
+- Freely estimate LRV scales in $G - 1$ groups.
+- Freely estimate item intercepts $G - 1$ groups.
+
+Equating the LRV thresholds induces additional identifying constraints, so we are now able to freely estimate the LRV
+scales and item intercepts in all groups other than the reference group. However, we must always fix the LRV scales and
+item intercepts in the reference group (for all levels of invariance).
+
+### Weak/Metric Invariance {-}
+
+To impose weak invariance, apply the following changes to the threshold invariance model.
+
+- Equate factor loadings across groups.
+- Freely estimate latent variances in $G - 1$ groups.
+
+### Strong/Scalar Invariance {-}
+
+To impose strong invariance, apply the following changes to the weak invariance model.
+
+- Equate item intercepts across groups.
+- Freely estimate latent means in $G - 1$ groups.
+
+---
+
+## Configural Invariance
 
 We'll explore these ideas by adding political party affiliation to our previous CFA as a grouping factor.
 
@@ -804,22 +875,49 @@ We'll explore these ideas by adding political party affiliation to our previous 
 summary(outlook$party)
 ```
 
+First, we estimate the configural invariance model by adding the grouping factor without placing any cross-group
+constraints (i.e., in the same way that we did for continuous indicator models). We can make our lives much easier by
+using the `measEq.syntax()` function from the **semTools** package to programmatically generate the **lavaan** model
+syntax for our various restricted models.
+
+```{r}
+library(semTools)
+
+## Define the model syntax for the configurally-invariant model:
+baseMod <- measEq.syntax(configural.model = cfaMod,
+                         data             = outlook,
+                         ordered          = TRUE,
+                         parameterization = "delta",
+                         ID.fac           = "std.lv",
+                         ID.cat           = "Wu.Estabrook.2016",
+                         group            = "party")
+```
+
+We can view the resulting syntax by casting the `tMod` object as a character vector and printing it with the `cat()`
+function.
+
+```{r}
+baseMod |> as.character() |> cat()
+```
+
 ---
 
-## Configural Invariance
+Now, we estimate the configurally invariant model. 
 
-First, we estimate the configural invariance model by adding the grouping factor without placing any cross-group
-constraints (i.e., in the same way that we did for continuous indicator models). 
+*Notes:*
+
+- We do not need to specify anything for the `parameterization`, `std.lv`, or `auto.fix.first` arguments, because the
+model syntax we generated via `measEq.syntax()` implements the delta parameterization and fixed-factor identification.
+- We must type cast the object returned by `measEq.syntax()` as a character vector (i.e., by wrapping it with
+`as.character()`) to get the `cfa()` function to recognize this object as model syntax.
 
 ```{r}
 ## Estimate the baseline (configurally invariant) model:
-baseOut <- cfa(model            = cfaMod,
-               data             = outlook,
-               group            = "party",
-               ordered          = TRUE,
-               estimator        = "WLSMV",
-               parameterization = "delta",
-               std.lv           = TRUE)
+baseOut <- cfa(model     = as.character(baseMod),
+               data      = outlook,
+               group     = "party",
+               ordered   = TRUE,
+               estimator = "WLSMV")
 ```
 
 Check the summary to ensure that everything looks sensible.
@@ -832,12 +930,20 @@ Check the model fit to test configural invariance.
 
 ```{r}
 ## Define a few character vectors to specify which fit indices we want:
-stats <- c("chisq", "df", "pvalue", "cfi", "tli",
-  "rmsea", "rmsea.ci.lower", "rmsea.ci.upper")
-s4 <- paste(stats, "scaled", sep = ".")
+stats <- paste(
+  c("chisq",
+    "df",
+    "pvalue",
+    "cfi","tli",
+    "rmsea",
+    "rmsea.ci.lower",
+    "rmsea.ci.upper"),
+  "scaled",
+  sep = "."
+)
 
 ## Check the model fit:
-fitMeasures(baseOut, s4)
+fitMeasures(baseOut, stats)
 ```
 
 The model fits well. Configural invariance holds.
@@ -856,14 +962,7 @@ We must establish threshold invariance before considering weak or strong invaria
 both concern paths linking the LRVs to the common latent factors. We must first demonstrate, therefore, that the LRVs
 are defined equivalently in all groups.
 
----
-
-We can make our lives much easier by using the `measEq.syntax()` function from the **semTools** package to
-programmatically generate the **lavaan** model syntax for our various restricted models.
-
 ```{r}
-library(semTools)
-
 ## Define the model syntax for the threshold-invariant model:
 tMod <- measEq.syntax(configural.model = cfaMod,
                       data             = outlook,
@@ -873,12 +972,8 @@ tMod <- measEq.syntax(configural.model = cfaMod,
                       ID.cat           = "Wu.Estabrook.2016",
                       group            = "party",
                       group.equal      = "thresholds")
-```
 
-We can view the resulting syntax by casting the `tMod` object as a character vector and printing it with the `cat()`
-function.
-
-```{r}
+## Check the resulting syntax:
 tMod |> as.character() |> cat()
 ```
 
@@ -911,7 +1006,7 @@ groups.
 
 ```{r}
 ## Check the model fit:
-fitMeasures(tOut, s4)
+fitMeasures(tOut, stats)
 ```
 
 The model still fits very well.
@@ -1004,7 +1099,7 @@ estimate the latent variances in the second and third groups.
 
 ```{r}
 ## Check the model fit:
-fitMeasures(tlOut, s4)
+fitMeasures(tlOut, stats)
 ```
 
 Again, model fit is still excellent.
@@ -1070,7 +1165,7 @@ Constraining the item intercepts allows us to freely estimate the latent means i
 
 ```{r}
 ## Check the model fit:
-fitMeasures(tliOut, s4)
+fitMeasures(tliOut, stats)
 ```
 
 The strongly invariant model still fits very well.
