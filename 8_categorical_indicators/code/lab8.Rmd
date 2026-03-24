@@ -8,13 +8,16 @@ params:
 output: 
   bookdown::html_document2:
     toc: true
-    toc_depth: 2
+    toc_depth: 1
     toc_float: true
     number_sections: true
     df_print: paged
     css: "../../resources/style.css"
 editor_options: 
   chunk_output_type: console
+bibliography: ../../bibtex/data_refs.bib
+csl: ../../bibtex/apa.csl
+link-citations: yes
 ---
 
 ```{r setup, echo = FALSE, message = FALSE, warning = FALSE}
@@ -64,6 +67,11 @@ In this lab, you'll explore methods of doing CFA/SEM with categorical data using
 # Data
 
 ---
+
+We'll be analyzing data collected with the *Kentucky Inventory of Mindfulness Skills* [@baerEtAl:2004]. You can
+download the dataset that we'll analyze below via [this link][kims1], and you can access the original data
+[here][kims1]. The KIMS contains 39 items assessing four dimensions of mindfulness skills: *Observing*, *Describing*,
+*Acting*, and *Accepting*. The following list shows the putative construct-to-item mapping.
 
 **Observing**
 
@@ -115,9 +123,15 @@ In this lab, you'll explore methods of doing CFA/SEM with categorical data using
 - `Q32`: I think some of my emotions are bad or inappropriate and I shouldn't feel them. 
 - `Q36`: I disapprove of myself when I have irrational ideas. 
 
+These data were collected via a self-report questionnaire wherein all the KIMS items were rated on a five-point
+Likert-type scale. So, we'll be better off using CVM-based modeling to analyzing these data as ordinal, rather than
+pretending that the items are normally distributed.
+
 ---
 
-First, we'll read in the *kims.rds* dataset, and save the resulting data frame as `kims`.
+##
+
+**Load the *kims.rds* dataset.**
 
 ```{r}
 dataDir <- "data"
@@ -130,51 +144,26 @@ kims    <- readRDS(here::here(dataDir, "kims.rds"))
 
 ---
 
-Let's assume we want to use the KIMS data to estimate a three-factor CFA model of the *Observing*, *Describing*, and *Accepting* constructs.
-Use the item numbers listed below to define each latent construct.
+Let's assume we want to use the KIMS data to estimate a three-factor CFA model of the *Observing*, *Describing*, and
+*Accepting* constructs. For these exercises, we'll use the item numbers listed below to define the three latent
+constructs in our CFA.
 
 - **Observing:** 5, 9, 17, 25, 29, 30, 37
 - **Describing:** 2, 6, 10, 14, 18, 22, 26, 34
 - **Accepting:** 4, 12, 20, 24, 28, 32, 36
+
+---
 
 ##
 
 **Define the model syntax for the three-factor CFA described above.**
 
 ```{r}
-# cfaMod <- '
-# obs =~ Q1 + Q5 + Q9  + Q13 + Q17 + Q25 + Q29 + Q30 + Q33 + Q37 + Q39
-# des =~ Q2 + Q6 + Q10 + Q14 + Q18 + Q22 + Q26 + Q34
-# acc =~ Q4 + Q8 + Q12 + Q16 + Q20 + Q24 + Q28 + Q32 + Q36
-# '
-
 cfaMod <- '
 obs =~ Q5 + Q9  + Q17 + Q25 + Q29 + Q30 + Q37
 des =~ Q2 + Q6  + Q10 + Q14 + Q18 + Q22 + Q26 + Q34
 acc =~ Q4 + Q12 + Q20 + Q24 + Q28 + Q32 + Q36
 '
-
-# library(psych)
-# library(dplyr)
-# 
-# kimsKeys <- list(
-#   obs = c("Q1", "Q5", "Q9", "Q13", "Q17", "Q25", "Q29", "Q30", "Q33", "Q37", "Q39"),
-#   des = c("Q2", "Q6", "Q10", "-Q14", "-Q18", "-Q22", "Q26", "Q34"),
-#   act = c("Q3", "Q7", "-Q11", "Q15", "Q19", "-Q23", "-Q27", "-Q31", "-Q35", "Q38"),
-#   acc = c("Q4", "Q8", "Q12", "Q16", "Q20", "Q24", "Q28", "Q32", "Q36")
-# )
-# 
-# tmp1 <- kims |>
-#   filter(sex == "male") |>
-#   scoreItems(keys = kimsKeys, items = _)
-# 
-# tmp1 |> print(short = FALSE)
-# 
-# tmp2 <- kims |>
-#   filter(sex == "female") |>
-#   scoreItems(keys = kimsKeys, items = _)
-# 
-# tmp2 |> print(short = FALSE)
 ```
 
 ---
@@ -213,11 +202,11 @@ cfaOut2 <- cfa(cfaMod,
 
 ---
 
-##
+## {#cfa}
 
-**Summarize and evalute the model.**
+**Summarize and evaluate the model.**
 
-- Is the model an acceptable representaiton of the data?
+- Is the model an acceptable representation of the data?
    - Does the model fit well?
    - Do the parameter estimates seem plausible?
 
@@ -241,6 +230,11 @@ stats <- paste(
 
 ## Fit measures for the robust DWLS fit:
 fitMeasures(cfaOut, stats)
+```
+
+```{asis}
+Yes, the model fits the data well and the parameter estimates all appear plausible. This CFA seems like a reasonable
+representation of the measurement structure underlying these data.
 ```
 
 ---
@@ -269,7 +263,13 @@ semMod <- paste(
 cats <- setdiff(colnames(kims), "age")
 
 ## Estimate the model:
-semFit0 <- sem(semMod, data = kims, ordered = cats, estimator = "WLSMV", std.lv = TRUE)
+semFit0 <- sem(
+  semMod,
+  data = kims,
+  std.lv = TRUE,
+  ordered = cats,
+  estimator = "WLSMV"
+)
 ```
 
 ---
@@ -283,6 +283,22 @@ semFit0 <- sem(semMod, data = kims, ordered = cats, estimator = "WLSMV", std.lv 
 
 ```{r}
 summary(semFit0)
+```
+
+```{r, include = FALSE}
+b <- inspect(semFit0, "est")$beta["acc", "age"]
+s <- inspect(semFit0, "se")$beta["acc", "age"]
+z <- b / s
+p <- pnorm(abs(z), lower.tail = FALSE) * 2
+```
+
+```{asis}
+Yes, *Age* significantly predicts *Accepting*
+$(\beta = `r round(b, 3)`,$
+$\mathit{SE} = `r round(s, 3)`,$
+$z = `r round(z, 3)`,$
+$`r prettyPValue(p)`).$
+Older tend to have significantly higher levels of accepting than younger participants.
 ```
 
 ---
@@ -302,7 +318,13 @@ semMod <- paste(
   sep = "\n"
 )
 
-semFit1 <- sem(semMod, data = kims, ordered = cats, estimator = "WLSMV", std.lv = TRUE)
+semFit1 <- sem(
+  semMod,
+  data = kims,
+  std.lv = TRUE,
+  ordered = cats,
+  estimator = "WLSMV"
+)
 ```
 
 ---
@@ -316,9 +338,40 @@ semFit1 <- sem(semMod, data = kims, ordered = cats, estimator = "WLSMV", std.lv 
 
 ```{r}
 summary(semFit1)
-fitMeasures(semFit1, stats)
+```
 
+```{r, paged.print = FALSE}
 anova(semFit0, semFit1)
+```
+
+```{r, include = FALSE}
+test <- anova(semFit0, semFit1)
+
+x2 <- test[2, "Chisq diff"] |> round(2)
+df <- test[2, "Df diff"]
+px <- prettyPValue(test[2, "Pr(>Chisq)"])
+
+b <- inspect(semFit1, "est")$beta["acc", c("obs", "des")]
+s <- inspect(semFit1, "se")$beta["acc", c("obs", "des")]
+z <- b / s
+pb <- pnorm(abs(z), lower.tail = FALSE) * 2
+```
+
+```{asis}
+Yes, adding *Observing* and *Describing* significantly improves the model
+$(\Delta \chi^2[`r df`] = `r x2`,$
+$`r px`).$
+After controlling for *Age* and *Observing*, *Describing* has a significant, negative effect on *Accepting*
+$(\beta = `r round(b[["des"]], 3)`,$
+$\mathit{SE} = `r round(s[["des"]], 3)`,$
+$z = `r round(z[["des"]], 3)`,$
+$`r prettyPValue(pb[["des"]])`).$
+*Observing*, on the other hand, is not a signifiant predictor of *Accepting*, after controlling for *Age* and
+*Describing*
+$(\beta = `r round(b[["obs"]], 3)`,$
+$\mathit{SE} = `r round(s[["obs"]], 3)`,$
+$z = `r round(z[["obs"]], 3)`,$
+$`r prettyPValue(pb[["obs"]])`).$
 ```
 
 ---
@@ -329,7 +382,7 @@ anova(semFit0, semFit1)
 
 ##
 
-**Estimate the CFA from XXX as a mutiple-group model.**
+**Estimate the CFA from \@ref(cfa) as a multiple-group model.**
 
 - Specify *sex* as the grouping factor.
 - Estimate a configurally invariant model (i.e., don't equate any parameters across groups).
@@ -338,11 +391,11 @@ anova(semFit0, semFit1)
 ## Estimate the baseline (configurally invariant) model:
 baseOut <- cfa(model            = cfaMod,
                data             = kims,
+               std.lv           = TRUE,
                group            = "sex",
                ordered          = TRUE,
                estimator        = "WLSMV",
-               parameterization = "delta",
-               std.lv           = TRUE)
+               parameterization = "delta")
 
 ## Check the summary to ensure that everything looks sensible.
 summary(baseOut)
@@ -361,7 +414,9 @@ summary(baseOut)
 fitMeasures(baseOut, stats)
 ```
 
+```{asis}
 The model fits well. Configural invariance holds.
+```
 
 ---
 
@@ -415,8 +470,8 @@ fitMeasures(tOut, stats)
 ```
 
 ```{asis}
-Everything looks good. The thresholds are equal across groups. All the parameter estimates seem sensible, and the model
-still fits very well.
+Everything looks good. The thresholds are correctly equated across groups. All the parameter estimates seem sensible,
+and the model still fits well.
 ```
 
 ---
@@ -430,7 +485,21 @@ still fits very well.
 compareFit(baseOut, tOut) |> summary()
 ```
 
-The $\Delta \chi^2$ test is nonsignificant, so we can infer invariant thresholds.
+```{r, include = FALSE}
+tmp  <- compareFit(baseOut, tOut)
+test <- tmp@nested
+
+x2 <- test[2, "Chisq diff"] |> round(2)
+df <- test[2, "Df diff"]
+p  <- prettyPValue(test[2, "Pr(>Chisq)"])
+```
+
+```{asis}
+The $\Delta \chi^2$ test is nonsignificant
+$(\Delta \chi^2[`r df`] = `r x2`,$
+$`r p`),$
+so we can infer invariant thresholds.
+```
 
 ---
 
@@ -482,11 +551,13 @@ summary(tlOut)
 fitMeasures(tlOut, stats)
 ```
 
-Again, model fit is still excellent, and all the parameter estimates are reasonable.
+```{asis}
+Again, model fit is still good, and all the parameter estimates are reasonable.
+```
 
 ---
 
-##
+## {#weakInvariance}
 
 **Test weak invariance.**
 
@@ -495,8 +566,21 @@ Again, model fit is still excellent, and all the parameter estimates are reasona
 compareFit(tOut, tlOut) |> summary()
 ```
 
-Relative to the threshold-invariant model, we haven't lost a significant amount of fit by equating the factor loadings
-across groups. Conditioning on the dubious threshold invariance, we can claim weak invariance.
+```{r, include = FALSE}
+tmp  <- compareFit(tOut, tlOut)
+test <- tmp@nested
+
+x2 <- test[2, "Chisq diff"] |> round(2)
+df <- test[2, "Df diff"]
+p  <- prettyPValue(test[2, "Pr(>Chisq)"])
+```
+
+```{asis}
+Again, the $\Delta \chi^2$ test is nonsignificant
+$(\Delta \chi^2[`r df`] = `r x2`,$
+$`r p`),$
+so we can infer weak invariance.
+```
 
 ---
 
@@ -549,7 +633,9 @@ summary(tliOut)
 fitMeasures(tliOut, stats)
 ```
 
-The strongly invariant model still fits very well.
+```{asis}
+The strongly invariant model still fits well, and the parameter estimates remain sensible.
+```
 
 ---
 
@@ -562,8 +648,22 @@ The strongly invariant model still fits very well.
 compareFit(tlOut, tliOut) |> summary()
 ```
 
-Now, we lose a significant amount of fit by constraining the item intercepts in addition to the factor loadings and
-thresholds (i.e., the $\Delta \chi^2$ test is significant). So, we should reject the hypothesis of strong invariance.
+```{r, include = FALSE}
+tmp  <- compareFit(tlOut, tliOut)
+test <- tmp@nested
+
+x2 <- test[2, "Chisq diff"] |> round(2)
+df <- test[2, "Df diff"]
+p  <- prettyPValue(test[2, "Pr(>Chisq)"])
+```
+
+```{asis}
+This time, the $\Delta \chi^2$ test is significant
+$(\Delta \chi^2[`r df`] = `r x2`,$
+$`r p`),$
+so we must reject the null hypothesis of strongly invariant measurement. Constraining the item intercepts, in addition
+to the factor loadings and thresholds, produces an unacceptable loss of model fit.
+```
 
 ---
 
@@ -571,14 +671,32 @@ thresholds (i.e., the $\Delta \chi^2$ test is significant). So, we should reject
 
 ---
 
+In this section, you will use a multiple-group SEM to test the following moderation hypotheses:
+
+- $H_1$: The partial effect of *Describing* on *Accepting* (controlling for *Age* and *Observing*) differs for males
+and females.
+- $H_2$: The partial effect of *Observing* on *Accepting* (controlling for *Age* and *Describing*) differs for males
+and females.
+
+---
+
+##
+
+**Estimate the unrestricted, moderated SEM.**
+
+- Label the potentially moderated parameters.
+- Maintain the weak invariance constraints imposed in \@ref(weakInvariance).
+
 ```{r}
+## Define model syntax with labels for the potentially moderated effects:
 semMod <- paste(
   cfaMod,
-  'acc ~ c("b1f", "b1m") * des + c("b2f", "b2m") * obs + c("b3f", "b3m") * age',
+  'acc ~ age + c("b2f", "b2m") * des + c("b3f", "b3m") * obs',
   'age ~~ des + obs',
   sep = "\n"
 )
 
+## Estimate the unrestricted moderated model:
 modOut <- sem(
   model = semMod,
   data = kims,
@@ -593,20 +711,70 @@ modOut <- sem(
 summary(modOut)
 ```
 
-```{r}
-cons <- c('b1f == b1m', 'b2f == b2m', 'b3f == b3m')
+---
 
-lavTestWald(modOut, constraints = cons)
+## {#h1Test}
+
+**Use `lavaan::lavTestWald()` to test $H_1$.**
+
+- What is your conclusion?
+
+```{r}
+lavTestWald(modOut, constraints = "b2f == b2m")
 ```
 
+```{r, include = FALSE}
+test1 <- lavTestWald(modOut, constraints = "b2f == b2m")
+```
+
+```{asis}
+$H_1$ is not supported
+$(\Delta \chi^2[`r test1$df`] = `r round(test1$stat, 3)`,$
+$`r prettyPValue(test1$p.value)`).$
+There is not a significant sex difference in the partial effect of *Describing* on *Accepting*.
+```
+
+---
+
+## {#h2Test}
+
+**Use `lavaan::lavTestWald()` to test $H_2$.**
+
+- What is your conclusion?
+
 ```{r}
+lavTestWald(modOut, constraints = "b3f == b3m")
+```
+
+```{r, include = FALSE}
+test2 <- lavTestWald(modOut, constraints = "b3f == b3m")
+```
+
+```{asis}
+$H_2$ is supported
+$(\Delta \chi^2[`r test2$df`] = `r round(test2$stat, 3)`,$
+$`r prettyPValue(test2$p.value)`).$
+*Sex* significantly affects the partial effect of *Observing* on *Accepting*.
+```
+
+---
+
+## {#parsimoniousSem}
+
+**Estimate a parsimonious model.**
+
+- Apply any parameter constraints suggested by the test results from \@ref(h1Test) and \@ref(h2Test).
+
+```{r}
+## Equate the 'describing' effect across groups:
 semMod <- paste(
   cfaMod,
-  'acc ~ c("b1", "b1") * des + c("b2", "b2") * obs + c("b3", "b3") * age',
+  'acc ~ age + c("b2", "b2") * des + c("b3f", "b3m") * obs',
   'age ~~ des + obs',
   sep = "\n"
 )
 
+## Estimate the parsimonious model:
 modOut2 <- sem(
   model = semMod,
   data = kims,
@@ -617,13 +785,73 @@ modOut2 <- sem(
   std.lv = TRUE,
   group.equal = c("thresholds", "loadings")
 )
+```
 
+```{asis}
+The hypothesis tests we conducted above suggested no sex difference for the *Describing* effect, so we can simplify our
+model by equating the partial effect of *Describing* on *Accepting* across groups. We can double-check the tenability of
+this constraint with a nested model comparison test.
+```
+
+```{r, paged.print = FALSE}
+anova(modOut, modOut2)
+```
+
+```{asis}
+As expected, the $\Delta \chi^2$ statistic is nonsignificant. Note how the p-value from this test is very similar to the
+p-value from the test of $H_1$ that we conducted in \@ref(h1Test). Both of these tests are evaluating the same
+hypothesis, so we shouldn't be surprised by the equivalent results.
+```
+
+---
+
+##
+
+**Interpret the final *Observing* and *Describing* effects.**
+
+- Interpret the estimates from the parsimonious model you estimated in \@ref(parsimoniousSem).
+
+```{r}
+## Summarize the parsimonous model:
 summary(modOut2)
 ```
 
-```{r}
-lavTestLRT(modOut, modOut2)
-anova(modOut, modOut2)
+```{r, include = FALSE}
+bf <- inspect(modOut2, "est")$female$beta["acc", c("obs", "des")]
+bm <- inspect(modOut2, "est")$male$beta["acc", c("obs", "des")]
+sf <- inspect(modOut2, "se")$female$beta["acc", c("obs", "des")]
+sm <- inspect(modOut2, "se")$male$beta["acc", c("obs", "des")]
+
+zf <- bf / sf
+zm <- bm / sm
+
+pf <- pnorm(abs(zf), lower.tail = FALSE) * 2
+pm <- pnorm(abs(zm), lower.tail = FALSE) * 2
+```
+
+```{asis}
+After controlling for *Age* and *Observing*, *Describing* has a significant, negative effect on *Accepting*
+$(\beta = `r round(bf[["des"]], 3)`,$
+$\mathit{SE} = `r round(sf[["des"]], 3)`,$
+$z = `r round(zf[["des"]], 3)`,$
+$`r prettyPValue(pf[["des"]])`),$
+and this effect does not significantly differ for males and females
+$(\Delta \chi^2[`r test1$df`] = `r round(test1$stat, 3)`,$
+$`r prettyPValue(test1$p.value)`).$
+
+On the other hand, $Sex$ has significant impact on the partial *Observing* effect
+$(\Delta \chi^2[`r test2$df`] = `r round(test2$stat, 3)`,$
+$`r prettyPValue(test2$p.value)`).$
+After controlling for *Age* and *Describing*, *Observing* has a significant, positive effect on *Accepting* for males
+$(\beta = `r round(bm[["obs"]], 3)`,$
+$\mathit{SE} = `r round(sm[["obs"]], 3)`,$
+$z = `r round(zm[["obs"]], 3)`,$
+$`r prettyPValue(pm[["obs"]])`),$
+but this effect is nonsignificant for females
+$(\beta = `r round(bf[["obs"]], 3)`,$
+$\mathit{SE} = `r round(sf[["obs"]], 3)`,$
+$z = `r round(zf[["obs"]], 3)`,$
+$`r prettyPValue(pf[["obs"]])`).$
 ```
 
 ---
@@ -631,3 +859,6 @@ anova(modOut, modOut2)
 End of Lab 8
 
 ---
+
+[kims0]: https://www.kaggle.com/datasets/lucasgreenwell/kentucky-inventory-of-mindfulness-skills-responses
+[kims1]: https://github.com/kylelang/lavaan-e-learning/raw/main/data/kims.rds

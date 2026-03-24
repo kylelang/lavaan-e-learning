@@ -2578,6 +2578,29 @@ if (window.hljs) {
 
 
 
+<style type="text/css">
+
+div.csl-bib-body { }
+div.csl-entry {
+clear: both;
+margin-bottom: 0em;
+}
+.hanging div.csl-entry {
+margin-left:2em;
+text-indent:-2em;
+}
+div.csl-left-margin {
+min-width:2em;
+float:left;
+}
+div.csl-right-inline {
+margin-left:2em;
+padding-left:1em;
+}
+div.csl-indent {
+margin-left: 2em;
+}
+</style>
 
 <style type="text/css">body { 
 font-size: 12px;
@@ -2784,6 +2807,10 @@ NOTE: These must be called within a math environment (e.g., $\va$)
 <div id="data" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> Data</h1>
 <hr />
+<p>We’ll be analyzing data collected with the <em>Kentucky Inventory of Mindfulness Skills</em> <span class="citation">(<a href="#ref-baerEtAl:2004">Baer et al., 2004</a>)</span>. You can
+download the dataset that we’ll analyze below via <a href="https://github.com/kylelang/lavaan-e-learning/raw/main/data/kims.rds">this link</a>, and you can access the original data
+<a href="https://github.com/kylelang/lavaan-e-learning/raw/main/data/kims.rds">here</a>. The KIMS contains 39 items assessing four dimensions of mindfulness skills: <em>Observing</em>, <em>Describing</em>,
+<em>Acting</em>, and <em>Accepting</em>. The following list shows the putative construct-to-item mapping.</p>
 <p><strong>Observing</strong></p>
 <ul>
 <li><code>Q1</code>: I notice changes in my body, such as whether my breathing slows down or speeds up.</li>
@@ -2835,26 +2862,34 @@ NOTE: These must be called within a math environment (e.g., $\va$)
 <li><code>Q32</code>: I think some of my emotions are bad or inappropriate and I shouldn’t feel them.</li>
 <li><code>Q36</code>: I disapprove of myself when I have irrational ideas.</li>
 </ul>
+<p>These data were collected via a self-report questionnaire wherein all the KIMS items were rated on a five-point
+Likert-type scale. So, we’ll be better off using CVM-based modeling to analyzing these data as ordinal, rather than
+pretending that the items are normally distributed.</p>
 <hr />
-<p>First, we’ll read in the <em>kims.rds</em> dataset, and save the resulting data frame as <code>kims</code>.</p>
+<div id="section" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> </h2>
+<p><strong>Load the <em>kims.rds</em> dataset.</strong></p>
 <hr />
+</div>
 </div>
 <div id="categorical-variable-cfa" class="section level1" number="2">
 <h1><span class="header-section-number">2</span> Categorical Variable CFA</h1>
 <hr />
-<p>Let’s assume we want to use the KIMS data to estimate a three-factor CFA model of the <em>Observing</em>, <em>Describing</em>, and <em>Accepting</em> constructs.
-Use the item numbers listed below to define each latent construct.</p>
+<p>Let’s assume we want to use the KIMS data to estimate a three-factor CFA model of the <em>Observing</em>, <em>Describing</em>, and
+<em>Accepting</em> constructs. For these exercises, we’ll use the item numbers listed below to define the three latent
+constructs in our CFA.</p>
 <ul>
 <li><strong>Observing:</strong> 5, 9, 17, 25, 29, 30, 37</li>
 <li><strong>Describing:</strong> 2, 6, 10, 14, 18, 22, 26, 34</li>
 <li><strong>Accepting:</strong> 4, 12, 20, 24, 28, 32, 36</li>
 </ul>
-<div id="section" class="section level2" number="2.1">
+<hr />
+<div id="section-1" class="section level2" number="2.1">
 <h2><span class="header-section-number">2.1</span> </h2>
 <p><strong>Define the model syntax for the three-factor CFA described above.</strong></p>
 <hr />
 </div>
-<div id="section-1" class="section level2" number="2.2">
+<div id="section-2" class="section level2" number="2.2">
 <h2><span class="header-section-number">2.2</span> </h2>
 <p><strong>Estimate the CFA using appropriate CVM-based settings.</strong></p>
 <ul>
@@ -2866,11 +2901,11 @@ Use the item numbers listed below to define each latent construct.</p>
 </ul>
 <hr />
 </div>
-<div id="section-2" class="section level2" number="2.3">
+<div id="cfa" class="section level2" number="2.3">
 <h2><span class="header-section-number">2.3</span> </h2>
-<p><strong>Summarize and evalute the model.</strong></p>
+<p><strong>Summarize and evaluate the model.</strong></p>
 <ul>
-<li>Is the model an acceptable representaiton of the data?
+<li>Is the model an acceptable representation of the data?
 <ul>
 <li>Does the model fit well?</li>
 <li>Do the parameter estimates seem plausible?</li>
@@ -2924,7 +2959,7 @@ Use the item numbers listed below to define each latent construct.</p>
 <hr />
 <div id="section-7" class="section level2" number="4.1">
 <h2><span class="header-section-number">4.1</span> </h2>
-<p><strong>Estimate the CFA from XXX as a mutiple-group model.</strong></p>
+<p><strong>Estimate the CFA from <a href="#cfa">2.3</a> as a multiple-group model.</strong></p>
 <ul>
 <li>Specify <em>sex</em> as the grouping factor.</li>
 <li>Estimate a configurally invariant model (i.e., don’t equate any parameters across groups).</li>
@@ -2937,7 +2972,6 @@ Use the item numbers listed below to define each latent construct.</p>
 <ul>
 <li>What is your conclusion?</li>
 </ul>
-<p>The model fits well. Configural invariance holds.</p>
 <hr />
 </div>
 <div id="section-9" class="section level2" number="4.3">
@@ -2962,7 +2996,6 @@ Use the item numbers listed below to define each latent construct.</p>
 <div id="section-11" class="section level2" number="4.5">
 <h2><span class="header-section-number">4.5</span> </h2>
 <p><strong>Test threshold invariance.</strong></p>
-<p>The <span class="math inline">\(\Delta \chi^2\)</span> test is nonsignificant, so we can infer invariant thresholds.</p>
 <hr />
 </div>
 <div id="section-12" class="section level2" number="4.6">
@@ -2982,17 +3015,14 @@ Use the item numbers listed below to define each latent construct.</p>
 <ul>
 <li>Check the results by summarizing the model and evaluating the model fit.</li>
 </ul>
-<p>Again, model fit is still excellent, and all the parameter estimates are reasonable.</p>
 <hr />
 </div>
-<div id="section-14" class="section level2" number="4.8">
+<div id="weakInvariance" class="section level2" number="4.8">
 <h2><span class="header-section-number">4.8</span> </h2>
 <p><strong>Test weak invariance.</strong></p>
-<p>Relative to the threshold-invariant model, we haven’t lost a significant amount of fit by equating the factor loadings
-across groups. Conditioning on the dubious threshold invariance, we can claim weak invariance.</p>
 <hr />
 </div>
-<div id="section-15" class="section level2" number="4.9">
+<div id="section-14" class="section level2" number="4.9">
 <h2><span class="header-section-number">4.9</span> </h2>
 <p><strong>Define the model syntax for the strong/scalar invariance model.</strong></p>
 <ul>
@@ -3003,29 +3033,79 @@ across groups. Conditioning on the dubious threshold invariance, we can claim we
 </ul>
 <hr />
 </div>
-<div id="section-16" class="section level2" number="4.10">
+<div id="section-15" class="section level2" number="4.10">
 <h2><span class="header-section-number">4.10</span> </h2>
 <p><strong>Estimate the strong invariance model.</strong></p>
 <ul>
 <li>Check the results by summarizing the model and evaluating the model fit.</li>
 </ul>
-<p>The strongly invariant model still fits very well.</p>
 <hr />
 </div>
-<div id="section-17" class="section level2" number="4.11">
+<div id="section-16" class="section level2" number="4.11">
 <h2><span class="header-section-number">4.11</span> </h2>
 <p><strong>Test strong invariance.</strong></p>
-<p>Now, we lose a significant amount of fit by constraining the item intercepts in addition to the factor loadings and
-thresholds (i.e., the <span class="math inline">\(\Delta \chi^2\)</span> test is significant). So, we should reject the hypothesis of strong invariance.</p>
 <hr />
 </div>
 </div>
 <div id="moderated-sem" class="section level1" number="5">
 <h1><span class="header-section-number">5</span> Moderated SEM</h1>
 <hr />
+<p>In this section, you will use a multiple-group SEM to test the following moderation hypotheses:</p>
+<ul>
+<li><span class="math inline">\(H_1\)</span>: The partial effect of <em>Describing</em> on <em>Accepting</em> (controlling for <em>Age</em> and <em>Observing</em>) differs for males
+and females.</li>
+<li><span class="math inline">\(H_2\)</span>: The partial effect of <em>Observing</em> on <em>Accepting</em> (controlling for <em>Age</em> and <em>Describing</em>) differs for males
+and females.</li>
+</ul>
+<hr />
+<div id="section-17" class="section level2" number="5.1">
+<h2><span class="header-section-number">5.1</span> </h2>
+<p><strong>Estimate the unrestricted, moderated SEM.</strong></p>
+<ul>
+<li>Label the potentially moderated parameters.</li>
+<li>Maintain the weak invariance constraints imposed in <a href="#weakInvariance">4.8</a>.</li>
+</ul>
+<hr />
+</div>
+<div id="h1Test" class="section level2" number="5.2">
+<h2><span class="header-section-number">5.2</span> </h2>
+<p><strong>Use <code>lavaan::lavTestWald()</code> to test <span class="math inline">\(H_1\)</span>.</strong></p>
+<ul>
+<li>What is your conclusion?</li>
+</ul>
+<hr />
+</div>
+<div id="h2Test" class="section level2" number="5.3">
+<h2><span class="header-section-number">5.3</span> </h2>
+<p><strong>Use <code>lavaan::lavTestWald()</code> to test <span class="math inline">\(H_2\)</span>.</strong></p>
+<ul>
+<li>What is your conclusion?</li>
+</ul>
+<hr />
+</div>
+<div id="parsimoniousSem" class="section level2" number="5.4">
+<h2><span class="header-section-number">5.4</span> </h2>
+<p><strong>Estimate a parsimonious model.</strong></p>
+<ul>
+<li>Apply any parameter constraints suggested by the test results from <a href="#h1Test">5.2</a> and <a href="#h2Test">5.3</a>.</li>
+</ul>
+<hr />
+</div>
+<div id="section-18" class="section level2" number="5.5">
+<h2><span class="header-section-number">5.5</span> </h2>
+<p><strong>Interpret the final <em>Observing</em> and <em>Describing</em> effects.</strong></p>
+<ul>
+<li>Interpret the estimates from the parsimonious model you estimated in <a href="#parsimoniousSem">5.4</a>.</li>
+</ul>
 <hr />
 <p>End of Lab 8</p>
 <hr />
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0" line-spacing="2">
+<div id="ref-baerEtAl:2004" class="csl-entry">
+Baer, R. A., Smith, G. T., &amp; Allen, K. B. (2004). Assessment of mindfulness by self-report: The kentucky inventory of mindfulness skills. <em>Assessment</em>, <em>11</em>(3), 191–206. <a href="https://doi.org/10.1177/1073191104268029">https://doi.org/10.1177/1073191104268029</a>
+</div>
+</div>
+</div>
 </div>
 
 
@@ -3077,7 +3157,7 @@ $(document).ready(function ()  {
 
     // establish options
     var options = {
-      selectors: "h1,h2",
+      selectors: "h1",
       theme: "bootstrap3",
       context: '.toc-content',
       hashGenerator: function (text) {
