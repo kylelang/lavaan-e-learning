@@ -70,7 +70,7 @@ In this lab, you'll explore methods of doing CFA/SEM with categorical data using
 
 We'll be analyzing data collected with the *Kentucky Inventory of Mindfulness Skills* [@baerEtAl:2004]. You can
 download the dataset that we'll analyze below via [this link][kims1], and you can access the original data
-[here][kims1]. The KIMS contains 39 items assessing four dimensions of mindfulness skills: *Observing*, *Describing*,
+[here][kims0]. The KIMS contains 39 items assessing four dimensions of mindfulness skills: *Observing*, *Describing*,
 *Acting*, and *Accepting*. The following list shows the putative construct-to-item mapping.
 
 **Observing**
