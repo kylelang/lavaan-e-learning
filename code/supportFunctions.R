@@ -1,7 +1,7 @@
 ### Title:    Support Functions for Examples
 ### Author:   Kyle M. Lang
 ### Created:  2017-08-24
-### Modified: 2026-02-27
+### Modified: 2026-03-23
 
 ###--------------------------------------------------------------------------###
 
@@ -345,3 +345,5 @@ getFmi <- function(x, what) {
 }
 
 ###--------------------------------------------------------------------------###
+
+prettyPValue <- function(x, digits = 3) ifelse(x < 0.001, "p < 0.001", paste0("p = ", round(x, digits))) |> noquote()
